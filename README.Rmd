@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# spada ([S]{.underline}hiny [**Pa**]{.underline}ckage for [**D**]{.underline}ata [**A**]{.underline}nalysis)
+# spada ([**S**]{.underline}hiny [**Pa**]{.underline}ckage for [**D**]{.underline}ata [**A**]{.underline}nalysis)
 
 <!-- badges: start -->
 
@@ -35,5 +35,3 @@ devtools::install_github("lgschuck/spada")
 ```{r}
 library(spada)
 ```
-
-

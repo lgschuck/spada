@@ -2,12 +2,12 @@
 % Please edit documentation in R/spada.R
 \name{spada}
 \alias{spada}
-\title{Spada}
+\title{Spada (Data Analysis)}
 \usage{
 spada(...)
 }
 \description{
-Function that generates App in Shiny for analysis of input dataset
+Function that generates a Shiny App for Data Analysis
 }
 \examples{
 if(interactive()) spada(mtcars)
