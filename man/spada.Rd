@@ -6,10 +6,13 @@
 \usage{
 spada(...)
 }
+\arguments{
+\item{...}{Objects of data.frame class}
+}
 \description{
 Function that generates a Shiny App for Data Analysis
 }
 \examples{
-if(interactive()) spada(mtcars)
+if(interactive()) spada(datasets::mtcars)
 
 }

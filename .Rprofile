@@ -5,7 +5,7 @@ if(interactive()){
   options(repos = repo)
   rm(repo)
 
-  .libPaths('.libs')
+  .libPaths('../.spada_libs')
 
   library(shiny)
   library(bslib)

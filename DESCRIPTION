@@ -6,7 +6,7 @@ Authors@R:
     role = c("aut", "cre"))
 Maintainer: Luís Gustavo Schuck <luisgustavoschuck@yahoo.com.br>
 Description: Tools to visual Data Analysis.
-License: AGPL (>= 3)
+License: AGPL (>= 3) + file LICENSE
 URL: https://github.com/lgschuck/spada
 BugReports: https://github.com/lgschuck/spada/issues
 Imports:

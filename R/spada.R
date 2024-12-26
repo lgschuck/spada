@@ -3,8 +3,10 @@
 #'
 #' Function that generates a Shiny App for Data Analysis
 #'
+#' @param ... Objects of data.frame class
+#'
 #' @examples
-#' if(interactive()) spada(mtcars)
+#' if(interactive()) spada(datasets::mtcars)
 #'
 #' @export
 #'
@@ -24,7 +26,7 @@
 
 spada <- function(...) {
   datasets <- list(...)
-  if(length(datasets) == 0) datasets <- list('iris' = iris, 'mtcars' = mtcars)
+  if(length(datasets) == 0) datasets <- list('iris' = datasets::iris, 'mtcars' = datasets::mtcars)
   stopifnot('Objects must be data.frame and have at least 1 row each' =
     sapply(datasets, is.data.frame) |> all() && all(sapply(datasets, nrow) > 0))
 
