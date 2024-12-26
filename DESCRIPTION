@@ -4,8 +4,9 @@ Version: 0.1.0.9000
 Authors@R: 
     person("Luís Gustavo", "Schuck", email="luisgustavoschuck@yahoo.com.br",  
     role = c("aut", "cre"))
+Maintainer: Luís Gustavo Schuck <luisgustavoschuck@yahoo.com.br>
 Description: Tools to visual Data Analysis.
-License: MIT + file LICENSE
+License: AGPL (>= 3)
 URL: https://github.com/lgschuck/spada
 BugReports: https://github.com/lgschuck/spada/issues
 Imports:
