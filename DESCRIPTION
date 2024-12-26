@@ -1,0 +1,20 @@
+Package: spada
+Title: Shiny Package for Data Analysis
+Version: 0.1.0.9000
+Authors@R: 
+    person("Luís Gustavo", "Schuck", email="luisgustavoschuck@yahoo.com.br",  
+    role = c("aut", "cre"))
+Description: Tools to visual Data Analysis.
+License: MIT + file LICENSE
+URL: https://github.com/lgschuck/spada
+BugReports: https://github.com/lgschuck/spada/issues
+Imports:
+  bsicons (>= 0.1.2),
+  bslib (>= 0.8.0),
+  data.table (>= 1.16.0),
+  dplyr (>= 1.1.4),
+  DT (>= 0.33),
+  shiny (>= 1.9.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
