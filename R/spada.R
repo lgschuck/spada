@@ -17,6 +17,7 @@
 #' @import bslib
 #' @import bsicons
 #' @import DT
+#' @import gt
 #' @importFrom graphics abline hist
 #' @importFrom stats median
 #' @importFrom utils object.size head
@@ -104,7 +105,7 @@ spada <- function(...) {
       "
         /* change color of navbar */
         .navbar {
-          background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3);
+          background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #008080);
         }
 
         /* change size of nav panel */
@@ -124,7 +125,7 @@ spada <- function(...) {
 
         .btn-task {
           color: #0072B2;
-          background-color: #F2F2F2;
+          background-color: #f9f9f9;
           border-color: #0072B2;
         }
 
@@ -155,25 +156,26 @@ spada <- function(...) {
     page_navbar(
       id = 'navbar',
       theme = bs_theme(
-        bg = '#f2f2f2',
-        fg = '#000',
+        # bg = '#f9f9f9',
+        bg = '#f9f9f9',
+        fg = '#000000',
         primary = '#02517d',
         secondary = '#0072B2',
         success = '#009E73',
         font_size_base = "1rem",
       ),
-      title = 'Data Viz',
+      title = 'Spada',
       bg = '#02517d',
 
       # page summary ----------------------------------------------------------
       nav_panel(
-        'Summary',
+        'Data',
         icon = bs_icon('info-square-fill'),
         useBusyIndicators(),
         layout_column_wrap(
           width = 1,
           min_height = '100px',
-          uiOutput('pS_value_box'),
+          uiOutput('pD_value_box'),
           height = '100px'
         ),
 
@@ -188,25 +190,25 @@ spada <- function(...) {
                      layout_column_wrap(
                        value_box(
                          title = 'Numeric Vars',
-                         value = textOutput('pS_var_num_vars'),
+                         value = textOutput('pD_var_num_vars'),
                          showcase = bs_icon('123'),
                          theme = 'bg-gradient-yellow-orange'
                        ),
                        value_box(
                          title = 'Character Vars',
-                         value = textOutput('pS_var_char_vars'),
+                         value = textOutput('pD_var_char_vars'),
                          showcase = bs_icon('alphabet'),
                          theme = 'bg-gradient-blue-indigo'
                        ),
                        value_box(
                          title = 'Factor Vars',
-                         value = textOutput('pS_var_factor_vars'),
+                         value = textOutput('pD_var_factor_vars'),
                          showcase = bs_icon('diagram-3'),
                          theme = 'bg-gradient-green-indigo'
                        ),
                        value_box(
                          title = 'Date Vars',
-                         value = textOutput('pS_var_date_vars'),
+                         value = textOutput('pD_var_date_vars'),
                          showcase = bs_icon('calendar3'),
                          theme = 'bg-gradient-purple-indigo'
                        )
@@ -214,61 +216,68 @@ spada <- function(...) {
                      layout_column_wrap(
                        value_box(
                          title = "Var with most NA's",
-                         value = textOutput('pS_var_most_nas'),
+                         value = textOutput('pD_var_most_nas'),
                          showcase = bs_icon('database-x'),
                          theme = 'bg-gradient-red-indigo',
-                         p(textOutput('pS_var_most_nas_n', inline = T), ' rows')
+                         p(textOutput('pD_var_most_nas_n', inline = T), ' rows')
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
                        value_box(
                          title = "Var with biggest % of NA's",
-                         value = textOutput('pS_var_biggest_perc_nas'),
+                         value = textOutput('pD_var_biggest_perc_nas'),
                          showcase = bs_icon('percent'),
                          theme = 'light',
-                         p(textOutput('pS_var_biggest_perc_nas_perc', inline = T), ' %')
+                         p(textOutput('pD_var_biggest_perc_nas_perc', inline = T), ' %')
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
                        value_box(
                          title = 'Var with max value',
-                         value = textOutput('pS_var_max_value', inline = T),
+                         value = textOutput('pD_var_max_value', inline = T),
                          showcase = bs_icon('graph-up-arrow', placement = 'top'),
                          theme = 'bg-gradient-pink-indigo',
-                         p('Max value:', textOutput('pS_max_value', inline = T)),
+                         p('Max value:', textOutput('pD_max_value', inline = T)),
                          hr(),
                          p(bs_icon('graph-down-arrow'), 'Var with min value'),
-                         p(textOutput('pS_var_min_value', inline = T)),
-                         p('Min value:', textOutput('pS_min_value', inline = T))
+                         p(textOutput('pD_var_min_value', inline = T)),
+                         p('Min value:', textOutput('pD_min_value', inline = T))
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
                        value_box(
                          title = "Var with biggest size",
-                         value = textOutput('pS_var_biggest_size'),
+                         value = textOutput('pD_var_biggest_size'),
                          showcase = bs_icon('sd-card'),
                          theme = 'bg-gradient-teal-indigo',
-                         p(textOutput('pS_var_biggest_size_size', inline = T), 'kB')
+                         p(textOutput('pD_var_biggest_size_size', inline = T), 'kB')
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top')
                      )
                    )
                  ),
-                 nav_panel('Metadata', card_body(DTOutput('pS_metadata_t'))),
+                 nav_panel(
+                  'Metadata',
+                  card_body(
+                    # DTOutput('pD_metadata_t'),
+                    gt_output('pD_metadata_gt'),
+                  )
+                ),
                  nav_panel(
                    'Overview',
                    card_body(
                      fluidRow(
-                       column(2, numericInput('pS_over_size_sample', 'Number of Rows', 100, 100, 1e4, 100)),
+                       column(2, numericInput('pD_over_size_sample', 'Number of Rows', 100, 100, 1e4, 100)),
                        column(2, radioButtons(
-                         'pS_over_radio_sample', 'Show',
+                         'pD_over_radio_sample', 'Show',
                          c('First rows' = 'first', 'Sample' = 'sample'), inline = T))
                      ),
-                    DTOutput('pS_over_t')),
+                    # DTOutput('pD_over_t'),
+                    gt_output('pD_over_gt')),
                  ),
                  nav_panel(
                    'Data',
                    card_body(
-                     uiOutput('pS_data_ui_sel_df'),
-                     textInput('pS_data_txt_new_name', 'New Name'),
+                     uiOutput('pD_data_ui_sel_df'),
+                     textInput('pD_data_txt_new_name', 'New Name'),
                      layout_column_wrap(
-                      btn_task('pS_data_btn_new_name', 'Rename dataset'),
-                      btn_task('pS_data_btn_active', 'Make dataset Active'),
-                      # btn_task('pS_data_btn_copy_dataset', 'Copy dataset'),
-                      # btn_task('pS_data_btn_delete_dataset', 'Delete dataset'),
+                      btn_task('pD_data_btn_new_name', 'Rename dataset'),
+                      btn_task('pD_data_btn_active', 'Make dataset Active'),
+                      # btn_task('pD_data_btn_copy_dataset', 'Copy dataset'),
+                      # btn_task('pD_data_btn_delete_dataset', 'Delete dataset'),
                      ),
                    )),
                )
@@ -337,11 +346,16 @@ spada <- function(...) {
                                               uiOutput('pE_convert_ui_date_formats')
                            )
                          ),
-                         card_footer(btn_task('pE_convert_btn_apply', 'Apply conversion', icon('hammer')))
+                         card_footer(
+                           btn_task('pE_convert_btn_apply', 'Apply conversion',
+                                    icon('hammer'))
+                         )
                        ),
                        card(
                          card_header('Preview', class = 'mini-header'),
-                         card_body(DTOutput('pE_convert_preview_t1')),
+                         card_body(
+                           # DTOutput('pE_convert_preview_t1'),
+                           gt_output('pE_convert_preview_gt1')),
                          card_footer(btn_task('pE_convert_btn_preview_sample',
                                               'Show new sample', icon('rotate-right')))
                        )
@@ -534,7 +548,9 @@ spada <- function(...) {
                 nav_panel(
                   'Stats',
                   full_screen = T,
-                  card_body(DTOutput('pA_t1')),
+                  card_body(
+                    # DTOutput('pA_t1'),
+                    gt_output('pA_gt1')),
                   card_footer(numericInput('pA_t1_digits', 'Digits', 2, 0, 9, 1))
                 )
               )
@@ -573,7 +589,7 @@ spada <- function(...) {
     # main value boxes --------------------------------------------------------
     main_value_box_active <- reactive(main_value_box(df$df_active, df$df_active_name))
 
-    output$pS_value_box <- renderUI({ main_value_box_active() })
+    output$pD_value_box <- renderUI({ main_value_box_active() })
     output$pE_value_box <- renderUI({ main_value_box_active() })
     output$pA_value_box <- renderUI({ main_value_box_active() })
 
@@ -583,24 +599,28 @@ spada <- function(...) {
       df_info(df$df_active)
     })
 
-    output$pS_metadata_t <- renderDT(
-      df_metadata() |> df_info_print()
+    # output$pD_metadata_t <- renderDT(
+    #   df_metadata() |> df_info_print()
+    # )
+
+    output$pD_metadata_gt <- render_gt(
+      df_metadata() |> gt_info()
     )
 
     # overview -----------------------
-    output$pS_over_t <- renderDT(
+    output$pD_over_t <- renderDT(
       {
-        req(input$pS_over_size_sample)
-        pS_over_n_show <- max(1, input$pS_over_size_sample)
-        pS_over_n_show <- min(pS_over_n_show, nrow(df$df_active))
+        req(input$pD_over_size_sample)
+        pD_over_n_show <- max(1, input$pD_over_size_sample)
+        pD_over_n_show <- min(pD_over_n_show, nrow(df$df_active))
 
-        if(input$pS_over_radio_sample == 'first'){
-          pS_over_idx <- 1:pS_over_n_show
-        } else if (input$pS_over_radio_sample == 'sample'){
-          pS_over_idx <- sample.int(nrow(df$df_active), pS_over_n_show, replace = F)
+        if(input$pD_over_radio_sample == 'first'){
+          pD_over_idx <- 1:pD_over_n_show
+        } else if (input$pD_over_radio_sample == 'sample'){
+          pD_over_idx <- sample.int(nrow(df$df_active), pD_over_n_show, replace = F)
         }
 
-        df$df_active[pS_over_idx, ] |>
+        df$df_active[pD_over_idx, ] |>
           datatable(
             extensions = 'ColReorder',
             rownames = F, #style = 'default', class = 'cell-border stripe',
@@ -610,13 +630,39 @@ spada <- function(...) {
       }
     )
 
-    # values for boxes -----------------------
-    output$pS_var_num_vars <- renderText(sapply(df$df_active, is.numeric) |> sum())
-    output$pS_var_char_vars <- renderText(sapply(df$df_active, is.character) |> sum())
-    output$pS_var_factor_vars <- renderText(sapply(df$df_active, is.factor) |> sum())
-    output$pS_var_date_vars <- renderText(sapply(df$df_active, is_date) |> sum())
+    output$pD_over_gt <- render_gt(
+      {
+        req(input$pD_over_size_sample)
+        pD_over_n_show <- max(1, input$pD_over_size_sample)
+        pD_over_n_show <- min(pD_over_n_show, nrow(df$df_active))
 
-    output$pS_var_most_nas <- renderText(
+        if(input$pD_over_radio_sample == 'first'){
+          pD_over_idx <- 1:pD_over_n_show
+        } else if (input$pD_over_radio_sample == 'sample'){
+          pD_over_idx <- sample.int(nrow(df$df_active), pD_over_n_show, replace = F)
+        }
+
+        df$df_active[pD_over_idx, ] |>
+          gt() |>
+          opt_interactive(
+            use_filters = T,
+            use_resizers = T,
+            use_highlight = T,
+            use_compact_mode = T,
+            use_text_wrapping = F,
+            use_page_size_select = T
+          ) |>
+          tab_options(table.background.color = '#f9f9f9')
+      }
+    )
+
+    # values for boxes -----------------------
+    output$pD_var_num_vars <- renderText(sapply(df$df_active, is.numeric) |> sum())
+    output$pD_var_char_vars <- renderText(sapply(df$df_active, is.character) |> sum())
+    output$pD_var_factor_vars <- renderText(sapply(df$df_active, is.factor) |> sum())
+    output$pD_var_date_vars <- renderText(sapply(df$df_active, is_date) |> sum())
+
+    output$pD_var_most_nas <- renderText(
       {
         if(df_metadata() |> filter(n_nas > 0) |> nrow() < 1) { 'None'
         } else {
@@ -625,7 +671,7 @@ spada <- function(...) {
       }
     )
 
-    output$pS_var_most_nas_n <- renderText(
+    output$pD_var_most_nas_n <- renderText(
       {
         if(df_metadata() |> filter(n_nas > 0) |> nrow() < 1) { '0'
         } else {
@@ -634,7 +680,7 @@ spada <- function(...) {
       }
     )
 
-    output$pS_var_biggest_perc_nas <- renderText(
+    output$pD_var_biggest_perc_nas <- renderText(
       {
         if(df_metadata() |> filter(perc_nas > 0) |> nrow() < 1) { 'None'
         } else {
@@ -643,7 +689,7 @@ spada <- function(...) {
       }
     )
 
-    output$pS_var_biggest_perc_nas_perc <- renderText(
+    output$pD_var_biggest_perc_nas_perc <- renderText(
       {
         if(df_metadata() |> filter(perc_nas > 0) |> nrow() < 1) { '0'
         } else {
@@ -652,70 +698,70 @@ spada <- function(...) {
       }
     )
 
-    output$pS_var_max_value <- renderText(
+    output$pD_var_max_value <- renderText(
       df_metadata() |> arrange(-max) |> head(1) |> pull(var)
     )
 
-    output$pS_max_value <- renderText(
+    output$pD_max_value <- renderText(
       df_metadata() |> arrange(-max) |> head(1) |> pull(max) |> f_num(dig = 3)
     )
 
-    output$pS_var_min_value <- renderText(
+    output$pD_var_min_value <- renderText(
       df_metadata() |> arrange(min) |> head(1) |> pull(var)
     )
 
-    output$pS_min_value <- renderText(
+    output$pD_min_value <- renderText(
       df_metadata() |> arrange(min) |> head(1) |> pull(min) |> f_num(dig = 3)
     )
 
-    output$pS_var_biggest_size <- renderText(
+    output$pD_var_biggest_size <- renderText(
       df_metadata() |> arrange(-size) |> head(1) |> pull(var)
     )
 
-    output$pS_var_biggest_size_size <- renderText(
+    output$pD_var_biggest_size_size <- renderText(
       df_metadata() |> arrange(-size) |> head(1) |> pull(size) |> round(2)
     )
 
     # define active dataset ---------------------------------------------------
-    output$pS_data_ui_sel_df <- renderUI(
-      selectInput('pS_data_sel_df', 'Select a dataset', names(datasets_react$data))
+    output$pD_data_ui_sel_df <- renderUI(
+      selectInput('pD_data_sel_df', 'Select a dataset', names(datasets_react$data))
     )
 
     observe({
       # save active to original data
       datasets_react$data[[df$df_active_name]] <- df$df_active
       # choose new dataset to be active
-      df$df_active <- datasets_react$data[[input$pS_data_sel_df]]
+      df$df_active <- datasets_react$data[[input$pD_data_sel_df]]
       df$df_backup <- NULL
 
-      df$df_active_name <- input$pS_data_sel_df
+      df$df_active_name <- input$pD_data_sel_df
 
-    }) |> bindEvent(input$pS_data_btn_active)
+    }) |> bindEvent(input$pD_data_btn_active)
 
     observe({
-      if(!is_valid_name(input$pS_data_txt_new_name) |
-          input$pS_data_txt_new_name %in% names(datasets_react$data)){
+      if(!is_valid_name(input$pD_data_txt_new_name) |
+          input$pD_data_txt_new_name %in% names(datasets_react$data)){
         msg('New name is not valid or in use')
 
       } else {
-        names(datasets_react$data)[names(datasets_react$data) == input$pS_data_sel_df] <- input$pS_data_txt_new_name
+        names(datasets_react$data)[names(datasets_react$data) == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         # update active dataset if necessary
-        if(df$df_active_name == input$pS_data_sel_df){
-          df$df_active <- datasets_react$data[[input$pS_data_txt_new_name]]
+        if(df$df_active_name == input$pD_data_sel_df){
+          df$df_active <- datasets_react$data[[input$pD_data_txt_new_name]]
 
-          df$df_active_name <- input$pS_data_txt_new_name
+          df$df_active_name <- input$pD_data_txt_new_name
         }
       }
 
-    }) |> bindEvent(input$pS_data_btn_new_name)
+    }) |> bindEvent(input$pD_data_btn_new_name)
 
     # observe({
 
-    # }) |> bindEvent(input$pS_data_btn_copy_dataset)
+    # }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
     # observe({
 
-    # }) |> bindEvent(input$pS_data_btn_delete_dataset)
+    # }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
 
     # edit page events --------------------------------------------------------
@@ -743,7 +789,7 @@ spada <- function(...) {
             choices = NULL,
             multiple = T,
             options = list(create = T)
-          ) |> tooltip('Text should not be in quotes')
+          ) |> tooltip('Text should not be in quotes', placement = 'top')
         }
       })
     }) |> bindEvent(input$pE_filter_vars_filter)
@@ -933,10 +979,10 @@ spada <- function(...) {
     pE_convert_preview_sample_trigger <- reactiveVal(1)
     pE_convert_preview_sample <- reactive({
       pE_convert_preview_sample_trigger()
-      if(nrow(df$df_active) < 5) {
+      if(nrow(df$df_active) < 8) {
         rep(TRUE, nrow(df$df_active))
       } else {
-        sample(nrow(df$df_active), 5, replace = F)
+        sample(nrow(df$df_active), 8, replace = F)
       }
     })
 
@@ -946,13 +992,13 @@ spada <- function(...) {
     }) |> bindEvent(input$pE_convert_btn_preview_sample)
 
     pE_convert_preview_df <- reactive({
+      invalidateLater(1000, session)
       req(input$pE_convert_vars_sel)
       req(input$pE_convert_sel_format)
 
       if(input$pE_convert_sel_format == 'as.Date'){
         req(input$pE_convert_sel_date_formats)
       }
-
 
       pE_convert_preview_df_temp <- subset(
         df$df_active[pE_convert_preview_sample(), ],
@@ -966,13 +1012,24 @@ spada <- function(...) {
 
     })
 
-    output$pE_convert_preview_t1 <- renderDT({
-      datatable(pE_convert_preview_df(),
-                rownames = F,
-                options = list(dom = 'Bt', pageLength = 5,
-                               columnDefs = list(
-                                 list(targets = 0:1, width = '200px', className = 'dt-center')))
-      )
+    # output$pE_convert_preview_t1 <- renderDT({
+    #   datatable(pE_convert_preview_df(),
+    #             rownames = F,
+    #             options = list(dom = 'Bt', pageLength = 5,
+    #                            columnDefs = list(
+    #                              list(targets = 0:1, width = '200px', className = 'dt-center')))
+    #   )
+    # })
+
+    output$pE_convert_preview_gt1 <- render_gt({
+      pE_convert_preview_df() |>
+        gt() |>
+        opt_interactive(
+          use_sorting = F,
+          use_pagination = F,
+          use_highlight = T,
+          use_compact_mode = T) |>
+        tab_options(table.background.color = '#f9f9f9')
     })
 
     observe({
@@ -1374,7 +1431,7 @@ spada <- function(...) {
         } else { NA }
     )
     # stats table -------------------------------------------------------------
-    pA_t1 <- reactive(datatable(
+    pA_t1 <- reactive(
       data.frame(
         var = c(
           paste("% NA's (", pA_stats_n_nas(), '/', pA_stats_obs(), ')'),
@@ -1400,18 +1457,29 @@ spada <- function(...) {
           pA_stats_sd(),
           pA_stats_correlation()
         )
-      ),
-      options = list(dom = 'B', pageLength = 20, ordering = F),
-      rownames = F,
-      colnames = NULL
-    ))
+      )
+    )
 
-    output$pA_t1 <- renderDT(pA_t1() |>
-                               formatCurrency(
-                                 'value',
-                                 digits = input$pA_t1_digits,
-                                 currency = ''
-                               ))
+    # output$pA_t1 <- renderDT(
+    #   pA_t1() |>
+    #     datatable(
+    #       options = list(dom = 'B', pageLength = 20, ordering = F),
+    #       rownames = F,
+    #       colnames = NULL
+    #     ) |>
+    #     formatCurrency('value', digits = input$pA_t1_digits, currency = '')
+    # )
+
+    output$pA_gt1 <- render_gt(
+      pA_t1() |>
+        gt() |>
+        opt_interactive(use_pagination = F,
+                        use_highlight = T,
+                        use_compact_mode = T) |>
+        cols_label(var = 'Measure', value = 'Value') |>
+        fmt_number(decimals = input$pA_t1_digits) |>
+        tab_options(table.background.color = '#ffffff')
+    )
 
     # exit app event ----------------------------------------------------------
     observe({

@@ -1,25 +1,28 @@
 
-# info abaout dataset variables -------------------------------------------
+# info abaout dataset variables -----------------------------------------------
 df_info <- function(df){
   rows <- nrow(df)
+  n_nas = sapply(df, \(x) length(x[is.na(x)]))
+  n_valid <- rows - n_nas
+  n_unique <- sapply(df, \(x) length(unique(x)))
 
   data.frame(
     var = names(df),
     type = sapply(df, typeof),
-    class = sapply(df, \(x) class(x) |> paste(collapse = '/')),
-    size = sapply(df, object.size) / 2^10,
+    class = sapply(df, \(x) paste(class(x), collapse = "/")),
+    size = sapply(df, object.size),
     min = sapply(df, \(x) if (is.numeric(x)) mina(x) else NA),
     max = sapply(df, \(x) if (is.numeric(x)) mana(x) else NA),
-    n_valid = sapply(df, \(x) length(x[!is.na(x)])),
-    perc_valid = sapply(df, \(x) length(x[!is.na(x)])) / rows,
-    n_unique = sapply(df, \(x) length(unique(x))),
-    perc_unique = sapply(df, \(x) length(unique(x))) / rows,
-    n_nas = sapply(df, \(x) length(x[is.na(x)])),
-    perc_nas = sapply(df, \(x) length(x[is.na(x)])) / rows
+    n_valid = n_valid,
+    perc_valid = n_valid / rows,
+    n_unique = n_unique,
+    perc_unique = n_unique / rows,
+    n_nas = n_nas,
+    perc_nas = n_nas / rows
   )
 }
 
-# format bars in DT -------------------------------------------------------
+# format bars in DT -----------------------------------------------------------
 format_color_bar <- function(DF, NAME, VALUES, COLOR){
 
   VALUES <- if(VALUES |> length() == 0) 0 else VALUES
@@ -32,14 +35,14 @@ format_color_bar <- function(DF, NAME, VALUES, COLOR){
     backgroundPosition = 'top')
 }
 
-# print DT of df_info -----------------------------------------------------
+# print DT of df_info ---------------------------------------------------------
 df_info_print <- function(df){
   df |>
     DT::datatable(
       extensions = 'ColReorder',
       rownames = F,
       colnames = c('Variable', 'Type', 'Class', 'Size (kB)', 'Min',
-                   'Max', 'Valid', '% Valid', 'Unique', '% Unique', 
+                   'Max', 'Valid', '% Valid', 'Unique', '% Unique',
                    "NA's", "% NA's"),
       options = list(
         dom = 'Bftp',
@@ -79,7 +82,7 @@ df_info_print <- function(df){
       background = DT::styleColorBar(c(-0.001, 1.05), '#284e4c'),
       backgroundSize = '100% 20%',
       backgroundRepeat = 'no-repeat',
-      backgroundPosition = 'top') |> 
+      backgroundPosition = 'top') |>
     DT::formatStyle(
       'perc_nas',
       background = DT::styleColorBar(c(-0.001, 1.05), '#919191'),
@@ -88,18 +91,18 @@ df_info_print <- function(df){
       backgroundPosition = 'top')
 }
 
-# empty plot function -----------------------------------------------------
+# empty plot function ---------------------------------------------------------
 empty_plot <- function(msg = 'No plot', c = 2){
   plot(1:10, 1:10, type = 'n', xlab = '', ylab = '')
   text(5, 5, msg, cex = c)
 }
 
-# bslib btn task ----------------------------------------------------------
+# bslib btn task --------------------------------------------------------------
 btn_task <- function(ID, LABEL, ICON = NULL){
   bslib::input_task_button(id = ID, label = LABEL, icon = ICON, class = 'btn-task')
 }
 
-# function to generate value boxes on top of pages ------------------------
+# function to generate value boxes on top of pages ----------------------------
 main_value_box <- function(df, df_name){
   tagList(
     bslib::layout_columns(
@@ -137,7 +140,7 @@ main_value_box <- function(df, df_name){
   )
 }
 
-# messages - shownotification ---------------------------------------------
+# messages - shownotification -------------------------------------------------
 msg <- function(TEXT, DURATION = 2){
   showNotification(ui = TEXT, duration = DURATION, type = 'message')
 }
@@ -146,12 +149,12 @@ msg_error <- function(TEXT, DURATION = 2){
   showNotification(ui = TEXT, duration = DURATION, type = 'error')
 }
 
-# is date function --------------------------------------------------------
+# is date function ------------------------------------------------------------
 is_date <- function(x){
   inherits(x, c('Date', 'POSIXt', 'POSIXct', 'POSIXlt'))
 }
 
-# try convert -------------------------------------------------------------
+# try convert -----------------------------------------------------------------
 try_convert <- function(x, fun){
   tryCatch(fun(x),
            error = function(e) rep(NA, x |> length()),
@@ -185,8 +188,79 @@ convert <- function(x, type, date_format = '%Y-%m-%d', date_origin = '1970-01-01
   }
 }
 
-# valid name -------------------------------------------------------------
+# valid name ------------------------------------------------------------------
 is_valid_name <- function(x){
   x == make.names(x)
 }
 
+# gt info ---------------------------------------------------------------------
+
+gt_info <- function(df){
+  setDT(df)
+  df[, f := fcase(
+    class == 'integer', '1',
+    class == 'character', 'a',
+    class == 'numeric', 'calculator',
+    class %in% c('Date', 'POSIXct/POSIXt'), 'calendar',
+    class == 'factor', 'sitemap',
+    class == 'raw', 'sd-card',
+    class == 'complex', 'info')]
+
+  df |>
+    gt() |>
+    fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_nas')) |>
+    fmt_bytes(columns = 'size') |>
+    data_color(columns = 'size', palette = blue_palette) |>
+    data_color(columns = 'min', palette = yl_palette) |>
+    data_color(columns = 'max', palette = pk_palette) |>
+    data_color(columns = 'n_valid', palette = lg_palette) |>
+    data_color(columns = 'perc_valid', palette = lg_palette) |>
+    data_color(columns = 'n_unique', palette = dg_palette) |>
+    data_color(columns = 'perc_unique', palette = dg_palette) |>
+    data_color(columns = 'n_nas', palette = red_palette) |>
+    data_color(columns = 'perc_nas', palette = red_palette) |>
+    fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
+    fmt_number(columns = c('min', 'max')) |>
+    sub_missing() |>
+    opt_interactive(
+      use_filters = T,
+      use_resizers = T,
+      use_highlight = T,
+      use_compact_mode = T,
+      use_text_wrapping = F,
+      use_page_size_select = T
+    ) |>
+    cols_move(columns = 'f', after = 'var') |>
+    fmt_icon(columns = f) |>
+    cols_label(
+      var = 'Variable',
+      type = 'Type',
+      class = 'Class',
+      size = 'Size',
+      min = 'Min',
+      max = 'Max',
+      n_valid = 'Valid',
+      perc_valid = '% Valid',
+      n_unique = 'Unique',
+      perc_unique = '% Unique',
+      n_nas = "NA's",
+      perc_nas = "% NA's",
+      f = ''
+    ) |>
+    cols_width(f ~ px(30)) |>
+    cols_merge(
+      columns = c(class, f),
+      pattern = "{2} {1}"
+    ) |>
+    tab_options(table.background.color = '#ffffff')
+}
+
+
+# palettes --------------------------------------------------------------------
+
+blue_palette <- c('#ffffff', '#096691', '#134359')
+yl_palette <- c('#ffffff', '#ffc107', '#f7a305')
+dg_palette <- c('#ffffff','#1c6561', '#284e4c')
+lg_palette <- c('#ffffff', '#0cb0a8', '#09918b')
+pk_palette <- c('#ffffff', '#bf007f', '#8f0360')
+red_palette <- c('#ffffff', '#b60020', '#750217')

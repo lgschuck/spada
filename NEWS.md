@@ -6,6 +6,29 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
+## 2024.12.27-1
+
+### TO DO
+
+1 - 'Edit' Page > Convert
+
+* on changing the active dataset and a variable is selected an error is rased from data.table (variable does not exist)
+
+### Improvements
+
+1 - function utils
+
+* df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)
+* new function: gt_info to generate metadata with gt package
+* color palettes: new palettes to df_info function
+
+2 - funciton spada
+
+* background color change (from # f2f2f2 to #f9f9f9)
+* change title to Spada
+* change Summary page to Data page
+* gt tables instead of DT datatables
+
 ## 2024.12.25-1
 
 1 - metadata: new unique info in df_info

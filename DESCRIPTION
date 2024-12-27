@@ -15,6 +15,7 @@ Imports:
   data.table (>= 1.16.0),
   dplyr (>= 1.1.4),
   DT (>= 0.33),
+  gt (>= 0.11.1),
   shiny (>= 1.9.1)
 Encoding: UTF-8
 LazyData: true
