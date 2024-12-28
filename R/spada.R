@@ -17,7 +17,6 @@
 #' @import bslib
 #' @import bsicons
 #' @import DT
-#' @import gt
 #' @importFrom graphics abline hist
 #' @importFrom stats median
 #' @importFrom utils object.size head
@@ -105,11 +104,13 @@ spada <- function(...) {
       "
         /* change color of navbar */
         .navbar {
-          background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #008080);
+          /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #008080);*/
+          /*background: linear-gradient(to right, #0277bd, #0277bd);*/
+          background: #007bb5;
         }
 
         /* change size of nav panel */
-        .nav-link {font-size: 15px; }
+        .nav-link {font-size: 17px; }
 
         body { font-size: 0.9rem; }
 
@@ -120,7 +121,9 @@ spada <- function(...) {
 
         .mini-header {
           color: white;
-          background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #20adc9, #008080);
+          /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #20adc9, #008080);*/
+          /*background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #63a9ca, #7bbfce);*/
+          background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #5fa3c2, #4e96b6);
         }
 
         .btn-task {
@@ -156,7 +159,6 @@ spada <- function(...) {
     page_navbar(
       id = 'navbar',
       theme = bs_theme(
-        # bg = '#f9f9f9',
         bg = '#f9f9f9',
         fg = '#000000',
         primary = '#02517d',
@@ -244,7 +246,7 @@ spada <- function(...) {
                          value = textOutput('pD_var_biggest_size'),
                          showcase = bs_icon('sd-card'),
                          theme = 'bg-gradient-teal-indigo',
-                         p(textOutput('pD_var_biggest_size_size', inline = T), 'kB')
+                         p(textOutput('pD_var_biggest_size_size', inline = T), 'Bytes')
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top')
                      )
                    )
@@ -252,7 +254,6 @@ spada <- function(...) {
                  nav_panel(
                   'Metadata',
                   card_body(
-                    # DTOutput('pD_metadata_t'),
                     gt_output('pD_metadata_gt'),
                   )
                 ),
@@ -354,7 +355,6 @@ spada <- function(...) {
                        card(
                          card_header('Preview', class = 'mini-header'),
                          card_body(
-                           # DTOutput('pE_convert_preview_t1'),
                            gt_output('pE_convert_preview_gt1')),
                          card_footer(btn_task('pE_convert_btn_preview_sample',
                                               'Show new sample', icon('rotate-right')))
@@ -482,10 +482,10 @@ spada <- function(...) {
                     layout_columns(
                       col_widths = c(8, 2, 2),
                       radioButtons('pA_radio_dist_plot', 'Plot type:',
-                                   c('Dots' = 'dots',
-                                     'Histogram' = 'hist',
+                                   c('Histogram' = 'hist',
                                      'Boxplot' = 'boxplot',
                                      'Boxplot by Groups' = 'boxplot_group',
+                                     'Dots' = 'dots',
                                      'Barplot' = 'barplot'), inline = T),
                       numericInput('pA_var_percentile', 'Percentile', 50, 0, 100, 5),
                       numericInput('pA_bins', 'Bins', 10, 5, step = 10) |>
@@ -536,9 +536,8 @@ spada <- function(...) {
                       card_footer(
                         layout_column_wrap(
                           radioButtons('pA_radio_lm_resid', 'Plot type:',
-                                       c('Dots' = 'dots',
-                                         'Histogram' = 'hist',
-                                         'Boxplot' = 'boxplot'), inline = T),
+                                       c('Histogram' = 'hist', 'Boxplot' = 'boxplot',
+                                         'Dots' = 'dots'), inline = T),
                           btn_task('pA_btn_lm_resid', 'Plot residuals', icon('chart-simple')))
                       )
                     ),
@@ -549,7 +548,6 @@ spada <- function(...) {
                   'Stats',
                   full_screen = T,
                   card_body(
-                    # DTOutput('pA_t1'),
                     gt_output('pA_gt1')),
                   card_footer(numericInput('pA_t1_digits', 'Digits', 2, 0, 9, 1))
                 )
@@ -559,8 +557,24 @@ spada <- function(...) {
         )
       ),
 
-      # page exit -------------------------------------------------------------
       nav_spacer(),
+      # page config -----------------------------------------------------------
+      nav_panel(
+        value = 'config',
+        title = 'Config',
+        icon = bs_icon('sliders2'),
+        card(style = 'background-color: #02517d;',
+          card(
+            card_body(
+              h2('Config'),
+              selectInput('pC_sel_palette', 'Select colors for plots',
+                          c('Palette 1' = 1, 'Palette 2' = 2, 'Palette 3' = 3)),
+              fluidRow(column(3, plotOutput('pC_sample_plot')))
+            )
+          )
+        )
+      ),
+      # page exit -------------------------------------------------------------
       nav_panel(
         value = 'exit',
         title = 'Exit',
@@ -573,7 +587,8 @@ spada <- function(...) {
   # Server
   ### ===================================================================== ###
   server <- function(input, output, session) {
-    # original data
+
+    # data --------------------------------------------------------------------
     datasets_react <- reactiveValues(data = lapply(datasets, setDT))
 
     # inicialize with the first dataset informed
@@ -585,6 +600,25 @@ spada <- function(...) {
 
     gc()
     df_active_names <- reactive(df$df_active |> names())
+
+    # palettes ----------------------------------------------------------------
+
+    palette <- reactive({
+      if(input$pC_sel_palette == 1){
+        list('fill' = 'steelblue2', 'line' = 'sienna2')
+      } else if (input$pC_sel_palette == 2){
+        list('fill' = 'cyan3', 'line' = 'red3')
+      } else if (input$pC_sel_palette == 3){
+        list('fill' = 'hotpink3', 'line' = 'mediumseagreen')
+      }
+    })
+
+    output$pC_sample_plot <- renderPlot({
+      req(palette())
+      hist(sample.int(100, 30), col = palette()[['fill']],
+           xlab = '', ylab = '', main = '')
+      abline(h = 5, col = palette()[['line']], lwd = 3)
+    }) |> bindCache(palette())
 
     # main value boxes --------------------------------------------------------
     main_value_box_active <- reactive(main_value_box(df$df_active, df$df_active_name))
@@ -599,37 +633,11 @@ spada <- function(...) {
       df_info(df$df_active)
     })
 
-    # output$pD_metadata_t <- renderDT(
-    #   df_metadata() |> df_info_print()
-    # )
-
     output$pD_metadata_gt <- render_gt(
       df_metadata() |> gt_info()
     )
 
     # overview -----------------------
-    output$pD_over_t <- renderDT(
-      {
-        req(input$pD_over_size_sample)
-        pD_over_n_show <- max(1, input$pD_over_size_sample)
-        pD_over_n_show <- min(pD_over_n_show, nrow(df$df_active))
-
-        if(input$pD_over_radio_sample == 'first'){
-          pD_over_idx <- 1:pD_over_n_show
-        } else if (input$pD_over_radio_sample == 'sample'){
-          pD_over_idx <- sample.int(nrow(df$df_active), pD_over_n_show, replace = F)
-        }
-
-        df$df_active[pD_over_idx, ] |>
-          datatable(
-            extensions = 'ColReorder',
-            rownames = F, #style = 'default', class = 'cell-border stripe',
-            options = list(dom = 'Bftp', pageLength = 8, colReorder = T,
-                           columnDefs = list(list(targets = '_all', className = 'dt-right')))
-          )
-      }
-    )
-
     output$pD_over_gt <- render_gt(
       {
         req(input$pD_over_size_sample)
@@ -643,6 +651,8 @@ spada <- function(...) {
         }
 
         df$df_active[pD_over_idx, ] |>
+          lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
+          as.data.frame() |>
           gt() |>
           opt_interactive(
             use_filters = T,
@@ -719,7 +729,7 @@ spada <- function(...) {
     )
 
     output$pD_var_biggest_size_size <- renderText(
-      df_metadata() |> arrange(-size) |> head(1) |> pull(size) |> round(2)
+      df_metadata() |> arrange(-size) |> head(1) |> pull(size) |> f_num()
     )
 
     # define active dataset ---------------------------------------------------
@@ -992,7 +1002,6 @@ spada <- function(...) {
     }) |> bindEvent(input$pE_convert_btn_preview_sample)
 
     pE_convert_preview_df <- reactive({
-      invalidateLater(1000, session)
       req(input$pE_convert_vars_sel)
       req(input$pE_convert_sel_format)
 
@@ -1011,15 +1020,6 @@ spada <- function(...) {
                                 date_origin = input$pE_convert_sel_date_origin)]
 
     })
-
-    # output$pE_convert_preview_t1 <- renderDT({
-    #   datatable(pE_convert_preview_df(),
-    #             rownames = F,
-    #             options = list(dom = 'Bt', pageLength = 5,
-    #                            columnDefs = list(
-    #                              list(targets = 0:1, width = '200px', className = 'dt-center')))
-    #   )
-    # })
 
     output$pE_convert_preview_gt1 <- render_gt({
       pE_convert_preview_df() |>
@@ -1218,58 +1218,50 @@ spada <- function(...) {
       } else { NA }
     )
 
-    # render histogram --------------------------------------------------------
+    # render plots ------------------------------------------------------------
     output$pA_g_dist <- renderPlot({
-      if(input$pA_radio_dist_plot == 'hist'){
-        if(!is.numeric(pA_var())){
-          empty_plot('Value must be numeric')
-        } else {
-          hist(pA_var(),
-               col = 'steelblue2',
-               breaks = input$pA_bins,
-               main = '',
-               xlab = '',
-               ylab = 'Count')
-          abline(v = pA_var_percentile(), col = 'brown3')
-        }
-      } else if (input$pA_radio_dist_plot == 'boxplot'){
-        if(!is.numeric(pA_var())){
-          empty_plot('Value must be numeric')
-        } else {
-          boxplot(pA_var(), horizontal = T, col = 'steelblue2')
-          abline(v = pA_var_percentile(), col = 'brown3')
-        }
-      } else if (input$pA_radio_dist_plot == 'boxplot_group'){
-        if(!is.numeric(pA_var())){
-          empty_plot('Value must be numeric')
-        } else {
-          if((unique(pA_var2()) |> length()) > 5){
-            empty_plot('Too many groups (max 5)')
-          } else {
-            pA_g_dist_boxg_col <- colors()[sample.int(
-              colors() |> length(), unique(pA_var2()) |> length(), replace = F)]
+      if (input$pA_radio_dist_plot == 'barplot'){
+        validate(need(!is.numeric(pA_var()), 'Var can not be numeric'))
+        barplot(table(pA_var()), col = palette()[['fill']])
+      } else {
+        validate(need(is.numeric(pA_var()), 'Var must be numeric'))
 
-            boxplot(pA_var() ~ pA_var2(), horizontal = T,
-                    col = pA_g_dist_boxg_col, xlab = '', ylab = '')
-            abline(v = pA_var_percentile(), col = 'brown3')
+        if (input$pA_radio_dist_plot == 'boxplot_group'){
+          validate(
+            need((unique(pA_var2()) |> length()) <= 7, 'Too many groups (max 7)'))
+
+          pA_g_dist_boxg_col <- colors()[sample.int(
+            colors() |> length(), unique(pA_var2()) |> length(), replace = F)]
+
+          boxplot(pA_var() ~ pA_var2(), horizontal = T,
+                  col = pA_g_dist_boxg_col, xlab = '', ylab = '')
+          abline(v = pA_var_percentile(), col = palette()[['line']])
+        } else {
+          validate(
+            need(isTruthy(input$pA_var_percentile)
+                 && between(input$pA_var_percentile, 0, 100), 'Percentile must be between 0 and 100')
+          )
+
+          if(input$pA_radio_dist_plot == 'hist'){
+            validate(need(input$pA_bins > 0, 'Bins must be 1 or higher'))
+            hist(pA_var(),
+                 col = palette()[['fill']],
+                 breaks = input$pA_bins,
+                 main = '',
+                 xlab = '',
+                 ylab = 'Count')
+            abline(v = pA_var_percentile(), col = palette()[['line']], lwd = 2)
+          } else if (input$pA_radio_dist_plot == 'boxplot'){
+            boxplot(pA_var(), horizontal = T, col = palette()[['fill']])
+            abline(v = pA_var_percentile(), col = palette()[['line']], lwd = 2)
+          } else if (input$pA_radio_dist_plot == 'dots'){
+            plot(pA_var(), col = palette()[['fill']], ylab = 'Values', pch = 19)
+            abline(h = pA_var_percentile(), col = palette()[['line']], lwd = 2)
           }
-        }
-      } else if (input$pA_radio_dist_plot == 'dots'){
-        if(!is.numeric(pA_var())){
-          empty_plot('Value must be numeric')
-        } else {
-          plot(pA_var(), col = 'steelblue2', ylab = 'Values')
-          abline(h = pA_var_percentile(), col = 'brown3')
-        }
-      } else if (input$pA_radio_dist_plot == 'barplot'){
-        if(!is.numeric(pA_var())){
-          barplot(table(pA_var()), col = 'steelblue2')
-        } else {
-          empty_plot('Value can not be numeric')
         }
       }
     }) |> bindCache(pA_var(), pA_var2(), input$pA_radio_dist_plot, input$pA_bins,
-                    input$pA_var_percentile)
+                    input$pA_var_percentile, palette())
     # render scatter plot -----------------------------------------------------
     output$pA_g_scatter <- renderPlot({
       if (input$pA_scatter_lm &
@@ -1279,15 +1271,16 @@ spada <- function(...) {
           pA_var2(),
           pA_var(),
           type = 'p',
-          col = 'steelblue2',
+          col = palette()[['fill']],
           xlab = input$pA_sel_vars2,
           ylab = input$pA_sel_vars
         )
         lines(
           pA_linear_model$x,
           pA_linear_model$y,
-          col = 'brown3',
-          lty = 'dotdash'
+          col = palette()[['line']],
+          lty = 'dotdash',
+          lwd = 2
         )
         mtext(paste('Adjusted R Squared:',
                     summary(pA_linear_model$model)$r.squared |> round(4)),
@@ -1297,7 +1290,7 @@ spada <- function(...) {
           pA_var2(),
           pA_var(),
           type = 'p',
-          col = 'steelblue2',
+          col = palette()[['fill']],
           xlab = input$pA_sel_vars2,
           ylab = input$pA_sel_vars
         )
@@ -1388,25 +1381,23 @@ spada <- function(...) {
 
     # plot linear model residuals ---------------------------------------------
     output$pA_g_lm_resid <- renderPlot({
+      validate(need(isTruthy(pA_linear_model$model), 'No residuals to plot'))
 
-      if(!isTruthy(pA_linear_model$model)){
-        empty_plot('No residuals to plot')
-      } else {
         if(input$pA_radio_lm_resid == 'hist'){
           hist(pA_linear_model$model$residuals,
-               col = 'steelblue2',
+               col = palette()[['fill']],
                main = '',
                xlab = '',
                ylab = 'Count')
         } else if (input$pA_radio_lm_resid == 'boxplot'){
           boxplot(pA_linear_model$model$residuals,
-                  horizontal = T, col = 'steelblue2')
+                  horizontal = T, col = palette()[['fill']])
         } else if (input$pA_radio_lm_resid == 'dots'){
-          plot(pA_linear_model$model$residuals, col = 'steelblue2',
-               ylab = 'Residuals')
-          abline(h = 0, col = 'brown3', lty = 'dotdash')
+          plot(pA_linear_model$model$residuals, col = palette()[['fill']],
+               ylab = 'Residuals', pch = 19)
+          abline(h = 0, col = palette()[['line']], lty = 'dotdash', lwd = 2)
         }
-      }
+      # }
     }) |> bindEvent(input$pA_btn_lm_resid)
 
     # metrics -----------------------------------------------------------------
@@ -1460,26 +1451,23 @@ spada <- function(...) {
       )
     )
 
-    # output$pA_t1 <- renderDT(
-    #   pA_t1() |>
-    #     datatable(
-    #       options = list(dom = 'B', pageLength = 20, ordering = F),
-    #       rownames = F,
-    #       colnames = NULL
-    #     ) |>
-    #     formatCurrency('value', digits = input$pA_t1_digits, currency = '')
-    # )
+    output$pA_gt1 <- render_gt({
 
-    output$pA_gt1 <- render_gt(
+      validate(
+        need(
+          isTruthy(input$pA_var_percentile) && between(input$pA_var_percentile, 0, 100),
+          'Percentile must be between 0 and 100'))
+
       pA_t1() |>
         gt() |>
+        sub_missing() |>
         opt_interactive(use_pagination = F,
                         use_highlight = T,
                         use_compact_mode = T) |>
         cols_label(var = 'Measure', value = 'Value') |>
         fmt_number(decimals = input$pA_t1_digits) |>
         tab_options(table.background.color = '#ffffff')
-    )
+    })
 
     # exit app event ----------------------------------------------------------
     observe({

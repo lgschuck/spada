@@ -18,7 +18,6 @@ import(DT)
 import(bsicons)
 import(bslib)
 import(data.table)
-import(gt)
 import(shiny, except = c(dataTableOutput, renderDataTable))
 
 importFrom(data.table,fcase)

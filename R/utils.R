@@ -111,29 +111,29 @@ main_value_box <- function(df, df_name){
         title = 'Active Dataset',
         value = df_name,
         showcase = bsicons::bs_icon('file-binary'),
-        theme = 'bg-gradient-blue-indigo',
+        theme = 'light',
         class = 'main-value-box'
       ),
       bslib::value_box(
         title = 'Rows / Columns',
-        value = paste(nrow(df) |> f_num(dec = '.', big = ','), '/',
+        value = paste(nrow(df) |> f_num(dec = '.', big = ',', dig = 3), '/',
                       ncol(df) |> f_num(dec = '.', big = ',')),
         showcase = bsicons::bs_icon('layout-text-sidebar-reverse'),
-        theme = 'bg-gradient-blue-indigo',
+        theme = 'light',
         class = 'main-value-box'
       ),
       bslib::value_box(
         title = "Columns with NA's",
         value = sum(colSums(is.na(df)) > 0),
         showcase = bsicons::bs_icon("database-x"),
-        theme = 'bg-gradient-blue-indigo',
+        theme = 'light',
         class = 'main-value-box'
       ),
       bslib::value_box(
         title = 'Size (MB)',
         value = (object.size(df) / 2^20) |> as.numeric() |> round(2),
         showcase = bsicons::bs_icon('sd-card'),
-        theme = 'bg-gradient-blue-indigo',
+        theme = 'light',
         class = 'main-value-box'
       )
     )

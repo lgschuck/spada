@@ -6,7 +6,6 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-## 2024.12.27-1
 
 ### TO DO
 
@@ -14,19 +13,51 @@ editor_options:
 
 * on changing the active dataset and a variable is selected an error is rased from data.table (variable does not exist)
 
+## 2024.12.27-1
+
+### Bug Fixes
+
+1 - gt cannot show complex in opt_interactive, now convert to char before apply gt function
+
+### Improvements
+
+1 - function utils
+
+* change color in value boxes (to **gray**) for better looking
+
+* number of rows (value box) now with **decimals**
+
+2 - funciton spada
+
+* **Visual changes**: many visual changes (still in search for an identity)
+
+*	**Analysis page**: change order of plots, because the dot plot took to long to load (histogram way quicker)
+*	**Analysis page**: insertion of **validates** in plots and table of stats
+
+* new **Config page** with options of colors (plots)
+
+* value box **Var with biggest size**, now showing formatted number and the 'Bytes' word
+
+## 2024.12.26-1
+
 ### Improvements
 
 1 - function utils
 
 * df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)
+
 * new function: gt_info to generate metadata with gt package
+
 * color palettes: new palettes to df_info function
 
 2 - funciton spada
 
 * background color change (from # f2f2f2 to #f9f9f9)
+
 * change title to Spada
+
 * change Summary page to Data page
+
 * gt tables instead of DT datatables
 
 ## 2024.12.25-1
