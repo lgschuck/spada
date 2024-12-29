@@ -207,22 +207,22 @@ gt_info <- function(df){
     class == 'complex', 'info')]
 
   df |>
-    gt() |>
-    fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_nas')) |>
-    fmt_bytes(columns = 'size') |>
-    data_color(columns = 'size', palette = blue_palette) |>
-    data_color(columns = 'min', palette = yl_palette) |>
-    data_color(columns = 'max', palette = pk_palette) |>
-    data_color(columns = 'n_valid', palette = lg_palette) |>
-    data_color(columns = 'perc_valid', palette = lg_palette) |>
-    data_color(columns = 'n_unique', palette = dg_palette) |>
-    data_color(columns = 'perc_unique', palette = dg_palette) |>
-    data_color(columns = 'n_nas', palette = red_palette) |>
-    data_color(columns = 'perc_nas', palette = red_palette) |>
-    fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
-    fmt_number(columns = c('min', 'max')) |>
-    sub_missing() |>
-    opt_interactive(
+    gt::gt() |>
+    gt::fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_nas')) |>
+    gt::fmt_bytes(columns = 'size') |>
+    gt::data_color(columns = 'size', palette = blue_palette) |>
+    gt::data_color(columns = 'min', palette = yl_palette) |>
+    gt::data_color(columns = 'max', palette = pk_palette) |>
+    gt::data_color(columns = 'n_valid', palette = lg_palette) |>
+    gt::data_color(columns = 'perc_valid', palette = lg_palette) |>
+    gt::data_color(columns = 'n_unique', palette = dg_palette) |>
+    gt::data_color(columns = 'perc_unique', palette = dg_palette) |>
+    gt::data_color(columns = 'n_nas', palette = red_palette) |>
+    gt::data_color(columns = 'perc_nas', palette = red_palette) |>
+    gt::fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
+    gt::fmt_number(columns = c('min', 'max')) |>
+    gt::sub_missing() |>
+    gt::opt_interactive(
       use_filters = T,
       use_resizers = T,
       use_highlight = T,
@@ -230,9 +230,9 @@ gt_info <- function(df){
       use_text_wrapping = F,
       use_page_size_select = T
     ) |>
-    cols_move(columns = 'f', after = 'var') |>
-    fmt_icon(columns = f) |>
-    cols_label(
+    gt::cols_move(columns = 'f', after = 'var') |>
+    gt::fmt_icon(columns = f) |>
+    gt::cols_label(
       var = 'Variable',
       type = 'Type',
       class = 'Class',
@@ -247,12 +247,12 @@ gt_info <- function(df){
       perc_nas = "% NA's",
       f = ''
     ) |>
-    cols_width(f ~ px(30)) |>
-    cols_merge(
+    gt::cols_width(f ~ px(30)) |>
+    gt::cols_merge(
       columns = c(class, f),
       pattern = "{2} {1}"
     ) |>
-    tab_options(table.background.color = '#ffffff')
+    gt::tab_options(table.background.color = '#ffffff')
 }
 
 

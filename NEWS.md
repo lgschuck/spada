@@ -6,14 +6,19 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-
 ### TO DO
 
 1 - 'Edit' Page > Convert
 
 * on changing the active dataset and a variable is selected an error is rased from data.table (variable does not exist)
 
-## 2024.12.27-1
+## 2024.12.29-1
+
+### Improvements
+
+1 - New functionality: **copy dataset** (Data page)
+2 - **Config** page now is a module
+3 - New Some reactives now with bindCache
 
 ### Bug Fixes
 

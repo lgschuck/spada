@@ -17,6 +17,7 @@
 #' @import bslib
 #' @import bsicons
 #' @import DT
+#' @import gt
 #' @importFrom graphics abline hist
 #' @importFrom stats median
 #' @importFrom utils object.size head
@@ -169,7 +170,7 @@ spada <- function(...) {
       title = 'Spada',
       bg = '#02517d',
 
-      # page summary ----------------------------------------------------------
+      # page data -------------------------------------------------------------
       nav_panel(
         'Data',
         icon = bs_icon('info-square-fill'),
@@ -277,7 +278,7 @@ spada <- function(...) {
                      layout_column_wrap(
                       btn_task('pD_data_btn_new_name', 'Rename dataset'),
                       btn_task('pD_data_btn_active', 'Make dataset Active'),
-                      # btn_task('pD_data_btn_copy_dataset', 'Copy dataset'),
+                      btn_task('pD_data_btn_copy_dataset', 'Copy dataset'),
                       # btn_task('pD_data_btn_delete_dataset', 'Delete dataset'),
                      ),
                    )),
@@ -559,21 +560,8 @@ spada <- function(...) {
 
       nav_spacer(),
       # page config -----------------------------------------------------------
-      nav_panel(
-        value = 'config',
-        title = 'Config',
-        icon = bs_icon('sliders2'),
-        card(style = 'background-color: #02517d;',
-          card(
-            card_body(
-              h2('Config'),
-              selectInput('pC_sel_palette', 'Select colors for plots',
-                          c('Palette 1' = 1, 'Palette 2' = 2, 'Palette 3' = 3)),
-              fluidRow(column(3, plotOutput('pC_sample_plot')))
-            )
-          )
-        )
-      ),
+      page_config_ui('pC'),
+
       # page exit -------------------------------------------------------------
       nav_panel(
         value = 'exit',
@@ -587,7 +575,6 @@ spada <- function(...) {
   # Server
   ### ===================================================================== ###
   server <- function(input, output, session) {
-
     # data --------------------------------------------------------------------
     datasets_react <- reactiveValues(data = lapply(datasets, setDT))
 
@@ -601,25 +588,6 @@ spada <- function(...) {
     gc()
     df_active_names <- reactive(df$df_active |> names())
 
-    # palettes ----------------------------------------------------------------
-
-    palette <- reactive({
-      if(input$pC_sel_palette == 1){
-        list('fill' = 'steelblue2', 'line' = 'sienna2')
-      } else if (input$pC_sel_palette == 2){
-        list('fill' = 'cyan3', 'line' = 'red3')
-      } else if (input$pC_sel_palette == 3){
-        list('fill' = 'hotpink3', 'line' = 'mediumseagreen')
-      }
-    })
-
-    output$pC_sample_plot <- renderPlot({
-      req(palette())
-      hist(sample.int(100, 30), col = palette()[['fill']],
-           xlab = '', ylab = '', main = '')
-      abline(h = 5, col = palette()[['line']], lwd = 3)
-    }) |> bindCache(palette())
-
     # main value boxes --------------------------------------------------------
     main_value_box_active <- reactive(main_value_box(df$df_active, df$df_active_name))
 
@@ -627,7 +595,7 @@ spada <- function(...) {
     output$pE_value_box <- renderUI({ main_value_box_active() })
     output$pA_value_box <- renderUI({ main_value_box_active() })
 
-    # summary page events -----------------------------------------------------
+    # data page events -----------------------------------------------------
     df_metadata <- reactive({
       pE_convert_trigger()
       df_info(df$df_active)
@@ -746,12 +714,14 @@ spada <- function(...) {
 
       df$df_active_name <- input$pD_data_sel_df
 
+      msg(paste('Dataset', df$df_active_name, 'is the active one'))
+
     }) |> bindEvent(input$pD_data_btn_active)
 
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) |
           input$pD_data_txt_new_name %in% names(datasets_react$data)){
-        msg('New name is not valid or in use')
+        msg_error('New name is not valid or already in use')
 
       } else {
         names(datasets_react$data)[names(datasets_react$data) == input$pD_data_sel_df] <- input$pD_data_txt_new_name
@@ -765,9 +735,15 @@ spada <- function(...) {
 
     }) |> bindEvent(input$pD_data_btn_new_name)
 
-    # observe({
-
-    # }) |> bindEvent(input$pD_data_btn_copy_dataset)
+    observe({
+      if(!is_valid_name(input$pD_data_txt_new_name) ||
+         (input$pD_data_txt_new_name %in% names(datasets_react$data))){
+        msg_error('Name invalid or already in use')
+      } else {
+        datasets_react$data[[ input$pD_data_txt_new_name ]] <- df$df_active
+        msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
+      }
+    }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
     # observe({
 
@@ -1216,13 +1192,13 @@ spada <- function(...) {
       if(is.numeric(pA_var())){
         pn(pA_var(), input$pA_var_percentile / 100)
       } else { NA }
-    )
+    ) |> bindCache(pA_var(), input$pA_var_percentile)
 
     # render plots ------------------------------------------------------------
     output$pA_g_dist <- renderPlot({
       if (input$pA_radio_dist_plot == 'barplot'){
         validate(need(!is.numeric(pA_var()), 'Var can not be numeric'))
-        barplot(table(pA_var()), col = palette()[['fill']])
+        barplot(table(pA_var()), col = color_fill())
       } else {
         validate(need(is.numeric(pA_var()), 'Var must be numeric'))
 
@@ -1235,7 +1211,7 @@ spada <- function(...) {
 
           boxplot(pA_var() ~ pA_var2(), horizontal = T,
                   col = pA_g_dist_boxg_col, xlab = '', ylab = '')
-          abline(v = pA_var_percentile(), col = palette()[['line']])
+          abline(v = pA_var_percentile(), col = color_line())
         } else {
           validate(
             need(isTruthy(input$pA_var_percentile)
@@ -1245,23 +1221,23 @@ spada <- function(...) {
           if(input$pA_radio_dist_plot == 'hist'){
             validate(need(input$pA_bins > 0, 'Bins must be 1 or higher'))
             hist(pA_var(),
-                 col = palette()[['fill']],
+                 col = color_fill(),
                  breaks = input$pA_bins,
                  main = '',
                  xlab = '',
                  ylab = 'Count')
-            abline(v = pA_var_percentile(), col = palette()[['line']], lwd = 2)
+            abline(v = pA_var_percentile(), col = color_line(), lwd = 2)
           } else if (input$pA_radio_dist_plot == 'boxplot'){
-            boxplot(pA_var(), horizontal = T, col = palette()[['fill']])
-            abline(v = pA_var_percentile(), col = palette()[['line']], lwd = 2)
+            boxplot(pA_var(), horizontal = T, col = color_fill())
+            abline(v = pA_var_percentile(), col = color_line(), lwd = 2)
           } else if (input$pA_radio_dist_plot == 'dots'){
-            plot(pA_var(), col = palette()[['fill']], ylab = 'Values', pch = 19)
-            abline(h = pA_var_percentile(), col = palette()[['line']], lwd = 2)
+            plot(pA_var(), col = color_fill(), ylab = 'Values', pch = 19)
+            abline(h = pA_var_percentile(), col = color_line(), lwd = 2)
           }
         }
       }
     }) |> bindCache(pA_var(), pA_var2(), input$pA_radio_dist_plot, input$pA_bins,
-                    input$pA_var_percentile, palette())
+                    input$pA_var_percentile, color_fill(), color_line())
     # render scatter plot -----------------------------------------------------
     output$pA_g_scatter <- renderPlot({
       if (input$pA_scatter_lm &
@@ -1271,14 +1247,14 @@ spada <- function(...) {
           pA_var2(),
           pA_var(),
           type = 'p',
-          col = palette()[['fill']],
+          col = color_fill(),
           xlab = input$pA_sel_vars2,
           ylab = input$pA_sel_vars
         )
         lines(
           pA_linear_model$x,
           pA_linear_model$y,
-          col = palette()[['line']],
+          col = color_line(),
           lty = 'dotdash',
           lwd = 2
         )
@@ -1290,7 +1266,7 @@ spada <- function(...) {
           pA_var2(),
           pA_var(),
           type = 'p',
-          col = palette()[['fill']],
+          col = color_fill(),
           xlab = input$pA_sel_vars2,
           ylab = input$pA_sel_vars
         )
@@ -1305,7 +1281,9 @@ spada <- function(...) {
       pA_var2(),
       pA_var(),
       pA_linear_model$x,
-      pA_linear_model$y
+      pA_linear_model$y,
+      color_fill(),
+      color_line()
     ) |> bindEvent(input$pA_btn_scatter)
 
     # tables ------------------------------------------------------------------
@@ -1315,7 +1293,10 @@ spada <- function(...) {
       } else if (input$pA_table_type == '2d'){
         table(pA_var(), pA_var2())
       }
-    )
+    )|> bindCache(
+      pA_var(),
+      pA_var2(),
+      input$pA_table_type)
 
     # linear model ------------------------------------------------------------
     pA_linear_model <- reactiveValues(
@@ -1381,21 +1362,22 @@ spada <- function(...) {
 
     # plot linear model residuals ---------------------------------------------
     output$pA_g_lm_resid <- renderPlot({
+
       validate(need(isTruthy(pA_linear_model$model), 'No residuals to plot'))
 
         if(input$pA_radio_lm_resid == 'hist'){
           hist(pA_linear_model$model$residuals,
-               col = palette()[['fill']],
+               col = color_fill(),
                main = '',
                xlab = '',
                ylab = 'Count')
         } else if (input$pA_radio_lm_resid == 'boxplot'){
           boxplot(pA_linear_model$model$residuals,
-                  horizontal = T, col = palette()[['fill']])
+                  horizontal = T, col = color_fill())
         } else if (input$pA_radio_lm_resid == 'dots'){
-          plot(pA_linear_model$model$residuals, col = palette()[['fill']],
+          plot(pA_linear_model$model$residuals, col = color_fill(),
                ylab = 'Residuals', pch = 19)
-          abline(h = 0, col = palette()[['line']], lty = 'dotdash', lwd = 2)
+          abline(h = 0, col = color_line(), lty = 'dotdash', lwd = 2)
         }
       # }
     }) |> bindEvent(input$pA_btn_lm_resid)
@@ -1452,7 +1434,6 @@ spada <- function(...) {
     )
 
     output$pA_gt1 <- render_gt({
-
       validate(
         need(
           isTruthy(input$pA_var_percentile) && between(input$pA_var_percentile, 0, 100),
@@ -1461,13 +1442,21 @@ spada <- function(...) {
       pA_t1() |>
         gt() |>
         sub_missing() |>
+        cols_label(var = 'Measure', value = 'Value') |>
+        fmt_number(decimals = input$pA_t1_digits) |>
         opt_interactive(use_pagination = F,
                         use_highlight = T,
                         use_compact_mode = T) |>
-        cols_label(var = 'Measure', value = 'Value') |>
-        fmt_number(decimals = input$pA_t1_digits) |>
         tab_options(table.background.color = '#ffffff')
-    })
+    }) |> bindCache(
+      input$pA_t1_digits,
+      pA_t1()
+    )
+
+    # config events -----------------------------------------------------------
+    mod_pC <- page_config_server('pC')
+    color_fill <- reactive(mod_pC$palette()[['fill']])
+    color_line <- reactive(mod_pC$palette()[['line']])
 
     # exit app event ----------------------------------------------------------
     observe({
