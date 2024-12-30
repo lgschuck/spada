@@ -1,6 +1,7 @@
 
 # ui --------------------------------------------------------------------------
 page_config_ui <- function(id) {
+  ns <- NS(id)
   nav_panel(
     value = 'config',
     title = 'Config',
@@ -9,7 +10,7 @@ page_config_ui <- function(id) {
       card_body(
         h2('Config'),
         selectInput(
-          NS(id, 'sel_palette'),
+          ns('sel_palette'),
           'Select colors for plots',
           c(
             'Palette 1' = 1,
@@ -18,7 +19,7 @@ page_config_ui <- function(id) {
           )
         ),
         fluidRow(column(3, plotOutput(
-          NS(id, 'sample_plot')
+          ns('sample_plot')
         )))
       )
     ))

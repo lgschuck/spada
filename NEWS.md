@@ -8,6 +8,28 @@ editor_options:
 
 ## TO DO
 
+## 2024.12.30-1
+
+### Improvements
+
+1 - General
+
+* Created **zzz.R** and inserted utils::globalVariables for global variables (check note)
+
+* Value boxes: **resized** to give more space for other elements
+
+2 - utils function
+
+* CSS, js_exit, operators and date formats passed to utils.R
+
+3 - spada function
+
+* new **export_file module** and migration of Export to Data page
+
+* Use of **IQR** to calcule interquartile distance (faster than q3 - q1 manually)
+
+* Buttons of Edit page to backup now with new ID's (pE_export_ replaced by pE_)
+
 ## 2024.12.29-2
 
 ### Bug Fixes
@@ -18,12 +40,12 @@ editor_options:
 
 ### Improvements
 
-1 - function utils
+1 - utils function
 
 * **dt_info**: now return number and percentage of zeros for each variable
 * **gt_info**: Merge columns with number and percentage values
 
-2 - funciton spada
+2 - function spada
 
 * **Delete dataset**: new functionality to delete a selected dataset (as long as it is not the active)
 * **Icons**: inclusion of icons in Data tab (data page) and trash icon changed to trash-can
@@ -48,7 +70,7 @@ editor_options:
 
 ### Improvements
 
-1 - function utils
+1 - utils function
 
 * change color in value boxes (to **gray**) for better looking
 
@@ -65,11 +87,11 @@ editor_options:
 
 * value box **Var with biggest size**, now showing formatted number and the 'Bytes' word
 
-## 2024.12.26-1
+## 2024.12.27-1
 
 ### Improvements
 
-1 - function utils
+1 - utils function
 
 * df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)
 
@@ -77,7 +99,7 @@ editor_options:
 
 * color palettes: new palettes to df_info function
 
-2 - funciton spada
+2 - spada function
 
 * background color change (from # f2f2f2 to #f9f9f9)
 

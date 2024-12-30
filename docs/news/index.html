@@ -53,6 +53,21 @@
 <h3 id="to-do-0-1-0-9000">TO DO<a class="anchor" aria-label="anchor" href="#to-do-0-1-0-9000"></a></h3>
 </div>
 <div class="section level3">
+<h3 id="id_20241230-0-1-0-9000">2024.12.30-1<a class="anchor" aria-label="anchor" href="#id_20241230-0-1-0-9000"></a></h3>
+<div class="section level4">
+<h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
+<p>1 - General</p>
+<ul><li><p>Created <strong>zzz.R</strong> and inserted utils::globalVariables for global variables (check note)</p></li>
+<li><p>Value boxes: <strong>resized</strong> to give more space for other elements</p></li>
+</ul><p>2 - utils function</p>
+<ul><li>CSS, js_exit, operators and date formats passed to utils.R</li>
+</ul><p>3 - spada function</p>
+<ul><li><p>new <strong>export_file module</strong> and migration of Export to Data page</p></li>
+<li><p>Use of <strong>IQR</strong> to calcule interquartile distance (faster than q3 - q1 manually)</p></li>
+<li><p>Buttons of Edit page to backup now with new ID’s (pE_export_ replaced by pE_)</p></li>
+</ul></div>
+</div>
+<div class="section level3">
 <h3 id="id_20241229-0-1-0-9000">2024.12.29-2<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000"></a></h3>
 <div class="section level4">
 <h4 id="bug-fixes-0-1-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000"></a></h4>
@@ -60,13 +75,13 @@
 <ul><li>on changing the active dataset the selected variable may not exist in the new acive dataset and an error is raised from data.table (variable does not exist). <strong>Fix with if clause testing for presence of var in the active dataset</strong>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
-<p>1 - function utils</p>
+<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
+<p>1 - utils function</p>
 <ul><li>
 <strong>dt_info</strong>: now return number and percentage of zeros for each variable</li>
 <li>
 <strong>gt_info</strong>: Merge columns with number and percentage values</li>
-</ul><p>2 - funciton spada</p>
+</ul><p>2 - function spada</p>
 <ul><li>
 <strong>Delete dataset</strong>: new functionality to delete a selected dataset (as long as it is not the active)</li>
 <li>
@@ -85,7 +100,7 @@
 <div class="section level3">
 <h3 id="id_20241229-0-1-0-9000-1">2024.12.29-1<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000-1"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
+<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
 <p>1 - New functionality: <strong>copy dataset</strong> (Data page)</p>
 <p>2 - <strong>Config</strong> page now is a module</p>
 <p>3 - New Some reactives now with bindCache</p>
@@ -95,8 +110,8 @@
 <p>1 - gt cannot show complex in opt_interactive, now convert to char before apply gt function</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
-<p>1 - function utils</p>
+<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
+<p>1 - utils function</p>
 <ul><li><p>change color in value boxes (to <strong>gray</strong>) for better looking</p></li>
 <li><p>number of rows (value box) now with <strong>decimals</strong></p></li>
 </ul><p>2 - funciton spada</p>
@@ -108,14 +123,14 @@
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="id_20241226-0-1-0-9000">2024.12.26-1<a class="anchor" aria-label="anchor" href="#id_20241226-0-1-0-9000"></a></h3>
+<h3 id="id_20241227-0-1-0-9000">2024.12.27-1<a class="anchor" aria-label="anchor" href="#id_20241227-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
-<p>1 - function utils</p>
+<h4 id="improvements-0-1-0-9000-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-4"></a></h4>
+<p>1 - utils function</p>
 <ul><li><p>df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)</p></li>
 <li><p>new function: gt_info to generate metadata with gt package</p></li>
 <li><p>color palettes: new palettes to df_info function</p></li>
-</ul><p>2 - funciton spada</p>
+</ul><p>2 - spada function</p>
 <ul><li><p>background color change (from # f2f2f2 to #f9f9f9)</p></li>
 <li><p>change title to Spada</p></li>
 <li><p>change Summary page to Data page</p></li>

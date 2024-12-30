@@ -22,7 +22,7 @@
 #' @importFrom stats median
 #' @importFrom utils object.size head
 #' @importFrom graphics boxplot lines barplot mtext text
-#' @importFrom stats cor lm sd var rnorm
+#' @importFrom stats cor lm sd var rnorm IQR
 #' @importFrom grDevices colors
 
 spada <- function(...) {
@@ -45,117 +45,17 @@ spada <- function(...) {
   }
   gc()
 
-  filter_operators <- c('== (Equal)' = '==',
-                        '!= (Not Equal)' = '!=',
-                        '> (Greater)' = '>',
-                        '>= (Greater or Equal)' = '>=',
-                        '< (Less)' = '<',
-                        '<= (Less or Equal)' = '<=',
-                        'Is NA (is.na)' = 'is_na',
-                        'Not NA (! is.na)' = 'not_na',
-                        'In (%in%)' = 'in',
-                        'Not In (! %in%)' = 'not_in',
-                        'Between' = 'between',
-                        'Not Between' = 'not_between')
-
-  date_formats <- c(
-    # hifen
-    'YYYY-MM-DD' = '%Y-%m-%d',
-    'DD-MM-YYY' = '%d-%m-%Y',
-    'MM-DD-YY' = '%m-%d-%y',
-    'YYYY-MMM-DD' = '%Y-%b-%d',
-    'YY-MMM-DD' = '%y-%b-%d',
-    'YY-MM-DD' = '%y-%m-%d',
-    # bars
-    'YYYY/MM/DD' = '%Y/%m/%d',
-    'DD/MM/YYYY' = '%d/%m/%Y',
-    'MM/DD/YY' = '%m/%d/%y',
-    'YYYY/MMM/DD' = '%Y/%b/%d',
-    'YY/MMM/DD' = '%y/%b/%d',
-    'YY/MM/DD' = '%y/%m/%d',
-    # dots
-    'YYYY.MM.DD' = '%Y.%m.%d',
-    'DD.MM.YYYY' = '%d.%m.%Y',
-    'MM.DD.YY' = '%m.%d.%y',
-    'YYYY.MMM.DD' = '%Y.%b.%d',
-    'YY.MMM.DD' = '%y.%b.%d',
-    'YY.MM.DD' = '%y.%m.%d',
-    # no separator
-    'YYYYMMDD' = '%Y%m%d',
-    'DDMMYYYY' = '%d%m%Y',
-    'MMDDYY' = '%m%d%y',
-    'YYYYMMMDD' = '%Y%b%d',
-    'YYMMMDD' = '%y%b%d',
-    'YYMMDD' = '%y%m%d'
-  )
-
-  # close browser tab
-  js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.close();});"
-
   ### ===================================================================== ###
   # UI
   ### ===================================================================== ###
   ui <- tagList(
     useBusyIndicators(),
 
-    tags$head(tags$script(HTML(js_exit))),
+    # close the app
+    tag_js_exit,
 
-    # config style
-    tags$head(tags$style(HTML(
-      "
-        /* change color of navbar */
-        .navbar {
-          /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #008080);*/
-          /*background: linear-gradient(to right, #0277bd, #0277bd);*/
-          background: #007bb5;
-        }
-
-        /* change size of nav panel */
-        .nav-link {font-size: 17px; }
-
-        body { font-size: 0.9rem; }
-
-        .card {
-          border-radius: 0rem;
-          margin: -8px;
-        }
-
-        .mini-header {
-          color: white;
-          /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #20adc9, #008080);*/
-          /*background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #63a9ca, #7bbfce);*/
-          background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #5fa3c2, #4e96b6);
-        }
-
-        .btn-task {
-          color: #0072B2;
-          background-color: #f9f9f9;
-          border-color: #0072B2;
-        }
-
-        .btn-task:hover {
-          background-color: #0072B2;
-          border-color: #0072B2;
-          color: white;
-        }
-
-        /* border rectangular */
-
-        .card, .well {
-         --bs-card-inner-border-radius: 0;
-        }
-
-        .card-body {border-radius: 0rem;}
-
-        .nav-pills {
-          --bs-nav-pills-border-radius: 0rem;
-          --bs-nav-pills-link-active-color: #02517d;
-          /*--bs-nav-pills-link-active-bg: #d5d6d7;*/
-          --bs-nav-pills-link-active-bg: #e3e3e4;
-        }
-
-      "))
-    ),
+    # css style
+    tag_css,
 
     page_navbar(
       id = 'navbar',
@@ -174,12 +74,11 @@ spada <- function(...) {
       nav_panel(
         'Data',
         icon = bs_icon('info-square-fill'),
-        useBusyIndicators(),
         layout_column_wrap(
           width = 1,
-          min_height = '100px',
+          min_height = '65px',
           uiOutput('pD_value_box'),
-          height = '100px'
+          height = '65px'
         ),
 
         card(full_screen = T,
@@ -281,6 +180,8 @@ spada <- function(...) {
                       btn_task('pD_data_btn_delete_dataset', 'Delete dataset', icon('trash-can')),
                      ),
                    )),
+                export_file_ui('pD_export'),
+
                )
              )
         )
@@ -292,9 +193,9 @@ spada <- function(...) {
         icon = bs_icon('funnel'),
         layout_column_wrap(
           width = 1,
-          min_height = '100px',
+          min_height = '65px',
           uiOutput('pE_value_box'),
-          height = '100px'
+          height = '65px'
         ),
         card(full_screen = T,
              card_body(
@@ -404,39 +305,6 @@ spada <- function(...) {
                        )
                      ),
                    ),
-                   nav_panel(
-                     'Export',
-                     layout_column_wrap(
-                       card(
-                         layout_column_wrap(
-                           textInput('pE_export_file_name', 'File name', value = 'dataset'),
-                           radioButtons('pE_export_radio_format', 'File format',
-                                        c('csv', 'RDS', 'RDS Compressed'), inline = T)
-                         ),
-                         conditionalPanel(
-                           condition = "input.pE_export_radio_format == 'csv'",
-                           card(
-                             card_header('Csv Parameters', class = 'mini-header'),
-                             card_body(
-                               checkboxInput('pE_export_x_rownames', 'Save row names'),
-                               layout_column_wrap(
-                                 radioButtons('pE_export_radio_separator', 'Separator',
-                                              c('Comma' = ',', 'Semicolon' = ';'), inline = T),
-                                 radioButtons('pE_export_radio_decimal', 'Decimal Mark',
-                                              c('Dot' = '.', 'Comma' = ','), inline = T)
-                               ),
-                               layout_column_wrap(
-                                 textInput('pE_export_txt_na', 'Missing (NA) substitute', value = ''),
-                                 radioButtons('pE_export_radio_scientific', 'Scientific Notation',
-                                              c('No' = 999999999, 'Allow' = 0), inline = T)
-                               )
-                             )
-                           ),
-                         ),
-                         card_footer(downloadButton('pE_export_down', 'Export Active Dataset', icon('download')))
-                       )
-                     )
-                   )
                  )
                )
              ),
@@ -444,11 +312,11 @@ spada <- function(...) {
                layout_column_wrap(
                  btn_task('pE_btn_reset', 'Reset Dataset', icon('arrow-rotate-right')) |>
                    tooltip('Restore the original dataset to the Active dataset', placement = 'top'),
-                 btn_task('pE_export_btn_bkp', 'Create Backup', icon('cloud-arrow-up')) |>
+                 btn_task('pE_btn_bkp', 'Create Backup', icon('cloud-arrow-up')) |>
                    tooltip('Create a copy of the Active dataset', placement = 'top'),
-                 btn_task('pE_export_btn_restore', 'Restore Backup', icon('cloud-arrow-down')) |>
+                 btn_task('pE_btn_restore', 'Restore Backup', icon('cloud-arrow-down')) |>
                    tooltip('Restore a previously created backup', placement = 'top'),
-                 btn_task('pE_export_btn_clear_bkp', 'Clear Backup', icon('trash-can')) |>
+                 btn_task('pE_btn_clear_bkp', 'Clear Backup', icon('trash-can')) |>
                    tooltip('Erase the backup', placement = 'top'),
                ),
                style = 'background-color: #02517d;')
@@ -461,9 +329,9 @@ spada <- function(...) {
         icon = bs_icon('bar-chart-fill'),
         layout_column_wrap(
           width = 1,
-          min_height = '100px',
+          min_height = '65px',
           uiOutput('pA_value_box'),
-          height = '100px'
+          height = '65px'
         ),
         card(
           full_screen = T,
@@ -769,6 +637,9 @@ spada <- function(...) {
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
+
+    # export ----------------------------------------------------
+    export_file_server('pD_export', reactive(df$df_active))
 
     # edit page events --------------------------------------------------------
 
@@ -1107,7 +978,7 @@ spada <- function(...) {
       df$df_backup <- copy(df$df_active)
       gc()
       msg('Backup created')
-    }) |> bindEvent(input$pE_export_btn_bkp)
+    }) |> bindEvent(input$pE_btn_bkp)
 
     # restore backup ---------------------------
     observe({
@@ -1118,7 +989,7 @@ spada <- function(...) {
         gc()
         msg('Backup restored')
       }
-    }) |> bindEvent(input$pE_export_btn_restore)
+    }) |> bindEvent(input$pE_btn_restore)
 
     # clear backup ---------------------------
     observe({
@@ -1129,36 +1000,7 @@ spada <- function(...) {
         gc()
         msg('Backup cleared')
       }
-    }) |> bindEvent(input$pE_export_btn_clear_bkp)
-
-    # export ----------------------------------------------------
-    output$pE_export_down <- downloadHandler(
-
-      filename = function() {
-        paste(input$pE_export_file_name,
-              if(input$pE_export_radio_format == 'csv'){
-                '.csv'
-              } else if (input$pE_export_radio_format == 'RDS' |
-                         input$pE_export_radio_format == 'RDS Compressed'){
-                '.RDS'
-              })
-      },
-      content = function(file) {
-        if(input$pE_export_radio_format == 'csv'){
-          fwrite(df$df_active, file,
-                 row.names = input$pE_export_x_rownames,
-                 sep = input$pE_export_radio_separator,
-                 dec = input$pE_export_radio_decimal,
-                 na = input$pE_export_txt_na,
-                 scipen = as.integer(input$pE_export_radio_scientific)
-          )
-        } else if (input$pE_export_radio_format == 'RDS'){
-          saveRDS(df$df_active, file, compress = F)
-        } else if (input$pE_export_radio_format == 'RDS Compressed') {
-          saveRDS(df$df_active, file, compress = T)
-        }
-      }
-    )
+    }) |> bindEvent(input$pE_btn_clear_bkp)
 
     # analysis page events ----------------------------------------------------
     var_analysis <- reactive({
@@ -1178,9 +1020,7 @@ spada <- function(...) {
     pA_outliers_index <- reactive({
       v <- df$df_active[[input$pA_sel_vars]]
       if(input$pA_outliers & is.numeric(v)) {
-        q1 <- p25(v)
-        q3 <- p75(v)
-        dist_interquatile <- 1.5 * (q3 - q1)
+        dist_interquatile <- IQR(v, na.rm = T)
         v >= (q1 - dist_interquatile) & v <= (q3 + dist_interquatile)
       } else {
         rep(T, length(v))

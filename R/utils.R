@@ -1,5 +1,122 @@
 
-# info abaout dataset variables -----------------------------------------------
+# list of filters -------------------------------------------------------------
+filter_operators <- c('== (Equal)' = '==',
+                      '!= (Not Equal)' = '!=',
+                      '> (Greater)' = '>',
+                      '>= (Greater or Equal)' = '>=',
+                      '< (Less)' = '<',
+                      '<= (Less or Equal)' = '<=',
+                      'Is NA (is.na)' = 'is_na',
+                      'Not NA (! is.na)' = 'not_na',
+                      'In (%in%)' = 'in',
+                      'Not In (! %in%)' = 'not_in',
+                      'Between' = 'between',
+                      'Not Between' = 'not_between')
+
+# lits of date formats --------------------------------------------------------
+date_formats <- c(
+  # hifen
+  'YYYY-MM-DD' = '%Y-%m-%d',
+  'DD-MM-YYY' = '%d-%m-%Y',
+  'MM-DD-YY' = '%m-%d-%y',
+  'YYYY-MMM-DD' = '%Y-%b-%d',
+  'YY-MMM-DD' = '%y-%b-%d',
+  'YY-MM-DD' = '%y-%m-%d',
+  # bars
+  'YYYY/MM/DD' = '%Y/%m/%d',
+  'DD/MM/YYYY' = '%d/%m/%Y',
+  'MM/DD/YY' = '%m/%d/%y',
+  'YYYY/MMM/DD' = '%Y/%b/%d',
+  'YY/MMM/DD' = '%y/%b/%d',
+  'YY/MM/DD' = '%y/%m/%d',
+  # dots
+  'YYYY.MM.DD' = '%Y.%m.%d',
+  'DD.MM.YYYY' = '%d.%m.%Y',
+  'MM.DD.YY' = '%m.%d.%y',
+  'YYYY.MMM.DD' = '%Y.%b.%d',
+  'YY.MMM.DD' = '%y.%b.%d',
+  'YY.MM.DD' = '%y.%m.%d',
+  # no separator
+  'YYYYMMDD' = '%Y%m%d',
+  'DDMMYYYY' = '%d%m%Y',
+  'MMDDYY' = '%m%d%y',
+  'YYYYMMMDD' = '%Y%b%d',
+  'YYMMMDD' = '%y%b%d',
+  'YYMMDD' = '%y%m%d'
+)
+
+# close browser tab -----------------------------------------------------------
+js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.close();});"
+
+tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
+
+# css ---------------------------------------------------------------------
+
+tag_css <- tags$head(tags$style(HTML(
+  "
+    /* change color of navbar */
+    .navbar {
+      /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #008080);*/
+      /*background: linear-gradient(to right, #0277bd, #0277bd);*/
+      background: #007bb5;
+    }
+
+    /* change size of nav panel */
+    .nav-link {font-size: 17px; }
+
+    body { font-size: 0.9rem; }
+
+    .card {
+      border-radius: 0rem;
+      margin: -8px;
+    }
+
+    .mini-header {
+      color: white;
+      /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #20adc9, #008080);*/
+      /*background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #63a9ca, #7bbfce);*/
+      background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #5fa3c2, #4e96b6);
+    }
+
+    .btn-task {
+      color: #0072B2;
+      background-color: #f9f9f9;
+      border-color: #0072B2;
+    }
+
+    .btn-task:hover {
+      background-color: #0072B2;
+      border-color: #0072B2;
+      color: white;
+    }
+
+    /* border rectangular */
+
+    .card, .well {
+     --bs-card-inner-border-radius: 0;
+    }
+
+    .card-body {border-radius: 0rem;}
+
+    .nav-pills {
+      --bs-nav-pills-border-radius: 0rem;
+      --bs-nav-pills-link-active-color: #02517d;
+      /*--bs-nav-pills-link-active-bg: #d5d6d7;*/
+      --bs-nav-pills-link-active-bg: #e3e3e4;
+    }
+
+    .value-box-title {
+      font-size: 1rem !important;
+    }
+
+    .value-box-value {
+      font-size: 1.5rem !important;
+    }
+
+  "))
+)
+
+# info about dataset variables -----------------------------------------------
 df_info <- function(df){
   rows <- nrow(df)
   n_nas = sapply(df, \(x) length(x[is.na(x)]))
@@ -113,7 +230,7 @@ main_value_box <- function(df, df_name){
       bslib::value_box(
         title = 'Active Dataset',
         value = df_name,
-        showcase = bsicons::bs_icon('file-binary'),
+        showcase = bsicons::bs_icon('file-binary', size = '3rem'),
         theme = 'light',
         class = 'main-value-box'
       ),
@@ -121,21 +238,21 @@ main_value_box <- function(df, df_name){
         title = 'Rows / Columns',
         value = paste(nrow(df) |> f_num(dec = '.', big = ',', dig = 3), '/',
                       ncol(df) |> f_num(dec = '.', big = ',')),
-        showcase = bsicons::bs_icon('layout-text-sidebar-reverse'),
+        showcase = bsicons::bs_icon('layout-text-sidebar-reverse', size = '3rem'),
         theme = 'light',
         class = 'main-value-box'
       ),
       bslib::value_box(
         title = "Columns with NA's",
         value = sum(colSums(is.na(df)) > 0),
-        showcase = bsicons::bs_icon("database-x"),
+        showcase = bsicons::bs_icon('database-x', size = '3rem'),
         theme = 'light',
         class = 'main-value-box'
       ),
       bslib::value_box(
         title = 'Size (MB)',
         value = (object.size(df) / 2^20) |> as.numeric() |> round(2),
-        showcase = bsicons::bs_icon('sd-card'),
+        showcase = bsicons::bs_icon('sd-card', size = '3rem'),
         theme = 'light',
         class = 'main-value-box'
       )
@@ -204,7 +321,8 @@ gt_info <- function(df){
     class == 'integer', '1',
     class == 'character', 'a',
     class == 'numeric', 'calculator',
-    class %in% c('Date', 'POSIXct/POSIXt'), 'calendar',
+    class %in% c('Date', 'POSIXt', 'POSIXct', 'POSIXlt',
+                 'POSIXct/POSIXt', 'POSIXlt/POSIXt'), 'calendar',
     class == 'factor', 'sitemap',
     class == 'raw', 'sd-card',
     class == 'complex', 'info')]
