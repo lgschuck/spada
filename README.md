@@ -35,10 +35,10 @@ if(interactive()){
 
 ## Screenshots
 
-![](images/spada_home.png)
+![](man/figures/spada_home.png)
 
-![](images/spada_metadata.png)
+![](man/figures/spada_metadata.png)
 
-![](images/spada_overview.png)
+![](man/figures/spada_overview.png)
 
-![](images/spada_data.png)
+![](man/figures/spada_data.png)
