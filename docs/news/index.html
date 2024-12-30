@@ -49,23 +49,53 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0.9000" id="spada-0109000-development-version">Spada 0.1.0.9000 (development version)<a class="anchor" aria-label="anchor" href="#spada-0109000-development-version"></a></h2>
-<div class="section level4">
-<h4 id="to-do-0-1-0-9000">TO DO<a class="anchor" aria-label="anchor" href="#to-do-0-1-0-9000"></a></h4>
-<p>1 - ‘Edit’ Page &gt; Convert</p>
-<ul><li>on changing the active dataset and a variable is selected an error is rased from data.table (variable does not exist)</li>
-</ul></div>
 <div class="section level3">
-<h3 id="id_20241229-0-1-0-9000">2024.12.29-1<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000"></a></h3>
-<div class="section level4">
-<h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
-<p>1 - New functionality: <strong>copy dataset</strong> (Data page) 2 - <strong>Config</strong> page now is a module 3 - New Some reactives now with bindCache</p>
+<h3 id="to-do-0-1-0-9000">TO DO<a class="anchor" aria-label="anchor" href="#to-do-0-1-0-9000"></a></h3>
 </div>
+<div class="section level3">
+<h3 id="id_20241229-0-1-0-9000">2024.12.29-2<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000"></a></h3>
 <div class="section level4">
 <h4 id="bug-fixes-0-1-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000"></a></h4>
+<p>1 - ‘Edit’ Page &gt; Convert</p>
+<ul><li>on changing the active dataset the selected variable may not exist in the new acive dataset and an error is raised from data.table (variable does not exist). <strong>Fix with if clause testing for presence of var in the active dataset</strong>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
+<p>1 - function utils</p>
+<ul><li>
+<strong>dt_info</strong>: now return number and percentage of zeros for each variable</li>
+<li>
+<strong>gt_info</strong>: Merge columns with number and percentage values</li>
+</ul><p>2 - funciton spada</p>
+<ul><li>
+<strong>Delete dataset</strong>: new functionality to delete a selected dataset (as long as it is not the active)</li>
+<li>
+<strong>Icons</strong>: inclusion of icons in Data tab (data page) and trash icon changed to trash-can</li>
+<li>
+<strong>Convert</strong>: change renderUi for conditionalPanel to convert to Date variables</li>
+<li>
+<strong>Analysis - Bins</strong>: bins now inside conditionalPanel and layout_colums substituted by fluidRow for better look</li>
+<li>
+<strong>Analysis - Boxplot by group</strong>: removed validate to max number of groups</li>
+<li>
+<strong>stopApp</strong>: now app stops when the browser tab is closed. <a href="https://github.com/daattali/advanced-shiny/tree/master/auto-kill-app" class="external-link">Auto kill - Dean Attali</a>
+</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="id_20241229-0-1-0-9000-1">2024.12.29-1<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000-1"></a></h3>
+<div class="section level4">
+<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
+<p>1 - New functionality: <strong>copy dataset</strong> (Data page)</p>
+<p>2 - <strong>Config</strong> page now is a module</p>
+<p>3 - New Some reactives now with bindCache</p>
+</div>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-0-9000-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-1"></a></h4>
 <p>1 - gt cannot show complex in opt_interactive, now convert to char before apply gt function</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
+<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
 <p>1 - function utils</p>
 <ul><li><p>change color in value boxes (to <strong>gray</strong>) for better looking</p></li>
 <li><p>number of rows (value box) now with <strong>decimals</strong></p></li>
@@ -80,7 +110,7 @@
 <div class="section level3">
 <h3 id="id_20241226-0-1-0-9000">2024.12.26-1<a class="anchor" aria-label="anchor" href="#id_20241226-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
+<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
 <p>1 - function utils</p>
 <ul><li><p>df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)</p></li>
 <li><p>new function: gt_info to generate metadata with gt package</p></li>

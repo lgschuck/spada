@@ -6,18 +6,40 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-### TO DO
+## TO DO
+
+## 2024.12.29-2
+
+### Bug Fixes
 
 1 - 'Edit' Page > Convert
 
-* on changing the active dataset and a variable is selected an error is rased from data.table (variable does not exist)
+* on changing the active dataset the selected variable may not exist in the new acive dataset and an error is raised from data.table (variable does not exist). **Fix with if clause testing for presence of var in the active dataset**.
+
+### Improvements
+
+1 - function utils
+
+* **dt_info**: now return number and percentage of zeros for each variable
+* **gt_info**: Merge columns with number and percentage values
+
+2 - funciton spada
+
+* **Delete dataset**: new functionality to delete a selected dataset (as long as it is not the active)
+* **Icons**: inclusion of icons in Data tab (data page) and trash icon changed to trash-can
+* **Convert**: change renderUi for conditionalPanel to convert to Date variables
+* **Analysis - Bins**: bins now inside conditionalPanel and layout_colums substituted by fluidRow for better look
+* **Analysis - Boxplot by group**: removed validate to max number of groups
+* **stopApp**: now app stops when the browser tab is closed. [Auto kill - Dean Attali](https://github.com/daattali/advanced-shiny/tree/master/auto-kill-app)
 
 ## 2024.12.29-1
 
 ### Improvements
 
 1 - New functionality: **copy dataset** (Data page)
+
 2 - **Config** page now is a module
+
 3 - New Some reactives now with bindCache
 
 ### Bug Fixes

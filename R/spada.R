@@ -22,7 +22,7 @@
 #' @importFrom stats median
 #' @importFrom utils object.size head
 #' @importFrom graphics boxplot lines barplot mtext text
-#' @importFrom stats cor lm sd var
+#' @importFrom stats cor lm sd var rnorm
 #' @importFrom grDevices colors
 
 spada <- function(...) {
@@ -261,14 +261,13 @@ spada <- function(...) {
                  nav_panel(
                    'Overview',
                    card_body(
+                     gt_output('pD_over_gt')),
                      fluidRow(
                        column(2, numericInput('pD_over_size_sample', 'Number of Rows', 100, 100, 1e4, 100)),
                        column(2, radioButtons(
                          'pD_over_radio_sample', 'Show',
                          c('First rows' = 'first', 'Sample' = 'sample'), inline = T))
                      ),
-                    # DTOutput('pD_over_t'),
-                    gt_output('pD_over_gt')),
                  ),
                  nav_panel(
                    'Data',
@@ -276,10 +275,10 @@ spada <- function(...) {
                      uiOutput('pD_data_ui_sel_df'),
                      textInput('pD_data_txt_new_name', 'New Name'),
                      layout_column_wrap(
-                      btn_task('pD_data_btn_new_name', 'Rename dataset'),
-                      btn_task('pD_data_btn_active', 'Make dataset Active'),
-                      btn_task('pD_data_btn_copy_dataset', 'Copy dataset'),
-                      # btn_task('pD_data_btn_delete_dataset', 'Delete dataset'),
+                      btn_task('pD_data_btn_new_name', 'Rename dataset', icon('file-signature')),
+                      btn_task('pD_data_btn_active', 'Make dataset Active', icon('check')),
+                      btn_task('pD_data_btn_copy_dataset', 'Copy dataset', icon('copy')),
+                      btn_task('pD_data_btn_delete_dataset', 'Delete dataset', icon('trash-can')),
                      ),
                    )),
                )
@@ -336,16 +335,25 @@ spada <- function(...) {
                        card(
                          card_header('Conversions', class = 'mini-header'),
                          card_body(
-                           layout_column_wrap(height = '200px',
-                                              uiOutput('pE_convert_ui_var_sel'),
-                                              textInput('pE_convert_txt_current_format', 'Current Type / Class')
+                           layout_column_wrap(
+                             height = '200px',
+                             uiOutput('pE_convert_ui_var_sel'),
+                             textInput('pE_convert_txt_current_format', 'Current Type / Class')
                            ),
-                           layout_column_wrap(height = '800px',
-                                              selectInput('pE_convert_sel_format', 'Select the new format',
-                                                          c('', 'as.numeric', 'as.integer',
-                                                            'as.character', 'as.Date', 'as.factor',
-                                                            'as.double', 'as.complex')),
-                                              uiOutput('pE_convert_ui_date_formats')
+                           layout_column_wrap(
+                             height = '800px',
+                             selectInput('pE_convert_sel_format', 'Select the new format',
+                                         c('', 'as.numeric', 'as.integer',
+                                           'as.character', 'as.Date', 'as.factor',
+                                           'as.double', 'as.complex')),
+                             conditionalPanel(
+                               condition = "input.pE_convert_sel_format == 'as.Date'",
+                               selectInput(
+                                 'pE_convert_sel_date_formats', 'Choose the entry format',
+                                 date_formats) |> tooltip('For non numeric inputs'),
+                               dateInput('pE_convert_sel_date_origin', 'Choose a start date', value = '1970-01-01') |>
+                                 tooltip('For numeric inputs')
+                              )
                            )
                          ),
                          card_footer(
@@ -440,7 +448,7 @@ spada <- function(...) {
                    tooltip('Create a copy of the Active dataset', placement = 'top'),
                  btn_task('pE_export_btn_restore', 'Restore Backup', icon('cloud-arrow-down')) |>
                    tooltip('Restore a previously created backup', placement = 'top'),
-                 btn_task('pE_export_btn_clear_bkp', 'Clear Backup', icon('trash')) |>
+                 btn_task('pE_export_btn_clear_bkp', 'Clear Backup', icon('trash-can')) |>
                    tooltip('Erase the backup', placement = 'top'),
                ),
                style = 'background-color: #02517d;')
@@ -480,17 +488,23 @@ spada <- function(...) {
                   full_screen = T,
                   card_body(plotOutput('pA_g_dist')),
                   card_footer(
-                    layout_columns(
-                      col_widths = c(8, 2, 2),
-                      radioButtons('pA_radio_dist_plot', 'Plot type:',
-                                   c('Histogram' = 'hist',
-                                     'Boxplot' = 'boxplot',
-                                     'Boxplot by Groups' = 'boxplot_group',
-                                     'Dots' = 'dots',
-                                     'Barplot' = 'barplot'), inline = T),
-                      numericInput('pA_var_percentile', 'Percentile', 50, 0, 100, 5),
-                      numericInput('pA_bins', 'Bins', 10, 5, step = 10) |>
-                        tooltip('Only for Histrograms', placement = 'top')
+                    fluidRow(
+                      column(8,
+                             radioButtons(
+                               'pA_radio_dist_plot',
+                               'Plot type:',
+                               c('Histogram' = 'hist',
+                                 'Boxplot' = 'boxplot',
+                                 'Boxplot by Groups' = 'boxplot_group',
+                                 'Dots' = 'dots',
+                                 'Barplot' = 'barplot'),inline = T)),
+                      column(2, numericInput('pA_var_percentile', 'Percentile', 50, 0, 100, 5)),
+                      column(2, conditionalPanel(
+                        condition = "input.pA_radio_dist_plot == 'hist'",
+                        numericInput('pA_bins', 'Bins', 10, 5, step = 10) |>
+                          tooltip('Only for Histrograms', placement = 'top')
+                        )
+                      ),
                     )
                   )
                 ),
@@ -527,7 +541,7 @@ spada <- function(...) {
                         tooltip('Applied only if valid values are greater than 10.000'),
                       layout_column_wrap(
                         btn_task('pA_btn_scatter_lm_run', 'Run Linear Model', icon('gear')),
-                        btn_task('pA_btn_scatter_lm_clear', 'Clear Linear Model', icon('trash'))
+                        btn_task('pA_btn_scatter_lm_clear', 'Clear Linear Model', icon('trash-can'))
                       )
                     ),
                     nav_panel('Output', verbatimTextOutput('pA_linear_model')),
@@ -575,6 +589,7 @@ spada <- function(...) {
   # Server
   ### ===================================================================== ###
   server <- function(input, output, session) {
+
     # data --------------------------------------------------------------------
     datasets_react <- reactiveValues(data = lapply(datasets, setDT))
 
@@ -623,6 +638,7 @@ spada <- function(...) {
           as.data.frame() |>
           gt() |>
           opt_interactive(
+            page_size_default = 9,
             use_filters = T,
             use_resizers = T,
             use_highlight = T,
@@ -745,10 +761,14 @@ spada <- function(...) {
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
-    # observe({
-
-    # }) |> bindEvent(input$pD_data_btn_delete_dataset)
-
+    observe({
+      if(df$df_active_name == input$pD_data_sel_df){
+        msg_error('You can not delete the active dataset')
+      } else {
+        datasets_react$data[[ input$pD_data_sel_df ]] <- NULL
+        msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
+      }
+    }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
     # edit page events --------------------------------------------------------
 
@@ -948,19 +968,6 @@ spada <- function(...) {
       )
     }) |> bindEvent(current_format())
 
-    # render UI with date formats
-    output$pE_convert_ui_date_formats <- renderUI(
-      if(input$pE_convert_sel_format == 'as.Date'){
-        tagList(
-          selectInput(
-            'pE_convert_sel_date_formats', 'Choose the entry format',
-            date_formats) |> tooltip('For non numeric inputs'),
-          dateInput('pE_convert_sel_date_origin', 'Choose a start date',value = '1970-01-01') |>
-            tooltip('For numeric inputs')
-        )
-      }
-    )
-
     # sample to preview conversion
     pE_convert_preview_sample_trigger <- reactiveVal(1)
     pE_convert_preview_sample <- reactive({
@@ -998,14 +1005,17 @@ spada <- function(...) {
     })
 
     output$pE_convert_preview_gt1 <- render_gt({
-      pE_convert_preview_df() |>
-        gt() |>
-        opt_interactive(
-          use_sorting = F,
-          use_pagination = F,
-          use_highlight = T,
-          use_compact_mode = T) |>
-        tab_options(table.background.color = '#f9f9f9')
+      req(input$pE_convert_vars_sel)
+      if(input$pE_convert_vars_sel %in% names(df$df_active)){
+        pE_convert_preview_df() |>
+          gt() |>
+          opt_interactive(
+            use_sorting = F,
+            use_pagination = F,
+            use_highlight = T,
+            use_compact_mode = T) |>
+          tab_options(table.background.color = '#f9f9f9')
+      }
     })
 
     observe({
@@ -1203,8 +1213,8 @@ spada <- function(...) {
         validate(need(is.numeric(pA_var()), 'Var must be numeric'))
 
         if (input$pA_radio_dist_plot == 'boxplot_group'){
-          validate(
-            need((unique(pA_var2()) |> length()) <= 7, 'Too many groups (max 7)'))
+          # validate(
+          #   need((unique(pA_var2()) |> length()) <= 7, 'Too many groups (max 7)'))
 
           pA_g_dist_boxg_col <- colors()[sample.int(
             colors() |> length(), unique(pA_var2()) |> length(), replace = F)]
@@ -1459,6 +1469,7 @@ spada <- function(...) {
     color_line <- reactive(mod_pC$palette()[['line']])
 
     # exit app event ----------------------------------------------------------
+    session$onSessionEnded(stopApp)
     observe({
       if (input$navbar == 'exit') {
         gc()

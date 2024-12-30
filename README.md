@@ -24,3 +24,21 @@ devtools::install_github("lgschuck/spada")
 ``` r
 library(spada)
 ```
+
+## Use
+
+``` r
+if(interactive()){
+  spada()
+}
+```
+
+## Screenshots
+
+![](images/spada_home.png)
+
+![](images/spada_metadata.png)
+
+![](images/spada_overview.png)
+
+![](images/spada_data.png)
