@@ -8,6 +8,38 @@ editor_options:
 
 ## TO DO
 
+1 - use reactive instead of reactiveValues for datasets
+
+## 2025.01.03-1
+
+### Bug Fixes
+
+1 - Data Overview - after Edit only refresh if updat in rows or sample: fixed with insertion of buttons inside output$pD_over_gt. Avaliate use of reactive instead of reactiveValues for datasets.
+
+### Improvements
+
+1 - **export_file_module**: separator order now semicolon as default
+
+2 - new **import_file_module**: allows input csv and RDS files
+
+3 - **page_config_module**: new visual and size of input file as parameter
+
+4 - **spada function**:
+
+* sidebar now with Dataset Info accordion open by default
+
+* small visual changes (icons and capital in some titles)
+
+* **shiny.maxRequestSize** set to 500 MB by default
+
+* **datasets_names_react**: now names of the datasets are a reactive (used several times)
+
+* new **buttons in sidebar** accordion to navigate through pages
+
+* new **buttons in active dataset popover** navigate through pages 
+
+### Bug Fixes
+
 ## 2025.01.02-1
 
 ### Bug Fixes

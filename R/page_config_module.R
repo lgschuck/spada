@@ -6,9 +6,9 @@ page_config_ui <- function(id) {
     value = 'config',
     title = 'Config',
     icon = bs_icon('sliders2'),
-    card(style = 'background-color: #02517d;', card(
-      card_body(
-        h2('Config'),
+    card(style = 'background-color: #02517d;', layout_columns(
+      col_widths = c(9, 3), card(card_body(
+        h4('Colors'),
         selectInput(
           ns('sel_palette'),
           'Select colors for plots',
@@ -18,12 +18,15 @@ page_config_ui <- function(id) {
             'Palette 3' = 3
           )
         ),
-        fluidRow(column(3, plotOutput(
-          ns('sample_plot')
-        )))
-      )
+        plotOutput(ns('sample_plot'))
+      )), card(card_body(
+        h4('Size input files'),
+        numericInput(ns('input_file_size'), 'Size in MB', 500, min = 0, step = 100),
+        btn_task(ns('btn_file_size'), 'Apply', icon('check'))
+      ))
     ))
   )
+
 }
 
 # server ----------------------------------------------------------------------
@@ -57,6 +60,12 @@ page_config_server <- function(id) {
       abline(h = 100, col = palette()[['line']], lwd = 3)
 
     }) |> bindCache(palette())
+
+    observe({
+      options(shiny.maxRequestSize = input$input_file_size * 1024 ^ 2)
+      msg('New limit applied')
+
+    }) |> bindEvent(input$btn_file_size)
 
     return(list(palette = palette))
   })

@@ -75,7 +75,7 @@ spada <- function(...) {
       sidebar = sidebar(
         open = F,
         accordion(
-          open = F,
+          open = T,
           accordion_panel(
             style = "background-color: #02517d; color: white;",
             'Dataset Info',
@@ -172,7 +172,7 @@ spada <- function(...) {
                    card_body(
                      gt_output('pD_over_gt')),
                      fluidRow(
-                       column(2, numericInput('pD_over_size_sample', 'Number of Rows', 100, 100, 1e4, 100)),
+                       column(2, numericInput('pD_over_size_sample', 'Number of rows', 100, 100, 1e4, 100)),
                        column(2, radioButtons(
                          'pD_over_radio_sample', 'Show',
                          c('First rows' = 'first', 'Sample' = 'sample'), inline = T))
@@ -182,7 +182,7 @@ spada <- function(...) {
                    'Data',
                    card_body(
                      uiOutput('pD_data_ui_sel_df'),
-                     textInput('pD_data_txt_new_name', 'New Name'),
+                     textInput('pD_data_txt_new_name', 'New name'),
                      layout_column_wrap(
                       btn_task('pD_data_btn_new_name', 'Rename dataset', icon('file-signature')),
                       btn_task('pD_data_btn_active', 'Make dataset Active', icon('check')),
@@ -190,7 +190,9 @@ spada <- function(...) {
                       btn_task('pD_data_btn_delete_dataset', 'Delete dataset', icon('trash-can')),
                      ),
                    )),
+                nav_panel('Import', import_file_ui('pD_import')),
                 nav_panel('Export', export_file_ui('pD_export')),
+
                )
              )
         )
@@ -263,7 +265,7 @@ spada <- function(...) {
                          ),
                          card_footer(
                            btn_task('pE_convert_btn_apply', 'Apply conversion',
-                                    icon('hammer'))
+                                    icon('check'))
                          )
                        ),
                        card(
@@ -284,7 +286,7 @@ spada <- function(...) {
                            uiOutput('pE_order_ui_var_rows'),
                            selectInput('pE_order_vars_descending', 'Vars in descending order', '', multiple = T) |>
                              tooltip('If not informed, the order will be Ascending', placement = 'right'),
-                           radioButtons('pE_order_radio_nas', "NA's Placement",
+                           radioButtons('pE_order_radio_nas', "NA's placement",
                                         c('Last' = 'last', 'First' = 'first'),
                                         inline = T),
                          ),
@@ -468,8 +470,11 @@ spada <- function(...) {
   ### ===================================================================== ###
   server <- function(input, output, session) {
 
+    options(shiny.maxRequestSize = 500 * 1024 ^ 2)
+
     # data --------------------------------------------------------------------
     datasets_react <- reactiveValues(data = lapply(datasets, setDT))
+    datasets_names_react <- reactive(names(datasets_react$data))
 
     # inicialize with the first dataset informed
     df <- reactiveValues(
@@ -500,17 +505,35 @@ spada <- function(...) {
         p("Columns with NA's:",  sum(colSums(is.na(df$df_active)) > 0)),
         p('Size (MB):', (object.size(df$df_active) / 2^20) |>
             as.numeric() |> round(2)),
-        input_task_button('navbar_df_btn_change', 'Change',
+        input_task_button('navbar_df_btn_overview', '',
+                          icon = bs_icon('search'),
+                          class = 'btn-task',
+                          style = 'padding: 5px 10px;'),
+        input_task_button('navbar_df_btn_change', '',
                           icon = bs_icon('shuffle'),
                           class = 'btn-task',
-                          style = 'padding: 5px 10px;')
+                          style = 'padding: 5px 10px;'),
+        input_task_button('navbar_df_btn_explore', '',
+                          icon = bs_icon('bar-chart-line'),
+                          class = 'btn-task',
+                          style = 'padding: 5px 10px;'),
       )
     })
 
     observe({
       nav_select('navbar', selected = 'Data')
+      nav_select('navset_card_pill_data', selected = 'Overview')
+    }) |> bindEvent(input$navbar_df_btn_overview)
+
+    observe({
+      nav_select('navbar', selected = 'Data')
       nav_select('navset_card_pill_data', selected = 'Data')
     }) |> bindEvent(input$navbar_df_btn_change)
+
+    observe({
+      nav_select('navbar', selected = 'Analysis')
+      nav_select('navbar', selected = 'Exploratory')
+    }) |> bindEvent(input$navbar_df_btn_explore)
 
     # side bar --------------------------------------------------------
     output$sidebar_df_info <- renderUI({
@@ -523,19 +546,41 @@ spada <- function(...) {
         p("Columns with NA's:",  sum(colSums(is.na(df$df_active)) > 0)),
         p('Size (MB):', (object.size(df$df_active) / 2^20) |>
             as.numeric() |> round(2)),
-        input_task_button('sidebar_df_btn_change', 'Change',
-                          icon = bs_icon('shuffle'),
-                          class = 'btn-task',
-                          style = 'padding: 5px 10px;')
+        fluidRow(
+          column(1),
+          column(2, input_task_button('sidebar_df_btn_overview', '',
+                            icon = bs_icon('search'),
+                            class = 'btn-task',
+                            style = 'padding: 5px 10px;') |>
+                   tooltip('Overview', placement = 'bottom')),
+          column(2, input_task_button('sidebar_df_btn_change', '',
+                            icon = bs_icon('shuffle'),
+                            class = 'btn-task',
+                            style = 'padding: 5px 10px;') |>
+                   tooltip('Change dataset', placement = 'bottom')),
+          column(2, input_task_button('sidebar_df_btn_explore', '',
+                            icon = bs_icon('bar-chart-line'),
+                            class = 'btn-task',
+                            style = 'padding: 5px 10px;') |>
+                   tooltip('Exploratory Analysis', placement = 'bottom')),
+        )
       )
-
     })
+
+    observe({
+      nav_select('navbar', selected = 'Data')
+      nav_select('navset_card_pill_data', selected = 'Overview')
+    }) |> bindEvent(input$sidebar_df_btn_overview)
 
     observe({
       nav_select('navbar', selected = 'Data')
       nav_select('navset_card_pill_data', selected = 'Data')
     }) |> bindEvent(input$sidebar_df_btn_change)
 
+    observe({
+      nav_select('navbar', selected = 'Analysis')
+      nav_select('navbar', selected = 'Exploratory')
+    }) |> bindEvent(input$sidebar_df_btn_explore)
 
     # data page events -----------------------------------------------------
     df_metadata <- reactive({
@@ -551,6 +596,10 @@ spada <- function(...) {
     output$pD_over_gt <- render_gt(
       {
         req(input$pD_over_size_sample)
+
+        input$pE_convert_btn_apply
+        input$pE_order_btn_order_rows
+        input$pE_order_btn_order_cols
         pD_over_n_show <- max(1, input$pD_over_size_sample)
         pD_over_n_show <- min(pD_over_n_show, nrow(df$df_active))
 
@@ -645,7 +694,7 @@ spada <- function(...) {
 
     # define active dataset ---------------------------------------------------
     output$pD_data_ui_sel_df <- renderUI(
-      selectInput('pD_data_sel_df', 'Select a dataset', names(datasets_react$data))
+      selectInput('pD_data_sel_df', 'Select a dataset', datasets_names_react())
     )
 
     observe({
@@ -663,11 +712,11 @@ spada <- function(...) {
 
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) |
-          input$pD_data_txt_new_name %in% names(datasets_react$data)){
+          input$pD_data_txt_new_name %in% datasets_names_react()){
         msg_error('New name is not valid or already in use')
 
       } else {
-        names(datasets_react$data)[names(datasets_react$data) == input$pD_data_sel_df] <- input$pD_data_txt_new_name
+        names(datasets_react$data)[datasets_names_react() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         # update active dataset if necessary
         if(df$df_active_name == input$pD_data_sel_df){
           df$df_active <- datasets_react$data[[input$pD_data_txt_new_name]]
@@ -681,7 +730,7 @@ spada <- function(...) {
 
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) ||
-         (input$pD_data_txt_new_name %in% names(datasets_react$data))){
+         (input$pD_data_txt_new_name %in% datasets_names_react())){
         msg_error('Name invalid or already in use')
       } else {
         datasets_react$data[[ input$pD_data_txt_new_name ]] <- df$df_active
@@ -700,6 +749,16 @@ spada <- function(...) {
 
     # export ----------------------------------------------------
     export_file_server('pD_export', reactive(df$df_active))
+
+    # import ----------------------------------------------------
+    mod_pD_import <- import_file_server('pD_import', datasets_names_react())
+
+    observe({
+      req(mod_pD_import$data_imported())
+
+      datasets_react$data[[mod_pD_import$data_imported()[['data_name']]]] <- mod_pD_import$data_imported()[['data']]
+
+    }) |> bindEvent(mod_pD_import$data_imported())
 
     # edit page events --------------------------------------------------------
 
@@ -1379,6 +1438,7 @@ spada <- function(...) {
         stopApp()
       }
     })
+
   } # end of server function
 
   ### Run App -----------------------------------------------------------------

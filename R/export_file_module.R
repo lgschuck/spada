@@ -17,20 +17,20 @@ export_file_ui <- function(id) {
               checkboxInput(ns('x_rownames'), 'Save row names'),
               fluidRow(
                 column(3, radioButtons(ns('radio_separator'), 'Separator',
-                             c('Comma' = ',', 'Semicolon' = ';'), inline = T)),
-                column(3, radioButtons(ns('radio_decimal'), 'Decimal Mark',
+                             c('Semicolon' = ';', 'Comma' = ','), inline = T)),
+                column(3, radioButtons(ns('radio_decimal'), 'Decimal mark',
                        c('Dot' = '.', 'Comma' = ','), inline = T))
               ),
               fluidRow(
                 column(3, textInput(ns('txt_na'), 'Missing (NA) substitute', value = '')),
-                column(3, radioButtons(ns('radio_scientific'), 'Scientific Notation',
+                column(3, radioButtons(ns('radio_scientific'), 'Scientific notation',
                              c('No' = 999999999, 'Allow' = 0), inline = T))
               )
             )
           )
         ),
         card_footer(downloadButton(ns('down_handler'),
-                                   'Export Active Dataset', icon('download')))
+                                   'Export Active dataset', icon('download')))
       )
     )
 }
