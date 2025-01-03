@@ -2,14 +2,12 @@
 # ui --------------------------------------------------------------------------
 export_file_ui <- function(id) {
   ns <- NS(id)
-  nav_panel(
-    'Export',
     layout_column_wrap(
       card(
-        layout_column_wrap(
-          textInput(ns('file_name'), 'File name', value = 'dataset'),
-          radioButtons(ns('radio_format'), 'File format',
-                       c('csv', 'RDS', 'RDS Compressed'), inline = T)
+        fluidRow(
+          column(3, textInput(ns('file_name'), 'File name', value = 'dataset')),
+          column(3, radioButtons(ns('radio_format'), 'File format',
+                                 c('csv', 'RDS', 'RDS Compressed'), inline = T))
         ),
         conditionalPanel(
           condition = sprintf("input['%s'] == 'csv'", ns('radio_format')),
@@ -17,16 +15,16 @@ export_file_ui <- function(id) {
             card_header('Csv Parameters', class = 'mini-header'),
             card_body(
               checkboxInput(ns('x_rownames'), 'Save row names'),
-              layout_column_wrap(
-                radioButtons(ns('radio_separator'), 'Separator',
-                             c('Comma' = ',', 'Semicolon' = ';'), inline = T),
-                radioButtons(ns('radio_decimal'), 'Decimal Mark',
-                             c('Dot' = '.', 'Comma' = ','), inline = T)
+              fluidRow(
+                column(3, radioButtons(ns('radio_separator'), 'Separator',
+                             c('Comma' = ',', 'Semicolon' = ';'), inline = T)),
+                column(3, radioButtons(ns('radio_decimal'), 'Decimal Mark',
+                       c('Dot' = '.', 'Comma' = ','), inline = T))
               ),
-              layout_column_wrap(
-                textInput(ns('txt_na'), 'Missing (NA) substitute', value = ''),
-                radioButtons(ns('radio_scientific'), 'Scientific Notation',
-                             c('No' = 999999999, 'Allow' = 0), inline = T)
+              fluidRow(
+                column(3, textInput(ns('txt_na'), 'Missing (NA) substitute', value = '')),
+                column(3, radioButtons(ns('radio_scientific'), 'Scientific Notation',
+                             c('No' = 999999999, 'Allow' = 0), inline = T))
               )
             )
           )
@@ -35,7 +33,6 @@ export_file_ui <- function(id) {
                                    'Export Active Dataset', icon('download')))
       )
     )
-  )
 }
 
 # server ----------------------------------------------------------------------

@@ -53,13 +53,36 @@
 <h3 id="to-do-0-1-0-9000">TO DO<a class="anchor" aria-label="anchor" href="#to-do-0-1-0-9000"></a></h3>
 </div>
 <div class="section level3">
-<h3 id="id_20241230-0-1-0-9000">2024.12.30-1<a class="anchor" aria-label="anchor" href="#id_20241230-0-1-0-9000"></a></h3>
+<h3 id="id_20250102-0-1-0-9000">2025.01.02-1<a class="anchor" aria-label="anchor" href="#id_20250102-0-1-0-9000"></a></h3>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000"></a></h4>
+<p>1 - <strong>Analysis page - q1 object not found</strong>: back to calculate q1 and q3. (<a href="https://github.com/lgschuck/spada/issues/1" class="external-link">#1</a>)</p>
+<p>2 - <strong>Metadata - Error in zeros count</strong>: now df_info function uses suna(x == 0) instead of length(x[x == 0]) (<a href="https://github.com/lgschuck/spada/issues/2" class="external-link">#2</a>)</p>
+</div>
 <div class="section level4">
 <h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
+<p>1 - utils functions</p>
+<ul><li><p><strong>df_info</strong> now uses <strong>suna</strong> instead of length, this change fix errors and provide gain in speed.</p></li>
+<li><p><strong>deletion of format_color_bar and main_value_box</strong> functions given that they are now in use anymore</p></li>
+</ul><p>2 - export_file_module</p>
+<ul><li><p>now the <strong>nav_panel is outside</strong> the module (inside spada function). This gives the module better “format” being a <strong>bslib::card</strong></p></li>
+<li><p>layout_column_wrap replaced for fluidRow and column (better look)</p></li>
+</ul><p>3 - spada function</p>
+<ul><li><p><strong>new page sidebar</strong>: for now showing info about active dataset, in the future will receive links/shortcuts to other parts of the app</p></li>
+<li><p><strong>new menu Analysis</strong>: the Analysis page became Exploratory and inputs change names from pA_ to pA_E_</p></li>
+<li><p><strong>new menu Options</strong>: Config page and Exit are inside this menu. In the future general optiions and settings will be here.</p></li>
+<li><p>new Nav Item <strong>Active Dataset</strong>: now with popover to show rows, cols, NA’s and size</p></li>
+<li><p>in Data when new name is set a msg is shown.</p></li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="id_20241230-0-1-0-9000">2024.12.30-1<a class="anchor" aria-label="anchor" href="#id_20241230-0-1-0-9000"></a></h3>
+<div class="section level4">
+<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
 <p>1 - General</p>
 <ul><li><p>Created <strong>zzz.R</strong> and inserted utils::globalVariables for global variables (check note)</p></li>
 <li><p>Value boxes: <strong>resized</strong> to give more space for other elements</p></li>
-</ul><p>2 - utils function</p>
+</ul><p>2 - utils functions</p>
 <ul><li>CSS, js_exit, operators and date formats passed to utils.R</li>
 </ul><p>3 - spada function</p>
 <ul><li><p>new <strong>export_file module</strong> and migration of Export to Data page</p></li>
@@ -70,13 +93,13 @@
 <div class="section level3">
 <h3 id="id_20241229-0-1-0-9000">2024.12.29-2<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-1"></a></h4>
 <p>1 - ‘Edit’ Page &gt; Convert</p>
 <ul><li>on changing the active dataset the selected variable may not exist in the new acive dataset and an error is raised from data.table (variable does not exist). <strong>Fix with if clause testing for presence of var in the active dataset</strong>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
-<p>1 - utils function</p>
+<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
+<p>1 - utils functions</p>
 <ul><li>
 <strong>dt_info</strong>: now return number and percentage of zeros for each variable</li>
 <li>
@@ -100,18 +123,18 @@
 <div class="section level3">
 <h3 id="id_20241229-0-1-0-9000-1">2024.12.29-1<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000-1"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
+<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
 <p>1 - New functionality: <strong>copy dataset</strong> (Data page)</p>
 <p>2 - <strong>Config</strong> page now is a module</p>
 <p>3 - New Some reactives now with bindCache</p>
 </div>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-1"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-2"></a></h4>
 <p>1 - gt cannot show complex in opt_interactive, now convert to char before apply gt function</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
-<p>1 - utils function</p>
+<h4 id="improvements-0-1-0-9000-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-4"></a></h4>
+<p>1 - utils functions</p>
 <ul><li><p>change color in value boxes (to <strong>gray</strong>) for better looking</p></li>
 <li><p>number of rows (value box) now with <strong>decimals</strong></p></li>
 </ul><p>2 - funciton spada</p>
@@ -125,8 +148,8 @@
 <div class="section level3">
 <h3 id="id_20241227-0-1-0-9000">2024.12.27-1<a class="anchor" aria-label="anchor" href="#id_20241227-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-4"></a></h4>
-<p>1 - utils function</p>
+<h4 id="improvements-0-1-0-9000-5">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-5"></a></h4>
+<p>1 - utils functions</p>
 <ul><li><p>df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)</p></li>
 <li><p>new function: gt_info to generate metadata with gt package</p></li>
 <li><p>color palettes: new palettes to df_info function</p></li>
@@ -162,7 +185,7 @@
 </div>
 <div class="section level3">
 <h3 id="id_20241219-0-1-0-9000">2024.12.19-1<a class="anchor" aria-label="anchor" href="#id_20241219-0-1-0-9000"></a></h3>
-<p>1 - Creation of utils functions</p>
+<p>1 - Creation of utils functionss</p>
 <p>2 - insert requirement of select variables, operators or formats in edit page buttons</p>
 <p>3 - change actionButtons for bslib input_task_buttons</p>
 </div>

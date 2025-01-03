@@ -8,6 +8,41 @@ editor_options:
 
 ## TO DO
 
+## 2025.01.02-1
+
+### Bug Fixes
+
+1 - **Analysis page - q1 object not found**: back to calculate q1 and q3. ([#1](https://github.com/lgschuck/spada/issues/1))
+
+2 - **Metadata - Error in zeros count**: now df_info function uses suna(x == 0) instead of length(x[x == 0]) ([#2](https://github.com/lgschuck/spada/issues/2))
+
+### Improvements
+
+1 - utils functions
+
+* **df_info** now uses **suna** instead of length, this change fix errors and provide gain in speed.
+
+* **deletion of format_color_bar and main_value_box** functions given that they are now in use anymore
+
+2 - export_file_module
+
+* now the **nav_panel is outside** the module (inside spada function). This gives the module better "format" being a **bslib::card**
+
+* layout_column_wrap replaced for fluidRow and column (better look)
+
+3 - spada function
+
+* **new page sidebar**: for now showing info about active dataset, in the future will receive
+links/shortcuts to other parts of the app
+
+* **new menu Analysis**: the Analysis page became Exploratory and inputs change names from pA_ to pA_E_
+
+* **new menu Options**: Config page and Exit are inside this menu. In the future general optiions and settings will be here.
+
+* new Nav Item **Active Dataset**: now with popover to show rows, cols, NA's and size
+
+* in Data when new name is set a msg is shown.
+
 ## 2024.12.30-1
 
 ### Improvements
@@ -18,7 +53,7 @@ editor_options:
 
 * Value boxes: **resized** to give more space for other elements
 
-2 - utils function
+2 - utils functions
 
 * CSS, js_exit, operators and date formats passed to utils.R
 
@@ -40,7 +75,7 @@ editor_options:
 
 ### Improvements
 
-1 - utils function
+1 - utils functions
 
 * **dt_info**: now return number and percentage of zeros for each variable
 * **gt_info**: Merge columns with number and percentage values
@@ -70,7 +105,7 @@ editor_options:
 
 ### Improvements
 
-1 - utils function
+1 - utils functions
 
 * change color in value boxes (to **gray**) for better looking
 
@@ -91,7 +126,7 @@ editor_options:
 
 ### Improvements
 
-1 - utils function
+1 - utils functions
 
 * df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)
 
@@ -147,7 +182,7 @@ factor
 
 ## 2024.12.19-1
 
-1 - Creation of utils functions
+1 - Creation of utils functionss
 
 2 - insert requirement of select variables, operators or formats in edit
 page buttons

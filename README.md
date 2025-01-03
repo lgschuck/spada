@@ -35,10 +35,26 @@ if(interactive()){
 
 ## Screenshots
 
+### Data
+
 ![](man/figures/spada_home.png)
 
-![](man/figures/spada_metadata.png)
+![](man/figures/spada_home2.png)
 
-![](man/figures/spada_overview.png)
+![](man/figures/spada_home3.png)
 
-![](man/figures/spada_data.png)
+### Edit
+
+![](man/figures/spada_edit_filter.png)
+
+![](man/figures/spada_edit_convert.png)
+
+![](man/figures/spada_edit_order.png)
+
+### Analysis
+
+![](man/figures/spada_analysis_exploratory.png)
+
+### Options
+
+![](man/figures/spada_options_config.png)

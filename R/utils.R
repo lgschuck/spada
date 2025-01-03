@@ -113,16 +113,18 @@ tag_css <- tags$head(tags$style(HTML(
       font-size: 1.5rem !important;
     }
 
+    }
+
   "))
 )
 
 # info about dataset variables -----------------------------------------------
 df_info <- function(df){
   rows <- nrow(df)
-  n_nas = sapply(df, \(x) length(x[is.na(x)]))
+  n_nas = sapply(df, \(x) suna(is.na(x)))
   n_valid <- rows - n_nas
   n_unique <- sapply(df, \(x) length(unique(x)))
-  n_zero <- sapply(df, \(x) length(x[x == 0]))
+  n_zero <- sapply(df, \(x) suna(x == 0))
 
   data.frame(
     var = names(df),
@@ -142,75 +144,6 @@ df_info <- function(df){
   )
 }
 
-# format bars in DT -----------------------------------------------------------
-format_color_bar <- function(DF, NAME, VALUES, COLOR){
-
-  VALUES <- if(VALUES |> length() == 0) 0 else VALUES
-  DT::formatStyle(
-    table = DF,
-    columns = NAME,
-    background = DT::styleColorBar(data = range(VALUES) * c(-1.1, 1.1), color = COLOR),
-    backgroundSize = '100% 20%',
-    backgroundRepeat = 'no-repeat',
-    backgroundPosition = 'top')
-}
-
-# print DT of df_info ---------------------------------------------------------
-df_info_print <- function(df){
-  df |>
-    DT::datatable(
-      extensions = 'ColReorder',
-      rownames = F,
-      colnames = c('Variable', 'Type', 'Class', 'Size (kB)', 'Min',
-                   'Max', 'Valid', '% Valid', 'Unique', '% Unique',
-                   "NA's", "% NA's"),
-      options = list(
-        dom = 'Bftp',
-        pageLength = 10,
-        colReorder = T,
-        columnDefs = list(
-          list(targets = 0, width = '300px', className = 'dt-left'),
-          list(targets = 1:2, width = '200px', className = 'dt-left'),
-          list(targets = 3:11, width = '100px', className = 'dt-right')
-        )
-      )
-    ) |>
-    DT::formatCurrency(c('size', 'min', 'max', 'n_valid', 'n_nas'), digits = 2, currency = '') |>
-    DT::formatPercentage(c('perc_valid', 'perc_unique', 'perc_nas'), digits = 2) |>
-    DT::formatStyle(
-      'type',
-      fontWeight = 'bold',
-      backgroundColor = DT::styleEqual(
-        c('double', 'integer', 'character', 'logical', 'complex', 'raw'),
-        c(rep('#fcc932', 2), '#75bbf5', '#eba881' , rep('#be6d81', 2))
-      )
-    ) |>
-    format_color_bar('size', df$size, '#00bf7f') |>
-    format_color_bar('min', df$min[!is.na(df$min)], '#d867b2') |>
-    format_color_bar('max', df$max[!is.na(df$max)], '#bf007f') |>
-    format_color_bar('n_valid', df$n_valid[!is.na(df$n_valid)], '#0cb0a8') |>
-    format_color_bar('n_unique', df$n_unique[!is.na(df$n_unique)], '#1c6561') |>
-    format_color_bar('n_nas', df$n_nas, '#b62020') |>
-    DT::formatStyle(
-      'perc_valid',
-      background = DT::styleColorBar(c(-0.001, 1.05), '#05a17c'),
-      backgroundSize = '100% 20%',
-      backgroundRepeat = 'no-repeat',
-      backgroundPosition = 'top') |>
-    DT::formatStyle(
-      'perc_unique',
-      background = DT::styleColorBar(c(-0.001, 1.05), '#284e4c'),
-      backgroundSize = '100% 20%',
-      backgroundRepeat = 'no-repeat',
-      backgroundPosition = 'top') |>
-    DT::formatStyle(
-      'perc_nas',
-      background = DT::styleColorBar(c(-0.001, 1.05), '#919191'),
-      backgroundSize = '100% 20%',
-      backgroundRepeat = 'no-repeat',
-      backgroundPosition = 'top')
-}
-
 # empty plot function ---------------------------------------------------------
 empty_plot <- function(msg = 'No plot', c = 2){
   plot(1:10, 1:10, type = 'n', xlab = '', ylab = '')
@@ -220,44 +153,6 @@ empty_plot <- function(msg = 'No plot', c = 2){
 # bslib btn task --------------------------------------------------------------
 btn_task <- function(ID, LABEL, ICON = NULL){
   bslib::input_task_button(id = ID, label = LABEL, icon = ICON, class = 'btn-task')
-}
-
-# function to generate value boxes on top of pages ----------------------------
-main_value_box <- function(df, df_name){
-  tagList(
-    bslib::layout_columns(
-      col_widths = c(3, 3, 3, 3),
-      bslib::value_box(
-        title = 'Active Dataset',
-        value = df_name,
-        showcase = bsicons::bs_icon('file-binary', size = '3rem'),
-        theme = 'light',
-        class = 'main-value-box'
-      ),
-      bslib::value_box(
-        title = 'Rows / Columns',
-        value = paste(nrow(df) |> f_num(dec = '.', big = ',', dig = 3), '/',
-                      ncol(df) |> f_num(dec = '.', big = ',')),
-        showcase = bsicons::bs_icon('layout-text-sidebar-reverse', size = '3rem'),
-        theme = 'light',
-        class = 'main-value-box'
-      ),
-      bslib::value_box(
-        title = "Columns with NA's",
-        value = sum(colSums(is.na(df)) > 0),
-        showcase = bsicons::bs_icon('database-x', size = '3rem'),
-        theme = 'light',
-        class = 'main-value-box'
-      ),
-      bslib::value_box(
-        title = 'Size (MB)',
-        value = (object.size(df) / 2^20) |> as.numeric() |> round(2),
-        showcase = bsicons::bs_icon('sd-card', size = '3rem'),
-        theme = 'light',
-        class = 'main-value-box'
-      )
-    )
-  )
 }
 
 # messages - shownotification -------------------------------------------------
