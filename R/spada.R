@@ -73,6 +73,7 @@ spada <- function(...) {
 
       # page sidebar ----------------------------------------------------------
       sidebar = sidebar(
+        bg = '#e3e3e4',
         open = F,
         accordion(
           open = T,
@@ -116,7 +117,7 @@ spada <- function(...) {
                          title = 'Factor Vars',
                          value = textOutput('pD_var_factor_vars'),
                          showcase = bs_icon('diagram-3'),
-                         theme = 'bg-gradient-green-indigo'
+                         theme = 'bg-gradient-green-blue'
                        ),
                        value_box(
                          title = 'Date Vars',
@@ -127,36 +128,61 @@ spada <- function(...) {
                      ),
                      layout_column_wrap(
                        value_box(
-                         title = "Var with most NA's",
+                         title = "Rows",
+                         value = textOutput('pD_n_rows'),
+                         showcase = bs_icon('list'),
+                         theme = 'bg-gradient-blue-purple'
+                       ),
+                       value_box(
+                         title = "Most valid",
+                         value = textOutput('pD_var_most_valid'),
+                         showcase = bs_icon('list-check'),
+                         theme = 'bg-gradient-indigo-yellow',
+                         p('Number of valid:', textOutput('pD_var_most_valid_n_valid', inline = T))
+                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       value_box(
+                         title = "Most unique",
+                         value = textOutput('pD_var_most_unique'),
+                         showcase = bs_icon('fingerprint'),
+                         theme = 'bg-gradient-indigo-green',
+                         p('Number of unique:', textOutput('pD_var_most_unique_n_unique', inline = T))
+                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       value_box(
+                         title = "Most zeros",
+                         value = textOutput('pD_var_most_zeros'),
+                         showcase = bs_icon('0-circle'),
+                         theme = 'bg-gradient-orange-indigo',
+                         p('Number of zeros:', textOutput('pD_var_most_zeros_n_zeros', inline = T))
+                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top')
+                     ),
+                     layout_column_wrap(
+                       value_box(
+                         title = "Most NA's",
                          value = textOutput('pD_var_most_nas'),
                          showcase = bs_icon('database-x'),
                          theme = 'bg-gradient-red-indigo',
-                         p(textOutput('pD_var_most_nas_n', inline = T), ' rows')
+                         p("Number of NA's:", textOutput('pD_var_most_nas_n', inline = T), ' rows')
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
                        value_box(
-                         title = "Var with biggest % of NA's",
-                         value = textOutput('pD_var_biggest_perc_nas'),
-                         showcase = bs_icon('percent'),
-                         theme = 'light',
-                         p(textOutput('pD_var_biggest_perc_nas_perc', inline = T), ' %')
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
-                       value_box(
-                         title = 'Var with max value',
+                         title = 'Max value',
                          value = textOutput('pD_var_max_value', inline = T),
                          showcase = bs_icon('graph-up-arrow', placement = 'top'),
+                         theme = 'bg-gradient-blue-green',
+                         p('Max value:', textOutput('pD_max_value', inline = T))
+                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       value_box(
+                         title = "Min value",
+                         value = textOutput('pD_var_min_value'),
+                         showcase = bs_icon('graph-down-arrow'),
                          theme = 'bg-gradient-pink-indigo',
-                         p('Max value:', textOutput('pD_max_value', inline = T)),
-                         hr(),
-                         p(bs_icon('graph-down-arrow'), 'Var with min value'),
-                         p(textOutput('pD_var_min_value', inline = T)),
                          p('Min value:', textOutput('pD_min_value', inline = T))
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
                        value_box(
-                         title = "Var with biggest size",
+                         title = "Biggest size",
                          value = textOutput('pD_var_biggest_size'),
                          showcase = bs_icon('sd-card'),
                          theme = 'bg-gradient-teal-indigo',
-                         p(textOutput('pD_var_biggest_size_size', inline = T), 'Bytes')
+                         p('Size:', textOutput('pD_var_biggest_size_size', inline = T), 'Bytes')
                        ) |> tooltip("Showing 1, there may be ties.", placement = 'top')
                      )
                    )
@@ -317,7 +343,7 @@ spada <- function(...) {
              card_footer(
                layout_column_wrap(
                  btn_task('pE_btn_reset', 'Reset Dataset', icon('arrow-rotate-right')) |>
-                   tooltip('Restore the original dataset to the Active dataset', placement = 'top'),
+                   tooltip('Restore to previous state (before been set as the Active dataset)', placement = 'top'),
                  btn_task('pE_btn_bkp', 'Create Backup', icon('cloud-arrow-up')) |>
                    tooltip('Create a copy of the Active dataset', placement = 'top'),
                  btn_task('pE_btn_restore', 'Restore Backup', icon('cloud-arrow-down')) |>
@@ -335,7 +361,7 @@ spada <- function(...) {
 
         nav_panel(
           'Exploratory',
-          icon = bs_icon('bar-chart-fill'),
+          icon = bs_icon('bar-chart-line'),
 
           card(
             full_screen = T,
@@ -444,17 +470,30 @@ spada <- function(...) {
           )
         ),
       ), # end of analysis menu
-      # page config -----------------------------------------------------------
+      # menu options ----------------------------------------------------------
       nav_menu(
         title = 'Options',
         page_config_ui('pC'),
-        # page exit -------------------------------------------------------------
+        nav_item(
+          tags$a(
+            icon('book'),
+            'Documentation',
+            href = 'https://lgschuck.github.io/spada/',
+            target = '_blank'
+          )),
         nav_panel(
           value = 'exit',
           title = 'Exit',
-          icon = bs_icon('x-square-fill')
+          icon = icon('person-walking-arrow-right')
         ),
       ),
+
+      nav_item(
+        tags$a(
+          icon('github'),
+          href = 'https://github.com/lgschuck/spada',
+          target = '_blank'
+        )),
 
       nav_spacer(),
       # active dataset --------------------------------------------------------
@@ -632,6 +671,51 @@ spada <- function(...) {
     output$pD_var_factor_vars <- renderText(sapply(df$df_active, is.factor) |> sum())
     output$pD_var_date_vars <- renderText(sapply(df$df_active, is_date) |> sum())
 
+    output$pD_n_rows <- renderText(
+      df$df_active |> nrow() |> f_num()
+    )
+    output$pD_var_most_valid <- renderText(
+      if(df_metadata() |> filter(n_valid > 0) |> nrow() < 1) { 'None'
+      } else {
+        df_metadata() |> arrange(-n_valid) |> head(1) |> pull(var)
+      }
+    )
+
+    output$pD_var_most_valid_n_valid <- renderText(
+      if(df_metadata() |> filter(n_valid > 0) |> nrow() < 1) { '0'
+      } else {
+        df_metadata() |> arrange(-n_valid) |> head(1) |> pull(n_valid) |> f_num()
+      }
+    )
+
+    output$pD_var_most_unique <- renderText(
+      if(df_metadata() |> filter(n_unique > 0) |> nrow() < 1) { 'None'
+      } else {
+        df_metadata() |> arrange(-n_unique) |> head(1) |> pull(var)
+      }
+    )
+
+    output$pD_var_most_unique_n_unique <- renderText(
+      if(df_metadata() |> filter(n_unique > 0) |> nrow() < 1) { '0'
+      } else {
+        df_metadata() |> arrange(-n_unique) |> head(1) |> pull(n_unique) |> f_num()
+      }
+    )
+
+    output$pD_var_most_zeros <- renderText(
+      if(df_metadata() |> filter(n_zero > 0) |> nrow() < 1) { 'None'
+      } else {
+        df_metadata() |> arrange(-n_zero) |> head(1) |> pull(var)
+      }
+    )
+
+    output$pD_var_most_zeros_n_zeros <- renderText(
+      if(df_metadata() |> filter(n_zero > 0) |> nrow() < 1) { '0'
+      } else {
+        df_metadata() |> arrange(-n_zero) |> head(1) |> pull(n_zero) |> f_num()
+      }
+    )
+
     output$pD_var_most_nas <- renderText(
       {
         if(df_metadata() |> filter(n_nas > 0) |> nrow() < 1) { 'None'
@@ -650,38 +734,32 @@ spada <- function(...) {
       }
     )
 
-    output$pD_var_biggest_perc_nas <- renderText(
-      {
-        if(df_metadata() |> filter(perc_nas > 0) |> nrow() < 1) { 'None'
-        } else {
-          df_metadata() |> filter(perc_nas > 0)|> arrange(-perc_nas, -n_nas) |>
-            head(1) |> pull(var) }
-      }
-    )
-
-    output$pD_var_biggest_perc_nas_perc <- renderText(
-      {
-        if(df_metadata() |> filter(perc_nas > 0) |> nrow() < 1) { '0'
-        } else {
-          df_metadata() |> filter(perc_nas > 0)|> arrange(-perc_nas, -n_nas) |>
-            head(1) |> pull(perc_nas) * 100 }
-      }
-    )
-
     output$pD_var_max_value <- renderText(
-      df_metadata() |> arrange(-max) |> head(1) |> pull(var)
+      if(df_metadata() |> filter(!is.na(max)) |> nrow() < 1) { 'None'
+      } else {
+        df_metadata() |> arrange(-max) |> head(1) |> pull(var)
+      }
     )
 
     output$pD_max_value <- renderText(
-      df_metadata() |> arrange(-max) |> head(1) |> pull(max) |> f_num(dig = 3)
+      if(df_metadata() |> filter(!is.na(max)) |> nrow() < 1) { '0'
+      } else {
+        df_metadata() |> arrange(-max) |> head(1) |> pull(max) |> f_num(dig = 3)
+      }
     )
 
     output$pD_var_min_value <- renderText(
-      df_metadata() |> arrange(min) |> head(1) |> pull(var)
+      if(df_metadata() |> filter(!is.na(min)) |> nrow() < 1) { 'None'
+      } else {
+        df_metadata() |> arrange(min) |> head(1) |> pull(var)
+      }
     )
 
     output$pD_min_value <- renderText(
-      df_metadata() |> arrange(min) |> head(1) |> pull(min) |> f_num(dig = 3)
+      if(df_metadata() |> filter(!is.na(min)) |> nrow() < 1) { '0'
+      } else {
+        df_metadata() |> arrange(min) |> head(1) |> pull(min) |> f_num(dig = 3)
+      }
     )
 
     output$pD_var_biggest_size <- renderText(
@@ -810,8 +888,10 @@ spada <- function(...) {
         session, 'pE_filter_operator',
         label = 'Operator',
         choices =
-          if(df$df_active[[input$pE_filter_vars_filter]] |> is.factor() |
-             df$df_active[[input$pE_filter_vars_filter]] |> is.character()){
+          if(df$df_active[[input$pE_filter_vars_filter]] |> is.factor() ||
+             df$df_active[[input$pE_filter_vars_filter]] |> is.character() ||
+             df$df_active[[input$pE_filter_vars_filter]] |> is.complex()
+          ){
             c('',
               '== (Equal)' = '==',
               '!= (Not Equal)' = '!=',
@@ -837,8 +917,9 @@ spada <- function(...) {
 
     # filter rows
     observe({
-      if(input$pE_filter_vars_filter == '' | input$pE_filter_operator == ''){
-        msg('Choose a variable and an operator')
+      if(input$pE_filter_vars_filter == '' || input$pE_filter_operator == ''
+         || length(pE_filter_value_temp()) == 0){
+        msg('Choose a variable, an operator and a value', 3)
       } else if(length(pE_filter_value_temp()) > 1 & input$pE_filter_operator %in%
                 c('==', '!=', '>', '>=', '<', '<=')){
         msg_error('Operator requires value of length 1')
@@ -998,6 +1079,8 @@ spada <- function(...) {
       req(input$pE_convert_vars_sel)
       if(input$pE_convert_vars_sel %in% names(df$df_active)){
         pE_convert_preview_df() |>
+          lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
+          as.data.frame() |>
           gt() |>
           opt_interactive(
             use_sorting = F,

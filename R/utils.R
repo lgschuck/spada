@@ -220,15 +220,28 @@ gt_info <- function(df){
                  'POSIXct/POSIXt', 'POSIXlt/POSIXt'), 'calendar',
     class == 'factor', 'sitemap',
     class == 'raw', 'sd-card',
-    class == 'complex', 'info')]
+    class == 'complex', 'info',
+    class == 'logical', 'puzzle-piece')]
 
-  df |>
-    gt::gt() |>
+  df_gt <- df |>
+    gt::gt()
+
+  # if all NA do nothing
+  if(!all(df$min |> is.na())){
+    df_gt <- df_gt |>
+      gt::data_color(columns = 'min', palette = yl_palette)
+  }
+
+  # if all NA do nothing
+  if(!all(df$max |> is.na())){
+    df_gt <- df_gt |>
+      gt::data_color(columns = 'max', palette = pk_palette)
+  }
+
+  df_gt |>
     gt::fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
     gt::fmt_bytes(columns = 'size') |>
     gt::data_color(columns = 'size', palette = blue_palette) |>
-    gt::data_color(columns = 'min', palette = yl_palette) |>
-    gt::data_color(columns = 'max', palette = pk_palette) |>
     gt::data_color(columns = 'n_valid', palette = lg_palette) |>
     gt::data_color(columns = 'n_unique', palette = dg_palette) |>
     gt::data_color(columns = 'n_zero', palette = gray_palette) |>

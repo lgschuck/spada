@@ -20,7 +20,7 @@ page_config_ui <- function(id) {
         ),
         plotOutput(ns('sample_plot'))
       )), card(card_body(
-        h4('Size input files'),
+        h4('Size of input files'),
         numericInput(ns('input_file_size'), 'Size in MB', 500, min = 0, step = 100),
         btn_task(ns('btn_file_size'), 'Apply', icon('check'))
       ))

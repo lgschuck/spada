@@ -10,11 +10,37 @@ editor_options:
 
 1 - use reactive instead of reactiveValues for datasets
 
+## 2025.01.05-1
+
+### Bug Fixes
+
+1 - **Metadata - object color_fn not found**: new icon for logical and color format (function data_color) applied only if there is valid (non NA) min and max values ([#4](https://github.com/lgschuck/spada/issues/4)
+
+2 - **Edit > Convert - error in preview complex variable convertion**: fixed converting complex to character in the preview given that gt table in opt_interactive does not show complex properly ([#5](https://github.com/lgschuck/spada/issues/5)
+
+3 - **Edit > Filter: error in filtering complex**: now only show/allow operators '== (Equal)', '!= (Not Equal)', 'Is NA (is.na)', 'Not NA (! is.na)', 'In (%in%)' and 'Not In (! %in%)' (same for character and factors) ([#6](https://github.com/lgschuck/spada/issues/6)
+
+4 - **Edit > Filter: accept blank value**: now the value must have length 1 or bigger ([#7](https://github.com/lgschuck/spada/issues/7)
+
+### Improvements
+
+1 - utils functions
+
+2 - page_config_module: correction of a typo
+
+3 - spada function
+
+* new background color in sidebar
+
+* new value boxes in Data > Highligths (rows, valid, unique, zeros) and better server side checking (returning None if absent)
+
+* new itens in navbar: Options > Documentation link and Github link
+
 ## 2025.01.03-1
 
 ### Bug Fixes
 
-1 - Data Overview - after Edit only refresh if updat in rows or sample: fixed with insertion of buttons inside output$pD_over_gt. Avaliate use of reactive instead of reactiveValues for datasets.
+1 - Data Overview - after Edit only refresh if updat in rows or sample: fixed with insertion of buttons inside output$pD_over_gt. Avaliate use of reactive instead of reactiveValues for datasets. ([#3](https://github.com/lgschuck/spada/issues/3))
 
 ### Improvements
 
