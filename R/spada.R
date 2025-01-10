@@ -22,7 +22,7 @@
 #' @importFrom stats median
 #' @importFrom utils object.size head
 #' @importFrom graphics boxplot lines barplot mtext text
-#' @importFrom stats cor lm sd var rnorm IQR
+#' @importFrom stats cor lm sd var rnorm IQR cor.test
 #' @importFrom grDevices colors
 
 spada <- function(...) {
@@ -61,11 +61,12 @@ spada <- function(...) {
       id = 'navbar',
       theme = bs_theme(
         bg = '#f9f9f9',
+        # bg = '#e3e3e4',
         fg = '#000000',
         primary = '#02517d',
         secondary = '#0072B2',
         success = '#009E73',
-        font_size_base = "1rem",
+        font_size_base = '1rem'
       ),
       title = 'Spada',
 
@@ -78,7 +79,7 @@ spada <- function(...) {
         accordion(
           open = T,
           accordion_panel(
-            style = "background-color: #02517d; color: white;",
+            style = 'background-color: #02517d; color: white;',
             'Dataset Info',
             icon = bs_icon('file-binary', size = '1.75em'),
             uiOutput('sidebar_df_info')
@@ -128,32 +129,32 @@ spada <- function(...) {
                      ),
                      layout_column_wrap(
                        value_box(
-                         title = "Rows",
+                         title = 'Rows',
                          value = textOutput('pD_n_rows'),
                          showcase = bs_icon('list'),
                          theme = 'bg-gradient-blue-purple'
                        ),
                        value_box(
-                         title = "Most valid",
+                         title = 'Most valid',
                          value = textOutput('pD_var_most_valid'),
                          showcase = bs_icon('list-check'),
                          theme = 'bg-gradient-indigo-yellow',
                          p('Number of valid:', textOutput('pD_var_most_valid_n_valid', inline = T))
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
                        value_box(
-                         title = "Most unique",
+                         title = 'Most unique',
                          value = textOutput('pD_var_most_unique'),
                          showcase = bs_icon('fingerprint'),
                          theme = 'bg-gradient-indigo-green',
                          p('Number of unique:', textOutput('pD_var_most_unique_n_unique', inline = T))
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
                        value_box(
-                         title = "Most zeros",
+                         title = 'Most zeros',
                          value = textOutput('pD_var_most_zeros'),
                          showcase = bs_icon('0-circle'),
                          theme = 'bg-gradient-orange-indigo',
                          p('Number of zeros:', textOutput('pD_var_most_zeros_n_zeros', inline = T))
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top')
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top')
                      ),
                      layout_column_wrap(
                        value_box(
@@ -162,28 +163,28 @@ spada <- function(...) {
                          showcase = bs_icon('database-x'),
                          theme = 'bg-gradient-red-indigo',
                          p("Number of NA's:", textOutput('pD_var_most_nas_n', inline = T), ' rows')
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
                        value_box(
                          title = 'Max value',
                          value = textOutput('pD_var_max_value', inline = T),
                          showcase = bs_icon('graph-up-arrow', placement = 'top'),
                          theme = 'bg-gradient-blue-green',
                          p('Max value:', textOutput('pD_max_value', inline = T))
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
                        value_box(
-                         title = "Min value",
+                         title = 'Min value',
                          value = textOutput('pD_var_min_value'),
                          showcase = bs_icon('graph-down-arrow'),
                          theme = 'bg-gradient-pink-indigo',
                          p('Min value:', textOutput('pD_min_value', inline = T))
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top'),
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
                        value_box(
-                         title = "Biggest size",
+                         title = 'Biggest size',
                          value = textOutput('pD_var_biggest_size'),
                          showcase = bs_icon('sd-card'),
                          theme = 'bg-gradient-teal-indigo',
                          p('Size:', textOutput('pD_var_biggest_size_size', inline = T), 'Bytes')
-                       ) |> tooltip("Showing 1, there may be ties.", placement = 'top')
+                       ) |> tooltip('Showing 1, there may be ties', placement = 'top')
                      )
                    )
                  ),
@@ -399,9 +400,7 @@ spada <- function(...) {
                         column(2, numericInput('pA_E_var_percentile', 'Percentile', 50, 0, 100, 5)),
                         column(2, conditionalPanel(
                           condition = "input.pA_E_radio_dist_plot == 'hist'",
-                          numericInput('pA_E_bins', 'Bins', 10, 5, step = 10) |>
-                            tooltip('Only for Histrograms', placement = 'top')
-                          )
+                          numericInput('pA_E_bins', 'Bins', 10, 5, step = 10))
                         ),
                       )
                     )
@@ -460,15 +459,25 @@ spada <- function(...) {
                   nav_panel(
                     'Stats',
                     full_screen = T,
-                    card_body(
-                      gt_output('pA_E_gt1')),
-                    card_footer(numericInput('pA_E_t1_digits', 'Digits', 2, 0, 9, 1))
+                    stats_table_ui('pA_stats')
                   )
                 )
               )
             )
           )
+        ), # end of exploratory
+
+        nav_panel(
+          'Descriptive Stats',
+          icon = bs_icon('graph-up'),
+          descriptive_stats_ui('pA_desc_stats'),
         ),
+
+        nav_panel(
+          'Correlation',
+          icon = bs_icon('magnet'),
+          correlation_ui('pA_correlation'),
+        )
       ), # end of analysis menu
       # menu options ----------------------------------------------------------
       nav_menu(
@@ -544,18 +553,12 @@ spada <- function(...) {
         p("Columns with NA's:",  sum(colSums(is.na(df$df_active)) > 0)),
         p('Size (MB):', (object.size(df$df_active) / 2^20) |>
             as.numeric() |> round(2)),
-        input_task_button('navbar_df_btn_overview', '',
-                          icon = bs_icon('search'),
-                          class = 'btn-task',
-                          style = 'padding: 5px 10px;'),
-        input_task_button('navbar_df_btn_change', '',
-                          icon = bs_icon('shuffle'),
-                          class = 'btn-task',
-                          style = 'padding: 5px 10px;'),
-        input_task_button('navbar_df_btn_explore', '',
-                          icon = bs_icon('bar-chart-line'),
-                          class = 'btn-task',
-                          style = 'padding: 5px 10px;'),
+        btn_task('navbar_df_btn_overview', '', bs_icon('search'),
+                 style = 'padding: 5px 10px;'),
+        btn_task('navbar_df_btn_change', '', bs_icon('shuffle'),
+                 style = 'padding: 5px 10px;'),
+        btn_task('navbar_df_btn_explore', '', bs_icon('bar-chart-line'),
+                 style = 'padding: 5px 10px;')
       )
     })
 
@@ -570,7 +573,6 @@ spada <- function(...) {
     }) |> bindEvent(input$navbar_df_btn_change)
 
     observe({
-      nav_select('navbar', selected = 'Analysis')
       nav_select('navbar', selected = 'Exploratory')
     }) |> bindEvent(input$navbar_df_btn_explore)
 
@@ -587,19 +589,13 @@ spada <- function(...) {
             as.numeric() |> round(2)),
         fluidRow(
           column(1),
-          column(2, input_task_button('sidebar_df_btn_overview', '',
-                            icon = bs_icon('search'),
-                            class = 'btn-task',
+          column(2, btn_task('sidebar_df_btn_overview', '', bs_icon('search'),
                             style = 'padding: 5px 10px;') |>
                    tooltip('Overview', placement = 'bottom')),
-          column(2, input_task_button('sidebar_df_btn_change', '',
-                            icon = bs_icon('shuffle'),
-                            class = 'btn-task',
+          column(2, btn_task('sidebar_df_btn_change', '', bs_icon('shuffle'),
                             style = 'padding: 5px 10px;') |>
                    tooltip('Change dataset', placement = 'bottom')),
-          column(2, input_task_button('sidebar_df_btn_explore', '',
-                            icon = bs_icon('bar-chart-line'),
-                            class = 'btn-task',
+          column(2, btn_task('sidebar_df_btn_explore', '', bs_icon('bar-chart-line'),
                             style = 'padding: 5px 10px;') |>
                    tooltip('Exploratory Analysis', placement = 'bottom')),
         )
@@ -853,10 +849,10 @@ spada <- function(...) {
       output$pE_filter_ui_value <- renderUI({
         if (df$df_active[[input$pE_filter_vars_filter]] |> is_date() &
             input$pE_filter_operator %in% c('==', '!=', '>', '>=', '<', '<=', 'is_na', 'not_na')){
-          dateInput("pE_filter_value", "Date")
+          dateInput('pE_filter_value', 'Date')
         } else if (df$df_active[[input$pE_filter_vars_filter]] |> is_date() &
                    input$pE_filter_operator %in% c('between', 'not_between')){
-          dateRangeInput("pE_filter_value", "Date")
+          dateRangeInput('pE_filter_value', 'Date')
         } else {
           selectizeInput(
             'pE_filter_value', 'Value',
@@ -1243,7 +1239,8 @@ spada <- function(...) {
     })
 
     pA_E_var_percentile <- reactive(
-      if(is.numeric(pA_E_var())){
+      if(isTruthy(input$pA_E_var_percentile) && is.numeric(pA_E_var()) &&
+         between(input$pA_E_var_percentile, 0, 100)){
         pn(pA_E_var(), input$pA_E_var_percentile / 100)
       } else { NA }
     ) |> bindCache(pA_E_var(), input$pA_E_var_percentile)
@@ -1303,7 +1300,8 @@ spada <- function(...) {
           type = 'p',
           col = color_fill(),
           xlab = input$pA_E_sel_vars2,
-          ylab = input$pA_E_sel_vars
+          ylab = input$pA_E_sel_vars,
+          pch = 19
         )
         lines(
           pA_E_linear_model$x,
@@ -1322,7 +1320,8 @@ spada <- function(...) {
           type = 'p',
           col = color_fill(),
           xlab = input$pA_E_sel_vars2,
-          ylab = input$pA_E_sel_vars
+          ylab = input$pA_E_sel_vars,
+          pch = 19
         )
         mtext(paste('Pearson Correlation:', pA_E_stats_correlation() |> round(4)))
       }
@@ -1437,15 +1436,8 @@ spada <- function(...) {
     }) |> bindEvent(input$pA_E_btn_lm_resid)
 
     # metrics -----------------------------------------------------------------
-    pA_E_stats_obs <- reactive(length(pA_E_var()))
-    pA_E_stats_n_nas <- reactive(length(pA_E_var()[is.na(pA_E_var())]))
-    pA_E_stats_min <- reactive(if(is.numeric(pA_E_var())) mina(pA_E_var()) else NA)
-    pA_E_stats_q1 <- reactive(if(is.numeric(pA_E_var())) pn(pA_E_var(), 0.25) else NA)
-    pA_E_stats_median <- reactive(if(is.numeric(pA_E_var())) median(pA_E_var(), na.rm = T) else NA)
-    pA_E_stats_mean <- reactive(if(is.numeric(pA_E_var())) mean(pA_E_var(), na.rm = T) else NA)
-    pA_E_stats_q3 <- reactive(if(is.numeric(pA_E_var())) pn(pA_E_var(), 0.75) else NA)
-    pA_E_stats_max <- reactive(if(is.numeric(pA_E_var())) mana(pA_E_var()) else NA)
     pA_E_stats_sd <- reactive(if(is.numeric(pA_E_var())) sd(pA_E_var(), na.rm = T) else NA)
+
     pA_E_stats_correlation <- reactive(
       if(is.numeric(pA_E_var()) && is.numeric(pA_E_var2()) && pA_E_stats_sd() != 0 &&
         !is.na(pA_E_stats_sd())){
@@ -1458,54 +1450,16 @@ spada <- function(...) {
         } else { NA }
     )
     # stats table -------------------------------------------------------------
-    pA_E_t1 <- reactive(
-      data.frame(
-        var = c(
-          paste("% NA's (", pA_E_stats_n_nas(), '/', pA_E_stats_obs(), ')'),
-          'Minimum',
-          'Percentile 25',
-          'Median',
-          'Mean',
-          'Percentile 75',
-          'Maximum',
-          paste('Percentile', input$pA_E_var_percentile),
-          'Standard Deviation',
-          'Pearson Correlation'
-        ),
-        value = c(
-          pA_E_stats_n_nas() / pA_E_stats_obs() * 100,
-          pA_E_stats_min(),
-          pA_E_stats_q1(),
-          pA_E_stats_median(),
-          pA_E_stats_mean(),
-          pA_E_stats_q3(),
-          pA_E_stats_max(),
-          pA_E_var_percentile(),
-          pA_E_stats_sd(),
-          pA_E_stats_correlation()
-        )
-      )
-    )
+    stats_table_server('pA_stats', pA_E_var, pA_E_var2,
+                       reactive(input$pA_E_var_percentile),
+                       pA_E_var_percentile,
+                       pA_E_stats_sd, pA_E_stats_correlation)
 
-    output$pA_E_gt1 <- render_gt({
-      validate(
-        need(
-          isTruthy(input$pA_E_var_percentile) && between(input$pA_E_var_percentile, 0, 100),
-          'Percentile must be between 0 and 100'))
+    # descriptive stats -------------------------------------------------------
+    descriptive_stats_server('pA_desc_stats', reactive(df$df_active))
 
-      pA_E_t1() |>
-        gt() |>
-        sub_missing() |>
-        cols_label(var = 'Measure', value = 'Value') |>
-        fmt_number(decimals = input$pA_E_t1_digits) |>
-        opt_interactive(use_pagination = F,
-                        use_highlight = T,
-                        use_compact_mode = T) |>
-        tab_options(table.background.color = '#ffffff')
-    }) |> bindCache(
-      input$pA_E_t1_digits,
-      pA_E_t1()
-    )
+    # correlation -------------------------------------------------------------
+    correlation_server('pA_correlation', reactive(df$df_active), df_metadata, color_fill)
 
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')

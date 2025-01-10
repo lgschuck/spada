@@ -113,36 +113,8 @@ tag_css <- tags$head(tags$style(HTML(
       font-size: 1.5rem !important;
     }
 
-    }
-
   "))
 )
-
-# info about dataset variables -----------------------------------------------
-df_info <- function(df){
-  rows <- nrow(df)
-  n_nas = sapply(df, \(x) suna(is.na(x)))
-  n_valid <- rows - n_nas
-  n_unique <- sapply(df, \(x) length(unique(x)))
-  n_zero <- sapply(df, \(x) suna(x == 0))
-
-  data.frame(
-    var = names(df),
-    type = sapply(df, typeof),
-    class = sapply(df, \(x) paste(class(x), collapse = "/")),
-    size = sapply(df, object.size),
-    min = sapply(df, \(x) if (is.numeric(x)) mina(x) else NA),
-    max = sapply(df, \(x) if (is.numeric(x)) mana(x) else NA),
-    n_valid = n_valid,
-    perc_valid = n_valid / rows,
-    n_unique = n_unique,
-    perc_unique = n_unique / rows,
-    n_zero = n_zero,
-    perc_zero = n_zero / rows,
-    n_nas = n_nas,
-    perc_nas = n_nas / rows
-  )
-}
 
 # empty plot function ---------------------------------------------------------
 empty_plot <- function(msg = 'No plot', c = 2){
@@ -151,8 +123,9 @@ empty_plot <- function(msg = 'No plot', c = 2){
 }
 
 # bslib btn task --------------------------------------------------------------
-btn_task <- function(ID, LABEL, ICON = NULL){
-  bslib::input_task_button(id = ID, label = LABEL, icon = ICON, class = 'btn-task')
+btn_task <- function(ID, LABEL, ICON = NULL, ...){
+  bslib::input_task_button(id = ID, label = LABEL, icon = ICON,
+                           class = 'btn-task', ...)
 }
 
 # messages - shownotification -------------------------------------------------
@@ -177,7 +150,8 @@ try_convert <- function(x, fun){
 }
 
 # format conversion ----------------------------------------------------------
-convert <- function(x, type, date_format = '%Y-%m-%d', date_origin = '1970-01-01'){
+convert <- function(x, type, date_format = '%Y-%m-%d',
+                    date_origin = '1970-01-01'){
   if(x |> is.raw()) x <- as.numeric(x)
 
   if(type == 'as.numeric'){
@@ -201,84 +175,6 @@ convert <- function(x, type, date_format = '%Y-%m-%d', date_origin = '1970-01-01
   } else if(type == 'as.complex'){
     if(x |> is.character()) rep(NA, length(x)) else as.complex(x)
   }
-}
-
-# valid name ------------------------------------------------------------------
-is_valid_name <- function(x){
-  x == make.names(x)
-}
-
-# gt info ---------------------------------------------------------------------
-
-gt_info <- function(df){
-  setDT(df)
-  df[, f_icon := fcase(
-    class == 'integer', '1',
-    class == 'character', 'a',
-    class == 'numeric', 'calculator',
-    class %in% c('Date', 'POSIXt', 'POSIXct', 'POSIXlt',
-                 'POSIXct/POSIXt', 'POSIXlt/POSIXt'), 'calendar',
-    class == 'factor', 'sitemap',
-    class == 'raw', 'sd-card',
-    class == 'complex', 'info',
-    class == 'logical', 'puzzle-piece')]
-
-  df_gt <- df |>
-    gt::gt()
-
-  # if all NA do nothing
-  if(!all(df$min |> is.na())){
-    df_gt <- df_gt |>
-      gt::data_color(columns = 'min', palette = yl_palette)
-  }
-
-  # if all NA do nothing
-  if(!all(df$max |> is.na())){
-    df_gt <- df_gt |>
-      gt::data_color(columns = 'max', palette = pk_palette)
-  }
-
-  df_gt |>
-    gt::fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
-    gt::fmt_bytes(columns = 'size') |>
-    gt::data_color(columns = 'size', palette = blue_palette) |>
-    gt::data_color(columns = 'n_valid', palette = lg_palette) |>
-    gt::data_color(columns = 'n_unique', palette = dg_palette) |>
-    gt::data_color(columns = 'n_zero', palette = gray_palette) |>
-    gt::data_color(columns = 'n_nas', palette = red_palette) |>
-    gt::fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
-    gt::fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
-    gt::sub_missing() |>
-    gt::opt_interactive(
-      use_filters = T,
-      use_resizers = T,
-      use_highlight = T,
-      use_compact_mode = T,
-      use_text_wrapping = F,
-      use_page_size_select = T
-    ) |>
-    gt::cols_move(columns = 'f_icon', after = 'var') |>
-    gt::fmt_icon(columns = f_icon) |>
-    gt::cols_label(
-      var = 'Variable',
-      type = 'Type',
-      class = 'Class',
-      size = 'Size',
-      min = 'Min',
-      max = 'Max',
-      n_valid = 'Valid',
-      n_unique = 'Unique',
-      n_zero = 'Zeros',
-      n_nas = "NA's",
-      f_icon = ''
-    ) |>
-    gt::cols_width(f_icon ~ px(30)) |>
-    gt::cols_merge(columns = c(class, f_icon), pattern = "{2} {1}") |>
-    gt::cols_merge(columns = c(n_valid, perc_valid), pattern = "{1} / {2}") |>
-    gt::cols_merge(columns = c(n_unique, perc_unique), pattern = "{1} / {2}") |>
-    gt::cols_merge(columns = c(n_zero, perc_zero), pattern = "{1} / {2}") |>
-    gt::cols_merge(columns = c(n_nas, perc_nas), pattern = "{1} / {2}") |>
-    gt::tab_options(table.background.color = '#ffffff')
 }
 
 # palettes --------------------------------------------------------------------

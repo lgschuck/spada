@@ -10,17 +10,31 @@ editor_options:
 
 1 - use reactive instead of reactiveValues for datasets
 
+## 2025.01.10-1
+
+### Bug Fixes
+
+1 - **Analysis > Exploratory: error ins stats table when percentile out of range 0-100**: now test the range and if the input isTruphy ([#8](https://github.com/lgschuck/spada/issues/8))
+
+### Improvements
+
+1 - **Stats table** now is a module
+2 - **new module Correlation**
+3 - **new module Descriptive Stats**
+4 - **Scatter** (Analysis > Exploratory) now with filled points
+5 - **export functions**: df_info, gt_info and is_valid_name now are exported
+
 ## 2025.01.05-1
 
 ### Bug Fixes
 
-1 - **Metadata - object color_fn not found**: new icon for logical and color format (function data_color) applied only if there is valid (non NA) min and max values ([#4](https://github.com/lgschuck/spada/issues/4)
+1 - **Metadata - object color_fn not found**: new icon for logical and color format (function data_color) applied only if there is valid (non NA) min and max values ([#4](https://github.com/lgschuck/spada/issues/4))
 
-2 - **Edit > Convert - error in preview complex variable convertion**: fixed converting complex to character in the preview given that gt table in opt_interactive does not show complex properly ([#5](https://github.com/lgschuck/spada/issues/5)
+2 - **Edit > Convert - error in preview complex variable convertion**: fixed converting complex to character in the preview given that gt table in opt_interactive does not show complex properly ([#5](https://github.com/lgschuck/spada/issues/5))
 
-3 - **Edit > Filter: error in filtering complex**: now only show/allow operators '== (Equal)', '!= (Not Equal)', 'Is NA (is.na)', 'Not NA (! is.na)', 'In (%in%)' and 'Not In (! %in%)' (same for character and factors) ([#6](https://github.com/lgschuck/spada/issues/6)
+3 - **Edit > Filter: error in filtering complex**: now only show/allow operators '== (Equal)', '!= (Not Equal)', 'Is NA (is.na)', 'Not NA (! is.na)', 'In (%in%)' and 'Not In (! %in%)' (same for character and factors) ([#6](https://github.com/lgschuck/spada/issues/6))
 
-4 - **Edit > Filter: accept blank value**: now the value must have length 1 or bigger ([#7](https://github.com/lgschuck/spada/issues/7)
+4 - **Edit > Filter: accept blank value**: now the value must have length 1 or bigger ([#7](https://github.com/lgschuck/spada/issues/7))
 
 ### Improvements
 
