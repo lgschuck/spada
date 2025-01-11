@@ -6,30 +6,26 @@ descriptive_stats_ui <- function(id) {
     full_screen = T,
     card_header('Descriptive Statistics', class = 'mini-header'),
     layout_sidebar(bg = '#02517d',
-      sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
+      sidebar = sidebar(
+        bg = '#e3e3e4',
+        uiOutput(ns('parameters')),
+          checkboxGroupInput(
+            ns('xg_central_tendency'),
+            h6('Central Tendency'), inline = T,
+            c('Mean' = 'mean', 'Median' = 'median')
+          ),
+          checkboxGroupInput(
+            ns('xg_dispersion'), h6('Dispersion'), inline = T,
+            c('Minimum' = 'min', 'Maximum' = 'max', 'IQR',
+              'Range' = 'range', 'Variance' = 'var',
+              'Standard Deviation' = 'sd')
+          ),
+      ),
       navset_card_pill(
         nav_panel(
           'Stats',
-          accordion(
-            open = T,
-            accordion_panel(
-              'Measures',
-
-                  checkboxGroupInput(
-                    ns('xg_central_tendency'),
-                    'Central Tendency', inline = T,
-                    c('Mean' = 'mean', 'Median' = 'median')
-                  ),
-                  checkboxGroupInput(
-                    ns('xg_dispersion'), 'Dispersion', inline = T,
-                    c('Minimum' = 'min', 'Maximum' = 'max', 'IQR',
-                      'Range' = 'range', 'Variance' = 'var',
-                      'Standard Deviation' = 'sd')
-                    ),
-                # numericInput(ns('outliers'), 'Outliers', 0, 0, 100, 5)
-            ),
-            accordion_panel(
-              'Values',
+          card(full_screen = T,
+            card_body(
               gt_output(ns('gt_stats')))
           )
         )

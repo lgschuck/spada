@@ -8,7 +8,15 @@ editor_options:
 
 ## TO DO
 
-1 - use reactive instead of reactiveValues for datasets
+## 2025.01.11-1
+
+1 - **Mainly internal organization**, migrating spada UI to **spada_ui.R** function and spada Server to **spada_server.R** function.
+
+2 - **New modules**: Data Overview and Data Highlights
+
+3 - **Visual changes** in Correlation module and Descriptive Stats module
+
+4 - New exported **function is_date**
 
 ## 2025.01.10-1
 
@@ -19,9 +27,13 @@ editor_options:
 ### Improvements
 
 1 - **Stats table** now is a module
+
 2 - **new module Correlation**
+
 3 - **new module Descriptive Stats**
+
 4 - **Scatter** (Analysis > Exploratory) now with filled points
+
 5 - **export functions**: df_info, gt_info and is_valid_name now are exported
 
 ## 2025.01.05-1

@@ -9,6 +9,17 @@
 The goal of **spada** is to provide visual tools for Data Analysis in a
 Shiny App.
 
+This package is inspired in many other tools like:
+
+- IBM SPSS Statistics (<https://www.ibm.com/products/spss-statistics>)
+
+- R Commander package
+  (<https://cran.r-project.org/web/packages/Rcmdr/index.html>)
+
+- Jamovi (<https://www.jamovi.org/>)
+
+- ydata profiling (<https://docs.profiling.ydata.ai/latest/>)
+
 ## Installation
 
 You can install the development version of spada from
@@ -25,7 +36,7 @@ devtools::install_github("lgschuck/spada")
 library(spada)
 ```
 
-## Use
+## Usage
 
 ``` r
 if(interactive()){

@@ -137,11 +137,6 @@ msg_error <- function(TEXT, DURATION = 2){
   showNotification(ui = TEXT, duration = DURATION, type = 'error')
 }
 
-# is date function ------------------------------------------------------------
-is_date <- function(x){
-  inherits(x, c('Date', 'POSIXt', 'POSIXct', 'POSIXlt'))
-}
-
 # try convert -----------------------------------------------------------------
 try_convert <- function(x, fun){
   tryCatch(fun(x),
