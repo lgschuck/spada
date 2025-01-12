@@ -97,15 +97,7 @@ spada_ui <- function(){
                          ),
                          card_footer(btn_task('pE_filter_btn_filter', 'Apply filters', icon('check')))
                        ),
-                       card(
-                         card_header('Select Columns', class = 'mini-header'),
-                         card_body(
-                           uiOutput('pE_filter_ui_var_sel'),
-                           radioButtons('pE_filter_radio_var_sel', NULL,
-                                        c('Drop' = 'drop', 'Keep' = 'keep'), inline = T)
-                         ),
-                         card_footer(btn_task('pE_filter_btn_sel', 'Apply selection', icon('check')))
-                       )
+                       select_cols_ui('pE_filter_sel_cols'),
                      ),
                    ),
                    nav_panel(
@@ -165,21 +157,7 @@ spada_ui <- function(){
                            btn_task('pE_order_btn_order_rows', 'Order Rows', icon('shuffle')),
                          )
                        ),
-                       card(
-                         card_header('Order Columns', class = 'mini-header'),
-                         card_body(
-                           uiOutput('pE_order_ui_var_cols'),
-                           radioButtons('pE_order_radio_cols', NULL,
-                                        c('Before' = 'before', 'After' = 'after'),
-                                        inline = T),
-                           selectInput('pE_order_vars_rest', 'Other Variables', '') |>
-                             tooltip('If not informed, the Other Variables will be placed at the end',
-                                     placement = 'right'),
-                         ),
-                         card_footer(
-                           btn_task('pE_order_btn_order_cols', 'Order Columns', icon('arrow-right-arrow-left')),
-                         )
-                       )
+                       order_cols_ui('pE_filter_order_cols')
                      )
                    )
                  )

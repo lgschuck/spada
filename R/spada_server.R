@@ -115,7 +115,8 @@ spada_server <- function(datasets){
     data_overview_server('pD_overview', reactive(df$df_active),
                          reactive(list(input$pE_convert_btn_apply,
                                        input$pE_order_btn_order_rows,
-                                       input$pE_order_btn_order_cols)))
+                                       mod_pE_order_cols$btn_order_cols()
+                                       )))
 
     # values for boxes -----------------------
     data_highlights_server('pD_highlights', reactive(df$df_active), df_metadata)
@@ -190,10 +191,6 @@ spada_server <- function(datasets){
     # filter events ---------------------------
     output$pE_filter_ui_var_filter <- renderUI(
       selectInput('pE_filter_vars_filter', 'Variable', c('', df_active_names()))
-    )
-
-    output$pE_filter_ui_var_sel <- renderUI(
-      selectInput('pE_filter_vars_sel', 'Variable', c('', df_active_names()), multiple = T)
     )
 
     observe({
@@ -341,25 +338,15 @@ spada_server <- function(datasets){
     }) |> bindEvent(input$pE_filter_btn_filter)
 
     # select cols ---------------------------
+    mod_pE_sel_cols <- select_cols_server('pE_filter_sel_cols',
+                                          reactive(df$df_active))
+    # update df_active after sel_cols
     observe({
-      if(input$pE_filter_vars_sel |> length() == 0){
-        msg('Select at least one variable')
-      } else {
-        if(input$pE_filter_radio_var_sel == 'keep') {
-          df$df_active <- subset(df$df_active, select = input$pE_filter_vars_sel)
-          msg('Select columns: OK')
-        } else if (input$pE_filter_radio_var_sel == 'drop'){
-          if(all(df_active_names() %in% input$pE_filter_vars_sel)){
-            msg('Leave at least 1 variable')
-          } else {
-            df$df_active <- subset(
-              df$df_active,
-              select = setdiff(names(df$df_active), input$pE_filter_vars_sel))
-            msg('Select columns: OK')
-          }
-        }
-      }
-    }) |> bindEvent(input$pE_filter_btn_sel)
+      req(mod_pE_sel_cols$df_sel_cols())
+
+      df$df_active <- mod_pE_sel_cols$df_sel_cols()
+
+    }) |> bindEvent(mod_pE_sel_cols$df_sel_cols())
 
     # convert events ---------------------------
     output$pE_convert_ui_var_sel <- renderUI(
@@ -478,34 +465,15 @@ spada_server <- function(datasets){
     }) |> bindEvent(input$pE_order_btn_order_rows)
 
     # order cols events ---------------------------
-    output$pE_order_ui_var_cols <- renderUI(
-      selectInput('pE_order_vars_cols', 'Variables to move', c('', df_active_names()), multiple = T)
-    )
-
-    # rest of vars to order
+    mod_pE_order_cols <- order_cols_server('pE_filter_order_cols',
+                                          reactive(df$df_active))
+    # update df_active after sel_cols
     observe({
-      updateSelectInput(
-        session,
-        'pE_order_vars_rest',
-        label = 'Other Variables',
-        choices = df_active_names()[df_active_names() %notin% input$pE_order_vars_cols]
-      )
-    }) |> bindEvent(input$pE_order_vars_cols)
+      req(mod_pE_order_cols$df_order_cols())
 
-    # btn order cols ---------------------------
-    observe({
-      if(all(df_active_names() %in% input$pE_order_vars_cols) ||
-         input$pE_order_vars_rest == ''){
-        setcolorder(df$df_active, input$pE_order_vars_cols)
-      } else if(input$pE_order_radio_cols == 'before'){
-        setcolorder(df$df_active, input$pE_order_vars_cols,
-                    before = input$pE_order_vars_rest)
-      } else if (input$pE_order_radio_cols == 'after') {
-        setcolorder(df$df_active, input$pE_order_vars_cols,
-                    after = input$pE_order_vars_rest)
-      }
-      msg('Reordering Variables: OK')
-    }) |> bindEvent(input$pE_order_btn_order_cols)
+      df$df_active <- mod_pE_order_cols$df_order_cols()
+
+    }) |> bindEvent(mod_pE_order_cols$df_order_cols())
 
     # reset df active ---------------------------
     observe({

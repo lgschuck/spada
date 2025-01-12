@@ -8,6 +8,12 @@ editor_options:
 
 ## TO DO
 
+## 2025.01.11-2
+
+1 - **New modules**: Order Cols and Select Cols
+
+2 - **Correlation module** with better visual (using card instead of accordion)
+
 ## 2025.01.11-1
 
 1 - **Mainly internal organization**, migrating spada UI to **spada_ui.R** function and spada Server to **spada_server.R** function.

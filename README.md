@@ -20,6 +20,12 @@ This package is inspired in many other tools like:
 
 - ydata profiling (<https://docs.profiling.ydata.ai/latest/>)
 
+<div style="border: 2px solid #02517d; padding: 10px; background-color: #a9ccdb;">
+
+<strong>Warning:</strong> Spada is in active development.
+
+</div>
+
 ## Installation
 
 You can install the development version of spada from

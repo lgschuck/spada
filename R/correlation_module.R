@@ -8,40 +8,50 @@ correlation_ui <- function(id) {
     layout_sidebar(bg = '#02517d',
       sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
       navset_card_pill(
-        nav_panel('Test', accordion(open = T,
-          accordion_panel('Parameters', fluidRow(
-            column(3, radioButtons(
-              ns('radio_method'),
-              'Method',
-              c(
-                'Pearson' = 'pearson',
-                'Kendall' = 'kendall',
-                'Spearman' = 'spearman'
-              )
-            )),
-            column(3, radioButtons(
-              ns('radio_alternative'), 'Alternative', c(
-                c(
-                  'Two.sided' = 'two.sided',
-                  'Less' = 'less',
-                  'Greater' = 'greater'
+        nav_panel(
+          'Test',
+          accordion(
+            open = T,
+            accordion_panel(
+              'Parameters',
+              fluidRow(
+                column(3, radioButtons(ns('radio_method'),
+                                       'Method',
+                                       c('Pearson' = 'pearson',
+                                         'Kendall' = 'kendall',
+                                         'Spearman' = 'spearman')
+                                      )
+                       ),
+                column(3, radioButtons(ns('radio_alternative'),
+                                       'Alternative',
+                                       c('Two.sided' = 'two.sided',
+                                         'Less' = 'less',
+                                         'Greater' = 'greater')
+                                       )
+                       ),
+                column(2, numericInput(ns('confidence'),
+                                       'Confidence Interval - %',
+                                       value = 95, 0, 100, 5),
+                       btn_task(ns('btn_run_test'), 'Run Test')
+                       )
                 )
               )
-            )),
-            column(
-              2,
-              numericInput(ns('confidence'), 'Confidence Interval - %', value = 95, 0, 100, 5),
-              btn_task(ns('btn_run_test'), 'Run Test')
+            ),
+            card(
+              full_screen = T,
+              card_body(verbatimTextOutput(ns('cor_test_results')))
             )
-          )),
-          accordion_panel('Test Results', verbatimTextOutput(ns(
-            'cor_test_results'
-          )))
-        )),
-        nav_panel('Plot', plotOutput(ns('scatter_plot'))),
+          ),
+          nav_panel(
+            'Plot',
+            card(
+              full_screen = T,
+              card_body(plotOutput(ns('scatter_plot')))
+            )
+          )
+        )
       )
     )
-  )
 }
 
 # server ----------------------------------------------------------------------
