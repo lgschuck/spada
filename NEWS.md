@@ -8,6 +8,26 @@ editor_options:
 
 ## TO DO
 
+1 - Allow filter multiple conditions
+
+2 - Allow create and calculate variables
+
+3 - Functionalities to detect and treat duplicates
+
+4 - Normality tests
+
+## 2025.01.12-1
+
+### Improvements
+
+1 - **New modules**: Sidebar and Navbar Df Info
+
+2 - New function **filter_rows** in utils.R
+
+3 - **New reactives**: df_active_ncol, df_active_resume_data and df$df_trigger (to use for updates)
+
+4 - **New Vignette**: Intro
+
 ## 2025.01.11-2
 
 1 - **New modules**: Order Cols and Select Cols
@@ -72,7 +92,7 @@ editor_options:
 
 ### Bug Fixes
 
-1 - Data Overview - after Edit only refresh if updat in rows or sample: fixed with insertion of buttons inside output$pD_over_gt. Avaliate use of reactive instead of reactiveValues for datasets. ([#3](https://github.com/lgschuck/spada/issues/3))
+1 - **Data Overview - after Edit only refresh if updat in rows or sample**: fixed with insertion of buttons inside output$pD_over_gt. ([#3](https://github.com/lgschuck/spada/issues/3))
 
 ### Improvements
 

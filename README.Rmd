@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# spada ([**S**]{.underline}hiny [**Pa**]{.underline}ckage for [**D**]{.underline}ata [**A**]{.underline}nalysis)
+# spada ([**S**]{.underline}hiny [**Pa**]{.underline}ckage for [**D**]{.underline}ata [**A**]{.underline}nalysis) <img src="man/figures/logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
 

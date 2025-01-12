@@ -25,17 +25,7 @@ spada_ui <- function(){
       bg = '#02517d',
 
       # page sidebar ----------------------------------------------------------
-      sidebar = sidebar(
-        bg = '#e3e3e4',
-        open = F,
-        accordion(
-          open = T,
-          accordion_panel(
-            style = 'background-color: #02517d; color: white;',
-            'Dataset Info',
-            icon = bs_icon('file-binary', size = '1.75em'),
-            uiOutput('sidebar_df_info')
-          ))),
+      sidebar = sidebar_ui('sidebar'),
 
       # page data -------------------------------------------------------------
       nav_panel(
@@ -277,11 +267,7 @@ spada_ui <- function(){
                     )),
                 ),
                 navset_card_pill(
-                  nav_panel(
-                    'Stats',
-                    full_screen = T,
-                    stats_table_ui('pA_stats')
-                  )
+                  nav_panel('Stats', full_screen = T, stats_table_ui('pA_stats')                  )
                 )
               )
             )
@@ -325,7 +311,7 @@ spada_ui <- function(){
       # active dataset --------------------------------------------------------
       nav_item('Active dataset:'),
       nav_item(h4(textOutput('df_active_name')) |>
-                 popover(uiOutput('navbar_dataset_info'),
+                 popover(navbar_df_info_ui('navbar_df_info'),
                          placement = 'bottom'))
     )
   )

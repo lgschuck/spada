@@ -16,20 +16,44 @@ knitr::opts_chunk$set(
 
 ## Datasets
 
-The basic object in Spada is a dataset. A dataset is an object of the data.frame class. Internally, for speed and programmability purposes, Spada uses the data.table class from the data.table package.
+The basic object in Spada is a dataset. A dataset is an object of the data.frame class. Internally, for speed and programmability purposes, Spada uses the data.table class from the [**data.table**](https://rdatatable.gitlab.io/data.table/) package.
 
-So Spada demands at least one dataset. If none is provided in the funcion call the Iris and Mtcars, from datasets package, are used.
+So, Spada demands at least one dataset. If none is provided in the funcion call then Iris and Mtcars, from datasets package, are used as sample data.
 
 ```{r, eval = FALSE}
 library(spada)
 spada()
 ```
 
-For multiples datasets:
+For multiples datasets as input:
 
 ```{r, eval = FALSE}
-spada(df1, df2, df3)
+spada(iris, mtcars, cars)
 ```
+
+### Dataset Names
+
+If the user desires to give the datasets names, then the Spada function should be called like this:
+
+```{r, eval = FALSE}
+spada('dataset' = iris, 'test_data' = mtcars)
+```
+
+Spada will make valid and unique names with **make.names** function. So:
+
+```{r, eval = FALSE}
+spada('dataset 1' = iris, 'test data' = mtcars, 'dataset 1' = cars)
+```
+
+Will result in names: dataset.1, test.data and dataset.1.1.
+
+If the user inform at least one name, Spada will assume that the datasets should receive a name (instead the name of the original object) and **will create valid and unique names** using dataset_n, being n a sequencial number:
+
+```{r, eval = FALSE}
+spada('dataset 1' = iris, mtcars, cars)
+```
+
+Will result in names: dataset.1, dataset_2 and dataset_3.
 
 ### Active Dataset
 
@@ -40,3 +64,7 @@ The dataset in which the operations will be applied are the Active dataset. One 
 Spada uses a page_navbar from bslib package. In the left side are the menus that lead to the app pages. In the right side are the Active dataset name.
 
 ![](images/navbar_active_dataset.PNG)
+
+------------------------------------------------------------------------
+
+Updated: `r Sys.time()`

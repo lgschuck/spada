@@ -13,12 +13,14 @@ spada_server <- function(datasets){
     df <- reactiveValues(
       df_active = copy(datasets[[1]]),
       df_active_name = names(datasets)[1],
-      df_backup = NULL
+      df_backup = NULL,
+      df_trigger = 0
     )
 
     gc()
     df_active_names <- reactive(df$df_active |> names())
-    nrow_df_active <- reactive(df$df_active |> nrow())
+    df_active_nrow <- reactive(df$df_active |> nrow())
+    df_active_ncol <- reactive(df$df_active |> ncol())
 
     output$df_active_name <- renderText(
       if(nchar(df$df_active_name) <= 20){
@@ -29,83 +31,27 @@ spada_server <- function(datasets){
     )
 
     # navbar ------------------------------------------------------------------
-    output$navbar_dataset_info <- renderUI({
-      tagList(
-        h5(df$df_active_name),
-        p('Rows/Columns:',
-          paste(nrow_df_active() |> f_num(dec = '.', big = ',', dig = 3), '/',
-                nrow_df_active() |> f_num(dec = '.', big = ','))
-        ),
-        p("Columns with NA's:",  sum(colSums(is.na(df$df_active)) > 0)),
-        p('Size (MB):', (object.size(df$df_active) / 2^20) |>
-            as.numeric() |> round(2)),
-        btn_task('navbar_df_btn_overview', '', bs_icon('search'),
-                 style = 'padding: 5px 10px;'),
-        btn_task('navbar_df_btn_change', '', bs_icon('shuffle'),
-                 style = 'padding: 5px 10px;'),
-        btn_task('navbar_df_btn_explore', '', bs_icon('bar-chart-line'),
-                 style = 'padding: 5px 10px;')
-      )
+    # info used in navbar and sidebar
+    df_active_resume_data <- reactiveValues()
+
+    observe({
+      df_active_resume_data$nrow <- df_active_nrow()
+      df_active_resume_data$ncol <- df_active_ncol()
+      df_active_resume_data$name <- df$df_active_name
+      df_active_resume_data$n_nas <- df_metadata() |> filter(n_nas > 0) |> nrow()
+      df_active_resume_data$size <- (object.size(df$df_active) / 2^20) |>
+        as.numeric() |> round(2)
     })
 
-    observe({
-      nav_select('navbar', selected = 'Data')
-      nav_select('navset_card_pill_data', selected = 'Overview')
-    }) |> bindEvent(input$navbar_df_btn_overview)
-
-    observe({
-      nav_select('navbar', selected = 'Data')
-      nav_select('navset_card_pill_data', selected = 'Data')
-    }) |> bindEvent(input$navbar_df_btn_change)
-
-    observe({
-      nav_select('navbar', selected = 'Exploratory')
-    }) |> bindEvent(input$navbar_df_btn_explore)
+    navbar_df_info_server('navbar_df_info', reactive(df_active_resume_data),
+                          app_session = session)
 
     # side bar --------------------------------------------------------
-    output$sidebar_df_info <- renderUI({
-      tagList(
-        h5(df$df_active_name),
-        p('Rows/Columns:',
-          paste(nrow_df_active() |> f_num(dec = '.', big = ',', dig = 3), '/',
-                nrow_df_active() |> f_num(dec = '.', big = ','))
-        ),
-        p("Columns with NA's:",  sum(colSums(is.na(df$df_active)) > 0)),
-        p('Size (MB):', (object.size(df$df_active) / 2^20) |>
-            as.numeric() |> round(2)),
-        fluidRow(
-          column(1),
-          column(2, btn_task('sidebar_df_btn_overview', '', bs_icon('search'),
-                             style = 'padding: 5px 10px;') |>
-                   tooltip('Overview', placement = 'bottom')),
-          column(2, btn_task('sidebar_df_btn_change', '', bs_icon('shuffle'),
-                             style = 'padding: 5px 10px;') |>
-                   tooltip('Change dataset', placement = 'bottom')),
-          column(2, btn_task('sidebar_df_btn_explore', '', bs_icon('bar-chart-line'),
-                             style = 'padding: 5px 10px;') |>
-                   tooltip('Exploratory Analysis', placement = 'bottom')),
-        )
-      )
-    })
-
-    observe({
-      nav_select('navbar', selected = 'Data')
-      nav_select('navset_card_pill_data', selected = 'Overview')
-    }) |> bindEvent(input$sidebar_df_btn_overview)
-
-    observe({
-      nav_select('navbar', selected = 'Data')
-      nav_select('navset_card_pill_data', selected = 'Data')
-    }) |> bindEvent(input$sidebar_df_btn_change)
-
-    observe({
-      nav_select('navbar', selected = 'Analysis')
-      nav_select('navbar', selected = 'Exploratory')
-    }) |> bindEvent(input$sidebar_df_btn_explore)
+    sidebar_server('sidebar', reactive(df_active_resume_data), app_session = session)
 
     # data page events -----------------------------------------------------
     df_metadata <- reactive({
-      input$pE_convert_btn_apply
+      df$df_trigger
       df_info(df$df_active)
     })
 
@@ -213,6 +159,9 @@ spada_server <- function(datasets){
     }) |> bindEvent(input$pE_filter_vars_filter)
 
     pE_filter_value_temp <- reactive({
+
+      req(input$pE_filter_value)
+
       if(df$df_active[[input$pE_filter_vars_filter]] |> is.numeric()){
         unlist(input$pE_filter_value) |> as.numeric()
       } else if (df$df_active[[input$pE_filter_vars_filter]] |> is_date()){
@@ -247,17 +196,13 @@ spada_server <- function(datasets){
       )
     }) |> bindEvent(input$pE_filter_vars_filter)
 
-    pE_filter_preview_value <- reactive({
-      req(input$pE_filter_value)
-      pE_filter_value_temp()
-    })
     # update current format txt
     observe({
       updateTextInput(session, 'pE_filter_txt_preview_value',
                       label = 'Preview value',
-                      value = pE_filter_preview_value()
+                      value = pE_filter_value_temp()
       )
-    }) |> bindEvent(pE_filter_preview_value())
+    }) |> bindEvent(pE_filter_value_temp())
 
     # filter rows
     observe({
@@ -271,43 +216,10 @@ spada_server <- function(datasets){
                 c('between', 'not_between')){
         msg_error('Operator requires value of length 2')
       } else {
-        if(input$pE_filter_operator == '=='){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) == pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == '!='){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) != pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == '>'){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) > pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == '>='){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) >= pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == '<'){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) < pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == '<='){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) <= pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == 'is_na'){
-          df$df_active <-
-            df$df_active[is.na(get(input$pE_filter_vars_filter)), ]
-        } else if(input$pE_filter_operator == 'not_na'){
-          df$df_active <-
-            df$df_active[!is.na(get(input$pE_filter_vars_filter)), ]
-        } else if(input$pE_filter_operator == 'in'){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) %in% pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == 'not_in'){
-          df$df_active <-
-            df$df_active[!get(input$pE_filter_vars_filter) %in% pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == 'between'){
-          df$df_active <-
-            df$df_active[get(input$pE_filter_vars_filter) %between% pE_filter_value_temp(), ]
-        } else if(input$pE_filter_operator == 'not_between'){
-          df$df_active <-
-            df$df_active[!(get(input$pE_filter_vars_filter) %between% pE_filter_value_temp()), ]
-        }
+        df$df_active <- filter_rows(df$df_active,
+                                    input$pE_filter_vars_filter,
+                                    input$pE_filter_operator,
+                                    pE_filter_value_temp())
         msg('Filter rows: OK')
       }
     }) |> bindEvent(input$pE_filter_btn_filter)
@@ -372,10 +284,10 @@ spada_server <- function(datasets){
     pE_convert_preview_sample_trigger <- reactiveVal(1)
     pE_convert_preview_sample <- reactive({
       pE_convert_preview_sample_trigger()
-      if(nrow_df_active() < 8) {
-        rep(TRUE, nrow(df$df_active))
+      if(df_active_nrow() < 8) {
+        rep(TRUE, df_active_nrow())
       } else {
-        sample(nrow_df_active(), 8, replace = F)
+        sample(df_active_nrow(), 8, replace = F)
       }
     })
 
@@ -430,6 +342,8 @@ spada_server <- function(datasets){
                                date_origin = input$pE_convert_sel_date_origin)]
         msg('Conversion applied')
       }
+
+      df$df_trigger <- df$df_trigger + 1
     }) |> bindEvent(input$pE_convert_btn_apply)
 
     # order rows events ---------------------------

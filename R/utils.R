@@ -144,7 +144,7 @@ try_convert <- function(x, fun){
            warning = function(w) rep(NA, x |> length()))
 }
 
-# format conversion ----------------------------------------------------------
+# format conversion -----------------------------------------------------------
 convert <- function(x, type, date_format = '%Y-%m-%d',
                     date_origin = '1970-01-01'){
   if(x |> is.raw()) x <- as.numeric(x)
@@ -169,6 +169,35 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
     #   as.raw(x)
   } else if(type == 'as.complex'){
     if(x |> is.character()) rep(NA, length(x)) else as.complex(x)
+  }
+}
+
+# filter function -------------------------------------------------------------
+filter_rows <- function(df, var, operator, filter_value){
+  if(operator == '=='){
+    df[get(var) == filter_value, ]
+  } else if(operator == '!='){
+    df[get(var) != filter_value, ]
+  } else if(operator == '>'){
+    df[get(var) > filter_value, ]
+  } else if(operator == '>='){
+    df[get(var) >= filter_value, ]
+  } else if(operator == '<'){
+    df[get(var) < filter_value, ]
+  } else if(operator == '<='){
+    df[get(var) <= filter_value, ]
+  } else if(operator == 'is_na'){
+    df[is.na(get(var)), ]
+  } else if(operator == 'not_na'){
+    df[!is.na(get(var)), ]
+  } else if(operator == 'in'){
+    df[get(var) %in% filter_value, ]
+  } else if(operator == 'not_in'){
+    df[!get(var) %in% filter_value, ]
+  } else if(operator == 'between'){
+    df[get(var) %between% filter_value, ]
+  } else if(operator == 'not_between'){
+    df[!(get(var) %between% filter_value), ]
   }
 }
 

@@ -15,7 +15,6 @@
 #' @importFrom dplyr arrange filter mutate pull select
 #' @import bslib
 #' @import bsicons
-#' @import DT
 #' @import gt
 #' @importFrom graphics abline hist
 #' @importFrom stats median
