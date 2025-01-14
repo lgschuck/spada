@@ -62,9 +62,12 @@ page_config_server <- function(id) {
     }) |> bindCache(palette())
 
     observe({
-      options(shiny.maxRequestSize = input$input_file_size * 1024 ^ 2)
-      msg('New limit applied')
-
+      if(!isTruthy(input$input_file_size) || input$input_file_size < 1) {
+        msg('Value must be > 1')
+      } else {
+        options(shiny.maxRequestSize = input$input_file_size * 1024 ^ 2)
+        msg('New limit applied')
+      }
     }) |> bindEvent(input$btn_file_size)
 
     return(list(palette = palette))

@@ -201,6 +201,11 @@ filter_rows <- function(df, var, operator, filter_value){
   }
 }
 
+# tip place top by default ----------------------------------------------------
+ttip <- function(TRIGGER, ..., ID = NULL, PLACE = 'top'){
+  tooltip(trigger = TRIGGER, ... = ..., id = ID, placement = PLACE)
+}
+
 # palettes --------------------------------------------------------------------
 
 gray_palette <- c('#ffffff', '#585858', '#232323')

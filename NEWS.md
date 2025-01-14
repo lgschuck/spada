@@ -16,6 +16,33 @@ editor_options:
 
 4 - Normality tests
 
+## 2025.01.13-1
+
+### Bug Fixes
+
+1 - **Edit > Filter: Factor var - no levels after choose operator**: fixed
+(inserted req(operator)). Now the levels are shown when a factor var and an operator are selected. ([#9](https://github.com/lgschuck/spada/issues/9))
+
+### Improvements
+
+1 - **testthat**: create structure to run tests (test-fina.R as initial test)
+
+2 - **New modules**: Order Rows, Convert Cols and Exploratory
+
+3 - **Correlation** module: insert req in scatter plot
+
+4 - **Page Config** module: now validate value for file size (requires > 1 MB)
+
+5 - New **ttip** function (basic bslib::tooltip) with placement 'top' as default
+
+6 - Insertion of **info-circle** item in **tooltips** (almost everywhere) for better look
+
+7 - Better imports, **using importFrom** for bslib and gt packages
+
+8 - **Remove all gc()** calls
+
+9 - **df_info** function now test anyNA and if TRUE count NA values (speed improvement)
+
 ## 2025.01.12-1
 
 ### Improvements

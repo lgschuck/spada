@@ -9,7 +9,9 @@
 #' @export
 #'
 #' @importFrom data.table setDT
-#' @import gt
+#' @importFrom gt cols_label cols_merge cols_move cols_width data_color
+#'             fmt_bytes fmt_icon fmt_integer fmt_number fmt_percent gt
+#'             gt_output opt_interactive render_gt sub_missing tab_options
 
 gt_info <- function(df){
   stopifnot(is.data.frame(df))
@@ -27,32 +29,32 @@ gt_info <- function(df){
     class == 'logical', 'puzzle-piece')]
 
   df_gt <- df |>
-    gt::gt()
+    gt()
 
   # if all NA do nothing
   if(!all(df$min |> is.na())){
     df_gt <- df_gt |>
-      gt::data_color(columns = 'min', palette = yl_palette)
+      data_color(columns = 'min', palette = yl_palette)
   }
 
   # if all NA do nothing
   if(!all(df$max |> is.na())){
     df_gt <- df_gt |>
-      gt::data_color(columns = 'max', palette = pk_palette)
+      data_color(columns = 'max', palette = pk_palette)
   }
 
   df_gt |>
-    gt::fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
-    gt::fmt_bytes(columns = 'size') |>
-    gt::data_color(columns = 'size', palette = blue_palette) |>
-    gt::data_color(columns = 'n_valid', palette = lg_palette) |>
-    gt::data_color(columns = 'n_unique', palette = dg_palette) |>
-    gt::data_color(columns = 'n_zero', palette = gray_palette) |>
-    gt::data_color(columns = 'n_nas', palette = red_palette) |>
-    gt::fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
-    gt::fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
-    gt::sub_missing() |>
-    gt::opt_interactive(
+    fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
+    fmt_bytes(columns = 'size') |>
+    data_color(columns = 'size', palette = blue_palette) |>
+    data_color(columns = 'n_valid', palette = lg_palette) |>
+    data_color(columns = 'n_unique', palette = dg_palette) |>
+    data_color(columns = 'n_zero', palette = gray_palette) |>
+    data_color(columns = 'n_nas', palette = red_palette) |>
+    fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
+    fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
+    sub_missing() |>
+    opt_interactive(
       use_filters = T,
       use_resizers = T,
       use_highlight = T,
@@ -60,9 +62,9 @@ gt_info <- function(df){
       use_text_wrapping = F,
       use_page_size_select = T
     ) |>
-    gt::cols_move(columns = 'f_icon', after = 'var') |>
-    gt::fmt_icon(columns = f_icon) |>
-    gt::cols_label(
+    cols_move(columns = 'f_icon', after = 'var') |>
+    fmt_icon(columns = f_icon) |>
+    cols_label(
       var = 'Variable',
       type = 'Type',
       class = 'Class',
@@ -75,11 +77,11 @@ gt_info <- function(df){
       n_nas = "NA's",
       f_icon = ''
     ) |>
-    gt::cols_width(f_icon ~ px(30)) |>
-    gt::cols_merge(columns = c(class, f_icon), pattern = "{2} {1}") |>
-    gt::cols_merge(columns = c(n_valid, perc_valid), pattern = "{1} / {2}") |>
-    gt::cols_merge(columns = c(n_unique, perc_unique), pattern = "{1} / {2}") |>
-    gt::cols_merge(columns = c(n_zero, perc_zero), pattern = "{1} / {2}") |>
-    gt::cols_merge(columns = c(n_nas, perc_nas), pattern = "{1} / {2}") |>
-    gt::tab_options(table.background.color = '#ffffff')
+    cols_width(f_icon ~ px(30)) |>
+    cols_merge(columns = c(class, f_icon), pattern = "{2} {1}") |>
+    cols_merge(columns = c(n_valid, perc_valid), pattern = "{1} / {2}") |>
+    cols_merge(columns = c(n_unique, perc_unique), pattern = "{1} / {2}") |>
+    cols_merge(columns = c(n_zero, perc_zero), pattern = "{1} / {2}") |>
+    cols_merge(columns = c(n_nas, perc_nas), pattern = "{1} / {2}") |>
+    tab_options(table.background.color = '#ffffff')
 }

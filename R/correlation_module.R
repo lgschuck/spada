@@ -103,7 +103,10 @@ correlation_server <- function(id, df, metadata, color_fill) {
     output$cor_test_results <- renderPrint(cor_test$results) |>
       bindEvent(input$btn_run_test)
 
-    output$scatter_plot <- renderPlot(
+    output$scatter_plot <- renderPlot({
+      req(input$sel_var1)
+      req(input$sel_var2)
+
       plot(df_active()[[input$sel_var1]],
            df_active()[[input$sel_var2]],
            xlab = input$sel_var1,
@@ -111,6 +114,6 @@ correlation_server <- function(id, df, metadata, color_fill) {
            col = color_fill(), pch = 19, cex = 0.8
       )
 
-    )|> bindCache(df_active(), input$sel_var1, input$sel_var2, color_fill())
+    })|> bindCache(df_active(), input$sel_var1, input$sel_var2, color_fill())
   })
 }

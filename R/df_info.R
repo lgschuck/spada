@@ -13,7 +13,7 @@ df_info <- function(df){
 
   stopifnot(is.data.frame(df))
   rows <- nrow(df)
-  n_nas <- sapply(df, \(x) suna(is.na(x)))
+  n_nas <- sapply(df, \(x) if(anyNA(x)) suna(is.na(x)) else 0L)
   n_valid <- rows - n_nas
   n_unique <- sapply(df, \(x) length(unique(x)))
   n_zero <- sapply(df, \(x) suna(x == 0))

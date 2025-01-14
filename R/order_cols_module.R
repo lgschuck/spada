@@ -9,15 +9,16 @@ order_cols_ui <- function(id) {
       radioButtons(ns('radio_cols'), NULL,
                    c('Before' = 'before', 'After' = 'after'),
                    inline = T),
-      selectInput(ns('vars_rest'), 'Other Variables', '') |>
-        tooltip('If not informed, the Other Variables will be placed at the end',
-                placement = 'right'),
+      selectInput(ns('vars_rest'),
+                  list('Other Variables', bs_icon('info-circle')) |>
+                    ttip('If not informed, the Other Variables will be placed at the end',
+                         PLACE = 'right'),
+                  '')
     ),
     card_footer(
       btn_task(ns('btn_order_cols'), 'Order Columns', icon('arrow-right-arrow-left')),
     )
   )
-
 }
 
 # server ----------------------------------------------------------------------

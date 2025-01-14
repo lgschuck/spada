@@ -33,7 +33,7 @@ spada(iris, mtcars, cars)
 
 ### Dataset Names
 
-If the user desires to give the datasets names, then the Spada function should be called like this:
+If the user desires to give names to datasets, then the Spada function should be called like this:
 
 ```{r, eval = FALSE}
 spada('dataset' = iris, 'test_data' = mtcars)
@@ -67,4 +67,4 @@ Spada uses a page_navbar from bslib package. In the left side are the menus that
 
 ------------------------------------------------------------------------
 
-Updated: `r Sys.time()`
+Last Update: `r file.info('vignettes/Intro.Rmd')$mtime`
