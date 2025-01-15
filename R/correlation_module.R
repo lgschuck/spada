@@ -32,7 +32,7 @@ correlation_ui <- function(id) {
                 column(2, numericInput(ns('confidence'),
                                        'Confidence Interval - %',
                                        value = 95, 0, 100, 5),
-                       btn_task(ns('btn_run_test'), 'Run Test')
+                       btn_task(ns('btn_run_test'), 'Run Test', icon('gear'))
                        )
                 )
               )
@@ -46,7 +46,8 @@ correlation_ui <- function(id) {
             'Plot',
             card(
               full_screen = T,
-              card_body(plotOutput(ns('scatter_plot')))
+              card_body(plotOutput(ns('scatter_plot'))),
+              card_footer(btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear')))
             )
           )
         )
@@ -55,7 +56,7 @@ correlation_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-correlation_server <- function(id, df, metadata, color_fill) {
+correlation_server <- function(id, df, df_metadata, color_fill) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
@@ -66,7 +67,7 @@ correlation_server <- function(id, df, metadata, color_fill) {
     var_analysis <- reactive({
       df_names <- df_active() |> names()
 
-      var_analysis <- metadata() |> filter(perc_nas != 1) |> pull(var)
+      var_analysis <- df_metadata() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
       })
@@ -114,6 +115,7 @@ correlation_server <- function(id, df, metadata, color_fill) {
            col = color_fill(), pch = 19, cex = 0.8
       )
 
-    })|> bindCache(df_active(), input$sel_var1, input$sel_var2, color_fill())
+    })|> bindCache(df_active(), input$sel_var1, input$sel_var2, color_fill()) |>
+      bindEvent(input$btn_scatter)
   })
 }

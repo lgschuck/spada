@@ -82,6 +82,7 @@ spada_server <- function(datasets){
       df$df_active_name <- input$pD_data_sel_df
 
       msg(paste('Dataset', df$df_active_name, 'is the active one'))
+      gc()
     }) |> bindEvent(input$pD_data_btn_active)
 
     observe({
@@ -107,6 +108,7 @@ spada_server <- function(datasets){
       } else {
         dt_react$data[[ input$pD_data_txt_new_name ]] <- df$df_active
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
+        gc()
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
@@ -116,6 +118,7 @@ spada_server <- function(datasets){
       } else {
         dt_react$data[[ input$pD_data_sel_df ]] <- NULL
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
+        gc()
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
@@ -344,7 +347,12 @@ spada_server <- function(datasets){
     descriptive_stats_server('pA_desc_stats', reactive(df$df_active))
 
     # correlation -------------------------------------------------------------
-    correlation_server('pA_correlation', reactive(df$df_active), df_metadata, color_fill)
+    correlation_server('pA_correlation', reactive(df$df_active), df_metadata,
+                       color_fill)
+
+    # normality test ----------------------------------------------------------
+    normality_test_server('pA_normality_test', reactive(df$df_active),
+                       df_metadata, color_fill, color_line)
 
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')

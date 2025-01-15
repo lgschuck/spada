@@ -1,0 +1,165 @@
+
+# ui --------------------------------------------------------------------------
+normality_test_ui <- function(id) {
+  ns <- NS(id)
+  card(
+    full_screen = T,
+    card_header('Normality Test', class = 'mini-header'),
+    layout_sidebar(bg = '#02517d',
+      sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
+      navset_card_pill(
+        nav_panel(
+          'Histogram',
+          card(
+            full_screen = T,
+            card_body(plotOutput(ns('hist'))),
+            card_footer(
+              layout_columns(
+                col_widths = c(2, 3),
+                numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
+                btn_task(ns('btn_hist'), 'Generate Histogram', icon('gear'),
+                         style = 'margin-top:20px')
+              )
+            )
+          )
+        ),
+        nav_panel(
+          'QQ Plot',
+          card(
+            full_screen = T,
+            card_body(plotOutput(ns('qq_plot'))),
+            card_footer(btn_task(ns('btn_qq'), 'Generate QQ plot', icon('gear')))
+          )
+        ),
+        nav_panel(
+          'KS Test',
+          card(
+            full_screen = T,
+            card_body(verbatimTextOutput(ns('ks_test'))),
+            card_footer(btn_task(ns('btn_ks'), 'Run Test', icon('gear')))
+          )
+        ),
+        nav_panel(
+          'Shapiro-Wilk Test',
+          card(
+            full_screen = T,
+            card_body(verbatimTextOutput(ns('sw_test'))),
+            card_footer(btn_task(ns('btn_sw'), 'Run Test', icon('gear')))
+          )
+        )
+      )
+    )
+  )
+}
+
+# server ----------------------------------------------------------------------
+normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
+  moduleServer(id, function(input, output, session) {
+    ns <- NS(id)
+
+    df_active <- reactive({
+      req(df())
+      df()[, lapply(df(), is.numeric) == T, with = F]
+    })
+
+    var_analysis <- reactive({
+      req(df_active)
+
+      df_names <- df_active() |> names()
+
+      var_analysis <- df_metadata() |> filter(perc_nas != 1) |> pull(var)
+
+      df_names[df_names %in% var_analysis]
+      })
+
+    var <- reactive({
+      req(df_active())
+      req(input$sel_var1)
+      temp <- df_active()[[input$sel_var1]]
+      temp[!is.na(temp)]
+    })
+
+    output$parameters <- renderUI({
+      req(var_analysis())
+      tagList(
+        selectInput(ns('sel_var1'), 'Variable 1', var_analysis()),
+        p('* Showing only numeric variables')
+      )
+    })
+
+    output$hist <- renderPlot({
+      req(df_active())
+      req(input$sel_var1)
+      req(var())
+
+      validate(need(input$bins > 0, 'Bins must be 1 or higher'))
+
+      hist(var(),
+           breaks = input$bins,
+           probability = TRUE,
+           col = color_fill(),
+           xlab = 'Values',
+           ylab = 'Density',
+           main = paste('Histogram of', input$sel_var1)
+           )
+      curve(dnorm(x, mean = mean(var()),
+                  sd = sd(var())),
+            col = color_line(),
+            lwd = 2,
+            add = TRUE)
+    })|> bindCache(var(), color_fill(), color_line(), input$bins) |>
+      bindEvent(input$btn_hist)
+
+    output$qq_plot <- renderPlot({
+      req(input$sel_var1)
+      req(var())
+
+      qqnorm(var(), main = paste('Normal QQ Plot:', input$sel_var1),
+                                 col = color_fill())
+      qqline(var(), col = color_line())
+
+    })|> bindCache(var(), color_fill(), color_line()) |>
+      bindEvent(input$btn_qq)
+
+    output$ks_test <- renderPrint({
+      req(input$sel_var1)
+      req(var())
+
+      if(anyDuplicated(var()) > 0){
+        # small error to avoid ties
+        inputed_error <- reactive(abs(mina(var())/1e6))
+
+        test_value <- reactive(var() + rnorm(length(var()),
+                                               mean = 0,
+                                               sd = inputed_error()))
+
+        results = list(
+          'Results' = ks.test(test_value(), 'pnorm'),
+          'Observations' = paste('There are tied values, normally distributed',
+                                 'random noise was added (mean = 0 and sd =',
+                                 inputed_error())
+          )
+      } else {
+        test_value <- reactive(var())
+
+        results = list('Results' = ks.test(test_value(), 'pnorm'))
+      }
+
+      results
+    }) |> bindEvent(input$btn_ks)
+
+    output$sw_test <- renderPrint({
+      req(input$sel_var1)
+      req(var())
+
+      validate(
+        need(between(var() |> length(), 3, 5000),
+             paste0('Sample size must be between 3 and 5000 (actual: ',
+                   var() |> length(), ')')
+             )
+      )
+      shapiro.test(var())
+    }) |> bindEvent(input$btn_sw)
+
+  })
+}

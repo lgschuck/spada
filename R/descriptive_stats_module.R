@@ -9,17 +9,18 @@ descriptive_stats_ui <- function(id) {
       sidebar = sidebar(
         bg = '#e3e3e4',
         uiOutput(ns('parameters')),
-          checkboxGroupInput(
-            ns('xg_central_tendency'),
-            h6('Central Tendency'), inline = T,
-            c('Mean' = 'mean', 'Median' = 'median')
-          ),
-          checkboxGroupInput(
-            ns('xg_dispersion'), h6('Dispersion'), inline = T,
-            c('Minimum' = 'min', 'Maximum' = 'max', 'IQR',
-              'Range' = 'range', 'Variance' = 'var',
-              'Standard Deviation' = 'sd')
-          ),
+        checkboxGroupInput(
+          ns('xg_central_tendency'),
+          h6('Central Tendency'), inline = T,
+          c('Mean' = 'mean', 'Median' = 'median')
+        ),
+        checkboxGroupInput(
+          ns('xg_dispersion'), h6('Dispersion'), inline = T,
+          c('Minimum' = 'min', 'Maximum' = 'max', 'IQR',
+            'Range' = 'range', 'Variance' = 'var',
+            'Standard Deviation' = 'sd')
+        ),
+        btn_task(ns('btn_stats'), 'Generate Table', icon('gear'))
       ),
       navset_card_pill(
         nav_panel(
@@ -122,6 +123,6 @@ descriptive_stats_server <- function(id, df) {
       ) |>
         gt() |>
         opt_interactive()
-    )
+    ) |> bindEvent(input$btn_stats)
   })
 }

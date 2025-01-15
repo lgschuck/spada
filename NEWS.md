@@ -14,7 +14,25 @@ editor_options:
 
 3 - Functionalities to detect and treat duplicates
 
-4 - Normality tests
+4 - Sample filters for datasets
+
+5 - Functionalities to detect and treat outliers
+
+6 - Inference z and t test
+
+7 - Models: linear model, logistic regression, Kmeans, Trees
+
+## 2025.01.14-1
+
+### Improvements
+
+1 - **New module**: Normality test
+
+2 - Module **Correlation** > Scatter Plot now has a button to render plot
+
+3 - Module **Descriptive Stats** now has a button to render table
+
+4 - Other small adjustments in internal code and **new tests**
 
 ## 2025.01.13-1
 

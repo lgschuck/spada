@@ -108,21 +108,15 @@ card(
 }
 
 # server ----------------------------------------------------------------------
-exploratory_server <- function(id, input_df, input_df_metadata,
-                               input_color_fill, input_color_line) {
+exploratory_server <- function(id, input_df, df_metadata,
+                               color_fill, color_line) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
-
-    df_metadata <- reactive(input_df_metadata())
 
     df <- reactiveValues()
     observe({
       df$df_active <- input_df()
     })
-
-    color_fill <- reactive(input_color_fill())
-
-    color_line <- reactive(input_color_line())
 
     var_analysis <- reactive({
       df_metadata() |> filter(perc_nas != 1) |>  pull(var)

@@ -125,10 +125,12 @@ spada_ui <- function(){
         nav_panel('Descriptive Stats',
                   icon = bs_icon('graph-up'),
                   descriptive_stats_ui('pA_desc_stats')),
-
         nav_panel('Correlation',
                   icon = bs_icon('magnet'),
-                  correlation_ui('pA_correlation'))
+                  correlation_ui('pA_correlation')),
+        nav_panel('Normality Test',
+                  icon = bs_icon('bell'),
+                  normality_test_ui('pA_normality_test')),
       ), # end of analysis menu
       # menu options ----------------------------------------------------------
       nav_menu(

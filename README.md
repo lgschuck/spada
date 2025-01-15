@@ -36,6 +36,16 @@ You can install the development version of spada from
 devtools::install_github("lgschuck/spada")
 ```
 
+For a specific release visit
+[Releases](https://github.com/lgschuck/spada/releases) and change the
+ref parameter bellow for the tag name:
+
+![](images/install_release.png)
+
+``` r
+devtools::install_github("lgschuck/spada", ref = "2025.01.13-1")
+```
+
 ## Loading the package
 
 ``` r
