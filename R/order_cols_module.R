@@ -49,14 +49,18 @@ order_cols_server <- function(id, input_df) {
 
     # btn order cols ---------------------------
     observe({
-      if(all(df_names() %in% input$vars_cols) || input$vars_rest == ''){
-        setcolorder(df$df_active, input$vars_cols)
-      } else if(input$radio_cols == 'before'){
-        setcolorder(df$df_active, input$vars_cols, before = input$vars_rest)
-      } else if (input$radio_cols == 'after') {
-        setcolorder(df$df_active, input$vars_cols, after = input$vars_rest)
+      if(!isTruthy(input$vars_cols)){
+        msg('Choose at least one variable')
+      } else {
+        if(all(df_names() %in% input$vars_cols) || input$vars_rest == ''){
+          setcolorder(df$df_active, input$vars_cols)
+        } else if(input$radio_cols == 'before'){
+          setcolorder(df$df_active, input$vars_cols, before = input$vars_rest)
+        } else if (input$radio_cols == 'after') {
+          setcolorder(df$df_active, input$vars_cols, after = input$vars_rest)
+        }
+        msg('Reordering Variables: OK')
       }
-      msg('Reordering Variables: OK')
     }) |> bindEvent(input$btn_order_cols)
 
     return(list(df_order_cols = reactive(df$df_active),

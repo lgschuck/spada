@@ -74,19 +74,7 @@ spada_ui <- function(){
                    nav_panel(
                      'Filter',
                      layout_column_wrap(
-                       card(
-                         card_header('Filter Rows', class = 'mini-header'),
-                         card_body(
-                           uiOutput('pE_filter_ui_var_filter'),
-                           selectInput('pE_filter_operator',
-                                       'Operator', c('', filter_operators)),
-                           layout_column_wrap(
-                             uiOutput('pE_filter_ui_value'),
-                             textInput('pE_filter_txt_preview_value', 'Preview value')
-                           ),
-                         ),
-                         card_footer(btn_task('pE_filter_btn_filter', 'Apply filters', icon('check')))
-                       ),
+                       filter_rows_ui('pE_filter_rows'),
                        select_cols_ui('pE_filter_sel_cols'),
                      ),
                    ),
@@ -102,6 +90,7 @@ spada_ui <- function(){
                )
              ),
              card_footer(
+               div(style = "margin-bottom: -12px !important;"),
                layout_column_wrap(
                  btn_task('pE_btn_reset', 'Reset Dataset', icon('arrow-rotate-right')) |>
                    ttip('Restore to previous state (before been set as the Active dataset)'),
@@ -112,6 +101,7 @@ spada_ui <- function(){
                  btn_task('pE_btn_clear_bkp', 'Clear Backup', icon('trash-can')) |>
                    ttip('Erase the backup'),
                ),
+               div(style = "margin-bottom: -16px !important;"),
                style = 'background-color: #02517d;')
         )
       ),

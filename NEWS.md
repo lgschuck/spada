@@ -22,6 +22,28 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.17-1
+
+### Improvements
+
+1 - **New module**: Filter Rows
+
+2 - **Convert** module: always align right the preview table
+
+3 - **Descriptive Stats** module: now all options inicially as TRUE 
+
+4 - **Order Cols** and **Order Rows** modules: now require selection of at least one variable
+
+5 - **Page Config** module: now with colorPickr from shinyWidgets to more options
+
+6 - **df_info** function: now with nrows and ncols
+
+7 - **gt_info** function: format number of columns n_valid, n_unique, n_zero, n_nas
+
+8 - **Visual**: many css (margins and padding) for better use of the screen space
+
+9 - Fix in test-mina.R
+
 ## 2025.01.14-1
 
 ### Improvements

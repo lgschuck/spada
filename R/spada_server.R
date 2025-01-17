@@ -18,8 +18,6 @@ spada_server <- function(datasets){
     )
 
     df_active_names <- reactive(df$df_active |> names())
-    df_active_nrow <- reactive(df$df_active |> nrow())
-    df_active_ncol <- reactive(df$df_active |> ncol())
 
     output$df_active_name <- renderText(
       if(nchar(df$df_active_name) <= 20){
@@ -34,8 +32,8 @@ spada_server <- function(datasets){
     df_active_resume_data <- reactiveValues()
 
     observe({
-      df_active_resume_data$nrow <- df_active_nrow()
-      df_active_resume_data$ncol <- df_active_ncol()
+      df_active_resume_data$nrow <- df_metadata() |> pull(rows) |> head(1)
+      df_active_resume_data$ncol <- df_metadata() |> pull(cols) |> head(1)
       df_active_resume_data$name <- df$df_active_name
       df_active_resume_data$n_nas <- df_metadata() |> filter(n_nas > 0) |> nrow()
       df_active_resume_data$size <- (object.size(df$df_active) / 2^20) |>
@@ -58,12 +56,13 @@ spada_server <- function(datasets){
     output$pD_metadata_gt <- render_gt(df_metadata() |> gt_info())
 
     # overview -----------------------
-    data_overview_server('pD_overview', reactive(df$df_active),
-                         reactive(list(mod_pE_convert_cols$df_convert_cols_trigger(),
-                                       mod_pE_order_rows$btn_order_rows(),
-                                       mod_pE_order_cols$btn_order_cols()
-                                       )))
-
+    data_overview_server(
+      'pD_overview', reactive(df$df_active),
+       reactive(list(mod_pE_convert_cols$df_convert_cols_trigger(),
+                     mod_pE_order_rows$btn_order_rows(),
+                     mod_pE_order_cols$btn_order_cols())
+                )
+    )
     # values for boxes -----------------------
     data_highlights_server('pD_highlights', reactive(df$df_active), df_metadata)
 
@@ -138,123 +137,15 @@ spada_server <- function(datasets){
     # edit page events --------------------------------------------------------
 
     # filter events ---------------------------
-    output$pE_filter_ui_var_filter <- renderUI(
-      selectInput('pE_filter_vars_filter', 'Variable', c('', df_active_names()))
-    )
-
+    mod_pE_filter_rows <- filter_rows_server('pE_filter_rows',
+                                             reactive(df$df_active))
+    # update df_active after sel_cols
     observe({
-      output$pE_filter_ui_value <- renderUI({
-        if (df$df_active[[input$pE_filter_vars_filter]] |> is_date() &
-            input$pE_filter_operator %in% c('==', '!=', '>', '>=', '<', '<=', 'is_na', 'not_na')){
-          dateInput('pE_filter_value', 'Date')
-        } else if (df$df_active[[input$pE_filter_vars_filter]] |> is_date() &
-                   input$pE_filter_operator %in% c('between', 'not_between')){
-          dateRangeInput('pE_filter_value', 'Date')
-        } else {
-          selectizeInput(
-            'pE_filter_value',
-            list('Value', bs_icon("info-circle")) |>
-              ttip(PLACE = 'right', 'Text should not be in quotes'),
-            choices = NULL,
-            multiple = T,
-            options = list(create = T)
-          )
-        }
-      })
-    }) |> bindEvent(input$pE_filter_vars_filter)
+      req(mod_pE_filter_rows$df_filter_rows())
 
-    pE_filter_value_temp <- reactive({
+      df$df_active <- mod_pE_filter_rows$df_filter_rows()
 
-      req(input$pE_filter_value)
-
-      if(df$df_active[[input$pE_filter_vars_filter]] |> is.numeric()){
-        unlist(input$pE_filter_value) |> as.numeric()
-      } else if (df$df_active[[input$pE_filter_vars_filter]] |> is_date()){
-        unlist(input$pE_filter_value) |> as.Date()
-      } else if (df$df_active[[input$pE_filter_vars_filter]] |> is.raw()){
-        unlist(input$pE_filter_value) |> as.raw()
-      } else if (df$df_active[[input$pE_filter_vars_filter]] |> is.complex()){
-        unlist(input$pE_filter_value) |> as.complex()
-      } else {
-        input$pE_filter_value
-      }
-    })
-
-    # update selectinput to show pertinent operators
-    observe({
-      updateSelectInput(
-        session, 'pE_filter_operator',
-        label = 'Operator',
-        choices =
-          if(df$df_active[[input$pE_filter_vars_filter]] |> is.factor() ||
-             df$df_active[[input$pE_filter_vars_filter]] |> is.character() ||
-             df$df_active[[input$pE_filter_vars_filter]] |> is.complex()
-          ){
-            c('',
-              '== (Equal)' = '==',
-              '!= (Not Equal)' = '!=',
-              'Is NA (is.na)' = 'is_na',
-              'Not NA (! is.na)' = 'not_na',
-              'In (%in%)' = 'in',
-              'Not In (! %in%)' = 'not_in')
-          } else { c('', filter_operators) }
-      )
-    }) |> bindEvent(input$pE_filter_vars_filter)
-
-    # update current format txt
-    observe({
-      updateTextInput(session, 'pE_filter_txt_preview_value',
-                      label = 'Preview value',
-                      value = pE_filter_value_temp()
-      )
-    }) |> bindEvent(pE_filter_value_temp())
-
-    # filter rows
-    observe({
-      if(input$pE_filter_vars_filter == '' || input$pE_filter_operator == ''
-         || length(pE_filter_value_temp()) == 0){
-        msg('Choose a variable, an operator and a value', 3)
-      } else if(length(pE_filter_value_temp()) > 1 & input$pE_filter_operator %in%
-                c('==', '!=', '>', '>=', '<', '<=')){
-        msg_error('Operator requires value of length 1')
-      } else if(length(pE_filter_value_temp()) != 2 & input$pE_filter_operator %in%
-                c('between', 'not_between')){
-        msg_error('Operator requires value of length 2')
-      } else {
-        df$df_active <- filter_rows(df$df_active,
-                                    input$pE_filter_vars_filter,
-                                    input$pE_filter_operator,
-                                    pE_filter_value_temp())
-        msg('Filter rows: OK')
-      }
-    }) |> bindEvent(input$pE_filter_btn_filter)
-
-    # update selectize for factors
-    observe({
-      req(input$pE_filter_vars_filter)
-      req(input$pE_filter_operator)
-
-      if(df$df_active[[input$pE_filter_vars_filter]] |> is.factor()){
-        updateSelectizeInput(
-          session,
-          'pE_filter_value',
-          label = 'Value',
-          choices = df$df_active[[input$pE_filter_vars_filter]] |> levels(),
-          selected = ''
-        )
-      }
-    })
-
-    # clear value after click in button
-    observe({
-      updateSelectizeInput(
-        session,
-        'pE_filter_value',
-        label = 'Value',
-        choices = NULL,
-        selected = ''
-      )
-    }) |> bindEvent(input$pE_filter_btn_filter)
+    }) |> bindEvent(mod_pE_filter_rows$df_filter_rows())
 
     # select cols ---------------------------
     mod_pE_sel_cols <- select_cols_server('pE_filter_sel_cols',

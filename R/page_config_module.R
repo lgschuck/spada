@@ -9,14 +9,13 @@ page_config_ui <- function(id) {
     card(style = 'background-color: #02517d;', layout_columns(
       col_widths = c(9, 3), card(card_body(
         h4('Colors'),
-        selectInput(
-          ns('sel_palette'),
-          'Select colors for plots',
-          c(
-            'Palette 1' = 1,
-            'Palette 2' = 2,
-            'Palette 3' = 3
-          )
+        layout_columns(
+          col_widths = c(3, 3, 3),
+          colorPickr(inputId = ns('sel_fill'), label = 'Fill color:',
+                     selected = '#5cacee', update = 'changestop'),
+          colorPickr(inputId = ns('sel_line'),label = 'Line color',
+                     selected = '#EE7942', update = 'changestop'),
+          btn_task(ns('reset'), 'Reset', style = 'margin-top: 20px !important;')
         ),
         plotOutput(ns('sample_plot'))
       )), card(card_body(
@@ -26,32 +25,22 @@ page_config_ui <- function(id) {
       ))
     ))
   )
-
 }
 
 # server ----------------------------------------------------------------------
 page_config_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+    ns <- NS(id)
+
+    plot_values <- rnorm(1e3)
     palette <- reactive({
-      if (input$sel_palette == 1) {
-        return(list(
-          'fill' = 'steelblue2',
-          'line' = 'sienna2'
-        ))
-      } else if (input$sel_palette == 2) {
-        return(list('fill' = 'cyan3', 'line' = 'red3'))
-      } else if (input$sel_palette == 3) {
-        return(list(
-          'fill' = 'hotpink3',
-          'line' = 'mediumseagreen'
-        ))
-      }
+      list('fill' = input$sel_fill, 'line' = input$sel_line)
     })
 
     output$sample_plot <- renderPlot({
       req(palette())
       hist(
-        rnorm(1e3),
+        plot_values,
         col = palette()[['fill']],
         xlab = '',
         ylab = '',
@@ -70,6 +59,19 @@ page_config_server <- function(id) {
       }
     }) |> bindEvent(input$btn_file_size)
 
+    observe({
+      updateColorPickr(
+      session = session,
+      inputId = 'sel_fill', action = 'show', value = '#5cacee')
+
+      updateColorPickr(
+        session = session,
+        inputId = 'sel_line', action = 'show', value = '#EE7942')
+
+      }) |>
+        bindEvent(input$reset)
+
     return(list(palette = palette))
+
   })
 }

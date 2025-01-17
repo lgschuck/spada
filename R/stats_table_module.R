@@ -4,7 +4,10 @@ stats_table_ui <- function(id) {
   ns <- NS(id)
   card(
     card_body(gt_output(ns('gt_stats'))),
-    card_footer(numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1))
+    card_footer(
+      numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
+      div(style = "margin-bottom: -18px !important;")
+    )
   )
 }
 

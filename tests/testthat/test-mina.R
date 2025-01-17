@@ -1,5 +1,5 @@
 test_that('mina - all valid values', {
-  expect_equal(mina(c(1, 2, 3)), 3)
+  expect_equal(mina(c(1, 2, 3)), 1)
 })
 
 test_that('mina - all NA values', {
@@ -23,7 +23,7 @@ test_that('mina - only n 3 valid out of 3', {
 })
 
 test_that('mina - 2 and 3 valid out of 3', {
-  expect_equal(mina(c(NA, 2, 3)), 3)
+  expect_equal(mina(c(NA, 2, 3)), 2)
 })
 
 test_that('mina - NA, 3, 2', {

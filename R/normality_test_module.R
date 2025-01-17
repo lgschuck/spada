@@ -14,12 +14,14 @@ normality_test_ui <- function(id) {
             full_screen = T,
             card_body(plotOutput(ns('hist'))),
             card_footer(
+              div(style = "margin-bottom: -8px !important;"),
               layout_columns(
                 col_widths = c(2, 3),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
                 btn_task(ns('btn_hist'), 'Generate Histogram', icon('gear'),
-                         style = 'margin-top:20px')
-              )
+                         style = 'margin-top: 20px')
+              ),
+              div(style = "margin-bottom: -24px !important;"),
             )
           )
         ),

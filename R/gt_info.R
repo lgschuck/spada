@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @importFrom data.table setDT
-#' @importFrom gt cols_label cols_merge cols_move cols_width data_color
+#' @importFrom gt cols_hide cols_label cols_merge cols_move cols_width data_color
 #'             fmt_bytes fmt_icon fmt_integer fmt_number fmt_percent gt
 #'             gt_output opt_interactive render_gt sub_missing tab_options
 
@@ -28,7 +28,10 @@ gt_info <- function(df){
     class == 'complex', 'info',
     class == 'logical', 'puzzle-piece')]
 
-  df_gt <- df |>
+  df_gt <- df[, `:=` (n_valid = f_num(n_valid, dig = 3),
+                      n_unique = f_num(n_unique, dig = 3),
+                      n_zero = f_num(n_zero, dig = 3),
+                      n_nas = f_num(n_nas, dig = 3))] |>
     gt()
 
   # if all NA do nothing
@@ -44,6 +47,7 @@ gt_info <- function(df){
   }
 
   df_gt |>
+    cols_hide(columns = c('rows', 'cols')) |>
     fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
     fmt_bytes(columns = 'size') |>
     data_color(columns = 'size', palette = blue_palette) |>

@@ -3,13 +3,19 @@
 data_overview_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    card_body(gt_output(ns('gt'))),
+    card_body(gt_output(ns('gt')),
+              style = "margin-top: -24px !important;
+                       margin-bottom: -24px !important;
+                       padding-top: -24px !important;
+                       padding-bottom: -24px !important;
+              "),
     fluidRow(
       column(2, numericInput(ns('size_sample'), 'Number of rows', 100, 100, 1e4, 100)),
       column(2, radioButtons(
         ns('radio_sample'), 'Show',
-        c('First rows' = 'first', 'Sample' = 'sample'), inline = T))
-    )
+        c('First rows' = 'first', 'Sample' = 'sample'), inline = T)),
+      style = "margin-top: -16px !important; margin-bottom: -16px !important;"
+    ),
   )
 }
 

@@ -49,19 +49,23 @@ order_rows_server <- function(id, input_df) {
 
     # btn order rows ---------------------------
     observe({
-      rows_position <- rep(1, input$vars_rows |> length())
+      if(!isTruthy(input$vars_rows)){
+        msg('Choose at least one variable')
+      } else {
+        rows_position <- rep(1, input$vars_rows |> length())
 
-      rows_position[which(input$vars_rows %in% input$vars_descending)] <- -1
+        rows_position[which(input$vars_rows %in% input$vars_descending)] <- -1
 
-      setorderv(df$df_active, cols = input$vars_rows,
-                order = rows_position,
-                na.last = if(input$radio_nas == 'last'){
-                  TRUE
-                } else if (input$radio_nas == 'first'){
-                  FALSE
-                } else { FALSE }
-      )
-      msg('Reordering Rows: OK')
+        setorderv(df$df_active, cols = input$vars_rows,
+                  order = rows_position,
+                  na.last = if(input$radio_nas == 'last'){
+                    TRUE
+                  } else if (input$radio_nas == 'first'){
+                    FALSE
+                  } else { FALSE }
+        )
+        msg('Reordering Rows: OK')
+      }
     }) |> bindEvent(input$btn_order_rows)
 
     return(list(df_order_rows = reactive(df$df_active),

@@ -12,13 +12,15 @@ descriptive_stats_ui <- function(id) {
         checkboxGroupInput(
           ns('xg_central_tendency'),
           h6('Central Tendency'), inline = T,
-          c('Mean' = 'mean', 'Median' = 'median')
+          c('Mean' = 'mean', 'Median' = 'median'),
+          c('mean', 'median')
         ),
         checkboxGroupInput(
           ns('xg_dispersion'), h6('Dispersion'), inline = T,
           c('Minimum' = 'min', 'Maximum' = 'max', 'IQR',
             'Range' = 'range', 'Variance' = 'var',
-            'Standard Deviation' = 'sd')
+            'Standard Deviation' = 'sd'),
+          c('min', 'max', 'IQR', 'range', 'var', 'sd')
         ),
         btn_task(ns('btn_stats'), 'Generate Table', icon('gear'))
       ),

@@ -113,6 +113,11 @@ tag_css <- tags$head(tags$style(HTML(
       font-size: 1.5rem !important;
     }
 
+    .control-label {
+      margin-bottom: 3px !important;
+      padding-top: 3px !important;
+    }
+
   "))
 )
 

@@ -12,20 +12,22 @@
 #' @import shiny
 #' @import data.table
 #' @importFrom bsicons bs_icon
-#' @importFrom gt cols_label cols_merge cols_move cols_width data_color
-#'             fmt_bytes fmt_icon fmt_integer fmt_number fmt_percent gt
-#'             gt_output opt_interactive render_gt sub_missing tab_options
+#' @importFrom gt cols_align cols_hide cols_label cols_merge cols_move
+#'             cols_width data_color fmt_bytes fmt_icon fmt_integer
+#'             fmt_number fmt_percent gt gt_output opt_interactive render_gt
+#'             sub_missing tab_options
 #'
 #' @importFrom bslib accordion accordion_panel bs_theme card card_body
 #'             card_footer card_header layout_column_wrap layout_columns
 #'             layout_sidebar nav_item nav_menu nav_panel nav_select nav_spacer
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
-#'
+#' @importFrom shinyWidgets colorPickr updateColorPickr
 #' @importFrom dplyr arrange filter mutate pull select
 #' @importFrom graphics abline hist
 #' @importFrom utils object.size head
-#' @importFrom graphics boxplot lines barplot mtext text
-#' @importFrom stats cor lm sd var median rnorm IQR cor.test
+#' @importFrom graphics barplot boxplot curve lines mtext text
+#' @importFrom stats cor lm sd var median rnorm IQR cor.test dnorm ks.test
+#'             qqline qqnorm shapiro.test
 #' @importFrom grDevices colors
 
 spada <- function(...) {

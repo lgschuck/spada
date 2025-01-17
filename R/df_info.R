@@ -13,6 +13,7 @@ df_info <- function(df){
 
   stopifnot(is.data.frame(df))
   rows <- nrow(df)
+  cols <- ncol(df)
   n_nas <- sapply(df, \(x) if(anyNA(x)) suna(is.na(x)) else 0L)
   n_valid <- rows - n_nas
   n_unique <- sapply(df, \(x) length(unique(x)))
@@ -32,6 +33,8 @@ df_info <- function(df){
     n_zero = n_zero,
     perc_zero = n_zero / rows,
     n_nas = n_nas,
-    perc_nas = n_nas / rows
+    perc_nas = n_nas / rows,
+    rows = rep(rows, cols),
+    cols = rep(cols, cols)
   )
 }

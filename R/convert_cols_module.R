@@ -116,6 +116,7 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
           lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
           as.data.frame() |>
           gt() |>
+          cols_align(align = 'right') |>
           opt_interactive(
             use_sorting = F,
             use_pagination = F,

@@ -43,7 +43,8 @@ card(
                 condition = sprintf("input['%s'] == 'hist'", ns('radio_dist_plot')),
                 numericInput(ns('bins'), 'Bins', 10, 5, step = 10))
               ),
-            )
+            ),
+            div(style = "margin-bottom: -8px !important;"),
           )
         ),
         nav_panel(
@@ -57,7 +58,8 @@ card(
                 list('Plot Linear Model', bs_icon('info-circle')) |>
                   ttip('Show the line only if LM model was created')),
               btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear'))
-            )
+            ),
+            div(style = "margin-bottom: -18px !important;"),
           )
         ),
         nav_panel(
@@ -68,8 +70,7 @@ card(
                          c('1 Variable' = '1d',
                            '2 Variables' = '2d'), inline = T),
             verbatimTextOutput(ns('table'), placeholder = T),
-          ),
-          card_footer()
+          )
         ),
         nav_panel(
           'Linear Model',

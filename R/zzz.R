@@ -12,6 +12,9 @@ utils::globalVariables(
     'size',
     'preview',
     'q1',
-    'q3'
+    'q3',
+    'cols',
+    'rows',
+    'x'
     )
   )
