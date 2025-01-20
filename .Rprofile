@@ -14,7 +14,10 @@ if(interactive()){
   library(data.table)
   library(dplyr)
   library(conflicted)
+  library(shinyWidgets)
+  library(shinybusy)
 
   conflicted::conflict_prefer('filter', 'dplyr')
+  conflicted::conflict_prefer('between', 'data.table')
 
 }

@@ -29,7 +29,9 @@ descriptive_stats_ui <- function(id) {
           'Stats',
           card(full_screen = T,
             card_body(
-              gt_output(ns('gt_stats')))
+              gt_output(ns('gt_stats')),
+              uiOutput(ns('conditional_save_gt'))
+            )
           )
         )
       )
@@ -53,6 +55,7 @@ descriptive_stats_server <- function(id, df) {
     })
 
     df_stats <- reactive({
+      req(input$sel_var)
       subset(df(), select = input$sel_var)
     })
 
@@ -118,13 +121,26 @@ descriptive_stats_server <- function(id, df) {
       desc_stats
     })
 
-    output$gt_stats <- render_gt(
+    gt_stats <- reactive({
       data.frame(
         Measures = names(desc_stats()),
         do.call(rbind, desc_stats())
       ) |>
-        gt() |>
+        gt()
+    }) |> bindEvent(input$btn_stats)
+
+    output$gt_stats <- render_gt({
+      req(gt_stats)
+      gt_stats() |>
         opt_interactive()
-    ) |> bindEvent(input$btn_stats)
+    })
+
+    save_gt_server('pA_desciptive_stats_save_gt', gt_stats)
+
+    output$conditional_save_gt <- renderUI({
+      req(gt_stats())
+      save_gt_ui(ns('pA_desciptive_stats_save_gt'))
+    })
+
   })
 }

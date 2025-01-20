@@ -5,7 +5,13 @@ stats_table_ui <- function(id) {
   card(
     card_body(gt_output(ns('gt_stats'))),
     card_footer(
-      numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
+      layout_columns(
+        col_widths = c(6, 6),
+        numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
+        div(style = "margin-top: 24px !important;",
+            save_gt_ui(ns('pA_stats_table_save_gt'))
+        )
+      ),
       div(style = "margin-bottom: -18px !important;")
     )
   )
@@ -27,7 +33,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
 
     stats_table <- reactive(
       data.frame(
-        var = c(
+        measure = c(
           paste("% NA's (", stats_n_nas(), '/', stats_obs(), ')'),
           'Minimum',
           'Percentile 25',
@@ -54,26 +60,37 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
       )
     )
 
+    stats_table_fmt <- reactive({
+      stats_table() |>
+        gt() |>
+        sub_missing() |>
+        cols_label(measure = 'Measure', value = 'Value') |>
+        fmt_number(decimals = min(max(0, input$table_digits), 9))
+    })
+
     output$gt_stats <- render_gt({
       validate(
         need(
           isTruthy(input_percentile()) &&
             between(input_percentile(), 0, 100),
-          'Percentile must be between 0 and 100'))
+          'Percentile must be between 0 and 100'),
+        need(
+          isTruthy(input$table_digits) &&
+            between(input$table_digits, 0, 9),
+          'Percentile must be between 0 and 9')
+        )
 
-      stats_table() |>
-        gt() |>
-        sub_missing() |>
-        cols_label(var = 'Measure', value = 'Value') |>
-        fmt_number(decimals = input$table_digits) |>
+      stats_table_fmt() |>
         opt_interactive(use_pagination = F,
                         use_highlight = T,
                         use_compact_mode = T) |>
         tab_options(table.background.color = '#ffffff')
     }) |> bindCache(
       input$table_digits,
-      stats_table()
+      stats_table_fmt()
     )
+
+    save_gt_server('pA_stats_table_save_gt', stats_table_fmt)
 
   })
 }

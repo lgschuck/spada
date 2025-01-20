@@ -11,9 +11,10 @@ data_overview_ui <- function(id) {
               "),
     fluidRow(
       column(2, numericInput(ns('size_sample'), 'Number of rows', 100, 100, 1e4, 100)),
-      column(2, radioButtons(
+      column(2, radioGroupButtons(
         ns('radio_sample'), 'Show',
-        c('First rows' = 'first', 'Sample' = 'sample'), inline = T)),
+        c('First rows' = 'first', 'Sample' = 'sample'),
+        size = 'sm', individual = T)),
       style = "margin-top: -16px !important; margin-bottom: -16px !important;"
     ),
   )

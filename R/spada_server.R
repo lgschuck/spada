@@ -103,7 +103,7 @@ spada_server <- function(datasets){
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) ||
          (input$pD_data_txt_new_name %in% dt_names_react())){
-        msg_error('Name invalid or already in use')
+        msg_error('New name is not valid or already in use')
       } else {
         dt_react$data[[ input$pD_data_txt_new_name ]] <- df$df_active
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))

@@ -30,14 +30,14 @@ card(
           card_footer(
             fluidRow(
               column(8,
-                     radioButtons(
+                     radioGroupButtons(
                        ns('radio_dist_plot'),
                        'Plot type:',
                        c('Histogram' = 'hist',
                          'Boxplot' = 'boxplot',
                          'Boxplot by Groups' = 'boxplot_group',
                          'Dots' = 'dots',
-                         'Barplot' = 'barplot'),inline = T)),
+                         'Barplot' = 'barplot'), size = 'sm', individual = T)),
               column(2, numericInput(ns('var_percentile'), 'Percentile', 50, 0, 100, 5)),
               column(2, conditionalPanel(
                 condition = sprintf("input['%s'] == 'hist'", ns('radio_dist_plot')),
@@ -66,9 +66,9 @@ card(
           'Table',
           full_screen = T,
           card_body(
-            radioButtons(ns('table_type'), 'Table type:',
+            radioGroupButtons(ns('table_type'), 'Table type:',
                          c('1 Variable' = '1d',
-                           '2 Variables' = '2d'), inline = T),
+                           '2 Variables' = '2d'), size = 'sm', individual = T),
             verbatimTextOutput(ns('table'), placeholder = T),
           )
         ),
@@ -91,10 +91,12 @@ card(
               plotOutput(ns('g_lm_resid')),
               card_footer(
                 layout_column_wrap(
-                  radioButtons(ns('radio_lm_resid'), 'Plot type:',
+                  radioGroupButtons(ns('radio_lm_resid'), 'Plot type:',
                                c('Histogram' = 'hist', 'Boxplot' = 'boxplot',
-                                 'Dots' = 'dots'), inline = T),
-                  btn_task(ns('btn_lm_resid'), 'Plot residuals', icon('chart-simple')))
+                                 'Dots' = 'dots'), size = 'sm', individual = T),
+                  btn_task(ns('btn_lm_resid'), 'Plot residuals', icon('chart-simple'))
+                ),
+                div(style = "margin-bottom: -24px !important;"),
               )
             ),
           )),

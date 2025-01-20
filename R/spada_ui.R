@@ -4,6 +4,21 @@ spada_ui <- function(){
   tagList(
     useBusyIndicators(),
 
+    busy_start_up(
+      loader = spin_epic('orbit', color = '#FFFFFF'),
+      text = tagList(
+        h1(
+        'Spada',
+        style = "font-family: 'Times'; font-size: 120px;"),
+        p('Loading...',
+          style = "font-family: 'Times'; font-size: 20px;")
+      ),
+      mode = 'auto',
+      timeout = 1200,
+      color = '#FFFFFF',
+      background = '#02517d'
+    ),
+
     # close the app
     tag_js_exit,
 

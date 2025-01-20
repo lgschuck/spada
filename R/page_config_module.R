@@ -6,24 +6,52 @@ page_config_ui <- function(id) {
     value = 'config',
     title = 'Config',
     icon = bs_icon('sliders2'),
-    card(style = 'background-color: #02517d;', layout_columns(
-      col_widths = c(9, 3), card(card_body(
-        h4('Colors'),
-        layout_columns(
-          col_widths = c(3, 3, 3),
-          colorPickr(inputId = ns('sel_fill'), label = 'Fill color:',
-                     selected = '#5cacee', update = 'changestop'),
-          colorPickr(inputId = ns('sel_line'),label = 'Line color',
-                     selected = '#EE7942', update = 'changestop'),
-          btn_task(ns('reset'), 'Reset', style = 'margin-top: 20px !important;')
+    card(
+      style = 'background-color: #02517d;',
+      layout_columns(
+        col_widths = c(9, 3),
+        card(
+          card_body(
+            h4('Colors'),
+            layout_columns(
+              col_widths = c(3, 3, 3),
+              colorPickr(
+                inputId = ns('sel_fill'),
+                label = 'Fill color:',
+                selected = '#5cacee',
+                update = 'save'
+              ),
+              colorPickr(
+                inputId = ns('sel_line'),
+                label = 'Line color',
+                selected = '#EE7942',
+                update = 'save'
+              ),
+              btn_task(ns('reset'), 'Reset', icon('rotate'),
+                       style = 'margin-top: 20px !important;')
+            ),
+            plotOutput(ns('sample_plot'))
+          )
         ),
-        plotOutput(ns('sample_plot'))
-      )), card(card_body(
-        h4('Size of input files'),
-        numericInput(ns('input_file_size'), 'Size in MB', 500, min = 0, step = 100),
-        btn_task(ns('btn_file_size'), 'Apply', icon('check'))
-      ))
-    ))
+        card(
+          card_body(
+            h4('Size of input files'),
+            layout_columns(
+              col_widths = c(6, 6),
+              numericInput(
+                ns('input_file_size'),
+                'Size in MB',
+                500,
+                min = 0,
+                step = 100
+              ),
+              btn_task(ns('btn_file_size'), 'Apply', icon('check'),
+                       style = 'margin-top: 20px !important;')
+            )
+          )
+        )
+      )
+    )
   )
 }
 
@@ -60,16 +88,14 @@ page_config_server <- function(id) {
     }) |> bindEvent(input$btn_file_size)
 
     observe({
-      updateColorPickr(
-      session = session,
-      inputId = 'sel_fill', action = 'show', value = '#5cacee')
+      updateColorPickr(session = session,
+                       inputId = 'sel_fill',
+                       value = '#5cacee')
+      updateColorPickr(session = session,
+                       inputId = 'sel_line',
+                       value = '#EE7942')
 
-      updateColorPickr(
-        session = session,
-        inputId = 'sel_line', action = 'show', value = '#EE7942')
-
-      }) |>
-        bindEvent(input$reset)
+    }) |> bindEvent(input$reset)
 
     return(list(palette = palette))
 

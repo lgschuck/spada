@@ -134,12 +134,31 @@ btn_task <- function(ID, LABEL, ICON = NULL, ...){
 }
 
 # messages - shownotification -------------------------------------------------
-msg <- function(TEXT, DURATION = 2){
-  showNotification(ui = TEXT, duration = DURATION, type = 'message')
+msg <- function(TEXT, DURATION = 2.3){
+  # showNotification(ui = TEXT, duration = DURATION, type = 'message')
+
+  show_toast(
+    title = TEXT,
+    type = 'info',
+    position = 'center',
+    timer = DURATION * 1000,
+    timerProgressBar = F,
+    width = '650px'
+  )
+
 }
 
-msg_error <- function(TEXT, DURATION = 2){
-  showNotification(ui = TEXT, duration = DURATION, type = 'error')
+msg_error <- function(TEXT, DURATION = 2.3){
+  # showNotification(ui = TEXT, duration = DURATION, type = 'error')
+
+  show_toast(
+    title = TEXT,
+    type = 'error',
+    position = 'center',
+    timer = DURATION * 1000,
+    timerProgressBar = F,
+    width = '650px'
+  )
 }
 
 # try convert -----------------------------------------------------------------

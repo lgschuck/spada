@@ -22,6 +22,24 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.20-1
+
+### Improvements
+
+1 - **Startup page**: now with startup page with shinybusy package (new dependencie)
+
+2 - **radioGroupButtons**: change some radioButtons (shiny) for radioGroupButtons (shinyWidgets) in data_overview_module and exploratory_module for better look
+
+3 - **Page config** module: colorPickr now with 'save' mode for better reset of values and other visual changes fo better look
+
+4 - **New Save gt** module: now the gt table can be saved to hmtl, rtf and docx (gt::gt_save function)
+
+5 - **Stats table** module: check for digits if out of range (0, 9) and new save_gt module in this module
+
+6 - **Descriptive Stats** module: insert req to generate stats and new save_gt_module in this module
+
+7 - **show_toast**: change showNotification (shiny) for show_toast (shinyWidgets) for better look
+
 ## 2025.01.17-1
 
 ### Improvements
