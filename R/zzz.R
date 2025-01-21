@@ -15,6 +15,8 @@ utils::globalVariables(
     'q3',
     'cols',
     'rows',
-    'x'
+    'x',
+    'values',
+    'results'
     )
   )

@@ -22,7 +22,7 @@
 #'             layout_sidebar nav_item nav_menu nav_panel nav_select nav_spacer
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton
-#'             radioGroupButtons
+#'             radioGroupButtons statiCard
 #' @importFrom dplyr arrange filter mutate pull select
 #' @importFrom graphics abline hist
 #' @importFrom utils object.size head

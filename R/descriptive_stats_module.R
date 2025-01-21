@@ -50,7 +50,8 @@ descriptive_stats_server <- function(id, df) {
 
     output$parameters <- renderUI({
       tagList(
-        selectInput(ns('sel_var'), 'Variables', var_analysis(), multiple = T),
+        selectInput(ns('sel_var'), 'Variables', var_analysis(),
+                    var_analysis()[1], multiple = T),
       )
     })
 

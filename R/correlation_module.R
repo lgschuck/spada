@@ -5,54 +5,56 @@ correlation_ui <- function(id) {
   card(
     full_screen = T,
     card_header('Correlation', class = 'mini-header'),
-    layout_sidebar(bg = '#02517d',
+    layout_sidebar(
+      bg = '#02517d',
       sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
       navset_card_pill(
         nav_panel(
           'Test',
-          accordion(
-            open = T,
-            accordion_panel(
-              'Parameters',
-              fluidRow(
-                column(3, radioButtons(ns('radio_method'),
-                                       'Method',
-                                       c('Pearson' = 'pearson',
-                                         'Kendall' = 'kendall',
-                                         'Spearman' = 'spearman')
-                                      )
-                       ),
-                column(3, radioButtons(ns('radio_alternative'),
-                                       'Alternative',
-                                       c('Two.sided' = 'two.sided',
-                                         'Less' = 'less',
-                                         'Greater' = 'greater')
-                                       )
-                       ),
-                column(2, numericInput(ns('confidence'),
-                                       'Confidence Interval - %',
-                                       value = 95, 0, 100, 5),
-                       btn_task(ns('btn_run_test'), 'Run Test', icon('gear'))
-                       )
+          layout_columns(
+            col_widths = c(4, 8),
+            card(
+              card_body(
+                radioButtons(ns('radio_method'), 'Method',
+                             c('Pearson' = 'pearson',
+                               'Kendall' = 'kendall',
+                               'Spearman' = 'spearman')),
+                radioButtons(ns('radio_alternative'), 'Alternative',
+                             c('Two.sided' = 'two.sided',
+                               'Less' = 'less',
+                               'Greater' = 'greater')),
+                numericInput(ns('confidence'), 'Confidence Interval - %',
+                             value = 95, 0, 100, 5, width = '200px'),
+                layout_columns(
+                  col_widths = c(6, 6),
+                  btn_task(ns('btn_run_test'), 'Run Test', icon('gear')),
+                  btn_task(ns('btn_help_cor'), 'Help', icon('question'))
                 )
               )
             ),
             card(
-              full_screen = T,
-              card_body(verbatimTextOutput(ns('cor_test_results')))
+              card_body(
+                layout_columns(
+                  col_widths = c(3, 7, 2),
+                  uiOutput(ns('conditional_staticard_cor')),
+                  gt_output(ns('cor_gt')),
+                  uiOutput(ns('conditional_save_gt'))
+                )
+              )
             )
-          ),
-          nav_panel(
-            'Plot',
-            card(
-              full_screen = T,
-              card_body(plotOutput(ns('scatter_plot'))),
-              card_footer(btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear')))
-            )
+          )
+        ),
+        nav_panel('Plot', card(
+          full_screen = T,
+          card_body(plotOutput(ns('scatter_plot'))),
+          card_footer(
+            btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear'))
           )
         )
       )
     )
+  )
+  )
 }
 
 # server ----------------------------------------------------------------------
@@ -88,18 +90,81 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       req(input$radio_method)
 
       if(!isTruthy(input$confidence) || !between(input$confidence, 0, 100)){
-        msg('Inform a value between 0 and 100 %', 2)
+        msg('Confidence interval must be between 0 and 100%', 2)
       } else {
-        cor_test$results <- cor.test(df_active()[[input$sel_var1]],
-                                     df_active()[[input$sel_var2]],
-                                     alternative = input$radio_alternative,
-                                     method = input$radio_method,
-                                     conf.level = input$confidence/100,
-                                     exact = F)
+        df <- cor.test(df_active()[[input$sel_var1]],
+                       df_active()[[input$sel_var2]],
+                       alternative = input$radio_alternative,
+                       method = input$radio_method,
+                       conf.level = input$confidence/100,
+                       exact = F)
 
-        msg('Test completed')
+        df <- df |>
+          unlist() |> as.data.frame()
+
+        df$results <- rownames(df)
+        names(df) <- c('values', 'results')
+
+        df[df$results == 'data.name', ]$values <-
+          paste(input$sel_var1, '/', input$sel_var2)
+
+        cor_test$results <- df
+
+        msg('Test completed', DURATION = 1.5)
       }
     }) |> bindEvent(input$btn_run_test)
+
+    cor_results_gt <- reactive({
+      req(cor_test$results)
+      cor_test$results |>
+        gt() |>
+        cols_move(columns = 'values', after = 'results') |>
+        gt::cols_label('values' = 'Values', 'results' = 'Results')
+    })
+
+    output$cor_gt <- render_gt({
+      req(cor_results_gt())
+      cor_results_gt()
+    })
+
+    save_gt_server('pA_cor_save_gt', cor_results_gt)
+
+    output$conditional_save_gt <- renderUI({
+      req(cor_results_gt())
+      save_gt_ui(ns('pA_cor_save_gt'))
+    })
+
+    output$conditional_staticard_cor <- renderUI({
+      req(cor_results_gt())
+      tagList(
+        statiCard(cor_test$results |>
+                  filter(results %in% c('estimate.cor', 'estimate.tau',
+                  'estimate.rho')) |>
+                  pull(values) |>
+                  as.numeric() |>
+                  f_num(dig = 3),
+                  subtitle = 'Correlation',
+                  left = T,
+                  animate = T,
+                  duration = 30),
+        statiCard(cor_test$results |>
+                  filter(results %in% c('p.value')) |>
+                  pull(values) |>
+                  as.numeric() |>
+                  f_num(dig = 3),
+                  subtitle = 'p value',
+                  left = T,
+                  animate = T,
+                  duration = 30)
+      )
+    })
+
+    observe({
+      showModal(modalDialog(
+        HTML(get_help_file('stats', 'cor.test')),
+        easyClose = TRUE, size = 'xl'
+      ))
+    }) |> bindEvent(input$btn_help_cor)
 
     output$cor_test_results <- renderPrint(cor_test$results) |>
       bindEvent(input$btn_run_test)

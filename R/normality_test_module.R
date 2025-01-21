@@ -38,7 +38,10 @@ normality_test_ui <- function(id) {
           card(
             full_screen = T,
             card_body(verbatimTextOutput(ns('ks_test'))),
-            card_footer(btn_task(ns('btn_ks'), 'Run Test', icon('gear')))
+            card_footer(
+              btn_task(ns('btn_ks'), 'Run Test', icon('gear')),
+              btn_task(ns('btn_help_ks'), 'Help', icon('question'))
+            )
           )
         ),
         nav_panel(
@@ -46,7 +49,10 @@ normality_test_ui <- function(id) {
           card(
             full_screen = T,
             card_body(verbatimTextOutput(ns('sw_test'))),
-            card_footer(btn_task(ns('btn_sw'), 'Run Test', icon('gear')))
+            card_footer(
+              btn_task(ns('btn_sw'), 'Run Test', icon('gear')),
+              btn_task(ns('btn_help_sw'), 'Help', icon('question'))
+            )
           )
         )
       )
@@ -137,9 +143,9 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
         results = list(
           'Results' = ks.test(test_value(), 'pnorm'),
-          'Observations' = paste('There are tied values, normally distributed',
-                                 'random noise was added (mean = 0 and sd =',
-                                 inputed_error())
+          'Observations' = paste0('There are tied values, normally distributed',
+                                 ' random noise was added (mean = 0 and sd = ',
+                                 inputed_error(), ')')
           )
       } else {
         test_value <- reactive(var())
@@ -149,6 +155,13 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
       results
     }) |> bindEvent(input$btn_ks)
+
+    observe({
+      showModal(modalDialog(
+        HTML(get_help_file('stats', 'ks.test')),
+        easyClose = TRUE, size = 'xl'
+      ))
+    }) |> bindEvent(input$btn_help_ks)
 
     output$sw_test <- renderPrint({
       req(input$sel_var1)
@@ -162,6 +175,13 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       )
       shapiro.test(var())
     }) |> bindEvent(input$btn_sw)
+
+    observe({
+      showModal(modalDialog(
+        HTML(get_help_file('stats', 'shapiro.test')),
+        easyClose = TRUE, size = 'xl'
+      ))
+    }) |> bindEvent(input$btn_help_sw)
 
   })
 }

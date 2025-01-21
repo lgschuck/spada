@@ -22,6 +22,20 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.21-1
+
+### Improvements
+
+1 - **Correlation** module: new layout, new table with test results, help button (help documentation), save table button and statiCards (shnywidgets) with Correlation and p value.
+
+2 - **Descriptive Stats** module: now with variable selected by default
+
+3 - **Normality test** module: new Help button in Ks test and Shapiro-Wilk test
+
+4 - **utils.R** new function: **get_help_file** to search help in package documentation
+
+5 - **Startup**: new text in startup page (removed 'Loading...')
+
 ## 2025.01.20-1
 
 ### Improvements

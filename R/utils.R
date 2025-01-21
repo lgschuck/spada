@@ -230,6 +230,14 @@ ttip <- function(TRIGGER, ..., ID = NULL, PLACE = 'top'){
   tooltip(trigger = TRIGGER, ... = ..., id = ID, placement = PLACE)
 }
 
+
+# get function help -------------------------------------------------------
+get_help_file <- function(pak, fun){
+  utils::capture.output(
+    tools::Rd2HTML(tools::Rd_db(pak)[[paste0(fun, '.Rd')]])
+  )
+}
+
 # palettes --------------------------------------------------------------------
 
 gray_palette <- c('#ffffff', '#585858', '#232323')
