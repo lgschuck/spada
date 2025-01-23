@@ -17,7 +17,7 @@ page_config_ui <- function(id) {
               col_widths = c(3, 3, 3),
               colorPickr(
                 inputId = ns('sel_fill'),
-                label = 'Fill color:',
+                label = 'Fill color',
                 selected = '#5cacee',
                 update = 'save'
               ),

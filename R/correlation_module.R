@@ -11,10 +11,11 @@ correlation_ui <- function(id) {
       navset_card_pill(
         nav_panel(
           'Test',
-          layout_columns(
-            col_widths = c(4, 8),
-            card(
-              card_body(
+          card(
+            layout_sidebar(
+              sidebar = sidebar(
+                width = 400,
+                h5('Parameters', style = 'margin-bottom: -18px;'),
                 radioButtons(ns('radio_method'), 'Method',
                              c('Pearson' = 'pearson',
                                'Kendall' = 'kendall',
@@ -30,30 +31,28 @@ correlation_ui <- function(id) {
                   btn_task(ns('btn_run_test'), 'Run Test', icon('gear')),
                   btn_task(ns('btn_help_cor'), 'Help', icon('question'))
                 )
-              )
-            ),
-            card(
-              card_body(
-                layout_columns(
-                  col_widths = c(3, 7, 2),
-                  uiOutput(ns('conditional_staticard_cor')),
-                  gt_output(ns('cor_gt')),
-                  uiOutput(ns('conditional_save_gt'))
-                )
+              ),
+              layout_columns(
+                col_widths = c(3, 7, 2),
+                uiOutput(ns('conditional_staticard_cor')),
+                gt_output(ns('cor_gt')),
+                uiOutput(ns('conditional_save_gt'))
               )
             )
           )
         ),
-        nav_panel('Plot', card(
-          full_screen = T,
-          card_body(plotOutput(ns('scatter_plot'))),
-          card_footer(
-            btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear'))
+        nav_panel(
+          'Scatter',
+          card(
+            full_screen = T,
+            card_body(plotOutput(ns('scatter_plot'))),
+            card_footer(
+              btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear'))
+            )
           )
         )
       )
     )
-  )
   )
 }
 
@@ -127,11 +126,11 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       cor_results_gt()
     })
 
-    save_gt_server('pA_cor_save_gt', cor_results_gt)
+    save_gt_server('cor_save_gt', cor_results_gt)
 
     output$conditional_save_gt <- renderUI({
       req(cor_results_gt())
-      save_gt_ui(ns('pA_cor_save_gt'))
+      save_gt_ui(ns('cor_save_gt'))
     })
 
     output$conditional_staticard_cor <- renderUI({

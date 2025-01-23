@@ -37,7 +37,15 @@ normality_test_ui <- function(id) {
           'KS Test',
           card(
             full_screen = T,
-            card_body(verbatimTextOutput(ns('ks_test'))),
+            card_body(
+              layout_columns(
+                col_widths = c(3, 7, 2),
+                uiOutput(ns('conditional_staticard_ks')),
+                gt_output(ns('ks_test')),
+                uiOutput(ns('conditional_save_ks_gt'))
+              ),
+              uiOutput(ns('ks_test_obs_ui'))
+            ),
             card_footer(
               btn_task(ns('btn_ks'), 'Run Test', icon('gear')),
               btn_task(ns('btn_help_ks'), 'Help', icon('question'))
@@ -48,7 +56,13 @@ normality_test_ui <- function(id) {
           'Shapiro-Wilk Test',
           card(
             full_screen = T,
-            card_body(verbatimTextOutput(ns('sw_test'))),
+            card_body(
+              layout_columns(
+                col_widths = c(3, 7, 2),
+                uiOutput(ns('conditional_staticard_sw')),
+                gt_output(ns('sw_test')),
+                uiOutput(ns('conditional_save_sw_gt')))
+            ),
             card_footer(
               btn_task(ns('btn_sw'), 'Run Test', icon('gear')),
               btn_task(ns('btn_help_sw'), 'Help', icon('question'))
@@ -78,7 +92,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       var_analysis <- df_metadata() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
-      })
+    })
 
     var <- reactive({
       req(df_active())
@@ -86,6 +100,8 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       temp <- df_active()[[input$sel_var1]]
       temp[!is.na(temp)]
     })
+
+    var_len <- reactive(var() |> length())
 
     output$parameters <- renderUI({
       req(var_analysis())
@@ -95,6 +111,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       )
     })
 
+    # histogram ---------------------------------------------------------------
     output$hist <- renderPlot({
       req(df_active())
       req(input$sel_var1)
@@ -118,6 +135,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     })|> bindCache(var(), color_fill(), color_line(), input$bins) |>
       bindEvent(input$btn_hist)
 
+    # qq plot -----------------------------------------------------------------
     output$qq_plot <- renderPlot({
       req(input$sel_var1)
       req(var())
@@ -129,7 +147,8 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     })|> bindCache(var(), color_fill(), color_line()) |>
       bindEvent(input$btn_qq)
 
-    output$ks_test <- renderPrint({
+    # ks test -----------------------------------------------------------------
+    ks_results <- reactive({
       req(input$sel_var1)
       req(var())
 
@@ -138,23 +157,89 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         inputed_error <- reactive(abs(mina(var())/1e6))
 
         test_value <- reactive(var() + rnorm(length(var()),
-                                               mean = 0,
-                                               sd = inputed_error()))
+                                             mean = 0,
+                                             sd = inputed_error()))
+
+        df <- ks.test(test_value(), 'pnorm') |> unlist() |> as.data.frame()
+
+        df$results <- rownames(df)
+        names(df) <- c('values', 'results')
+
+        df[df$results == 'data.name', ]$values <- paste(input$sel_var1)
 
         results = list(
-          'Results' = ks.test(test_value(), 'pnorm'),
-          'Observations' = paste0('There are tied values, normally distributed',
-                                 ' random noise was added (mean = 0 and sd = ',
-                                 inputed_error(), ')')
-          )
+          'results' = df,
+          'observations' = paste0('There are tied values, normally distributed',
+                                  ' random noise was added (mean = 0 and sd = ',
+                                  inputed_error(), ')')
+        )
       } else {
-        test_value <- reactive(var())
+        df <- ks.test(var(), 'pnorm') |> unlist() |> as.data.frame()
 
-        results = list('Results' = ks.test(test_value(), 'pnorm'))
+        df$results <- rownames(df)
+        names(df) <- c('values', 'results')
+
+        df[df$results == 'data.name', ]$values <- paste(input$sel_var1)
+
+        results = list('results' = df)
       }
 
-      results
     }) |> bindEvent(input$btn_ks)
+
+    ks_results_gt <- reactive({
+      req(ks_results())
+
+      ks_results()$results |>
+        gt() |>
+        cols_move(columns = 'values', after = 'results') |>
+        gt::cols_label('values' = 'Values', 'results' = 'Results')
+    })
+
+    output$conditional_staticard_ks <- renderUI({
+      req(ks_results())
+      tagList(
+        statiCard(ks_results()$results |>
+                    filter(results %in% c('statistic.D')) |>
+                    pull(values) |>
+                    as.numeric() |>
+                    f_num(dig = 5),
+                  subtitle = 'Statistic D (test value)',
+                  left = T,
+                  animate = T,
+                  duration = 30),
+        statiCard(ks_results()$results |>
+                    filter(results %in% c('p.value')) |>
+                    pull(values) |>
+                    as.numeric() |>
+                    f_num(dig = 5),
+                  subtitle = 'p value',
+                  left = T,
+                  animate = T,
+                  duration = 30)
+      )
+    })
+
+    output$ks_test <- render_gt({
+      req(ks_results_gt())
+      ks_results_gt()
+    })
+
+    output$ks_test_obs <- renderPrint({
+      req(ks_results()$observations)
+      ks_results()$observations
+    })
+
+    output$ks_test_obs_ui <- renderUI({
+      req(ks_results()$observations)
+      verbatimTextOutput(ns('ks_test_obs'))
+    })
+
+    save_gt_server('ks_save_gt', ks_results_gt)
+
+    output$conditional_save_ks_gt <- renderUI({
+      req(ks_results_gt())
+      save_gt_ui(ns('ks_save_gt'))
+    })
 
     observe({
       showModal(modalDialog(
@@ -163,18 +248,72 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       ))
     }) |> bindEvent(input$btn_help_ks)
 
-    output$sw_test <- renderPrint({
+    # sw test -----------------------------------------------------------------
+    sw_results <- reactive({
       req(input$sel_var1)
       req(var())
+      req(var_len())
 
       validate(
-        need(between(var() |> length(), 3, 5000),
+        need(between(var_len(), 3, 5000),
              paste0('Sample size must be between 3 and 5000 (actual: ',
-                   var() |> length(), ')')
-             )
+                    var_len(), ')')
+        )
       )
-      shapiro.test(var())
+      df <- shapiro.test(var()) |> unlist() |> as.data.frame()
+
+      df$results <- rownames(df)
+      names(df) <- c('values', 'results')
+
+      df[df$results == 'data.name', ]$values <- paste(input$sel_var1)
+
+      df
     }) |> bindEvent(input$btn_sw)
+
+    sw_results_gt <- reactive({
+      req(sw_results())
+
+      sw_results() |>
+        gt() |>
+        cols_move(columns = 'values', after = 'results') |>
+        gt::cols_label('values' = 'Values', 'results' = 'Results')
+    })
+
+    output$conditional_staticard_sw <- renderUI({
+      req(ks_results())
+      tagList(
+        statiCard(sw_results() |>
+                    filter(results %in% c('statistic.W')) |>
+                    pull(values) |>
+                    as.numeric() |>
+                    f_num(dig = 5),
+                  subtitle = 'Statistic W (test value)',
+                  left = T,
+                  animate = T,
+                  duration = 30),
+        statiCard(sw_results() |>
+                    filter(results %in% c('p.value')) |>
+                    pull(values) |>
+                    as.numeric() |>
+                    f_num(dig = 5),
+                  subtitle = 'p value',
+                  left = T,
+                  animate = T,
+                  duration = 30)
+      )
+    })
+
+    output$sw_test <- render_gt({
+      req(sw_results_gt())
+      sw_results_gt()
+    })
+
+    save_gt_server('sw_save_gt', sw_results_gt)
+
+    output$conditional_save_sw_gt <- renderUI({
+      req(sw_results_gt())
+      save_gt_ui(ns('sw_save_gt'))
+    })
 
     observe({
       showModal(modalDialog(

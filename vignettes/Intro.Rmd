@@ -67,4 +67,4 @@ Spada uses a page_navbar from bslib package. In the left side are the menus that
 
 ------------------------------------------------------------------------
 
-Last Update: `r file.info('vignettes/Intro.Rmd')$mtime`
+Last Update: `r file.info('./vignettes/Intro.Rmd')$mtime`

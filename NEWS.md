@@ -22,6 +22,18 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.22-1
+
+### Improvements
+
+1 - **Correlation** module: parameters in card sidebar for better use of space
+
+2 - **df_info** function: new test file and now returns empty data.frame (accepted by gt_info) in case of no columns in the entry data.frame
+
+3 - **Normality test** module: now Ks and Shapiro-wilk tests have gt table, save button and statiCards
+
+4 - **Tests**: new/better test files for df_info, is_date, is_valid_name, mina, percentile and suna functions
+
 ## 2025.01.21-1
 
 ### Improvements

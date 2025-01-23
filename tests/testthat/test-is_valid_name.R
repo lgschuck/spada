@@ -14,4 +14,7 @@ test_that("is_valid_name - test name starting with number", {
   expect_equal(is_valid_name('1a'), FALSE)
 })
 
+test_that("is_valid_name - test name starting with blank space", {
+  expect_equal(is_valid_name(' 1a'), FALSE)
+})
 

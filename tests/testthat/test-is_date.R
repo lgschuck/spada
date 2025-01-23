@@ -17,3 +17,11 @@ test_that("is_date - test char", {
 test_that("is_date - test char in Date format", {
   expect_equal(is_date('2024-12-01'), FALSE)
 })
+
+test_that('is_date - test only first element of vector', {
+  expect_equal(is_date(c(Sys.Date(), 10)), TRUE)
+})
+
+test_that('is_date - test only first element of vector - 2', {
+  expect_equal(is_date(c(10, Sys.Date())), FALSE)
+})
