@@ -22,6 +22,24 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.26-1
+
+### Bug Fixes
+
+1 - **Filter rows: operators NA and not NA requires a value to apply the filter**: fixed, filter_rows_module.R refactored, now with much more robust check for filters, operators and values ([#10](https://github.com/lgschuck/spada/issues/10))
+
+### Improvements
+
+1 - **New dependencie**: package [DescTools](https://andrisignorell.github.io/DescTools/)
+
+2 - **Descriptive Stats** module: now with Mode (DescTools package) for numeri, character and factor variables
+
+3 - **Filter Rows** module: refactored to check operators and values. New operators: Outlier (and Not Outlier) and Logical (TRUE and FALSE)
+
+4 - **Stats table** module: now with Mode (DescTools package) for numeric, character and factor variables
+
+5 - **utils.R**: Operators for rows filters now in several objects for better organization
+
 ## 2025.01.22-1
 
 ### Improvements

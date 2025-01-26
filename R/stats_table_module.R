@@ -28,6 +28,11 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
     stats_q1 <- reactive(if(is.numeric(var1())) p25(var1()) else NA)
     stats_median <- reactive(if(is.numeric(var1())) median(var1(), na.rm = T) else NA)
     stats_mean <- reactive(if(is.numeric(var1())) mean(var1(), na.rm = T) else NA)
+    stats_mode <- reactive(
+      if(var1() |> is.numeric() ||
+         var1() |> is.character() ||
+         var1() |> is.factor()) Mode(var1(), na.rm = T) else NA
+      )
     stats_q3 <- reactive(if(is.numeric(var1())) p75(var1()) else NA)
     stats_max <- reactive(if(is.numeric(var1())) mana(var1()) else NA)
 
@@ -39,6 +44,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           'Percentile 25',
           'Median',
           'Mean',
+          'Mode',
           'Percentile 75',
           'Maximum',
           paste('Percentile', input_percentile()),
@@ -51,6 +57,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           stats_q1(),
           stats_median(),
           stats_mean(),
+          paste(stats_mode(), collapse = ' | '),
           stats_q3(),
           stats_max(),
           percentile(),

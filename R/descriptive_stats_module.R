@@ -12,8 +12,8 @@ descriptive_stats_ui <- function(id) {
         checkboxGroupInput(
           ns('xg_central_tendency'),
           h6('Central Tendency'), inline = T,
-          c('Mean' = 'mean', 'Median' = 'median'),
-          c('mean', 'median')
+          c('Mean' = 'mean', 'Median' = 'median', 'Mode' = 'mode'),
+          c('mean', 'median', 'mode')
         ),
         checkboxGroupInput(
           ns('xg_dispersion'), h6('Dispersion'), inline = T,
@@ -68,32 +68,41 @@ descriptive_stats_server <- function(id, df) {
       if('mean' %in% input$xg_central_tendency){
         desc_stats$Mean <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) mean(x, na.rm = T) else NA})
+          \(x) {if(x |> is.numeric()) mean(x, na.rm = T) else NA })
       }
 
       if('median' %in% input$xg_central_tendency){
         desc_stats$Median <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) median(x, na.rm = T) else NA})
+          \(x) {if(x |> is.numeric()) median(x, na.rm = T) else NA })
+      }
+
+      if('mode' %in% input$xg_central_tendency){
+        desc_stats$Mode <- sapply(
+          df_stats(),
+          \(x) {if(x |> is.numeric() ||
+                   x |> is.character() ||
+                   x |> is.factor()) paste(
+                     Mode(x, na.rm = T), collapse = ' | ') else NA })
       }
 
       # dispersion
       if('min' %in% input$xg_dispersion){
         desc_stats$Min <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) mina(x) else NA})
+          \(x) {if(x |> is.numeric()) mina(x) else NA })
       }
 
       if('max' %in% input$xg_dispersion){
         desc_stats$Max <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) mana(x) else NA})
+          \(x) {if(x |> is.numeric()) mana(x) else NA })
       }
 
       if('IQR' %in% input$xg_dispersion){
         desc_stats$IQR <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) IQR(x, na.rm = T) else NA})
+          \(x) {if(x |> is.numeric()) IQR(x, na.rm = T) else NA })
       }
 
       if('range' %in% input$xg_dispersion){
@@ -110,13 +119,13 @@ descriptive_stats_server <- function(id, df) {
       if('var' %in% input$xg_dispersion){
         desc_stats$Variance <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) var(x, na.rm = T) else NA})
+          \(x) {if(x |> is.numeric()) var(x, na.rm = T) else NA })
       }
 
       if('sd' %in% input$xg_dispersion){
         desc_stats[['Standard Deviation']] <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) sd(x, na.rm = T) else NA})
+          \(x) {if(x |> is.numeric()) sd(x, na.rm = T) else NA })
       }
 
       desc_stats

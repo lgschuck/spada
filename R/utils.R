@@ -1,17 +1,37 @@
 
 # list of filters -------------------------------------------------------------
-filter_operators <- c('== (Equal)' = '==',
-                      '!= (Not Equal)' = '!=',
-                      '> (Greater)' = '>',
-                      '>= (Greater or Equal)' = '>=',
-                      '< (Less)' = '<',
-                      '<= (Less or Equal)' = '<=',
-                      'Is NA (is.na)' = 'is_na',
-                      'Not NA (! is.na)' = 'not_na',
-                      'In (%in%)' = 'in',
-                      'Not In (! %in%)' = 'not_in',
-                      'Between' = 'between',
-                      'Not Between' = 'not_between')
+equal_operators <- c('== (Equal)' = '==',
+                     '!= (Not Equal)' = '!=')
+
+compare_operators <- c('> (Greater)' = '>',
+                       '>= (Greater or Equal)' = '>=',
+                       '< (Less)' = '<',
+                       '<= (Less or Equal)' = '<=')
+
+na_operators <- c('Is NA (is.na)' = 'is_na',
+                  'Not NA (! is.na)' = 'not_na')
+
+in_operators <- c('In (%in%)' = 'in',
+                  'Not In (! %in%)' = 'not_in')
+
+between_operators <- c('Between' = 'between',
+                       'Not Between' = 'not_between')
+
+outlier_operators <- c('Outlier' = 'outlier',
+                       'Not Outlier' = 'not_outlier')
+
+logical_operators <- c('TRUE' = 'is_true',
+                       'FALSE' = 'is_false')
+
+filter_operators <- c(
+  equal_operators,
+  compare_operators,
+  na_operators,
+  in_operators,
+  between_operators,
+  outlier_operators,
+  logical_operators
+)
 
 # lits of date formats --------------------------------------------------------
 date_formats <- c(
@@ -222,6 +242,14 @@ filter_rows <- function(df, var, operator, filter_value){
     df[get(var) %between% filter_value, ]
   } else if(operator == 'not_between'){
     df[!(get(var) %between% filter_value), ]
+  } else if(operator == 'outlier'){
+    df[Outlier(get(var), value = F, na.rm = T), ]
+  } else if(operator == 'not_outlier'){
+    df[!Outlier(get(var), value = F, na.rm = T), ]
+  } else if(operator == 'is_true'){
+    df[get(var) == TRUE, ]
+  } else if(operator == 'is_false'){
+    df[get(var) == FALSE, ]
   }
 }
 
