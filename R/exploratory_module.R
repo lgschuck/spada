@@ -178,8 +178,14 @@ exploratory_server <- function(id, input_df, df_metadata,
         validate(need(is.numeric(var()), 'Var must be numeric'))
 
         if (input$radio_dist_plot == 'boxplot_group'){
+          validate(
+            need(!is.numeric(var2()) | (is.numeric(var2()) & is.integer(var2())),
+                 'Variable 2 can not be float'),
+            need(!is.complex(var2()), 'Variable 2 can not be complex')
+          )
+
           g_dist_boxg_col <- colors()[sample.int(
-            colors() |> length(), unique(var2()) |> length(), replace = F)]
+            colors() |> length(), unique(var2()) |> length(), replace = T)]
 
           boxplot(var() ~ var2(), horizontal = T,
                   col = g_dist_boxg_col, xlab = '', ylab = '')

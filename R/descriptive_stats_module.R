@@ -82,8 +82,11 @@ descriptive_stats_server <- function(id, df) {
           df_stats(),
           \(x) {if(x |> is.numeric() ||
                    x |> is.character() ||
-                   x |> is.factor()) paste(
-                     Mode(x, na.rm = T), collapse = ' | ') else NA })
+                   x |> is.factor()){
+            x_mode <- Mode(x, na.rm = T)
+            if(is.na(x_mode) |> all()) NA else paste(x_mode, collapse = ' | ')
+          } else { NA }
+        })
       }
 
       # dispersion
@@ -142,6 +145,7 @@ descriptive_stats_server <- function(id, df) {
     output$gt_stats <- render_gt({
       req(gt_stats)
       gt_stats() |>
+        sub_missing() |>
         opt_interactive()
     })
 

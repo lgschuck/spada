@@ -16,6 +16,7 @@ if(interactive()){
   library(conflicted)
   library(shinyWidgets)
   library(shinybusy)
+  library(DescTools)
 
   conflicted::conflict_prefer('filter', 'dplyr')
   conflicted::conflict_prefer('between', 'data.table')

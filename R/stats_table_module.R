@@ -8,7 +8,7 @@ stats_table_ui <- function(id) {
       layout_columns(
         col_widths = c(6, 6),
         numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
-        div(style = "margin-top: 24px !important;",
+        div(style = "margin-top: 28px !important;",
             save_gt_ui(ns('pA_stats_table_save_gt'))
         )
       ),
@@ -57,7 +57,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           stats_q1(),
           stats_median(),
           stats_mean(),
-          paste(stats_mode(), collapse = ' | '),
+          if(is.na(stats_mode()) |> all()) NA else paste(stats_mode(), collapse = ' | '),
           stats_q3(),
           stats_max(),
           percentile(),

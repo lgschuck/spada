@@ -22,6 +22,23 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.26-2
+
+### Bug Fixes
+
+1 - **Exploratory Page > Boxplot by groups: error when plot Integer vs Numeric**: The error occurs because there is more unique values in Variable 2 than in colors() function tha is used to sample colors. Changed to replace = T. ([#11](https://github.com/lgschuck/spada/issues/11))
+
+2 - **Exploratory Page > Stats table: Mode NA for numeric, date, logical and complex var**: the gt table was receiving tha NA value as character and the function sub_missing() does not have effect on those values. Now the Mode is passed as character only if it is not NA.
+([#12](https://github.com/lgschuck/spada/issues/12))
+
+### Improvements
+
+1 - **Descriptive Stats** module: now Mode returns NA (not as character) and only paste/collapse values if Mode exists. Inserted sub_missing() in gt_stats for better look and consistency with other views
+
+2 - **Stats table** module: now Mode returns NA (not as character) and only paste/collapse values if Mode exists
+
+3 - **Exploratory** module: now the Variable 2 can not be float in Boxplot by Groups, because does not seam reasonable to have an infinite number of groups. Related to ([#11](https://github.com/lgschuck/spada/issues/11))
+
 ## 2025.01.26-1
 
 ### Bug Fixes
