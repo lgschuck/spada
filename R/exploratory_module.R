@@ -171,6 +171,9 @@ exploratory_server <- function(id, input_df, df_metadata,
 
     # render plots ------------------------------------------------------------
     output$g_dist <- renderPlot({
+      req(var())
+      req(var2())
+
       if (input$radio_dist_plot == 'barplot'){
         validate(need(!is.numeric(var()), 'Var can not be numeric'))
         barplot(table(var()), col = color_fill())

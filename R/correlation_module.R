@@ -88,8 +88,15 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       req(input$radio_alternative)
       req(input$radio_method)
 
-      if(!isTruthy(input$confidence) || !between(input$confidence, 0, 100)){
-        msg('Confidence interval must be between 0 and 100%', 2)
+      if(!isTruthy(input$confidence) ||
+         !between(input$confidence, 0, 100)) {
+        msg_error('Confidence interval must be between 0 and 100%', 2)
+      } else if (sum(!is.na(df_active()[[input$sel_var1]])) < 3 ||
+                 sum(!is.na(df_active()[[input$sel_var2]])) < 3) {
+        msg_error('Inform at least 3 valid values for each variable')
+      } else if (sd(df_active()[[input$sel_var1]], na.rm = T) == 0 ||
+                 sd(df_active()[[input$sel_var2]], na.rm = T) == 0) {
+        msg_error('The Standard deviation of any of the variables can not be zero', 3)
       } else {
         df <- cor.test(df_active()[[input$sel_var1]],
                        df_active()[[input$sel_var2]],

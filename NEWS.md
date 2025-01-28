@@ -22,6 +22,34 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.27-1
+
+### Bug Fixes
+
+1 - **Exploratory > Stats Table: digits input has no effect**: the input was
+been passed to gt functions (fmt_numeric) but the **value** column was char 
+given the paste command for Mode values. Fixed with new function f_dec. ([#13](https://github.com/lgschuck/spada/issues/13))
+
+2 - **Analysis > Correlation: not enough finite observations**: stats::cor.test for 
+Pearson demands at least 3 valid values (Spearman and Kendal a least 2 valid values). 
+New check throughs a error message if less than 3 valid values for all methods.
+([#14](https://github.com/lgschuck/spada/issues/14))
+
+### Improvements
+
+1 - **Correlation** module: now check if **Standard Deviation** of any informed 
+variable is zero, avoiding warning. Also fixed 
+([#14](https://github.com/lgschuck/spada/issues/14)).
+
+2 - **Exploratory** module: now with req (for main variable and variable 2) 
+in render_plot (output$gt_dist)
+
+3 - **Stats table** module: align columns, use '-' for sub_missing becasue the long dash is not an ASCII and could not be replicated in sub_values (devtools::check). Also fixed ([#13](https://github.com/lgschuck/spada/issues/14))
+
+4 - **utils.R**: new intern function f_dec for format number of decimals
+
+5 - **DESCRIPTION**: insert Depends (R >= 4.1.0) given the use of pipe operator
+
 ## 2025.01.26-2
 
 ### Bug Fixes

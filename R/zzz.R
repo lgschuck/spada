@@ -17,6 +17,7 @@ utils::globalVariables(
     'rows',
     'x',
     'values',
-    'results'
+    'results',
+    'value'
     )
   )

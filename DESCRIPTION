@@ -9,6 +9,8 @@ Description: Tools to visual Data Analysis.
 License: AGPL (>= 3) + file LICENSE
 URL: https://github.com/lgschuck/spada
 BugReports: https://github.com/lgschuck/spada/issues
+Depends:
+  R (>= 4.1.0)
 Imports:
   bsicons (>= 0.1.2),
   bslib (>= 0.8.0),

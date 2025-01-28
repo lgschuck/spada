@@ -36,7 +36,10 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
     stats_q3 <- reactive(if(is.numeric(var1())) p75(var1()) else NA)
     stats_max <- reactive(if(is.numeric(var1())) mana(var1()) else NA)
 
-    stats_table <- reactive(
+    stats_table <- reactive({
+
+      fmt_digits <- min(max(0, input$table_digits), 9)
+
       data.frame(
         measure = c(
           paste("% NA's (", stats_n_nas(), '/', stats_obs(), ')'),
@@ -52,27 +55,30 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           'Pearson Correlation'
         ),
         value = c(
-          stats_n_nas() / stats_obs() * 100,
-          stats_min(),
-          stats_q1(),
-          stats_median(),
-          stats_mean(),
-          if(is.na(stats_mode()) |> all()) NA else paste(stats_mode(), collapse = ' | '),
-          stats_q3(),
-          stats_max(),
-          percentile(),
-          var1_sd(),
-          pearson_correlation()
+          (stats_n_nas() / stats_obs() * 100) |> f_dec(dig = fmt_digits),
+          stats_min() |> f_dec(dig = fmt_digits),
+          stats_q1() |> f_dec(dig = fmt_digits),
+          stats_median() |> f_dec(dig = fmt_digits),
+          stats_mean() |> f_dec(dig = fmt_digits),
+          if(stats_mode() |> is.na() |> all()) NA else paste(
+            stats_mode()|> f_dec(dig = fmt_digits), collapse = ' | '),
+          stats_q3() |> f_dec(dig = fmt_digits),
+          stats_max() |> f_dec(dig = fmt_digits),
+          percentile() |> f_dec(dig = fmt_digits),
+          var1_sd() |> f_dec(dig = fmt_digits),
+          pearson_correlation() |> f_dec(dig = fmt_digits)
         )
       )
-    )
+    })
 
     stats_table_fmt <- reactive({
       stats_table() |>
         gt() |>
-        sub_missing() |>
+        sub_missing(missing_text = '-') |>
+        sub_values(values = 'NA', replacement = '-') |>
         cols_label(measure = 'Measure', value = 'Value') |>
-        fmt_number(decimals = min(max(0, input$table_digits), 9))
+        cols_align('left', measure) |>
+        cols_align('right', value)
     })
 
     output$gt_stats <- render_gt({

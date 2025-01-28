@@ -30,7 +30,7 @@
 #' @importFrom gt cols_align cols_hide cols_label cols_merge cols_move
 #'             cols_width data_color fmt_bytes fmt_icon fmt_integer
 #'             fmt_number fmt_percent gt gt_output gtsave opt_interactive
-#'             render_gt sub_missing tab_options
+#'             render_gt sub_missing sub_values tab_options
 #'
 
 #' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton

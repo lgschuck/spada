@@ -266,6 +266,15 @@ get_help_file <- function(pak, fun){
   )
 }
 
+# format decimals ---------------------------------------------------------
+f_dec <- function(x, dig = 0){
+  if(is.numeric(x) && !is.na(x) |> all()){
+    format(round(x, dig), nsmall = dig, scientific = F)
+  } else {
+    NA
+  }
+}
+
 # palettes --------------------------------------------------------------------
 
 gray_palette <- c('#ffffff', '#585858', '#232323')
