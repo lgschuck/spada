@@ -18,9 +18,15 @@ editor_options:
 
 5 - Functionalities to detect and treat outliers
 
-6 - Inference z and t test
+6 - Inference: t test
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
+
+## 2025.01.28-1
+
+### Improvements
+
+1 - New **Z Test** module: new module for Z test (DescTools::ZTest)
 
 ## 2025.01.27-1
 

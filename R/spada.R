@@ -19,7 +19,7 @@
 #'             layout_sidebar nav_item nav_menu nav_panel nav_select nav_spacer
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #'
-#' @importFrom DescTools Mode Outlier
+#' @importFrom DescTools Mode Outlier ZTest
 #'
 #' @importFrom dplyr arrange filter mutate pull select
 #'

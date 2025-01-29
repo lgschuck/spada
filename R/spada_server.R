@@ -245,6 +245,10 @@ spada_server <- function(datasets){
     normality_test_server('pA_normality_test', reactive(df$df_active),
                        df_metadata, color_fill, color_line)
 
+    # normality test ----------------------------------------------------------
+    z_test_server('pA_z_test', reactive(df$df_active), df_metadata,
+                  color_fill, color_line)
+
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')
     color_fill <- reactive(mod_pC$palette()[['fill']])

@@ -135,6 +135,9 @@ spada_ui <- function(){
         nav_panel('Normality Test',
                   icon = bs_icon('bell'),
                   normality_test_ui('pA_normality_test')),
+        nav_panel('Z Test',
+                  icon = icon('z'),
+                  z_test_ui('pA_z_test')),
       ), # end of analysis menu
       # menu options ----------------------------------------------------------
       nav_menu(
