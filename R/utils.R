@@ -259,20 +259,31 @@ ttip <- function(TRIGGER, ..., ID = NULL, PLACE = 'top'){
 }
 
 
-# get function help -------------------------------------------------------
+# get function help -----------------------------------------------------------
 get_help_file <- function(pak, fun){
   utils::capture.output(
     tools::Rd2HTML(tools::Rd_db(pak)[[paste0(fun, '.Rd')]])
   )
 }
 
-# format decimals ---------------------------------------------------------
+# format decimals -------------------------------------------------------------
 f_dec <- function(x, dig = 0){
   if(is.numeric(x) && !is.na(x) |> all()){
     format(round(x, dig), nsmall = dig, scientific = F)
   } else {
     NA
   }
+}
+
+# make var names --------------------------------------------------------------
+make_var_names <- function(df){
+    names(df) <- names(df) |> make.names(unique = T)
+    return(df)
+}
+
+# test all equal --------------------------------------------------------------
+test_all_equal <- function(x){
+  all(x == x[1])
 }
 
 # palettes --------------------------------------------------------------------

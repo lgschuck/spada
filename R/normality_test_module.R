@@ -85,7 +85,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     })
 
     var_analysis <- reactive({
-      req(df_active)
+      req(df_active())
 
       df_names <- df_active() |> names()
 
@@ -96,8 +96,9 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
     var <- reactive({
       req(df_active())
-      req(input$sel_var1)
-      temp <- df_active()[[input$sel_var1]]
+      req(input$sel_var)
+
+      temp <- df_active()[[input$sel_var]]
       temp[!is.na(temp)]
     })
 
@@ -106,7 +107,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     output$parameters <- renderUI({
       req(var_analysis())
       tagList(
-        selectInput(ns('sel_var1'), 'Variable 1', var_analysis()),
+        selectInput(ns('sel_var'), 'Variable 1', var_analysis()),
         p('* Showing only numeric variables')
       )
     })
@@ -114,7 +115,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     # histogram ---------------------------------------------------------------
     output$hist <- renderPlot({
       req(df_active())
-      req(input$sel_var1)
+      req(input$sel_var)
       req(var())
 
       validate(need(input$bins > 0, 'Bins must be 1 or higher'))
@@ -125,7 +126,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
            col = color_fill(),
            xlab = 'Values',
            ylab = 'Density',
-           main = paste('Histogram of', input$sel_var1)
+           main = paste('Histogram of', input$sel_var)
            )
       curve(dnorm(x, mean = mean(var()),
                   sd = sd(var())),
@@ -137,10 +138,10 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
     # qq plot -----------------------------------------------------------------
     output$qq_plot <- renderPlot({
-      req(input$sel_var1)
+      req(input$sel_var)
       req(var())
 
-      qqnorm(var(), main = paste('Normal QQ Plot:', input$sel_var1),
+      qqnorm(var(), main = paste('Normal QQ Plot:', input$sel_var),
                                  col = color_fill())
       qqline(var(), col = color_line())
 
@@ -149,7 +150,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
     # ks test -----------------------------------------------------------------
     ks_results <- reactive({
-      req(input$sel_var1)
+      req(input$sel_var)
       req(var())
 
       if(anyDuplicated(var()) > 0){
@@ -165,7 +166,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         df$results <- rownames(df)
         names(df) <- c('values', 'results')
 
-        df[df$results == 'data.name', ]$values <- paste(input$sel_var1)
+        df[df$results == 'data.name', ]$values <- paste(input$sel_var)
 
         results = list(
           'results' = df,
@@ -179,7 +180,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         df$results <- rownames(df)
         names(df) <- c('values', 'results')
 
-        df[df$results == 'data.name', ]$values <- paste(input$sel_var1)
+        df[df$results == 'data.name', ]$values <- paste(input$sel_var)
 
         results = list('results' = df)
       }
@@ -250,22 +251,27 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
     # sw test -----------------------------------------------------------------
     sw_results <- reactive({
-      req(input$sel_var1)
+      req(input$sel_var)
       req(var())
       req(var_len())
 
-      validate(
-        need(between(var_len(), 3, 5000),
-             paste0('Sample size must be between 3 and 5000 (actual: ',
-                    var_len(), ')')
-        )
-      )
+      if (var_len() < 3 || var_len() > 5000) {
+        msg(paste0('Sample size must be between 3 and 5000 (actual: ', var_len(), ')'), 3)
+
+        return()
+      }
+
+      if (test_all_equal(var())) {
+        msg('Shapiro-Wilk test: the values can not be all equal')
+        return()
+      }
+
       df <- shapiro.test(var()) |> unlist() |> as.data.frame()
 
       df$results <- rownames(df)
       names(df) <- c('values', 'results')
 
-      df[df$results == 'data.name', ]$values <- paste(input$sel_var1)
+      df[df$results == 'data.name', ]$values <- paste(input$sel_var)
 
       df
     }) |> bindEvent(input$btn_sw)
@@ -280,7 +286,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     })
 
     output$conditional_staticard_sw <- renderUI({
-      req(ks_results())
+      req(sw_results())
       tagList(
         statiCard(sw_results() |>
                     filter(results %in% c('statistic.W')) |>
@@ -315,6 +321,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       save_gt_ui(ns('sw_save_gt'))
     })
 
+    # help file of shapiro.test
     observe({
       showModal(modalDialog(
         HTML(get_help_file('stats', 'shapiro.test')),

@@ -22,6 +22,35 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.01.29-1
+
+### Bug Fixes
+
+1 - **Analysis > Normality Test > Shapiro: error if all values are equal**: 
+Shapiro does not accept all equal values. Now with check and msg_error 
+([#15](https://github.com/lgschuck/spada/issues/15))
+
+### Improvements
+
+1 - **Correlation** module: chane name of Alternatives and chance card header title 
+to Correlation Test
+
+2 - **Export file** module: now writes Sav (**haven package**) and uses checkbox to compress RDS
+
+3 - **Normality Test** module: better names and better checks for Shapiro-Wilk Test
+([#15](https://github.com/lgschuck/spada/issues/15))
+
+4 - **spada.R**: now make.names for the variables inside datasets
+
+5 - **spada_ui.R**: new name in the menu for Correlation (now Correlation Test)
+
+6 - **utils.R**: new internal functions: make_var_names and test_all_equal
+
+7 - **Z Test** module: better visuals and new checks for Mean and Std Deviation inputs
+
+8 - **DESCRIPTION**: insert [haven](https://haven.tidyverse.org)
+package as new dependencie
+
 ## 2025.01.28-1
 
 ### Improvements

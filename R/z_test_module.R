@@ -16,12 +16,21 @@ z_test_ui <- function(id) {
               sidebar = sidebar(
                 width = 400,
                 h5('Parameters', style = 'margin-bottom: -18px;'),
-                numericInput(ns('mu'), 'Hypothesized Mean', 0),
-                numericInput(ns('sd'), 'Std Deviation of Population', 1),
+                layout_columns(
+                  numericInput(
+                    ns('mu'),
+                    list('Mean', bs_icon('info-circle') |>
+                           ttip('Hypothesized Mean')), 0),
+                  numericInput(
+                    ns('sd'),
+                    list('Std Deviation', bs_icon('info-circle') |>
+                           ttip('Standard Deviation of Population')),
+                    value = 1, min = 0)
+                ),
                 radioButtons(ns('radio_alternative'), 'Alternative',
-                             c('Two.sided' = 'two.sided',
+                             c('Two sided' = 'two.sided',
                                'Less' = 'less',
-                               'Greater' = 'greater')),
+                               'Greater' = 'greater'), inline = T),
                 numericInput(ns('confidence'), 'Confidence Interval - %',
                              value = 95, 0, 100, 5, width = '200px'),
                 layout_columns(
@@ -104,8 +113,12 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       req(input$sel_var)
       req(input$radio_alternative)
 
-      if(input$sd == 0){
-        msg_error('Standard Deviation can not be 0', 2)
+      if(!isTruthy(input$mu)){
+        msg_error('Inform a value for the Mean')
+      } else if(!isTruthy(input$sd)){
+        msg_error('Inform a value for the Std Deviation')
+      } else if(input$sd <= 0){
+        msg_error('Standard Deviation must be positive ( > 0)', 2)
       } else if(!isTruthy(input$confidence) ||
          !between(input$confidence, 0, 100)) {
         msg_error('Confidence interval must be between 0 and 100%', 2)

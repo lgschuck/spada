@@ -7,7 +7,7 @@ export_file_ui <- function(id) {
         fluidRow(
           column(3, textInput(ns('file_name'), 'File name', value = 'dataset')),
           column(3, radioButtons(ns('radio_format'), 'File format',
-                                 c('csv', 'RDS', 'RDS Compressed'), inline = T))
+                                 c('csv', 'RDS', 'sav'), inline = T))
         ),
         conditionalPanel(
           condition = sprintf("input['%s'] == 'csv'", ns('radio_format')),
@@ -29,6 +29,26 @@ export_file_ui <- function(id) {
             )
           )
         ),
+        conditionalPanel(
+          condition = sprintf("input['%s'] == 'RDS'", ns('radio_format')),
+          card(
+            card_header('RDS Parameters', class = 'mini-header'),
+            card_body(
+              checkboxInput(ns('checkbox_rds_compress'), 'Compress')
+            ),
+          )
+        ),
+        conditionalPanel(
+          condition = sprintf("input['%s'] == 'sav'", ns('radio_format')),
+          card(
+            card_header('Sav Parameters', class = 'mini-header'),
+            card_body(
+              radioButtons(ns('radio_sav_compress'), 'Compress',
+                           c('Byte' = 'byte', 'None' = 'none', 'Zsav' = 'zsav'),
+                           inline = T)
+            ),
+          )
+        ),
         card_footer(downloadButton(ns('down_handler'),
                                    'Export Active dataset', icon('download')))
       )
@@ -41,11 +61,13 @@ export_file_server <- function(id, df_active) {
     output$down_handler <- downloadHandler(
 
       filename = function() {
-        paste(input$file_name,
+        paste0(input$file_name,
               if(input$radio_format == 'csv'){
                 '.csv'
               } else if (input$radio_format %in% c('RDS', 'RDS Compressed')){
                 '.RDS'
+              } else if (input$radio_format %in% c('sav')){
+                '.sav'
               })
       },
       content = function(file) {
@@ -58,9 +80,9 @@ export_file_server <- function(id, df_active) {
                  scipen = as.integer(input$radio_scientific)
           )
         } else if (input$radio_format == 'RDS'){
-          saveRDS(df_active(), file, compress = F)
-        } else if (input$radio_format == 'RDS Compressed') {
-          saveRDS(df_active(), file, compress = T)
+          saveRDS(df_active(), file, compress = input$checkbox_rds_compress)
+        } else if (input$radio_format == 'sav') {
+          write_sav(df_active(), file, compress = input$radio_sav_compress)
         }
       }
     )

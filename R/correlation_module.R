@@ -4,7 +4,7 @@ correlation_ui <- function(id) {
   ns <- NS(id)
   card(
     full_screen = T,
-    card_header('Correlation', class = 'mini-header'),
+    card_header('Correlation Test', class = 'mini-header'),
     layout_sidebar(
       bg = '#02517d',
       sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
@@ -21,9 +21,9 @@ correlation_ui <- function(id) {
                                'Kendall' = 'kendall',
                                'Spearman' = 'spearman')),
                 radioButtons(ns('radio_alternative'), 'Alternative',
-                             c('Two.sided' = 'two.sided',
+                             c('Two sided' = 'two.sided',
                                'Less' = 'less',
-                               'Greater' = 'greater')),
+                               'Greater' = 'greater'), inline = T),
                 numericInput(ns('confidence'), 'Confidence Interval - %',
                              value = 95, 0, 100, 5, width = '200px'),
                 layout_columns(

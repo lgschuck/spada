@@ -32,7 +32,8 @@
 #'             fmt_number fmt_percent gt gt_output gtsave opt_interactive
 #'             render_gt sub_missing sub_values tab_options
 #'
-
+#' @importFrom haven write_sav
+#'
 #' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton
 #'             radioGroupButtons statiCard
 #'
@@ -45,11 +46,12 @@
 
 spada <- function(...) {
   datasets <- list(...)
-  if(length(datasets) == 0) datasets <- list('iris' = datasets::iris, 'mtcars' = datasets::mtcars)
+  if(length(datasets) == 0) datasets <- list('iris' = datasets::iris,
+                                             'mtcars' = datasets::mtcars)
   stopifnot('Objects must be data.frame and have at least 1 row each' =
     sapply(datasets, is.data.frame) |> all() && all(sapply(datasets, nrow) > 0))
 
-  # set names
+  # set datasets names
   if(is.null(names(datasets))){
     names(datasets) <- lapply(substitute(list(...))[-1], deparse) |>
       unlist() |>
@@ -61,7 +63,9 @@ spada <- function(...) {
 
     names(datasets) <- make.names(names(datasets), unique = T)
   }
-  gc()
+
+  # make sure all datasets variables are valid names
+  datasets <- lapply(datasets, make_var_names)
 
   ### Run App -----------------------------------------------------------------
   shinyApp(spada_ui(), spada_server(datasets),
