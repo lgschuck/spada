@@ -28,14 +28,14 @@ f_num <- function(x, big = ',', dec = '.', thousand = 'K',
   fcase(
     is.infinite(x), paste(x),
     x > 1e9,
-    paste(format(round(x/1e9, digits = dig),
+    paste(format(round(x/1e9, digits = dig), nsmall = dig,
                  decimal.mark = dec, big.mark = big, scientific = F), billion),
     x > 1e6,
-    paste(format(round(x/1e6, digits = dig),
+    paste(format(round(x/1e6, digits = dig), nsmall = dig,
                  decimal.mark = dec, big.mark = big, scientific = F), million),
     x > 1e3,
-    paste(format(round(x/1e3, digits = dig),
+    paste(format(round(x/1e3, digits = dig), nsmall = dig,
                  decimal.mark = dec, big.mark = big, scientific = F), thousand),
-    default = format(round(x, dig), scientific = F)
+    default = format(round(x, dig), nsmall = dig, scientific = F)
     )
 }

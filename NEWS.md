@@ -22,6 +22,27 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.01-1
+
+Only visual and formatting changes.
+
+### Improvements
+
+1 - **Convert Cols, Data Overview and Sidebar** modules: background color receive object bg_color
+
+2 - **Correlation, Normality Test and Z Test** modules: sidebars color now with bg_color object and stati_card with blue color
+
+3 - **Descriptive Stats** module: gain digits input and f_num for format values
+
+4 - **f_num** function: now with nsmall inside format function for number of decimal digits
+
+5 - **Spada_ui**: now with color objects instead of hex code
+
+6 - **stats Table** module: now values with f_num instead of f_dec function
+
+7 - **utils.R**: new function stati_card (basically shinyWidgets::statiCard with default values)
+and colors in objects to use across several places
+
 ## 2025.01.29-1
 
 ### Bug Fixes

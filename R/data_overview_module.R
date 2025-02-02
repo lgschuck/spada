@@ -53,7 +53,7 @@ data_overview_server <- function(id, df, triggers) {
             use_text_wrapping = F,
             use_page_size_select = T
           ) |>
-          tab_options(table.background.color = '#f9f9f9')
+          tab_options(table.background.color = bg_color)
     })
   })
 }

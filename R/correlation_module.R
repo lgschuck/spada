@@ -6,14 +6,15 @@ correlation_ui <- function(id) {
     full_screen = T,
     card_header('Correlation Test', class = 'mini-header'),
     layout_sidebar(
-      bg = '#02517d',
-      sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
+      bg = main_color,
+      sidebar = sidebar(uiOutput(ns('parameters')), bg = sidebar_color),
       navset_card_pill(
         nav_panel(
           'Test',
           card(
             layout_sidebar(
               sidebar = sidebar(
+                bg = sidebar_color,
                 width = 400,
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 radioButtons(ns('radio_method'), 'Method',
@@ -143,25 +144,19 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
     output$conditional_staticard_cor <- renderUI({
       req(cor_results_gt())
       tagList(
-        statiCard(cor_test$results |>
+        stati_card(cor_test$results |>
                   filter(results %in% c('estimate.cor', 'estimate.tau',
                   'estimate.rho')) |>
                   pull(values) |>
                   as.numeric() |>
                   f_num(dig = 3),
-                  subtitle = 'Correlation',
-                  left = T,
-                  animate = T,
-                  duration = 30),
-        statiCard(cor_test$results |>
+                  'Correlation'),
+        stati_card(cor_test$results |>
                   filter(results %in% c('p.value')) |>
                   pull(values) |>
                   as.numeric() |>
                   f_num(dig = 3),
-                  subtitle = 'p value',
-                  left = T,
-                  animate = T,
-                  duration = 30)
+                  'p value')
       )
     })
 

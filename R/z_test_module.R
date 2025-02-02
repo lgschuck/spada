@@ -6,14 +6,15 @@ z_test_ui <- function(id) {
     full_screen = T,
     card_header('Z Test', class = 'mini-header'),
     layout_sidebar(
-      bg = '#02517d',
-      sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
+      bg = main_color,
+      sidebar = sidebar(uiOutput(ns('parameters')), bg = sidebar_color),
       navset_card_pill(
         nav_panel(
           'Test',
           card(
             layout_sidebar(
               sidebar = sidebar(
+                bg = sidebar_color,
                 width = 400,
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 layout_columns(
@@ -40,7 +41,9 @@ z_test_ui <- function(id) {
                 )
               ),
               card_body(
-                layout_column_wrap(
+                div(style = "margin-bottom: -48px !important;"),
+                layout_columns(
+                  col_widths = c(4, 4),
                   uiOutput(ns('staticard_mean')),
                   uiOutput(ns('staticard_sd'))
                 ),
@@ -167,43 +170,31 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
     output$staticard_mean <- renderUI({
       req(sample_mean())
-      statiCard(sample_mean() |> f_num(dig = 3),
-                subtitle = paste(input$sel_var, '- Mean'),
-                left = T,
-                animate = T,
-                duration = 30)
+      stati_card(sample_mean() |> f_num(dig = 3),
+                 paste(input$sel_var, '- Mean'))
     })
 
     output$staticard_sd <- renderUI({
       req(sample_sd())
-      statiCard(sample_sd() |> f_num(dig = 3),
-                subtitle = paste(input$sel_var, '- Std Deviation'),
-                left = T,
-                animate = T,
-                duration = 30)
+      stati_card(sample_sd() |> f_num(dig = 3),
+                 paste(input$sel_var, '- Std Deviation'))
     })
 
     output$conditional_staticard_ztest <- renderUI({
       req(ztest_results_gt())
       tagList(
-        statiCard(ztest$results |>
-                  filter(results %in% c('statistic.z')) |>
-                  pull(values) |>
-                  as.numeric() |>
-                  f_num(dig = 3),
-                  subtitle = 'Z value',
-                  left = T,
-                  animate = T,
-                  duration = 30),
-        statiCard(ztest$results |>
-                  filter(results %in% c('p.value')) |>
-                  pull(values) |>
-                  as.numeric() |>
-                  f_num(dig = 3),
-                  subtitle = 'p value',
-                  left = T,
-                  animate = T,
-                  duration = 30)
+        stati_card(ztest$results |>
+                   filter(results %in% c('statistic.z')) |>
+                   pull(values) |>
+                   as.numeric() |>
+                   f_num(dig = 3),
+                   'Z value'),
+        stati_card(ztest$results |>
+                   filter(results %in% c('p.value')) |>
+                   pull(values) |>
+                   as.numeric() |>
+                   f_num(dig = 3),
+                   'p value')
       )
     })
 

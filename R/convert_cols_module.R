@@ -122,7 +122,7 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
             use_pagination = F,
             use_highlight = T,
             use_compact_mode = T) |>
-          tab_options(table.background.color = '#f9f9f9')
+          tab_options(table.background.color = bg_color)
       }
     })
 

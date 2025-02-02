@@ -5,8 +5,8 @@ normality_test_ui <- function(id) {
   card(
     full_screen = T,
     card_header('Normality Test', class = 'mini-header'),
-    layout_sidebar(bg = '#02517d',
-      sidebar = sidebar(uiOutput(ns('parameters')), bg = '#e3e3e4'),
+    layout_sidebar(bg = main_color,
+      sidebar = sidebar(uiOutput(ns('parameters')), bg = sidebar_color),
       navset_card_pill(
         nav_panel(
           'Histogram',
@@ -199,24 +199,18 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     output$conditional_staticard_ks <- renderUI({
       req(ks_results())
       tagList(
-        statiCard(ks_results()$results |>
-                    filter(results %in% c('statistic.D')) |>
-                    pull(values) |>
-                    as.numeric() |>
-                    f_num(dig = 5),
-                  subtitle = 'Statistic D (test value)',
-                  left = T,
-                  animate = T,
-                  duration = 30),
-        statiCard(ks_results()$results |>
-                    filter(results %in% c('p.value')) |>
-                    pull(values) |>
-                    as.numeric() |>
-                    f_num(dig = 5),
-                  subtitle = 'p value',
-                  left = T,
-                  animate = T,
-                  duration = 30)
+        stati_card(ks_results()$results |>
+                   filter(results %in% c('statistic.D')) |>
+                   pull(values) |>
+                   as.numeric() |>
+                   f_num(dig = 5),
+                   'Statistic D (test value)'),
+        stati_card(ks_results()$results |>
+                   filter(results %in% c('p.value')) |>
+                   pull(values) |>
+                   as.numeric() |>
+                   f_num(dig = 5),
+                   'p value')
       )
     })
 
@@ -288,24 +282,18 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
     output$conditional_staticard_sw <- renderUI({
       req(sw_results())
       tagList(
-        statiCard(sw_results() |>
-                    filter(results %in% c('statistic.W')) |>
-                    pull(values) |>
-                    as.numeric() |>
-                    f_num(dig = 5),
-                  subtitle = 'Statistic W (test value)',
-                  left = T,
-                  animate = T,
-                  duration = 30),
-        statiCard(sw_results() |>
-                    filter(results %in% c('p.value')) |>
-                    pull(values) |>
-                    as.numeric() |>
-                    f_num(dig = 5),
-                  subtitle = 'p value',
-                  left = T,
-                  animate = T,
-                  duration = 30)
+        stati_card(sw_results() |>
+                   filter(results %in% c('statistic.W')) |>
+                   pull(values) |>
+                   as.numeric() |>
+                   f_num(dig = 5),
+                   'Statistic W (test value)'),
+        stati_card(sw_results() |>
+                   filter(results %in% c('p.value')) |>
+                   pull(values) |>
+                   as.numeric() |>
+                   f_num(dig = 5),
+                   'p value')
       )
     })
 

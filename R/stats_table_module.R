@@ -55,18 +55,18 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           'Pearson Correlation'
         ),
         value = c(
-          (stats_n_nas() / stats_obs() * 100) |> f_dec(dig = fmt_digits),
-          stats_min() |> f_dec(dig = fmt_digits),
-          stats_q1() |> f_dec(dig = fmt_digits),
-          stats_median() |> f_dec(dig = fmt_digits),
-          stats_mean() |> f_dec(dig = fmt_digits),
+          (stats_n_nas() / stats_obs() * 100) |> f_num(dig = fmt_digits),
+          stats_min() |> f_num(dig = fmt_digits),
+          stats_q1() |> f_num(dig = fmt_digits),
+          stats_median() |> f_num(dig = fmt_digits),
+          stats_mean() |> f_num(dig = fmt_digits),
           if(stats_mode() |> is.na() |> all()) NA else paste(
-            stats_mode()|> f_dec(dig = fmt_digits), collapse = ' | '),
-          stats_q3() |> f_dec(dig = fmt_digits),
-          stats_max() |> f_dec(dig = fmt_digits),
-          percentile() |> f_dec(dig = fmt_digits),
-          var1_sd() |> f_dec(dig = fmt_digits),
-          pearson_correlation() |> f_dec(dig = fmt_digits)
+            stats_mode()|> f_num(dig = fmt_digits), collapse = ' | '),
+          stats_q3() |> f_num(dig = fmt_digits),
+          stats_max() |> f_num(dig = fmt_digits),
+          percentile() |> f_num(dig = fmt_digits),
+          var1_sd() |> f_num(dig = fmt_digits),
+          pearson_correlation() |> f_num(dig = fmt_digits)
         )
       )
     })

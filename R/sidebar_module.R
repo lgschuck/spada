@@ -4,7 +4,7 @@ sidebar_ui <- function(id) {
   ns <- NS(id)
 
   sidebar(
-    bg = '#e3e3e4',
+    bg = sidebar_color,
     open = F,
     accordion(
       open = T,

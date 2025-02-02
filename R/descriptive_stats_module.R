@@ -5,9 +5,9 @@ descriptive_stats_ui <- function(id) {
   card(
     full_screen = T,
     card_header('Descriptive Statistics', class = 'mini-header'),
-    layout_sidebar(bg = '#02517d',
+    layout_sidebar(bg = main_color,
       sidebar = sidebar(
-        bg = '#e3e3e4',
+        bg = sidebar_color,
         uiOutput(ns('parameters')),
         checkboxGroupInput(
           ns('xg_central_tendency'),
@@ -22,6 +22,7 @@ descriptive_stats_ui <- function(id) {
             'Standard Deviation' = 'sd'),
           c('min', 'max', 'IQR', 'range', 'var', 'sd')
         ),
+        numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
         btn_task(ns('btn_stats'), 'Generate Table', icon('gear'))
       ),
       navset_card_pill(
@@ -64,17 +65,19 @@ descriptive_stats_server <- function(id, df) {
       req(input$sel_var)
       desc_stats <- list()
 
+      fmt_digits <- min(max(0, input$table_digits), 9)
+
       # central tendency
       if('mean' %in% input$xg_central_tendency){
         desc_stats$Mean <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) mean(x, na.rm = T) else NA })
+          \(x) {if(x |> is.numeric()) mean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
       }
 
       if('median' %in% input$xg_central_tendency){
         desc_stats$Median <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) median(x, na.rm = T) else NA })
+          \(x) {if(x |> is.numeric()) median(x, na.rm = T) |> f_num(dig = fmt_digits)  else NA })
       }
 
       if('mode' %in% input$xg_central_tendency){
@@ -83,7 +86,7 @@ descriptive_stats_server <- function(id, df) {
           \(x) {if(x |> is.numeric() ||
                    x |> is.character() ||
                    x |> is.factor()){
-            x_mode <- Mode(x, na.rm = T)
+            x_mode <- Mode(x, na.rm = T) |> f_num(dig = fmt_digits)
             if(is.na(x_mode) |> all()) NA else paste(x_mode, collapse = ' | ')
           } else { NA }
         })
@@ -93,19 +96,19 @@ descriptive_stats_server <- function(id, df) {
       if('min' %in% input$xg_dispersion){
         desc_stats$Min <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) mina(x) else NA })
+          \(x) {if(x |> is.numeric()) mina(x) |> f_num(dig = fmt_digits) else NA })
       }
 
       if('max' %in% input$xg_dispersion){
         desc_stats$Max <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) mana(x) else NA })
+          \(x) {if(x |> is.numeric()) mana(x) |> f_num(dig = fmt_digits) else NA })
       }
 
       if('IQR' %in% input$xg_dispersion){
         desc_stats$IQR <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) IQR(x, na.rm = T) else NA })
+          \(x) {if(x |> is.numeric()) IQR(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
       }
 
       if('range' %in% input$xg_dispersion){
@@ -113,7 +116,7 @@ descriptive_stats_server <- function(id, df) {
           df_stats(),
           \(x) {
             if(x |> is.numeric()){
-              paste('[', range(x), ']', collapse = '--->')
+              paste('[', range(x) |> f_num(dig = fmt_digits) , ']', collapse = '--->')
             } else { NA }
             }
           )
@@ -122,13 +125,13 @@ descriptive_stats_server <- function(id, df) {
       if('var' %in% input$xg_dispersion){
         desc_stats$Variance <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) var(x, na.rm = T) else NA })
+          \(x) {if(x |> is.numeric()) var(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
       }
 
       if('sd' %in% input$xg_dispersion){
         desc_stats[['Standard Deviation']] <- sapply(
           df_stats(),
-          \(x) {if(x |> is.numeric()) sd(x, na.rm = T) else NA })
+          \(x) {if(x |> is.numeric()) sd(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
       }
 
       desc_stats
@@ -145,7 +148,8 @@ descriptive_stats_server <- function(id, df) {
     output$gt_stats <- render_gt({
       req(gt_stats)
       gt_stats() |>
-        sub_missing() |>
+        sub_missing(missing_text = '-') |>
+        sub_values(values = 'NA', replacement = '-') |>
         opt_interactive()
     })
 

@@ -15,7 +15,7 @@ spada_ui <- function(){
       mode = 'auto',
       timeout = 1200,
       color = '#FFFFFF',
-      background = '#02517d'
+      background = main_color
     ),
 
     # close the app
@@ -27,16 +27,16 @@ spada_ui <- function(){
     page_navbar(
       id = 'navbar',
       theme = bs_theme(
-        bg = '#f9f9f9',
+        bg = bg_color,
         fg = '#000000',
-        primary = '#02517d',
+        primary = main_color,
         secondary = '#0072B2',
         success = '#009E73',
         font_size_base = '1rem'
       ),
       title = 'Spada',
 
-      bg = '#02517d',
+      bg = main_color,
 
       # page sidebar ----------------------------------------------------------
       sidebar = sidebar_ui('sidebar'),

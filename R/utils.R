@@ -165,7 +165,6 @@ msg <- function(TEXT, DURATION = 2.3){
     timerProgressBar = F,
     width = '650px'
   )
-
 }
 
 msg_error <- function(TEXT, DURATION = 2.3){
@@ -286,8 +285,29 @@ test_all_equal <- function(x){
   all(x == x[1])
 }
 
-# palettes --------------------------------------------------------------------
 
+# stati_card ------------------------------------------------------------------
+stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,
+                       COLOR = '#FFFFFF', BACKGROUND = main_color,
+                       ANIMATE = T, DURATION = 30, ID = NULL){
+  statiCard(value = VALUE,
+            subtitle = SUBTITLE,
+            icon = ICON,
+            left = LEFT,
+            color = COLOR,
+            background = BACKGROUND,
+            animate = ANIMATE,
+            duration = DURATION,
+            id = ID)
+}
+
+
+# app colors --------------------------------------------------------------
+main_color <- '#02517d'
+sidebar_color <- '#e3e3e4'
+bg_color <- '#f9f9f9'
+
+# palettes --------------------------------------------------------------------
 gray_palette <- c('#ffffff', '#585858', '#232323')
 blue_palette <- c('#ffffff', '#096691', '#134359')
 yl_palette <- c('#ffffff', '#ffc107', '#f7a305')
