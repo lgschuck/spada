@@ -25,17 +25,21 @@
 f_num <- function(x, big = ',', dec = '.', thousand = 'K',
                   million = 'M', billion = 'B', dig = 0){
 
-  fcase(
-    is.infinite(x), paste(x),
-    x > 1e9,
-    paste(format(round(x/1e9, digits = dig), nsmall = dig,
-                 decimal.mark = dec, big.mark = big, scientific = F), billion),
-    x > 1e6,
-    paste(format(round(x/1e6, digits = dig), nsmall = dig,
-                 decimal.mark = dec, big.mark = big, scientific = F), million),
-    x > 1e3,
-    paste(format(round(x/1e3, digits = dig), nsmall = dig,
-                 decimal.mark = dec, big.mark = big, scientific = F), thousand),
-    default = format(round(x, dig), nsmall = dig, scientific = F)
+  if(x |> is.numeric()){
+    fcase(
+      is.infinite(x), paste(x),
+      x > 1e9,
+      paste(format(round(x/1e9, digits = dig), nsmall = dig,
+                   decimal.mark = dec, big.mark = big, scientific = F), billion),
+      x > 1e6,
+      paste(format(round(x/1e6, digits = dig), nsmall = dig,
+                   decimal.mark = dec, big.mark = big, scientific = F), million),
+      x > 1e3,
+      paste(format(round(x/1e3, digits = dig), nsmall = dig,
+                   decimal.mark = dec, big.mark = big, scientific = F), thousand),
+      default = format(round(x, dig), nsmall = dig, scientific = F)
     )
+  } else {
+    x
+  }
 }

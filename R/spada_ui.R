@@ -96,10 +96,17 @@ spada_ui <- function(){
                    nav_panel(
                      'Order',
                      layout_column_wrap(
-                       order_rows_ui('pE_filter_order_rows'),
-                       order_cols_ui('pE_filter_order_cols')
+                       order_rows_ui('pE_order_rows'),
+                       order_cols_ui('pE_order_cols')
                      )
-                   )
+                   ),
+                   nav_panel(
+                     'Rename',
+                     layout_column_wrap(
+                       rename_cols_ui('pE_rename_cols'),
+                       card()
+                     )
+                   ),
                  )
                )
              ),

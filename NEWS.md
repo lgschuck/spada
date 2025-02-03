@@ -22,6 +22,21 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.02-1
+
+Highlights: new module Rename Cols and bug fix
+
+### Bug Fixes
+
+1 - **Analysis > Descriptive Stats: error in round for factors**: now f_num function only format numeric values
+([#16](https://github.com/lgschuck/spada/issues/16))
+
+### Improvements
+
+1 - **navbar_df_info and sidebar** modules: now number of rows with 1 decimal value (function f_num) for better look (solve side effect after use of nsmall in previous release)
+
+2 - New **Rename Cols** module: new module for rename variables of active dataset
+
 ## 2025.02.01-1
 
 Only visual and formatting changes.

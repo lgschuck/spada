@@ -176,8 +176,7 @@ spada_server <- function(datasets){
                     mod_pE_convert_cols$df_convert_cols_trigger())
 
     # order rows events ---------------------------
-    mod_pE_order_rows <- order_rows_server('pE_filter_order_rows',
-                                           reactive(df$df_active))
+    mod_pE_order_rows <- order_rows_server('pE_order_rows', reactive(df$df_active))
 
     # update df_active
     observe({
@@ -188,8 +187,7 @@ spada_server <- function(datasets){
     }) |> bindEvent(mod_pE_order_rows$df_order_rows())
 
     # order cols events ---------------------------
-    mod_pE_order_cols <- order_cols_server('pE_filter_order_cols',
-                                          reactive(df$df_active))
+    mod_pE_order_cols <- order_cols_server('pE_order_cols', reactive(df$df_active))
     # update df_active
     observe({
       req(mod_pE_order_cols$df_order_cols())
@@ -197,6 +195,15 @@ spada_server <- function(datasets){
       df$df_active <- mod_pE_order_cols$df_order_cols()
 
     }) |> bindEvent(mod_pE_order_cols$df_order_cols())
+
+    # rename cols events ---------------------------
+    mod_pE_rename_cols <- rename_cols_server('pE_rename_cols', reactive(df$df_active))
+    # update df_active
+    observe({
+      req(mod_pE_rename_cols$df_rename_cols())
+      df$df_active <- mod_pE_rename_cols$df_rename_cols()
+
+    }) |> bindEvent(mod_pE_rename_cols$df_rename_cols())
 
     # reset df active ---------------------------
     observe({

@@ -25,8 +25,8 @@ sidebar_server <- function(id, input_metadata, app_session) {
       tagList(
         h5(input_metadata()$name),
         p('Rows/Columns:',
-          paste(input_metadata()$nrow |> f_num(dec = '.', big = ',', dig = 3), '/',
-                input_metadata()$ncol |> f_num(dec = '.', big = ','))
+          paste(input_metadata()$nrow |> f_num(dig = 1),
+                '/', input_metadata()$ncol |> f_num())
         ),
         p("Columns with NA's:", input_metadata()$n_nas),
         p('Size (MB):', (input_metadata()$size)),
