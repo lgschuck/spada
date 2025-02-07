@@ -125,7 +125,7 @@ spada_server <- function(datasets){
     export_file_server('pD_export', reactive(df$df_active))
 
     # import file ----------------------------------------------------
-    mod_pD_import <- import_file_server('pD_import', dt_names_react())
+    mod_pD_import <- import_file_server('pD_import', dt_names_react)
 
     observe({
       req(mod_pD_import$data_imported())

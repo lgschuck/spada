@@ -22,6 +22,25 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.06-1
+
+Highlights: import sav (SPSS) files and Plot in Z test
+
+### Bug Fixes
+
+1 - **Data > Import: check for already used name not working**: the names were not beeing passed as reactive to File Import module. Fixed. 
+([#17](https://github.com/lgschuck/spada/issues/17))
+
+### Improvements
+
+1 - **Import file** module: now csv has a number of lines to read parameter and can read sav (SPSS) files
+
+2 - **Z Test** module: now has a plot with test results
+
+3 - **utils.R**: plot_z_test function
+
+4 - **spada_server.R**: now passes dt_names as reactive to File Import module
+
 ## 2025.02.02-1
 
 Highlights: new module Rename Cols and bug fix

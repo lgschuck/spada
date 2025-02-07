@@ -16,6 +16,11 @@ z_test_ui <- function(id) {
               sidebar = sidebar(
                 bg = sidebar_color,
                 width = 400,
+                fluidRow(
+                  h5('Sampe Values'),
+                  column(6, p(textOutput(ns('sample_mean')))),
+                  column(6, p(textOutput(ns('sample_sd'))))
+                ),
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 layout_columns(
                   numericInput(
@@ -41,15 +46,18 @@ z_test_ui <- function(id) {
                 )
               ),
               card_body(
-                div(style = "margin-bottom: -48px !important;"),
-                layout_columns(
-                  col_widths = c(4, 4),
-                  uiOutput(ns('staticard_mean')),
-                  uiOutput(ns('staticard_sd'))
-                ),
                 layout_columns(
                   col_widths = c(3, 7, 2),
-                  uiOutput(ns('conditional_staticard_ztest')),
+                  fluidRow(
+                    div(
+                      style = 'margin-bottom: 10px;',
+                      uiOutput(ns('conditional_staticard_ztest')),
+                    ),
+                    div(
+                      style = 'margin-bottom: 10px;',
+                      uiOutput(ns('conditional_plot'))
+                    )
+                  ),
                   gt_output(ns('ztest_gt')),
                   uiOutput(ns('conditional_save_gt'))
                 )
@@ -63,14 +71,14 @@ z_test_ui <- function(id) {
             full_screen = T,
             card_body(plotOutput(ns('hist'))),
             card_footer(
-              div(style = "margin-bottom: -8px !important;"),
+              div(style = 'margin-bottom: -8px !important;'),
               layout_columns(
                 col_widths = c(2, 3),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
                 btn_task(ns('btn_hist'), 'Generate Histogram', icon('gear'),
                          style = 'margin-top: 20px')
               ),
-              div(style = "margin-bottom: -24px !important;"),
+              div(style = 'margin-bottom: -24px !important;'),
             )
           )
         )
@@ -101,10 +109,20 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       df_active()[[input$sel_var]]
     })
 
+    # calculate values --------------------------------------------------------
     sample_mean <- reactive(var() |> mean(na.rm = T))
+
+    output$sample_mean <- renderText({
+      paste('Mean:', sample_mean() |> f_num(dig = 2))
+    })
 
     sample_sd <- reactive(var() |> sd(na.rm = T))
 
+    output$sample_sd <- renderText({
+      paste('Std Deviation:', sample_sd() |> f_num(dig = 2))
+    })
+
+    # input vars --------------------------------------------------------------
     output$parameters <- renderUI({
       tagList(
         selectInput(ns('sel_var'), 'Variable', var_analysis()),
@@ -112,6 +130,7 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       )
     })
 
+    # run z test --------------------------------------------------------------
     observe({
       req(input$sel_var)
       req(input$radio_alternative)
@@ -144,10 +163,13 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
         ztest$results <- df
 
+        ztest$confidence <- input$confidence/100
+
         msg('Test completed', DURATION = 1.5)
       }
     }) |> bindEvent(input$btn_run_test)
 
+    # results gt table --------------------------------------------------------
     ztest_results_gt <- reactive({
       req(ztest$results)
       ztest$results |>
@@ -161,6 +183,7 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       ztest_results_gt()
     })
 
+    # save gt module ----------------------------------------------------------
     save_gt_server('ztest_save_gt', ztest_results_gt)
 
     output$conditional_save_gt <- renderUI({
@@ -168,18 +191,37 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       save_gt_ui(ns('ztest_save_gt'))
     })
 
-    output$staticard_mean <- renderUI({
-      req(sample_mean())
-      stati_card(sample_mean() |> f_num(dig = 3),
-                 paste(input$sel_var, '- Mean'))
+    # test plot ---------------------------------------------------------------
+    output$conditional_plot <- renderUI({
+      req(ztest$results)
+      btn_task(ns('btn_plot'), 'Show Plot')
     })
 
-    output$staticard_sd <- renderUI({
-      req(sample_sd())
-      stati_card(sample_sd() |> f_num(dig = 3),
-                 paste(input$sel_var, '- Std Deviation'))
+    output$ztest_plot <- renderPlot({
+      req(ztest$results)
+      req(ztest$confidence)
+
+      plot_z_test(
+        confidence = ztest$confidence,
+        test_type = ztest$results |>
+          filter(results == 'alternative') |>
+          pull(values),
+        z_value = ztest$results |>
+          filter(results == 'statistic.z') |>
+          pull(values) |>
+          as.numeric()
+      )
     })
 
+    observe({
+      showModal(modalDialog(
+        title = 'Z Test - Plot',
+        plotOutput(ns('ztest_plot')),
+        easyClose = TRUE, size = 'xl', footer = NULL)
+      )
+    }) |> bindEvent(input$btn_plot)
+
+    # staticards --------------------------------------------------------------
     output$conditional_staticard_ztest <- renderUI({
       req(ztest_results_gt())
       tagList(
@@ -198,15 +240,13 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       )
     })
 
+    # help modal --------------------------------------------------------------
     observe({
       showModal(modalDialog(
         HTML(get_help_file('DescTools', 'ZTest')),
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_ztest)
-
-    output$ztest_results <- renderPrint(ztest$results) |>
-      bindEvent(input$btn_run_test)
 
     # histogram ---------------------------------------------------------------
     output$hist <- renderPlot({

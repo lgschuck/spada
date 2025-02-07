@@ -302,6 +302,58 @@ stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,
 }
 
 
+# plot z test -------------------------------------------------------------
+
+plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
+                        z_value = qnorm(confidence),
+                        color_fill = 'brown3', color_line = 'steelblue') {
+  # Define the standardized x-axis (Z-scores)
+  x <- seq(-4, 4, length.out = 1000)  # Standardized Z-values
+  y <- dnorm(x, mean = 0, sd = 1)  # Standard normal distribution
+
+  alpha <- 1 - confidence
+
+  # Determine critical values in standardized scale
+  if (test_type == 'two.sided') {
+    z_critical <- qnorm(1 - alpha / 2)
+    critical_left <- -z_critical
+    critical_right <- z_critical
+  } else if (test_type == 'greater') {
+    critical_right <- qnorm(1 - alpha)
+  } else if (test_type == 'less') {
+    critical_left <- qnorm(alpha)
+  } else {
+    stop("Invalid 'test_type'. Use 'two.sided', 'greater', or 'less'.")
+  }
+
+  # Create the plot
+  plot(x, y, type = "l", lwd = 2, col = color_line,
+       xlab = 'Standardized Values (Z)', ylab = 'Density',
+       main = paste('Test Type:', test_type, ' - Confidence:',
+                    confidence * 100, '% | Z value:', z_value |> f_num(dig = 3)))
+
+  # Highlight the critical regions
+  if (test_type == 'two.sided') {
+    polygon(c(x[x <= critical_left], critical_left),
+            c(y[x <= critical_left], 0), col = color_fill, border = NA)
+    polygon(c(x[x >= critical_right], critical_right),
+            c(y[x >= critical_right], 0), col = color_fill, border = NA)
+
+  } else if (test_type == 'less') {
+    polygon(c(x[x <= critical_left], critical_left),
+            c(y[x <= critical_left], 0), col = color_fill, border = NA)
+
+  } else if (test_type == 'greater') {
+    polygon(c(x[x >= critical_right], critical_right),
+            c(y[x >= critical_right], 0), col = color_fill, border = NA)
+  }
+
+  if(abs(z_value) <= 4){
+    abline(v = z_value, col = 'black', lwd = 2, lty = 2)
+  }
+
+}
+
 # app colors --------------------------------------------------------------
 main_color <- '#02517d'
 sidebar_color <- '#e3e3e4'

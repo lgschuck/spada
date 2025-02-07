@@ -1,7 +1,7 @@
 
 # ui --------------------------------------------------------------------------
 import_file_ui <- function(id) {
-  file_extensions <- c('csv', 'RDS')
+  file_extensions <- c('csv', 'RDS', 'sav')
   ns <- NS(id)
     card(
       card_body(
@@ -22,11 +22,38 @@ import_file_ui <- function(id) {
                              c('Semicolon' = ';', 'Comma' = ','), inline = T),
                 radioButtons(ns('radio_decimal'), 'Decimal Mark',
                              c('Dot' = '.', 'Comma' = ','), inline = T),
+                radioButtons(ns('csv_lines'), 'Lines to read',
+                             choices = c('All' = 'all', 'Specific (N)' = 'some'), inline = TRUE),
+                conditionalPanel(
+                  condition = sprintf("input['%s'] == 'some'", ns('csv_lines')),
+                  numericInput(ns('csv_n_lines'), NULL, width = '150px',
+                               value = 100, min = 1, step = 100) |>
+                    ttip('You may use Scientific Notation, e.g. 1e6')
+                ),
                 btn_task(ns('btn_preview_raw'), 'Preview raw file', icon('magnifying-glass')),
-              ),
+              )
             )
           )
         ),
+        conditionalPanel(
+          condition = sprintf("input['%s'] == 'sav'", ns('radio_file_ext')),
+          card(
+            card_header('SAV Parameters', class = 'mini-header'),
+            card_body(
+              layout_columns(
+                col_widths = c(2, 2),
+                radioButtons(ns('sav_lines'), 'Lines to read',
+                             choices = c('All' = 'all', 'Specific (N)' = 'some'), inline = TRUE),
+                conditionalPanel(
+                  condition = sprintf("input['%s'] == 'some'", ns('sav_lines')),
+                  numericInput(ns('sav_n_lines'), NULL, width = '150px',
+                               value = 100, min = 1, step = 100) |>
+                    ttip('You may use Scientific Notation, e.g. 1e6')
+                )
+              )
+            )
+          )
+        )
       ),
       card_footer(
         btn_task(ns('btn_import'), 'Import file', icon('upload')),
@@ -40,10 +67,11 @@ import_file_server <- function(id, current_names) {
 
     data <- reactiveValues(data = NULL, data_name = NULL)
 
+    # import file -------------------------------------------------------------
     observe({
       if(is.null(input$file)){
         msg_error('Insert a file')
-      } else if(!is_valid_name(input$dataset_name) || input$dataset_name %in% current_names){
+      } else if(!is_valid_name(input$dataset_name) || input$dataset_name %in% current_names()){
         msg_error('Name invalid or already in use')
       } else {
         file <- input$file
@@ -51,13 +79,22 @@ import_file_server <- function(id, current_names) {
 
         if (ext == 'csv' && input$radio_file_ext == 'csv') {
 
+          if (input$csv_lines == 'all') {
+            n <- Inf
+          } else if(!isTruthy(input$csv_n_lines) || input$csv_n_lines < 1){
+            msg_error('Number of lines must be at least 1')
+            return()
+          } else {
+            n <- as.integer(input$csv_n_lines)
+          }
+
           tryCatch(
             { data$data <- fread(
               file = file$datapath,
               sep = input$radio_separator,
               dec = input$radio_decimal,
               check.names = T,
-              nrows = Inf,
+              nrows = n,
               skip = 0,
               header = input$x_csv_header)
 
@@ -74,13 +111,34 @@ import_file_server <- function(id, current_names) {
           data_temp <- readRDS(file$datapath)
 
           if(data_temp |> is.data.frame()){
-            data$data <- data_temp
+            data$data <- data_temp |> as.data.table()
             data$data_name <- input$dataset_name
 
             msg('File imported')
           } else {
             msg_error('Object must be data.frame')
           }
+        } else if(ext == 'sav' && input$radio_file_ext == 'sav'){
+          if (input$sav_lines == 'all') {
+            n <- Inf
+          } else if(!isTruthy(input$sav_n_lines) || input$sav_n_lines < 1){
+            msg_error('Number of lines must be at least 1')
+            return()
+          } else {
+            n <- as.integer(input$sav_n_lines)
+          }
+
+          data_temp <- read_sav(file$datapath, n_max = n ,
+                                .name_repair = make.names) |>
+            as.data.table()
+
+          # convert labelled variables (avoid gt package error)
+          data_temp[ , names(.SD) := lapply(.SD, as_factor), .SDcols = is.labelled]
+
+          data$data <- data_temp
+          data$data_name <- input$dataset_name
+          msg('File imported')
+
         } else {
           msg_error(paste('Insert a', input$radio_file_ext, 'file'))
         }
@@ -88,6 +146,7 @@ import_file_server <- function(id, current_names) {
 
     }) |> bindEvent(input$btn_import)
 
+    # preview csv file --------------------------------------------------------
     observe({
       req(input$file)
 
@@ -108,6 +167,7 @@ import_file_server <- function(id, current_names) {
         }
       }) |> bindEvent(input$btn_preview_raw)
 
+    # data to return ----------------------------------------------------------
     data_imported <- reactive({
       req(data$data)
       req(data$data_name)
