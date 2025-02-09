@@ -68,6 +68,23 @@ normality_test_ui <- function(id) {
               btn_task(ns('btn_help_sw'), 'Help', icon('question'))
             )
           )
+        ),
+        nav_panel(
+          'Shapiro-Francia Test',
+          card(
+            full_screen = T,
+            card_body(
+              layout_columns(
+                col_widths = c(3, 7, 2),
+                uiOutput(ns('conditional_staticard_sf')),
+                gt_output(ns('sf_test')),
+                uiOutput(ns('conditional_save_sf_gt')))
+            ),
+            card_footer(
+              btn_task(ns('btn_sf'), 'Run Test', icon('gear')),
+              btn_task(ns('btn_help_sf'), 'Help', icon('question'))
+            )
+          )
         )
       )
     )
@@ -316,6 +333,80 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_sw)
+
+    # sf test -----------------------------------------------------------------
+    sf_results <- reactive({
+      req(input$sel_var)
+      req(var())
+      req(var_len())
+
+      if (var_len() < 5 || var_len() > 5000) {
+        msg(paste0('Sample size must be between 5 and 5000 (actual: ', var_len(), ')'), 3)
+
+        return()
+      }
+
+      if (test_all_equal(var())) {
+        msg('Shapiro-Francia test: the values can not be all equal')
+        return()
+      }
+
+      df <- ShapiroFranciaTest(var()) |> unlist() |> as.data.frame()
+
+      df$results <- rownames(df)
+      names(df) <- c('values', 'results')
+
+      df[df$results == 'data.name', ]$values <- paste(input$sel_var)
+
+      df
+    }) |> bindEvent(input$btn_sf)
+
+    sf_results_gt <- reactive({
+      req(sf_results())
+
+      sf_results() |>
+        gt() |>
+        cols_move(columns = 'values', after = 'results') |>
+        gt::cols_label('values' = 'Values', 'results' = 'Results')
+    })
+
+    output$conditional_staticard_sf <- renderUI({
+      req(sf_results())
+      tagList(
+        stati_card(sf_results() |>
+                     filter(results %in% c('statistic.W')) |>
+                     pull(values) |>
+                     as.numeric() |>
+                     f_num(dig = 5),
+                   'Statistic W (test value)'),
+        stati_card(sf_results() |>
+                     filter(results %in% c('p.value')) |>
+                     pull(values) |>
+                     as.numeric() |>
+                     f_num(dig = 5),
+                   'p value')
+      )
+    })
+
+    output$sf_test <- render_gt({
+      req(sf_results_gt())
+      sf_results_gt()
+    })
+
+    save_gt_server('sf_save_gt', sf_results_gt)
+
+    output$conditional_save_sf_gt <- renderUI({
+      req(sf_results_gt())
+      save_gt_ui(ns('sf_save_gt'))
+    })
+
+    # help file of ShapiroFranciaTest
+    observe({
+      showModal(modalDialog(
+        HTML(get_help_file('DescTools', 'ShapiroFranciaTest')),
+        easyClose = TRUE, size = 'xl'
+      ))
+    }) |> bindEvent(input$btn_help_sf)
 
   })
 }

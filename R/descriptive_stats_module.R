@@ -12,8 +12,9 @@ descriptive_stats_ui <- function(id) {
         checkboxGroupInput(
           ns('xg_central_tendency'),
           h6('Central Tendency'), inline = T,
-          c('Mean' = 'mean', 'Median' = 'median', 'Mode' = 'mode'),
-          c('mean', 'median', 'mode')
+          c('Mean' = 'mean', 'Geometric Mean' = 'gmean', 'Harmonic Mean' = 'hmean',
+            'Median' = 'median', 'Mode' = 'mode'),
+          c('mean', 'gmean', 'hmean', 'median', 'mode')
         ),
         checkboxGroupInput(
           ns('xg_dispersion'), h6('Dispersion'), inline = T,
@@ -21,6 +22,10 @@ descriptive_stats_ui <- function(id) {
             'Range' = 'range', 'Variance' = 'var',
             'Standard Deviation' = 'sd'),
           c('min', 'max', 'IQR', 'range', 'var', 'sd')
+        ),
+        checkboxGroupInput(
+          ns('xg_shape'), h6('Shape'), inline = T,
+          c('Skewness' = 'skew', 'Kurtosis' = 'kurt'), c('skew', 'kurt')
         ),
         numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
         btn_task(ns('btn_stats'), 'Generate Table', icon('gear'))
@@ -61,6 +66,8 @@ descriptive_stats_server <- function(id, df) {
       subset(df(), select = input$sel_var)
     })
 
+
+    # calculate stats ---------------------------------------------------------
     desc_stats <- reactive({
       req(input$sel_var)
       desc_stats <- list()
@@ -72,6 +79,18 @@ descriptive_stats_server <- function(id, df) {
         desc_stats$Mean <- sapply(
           df_stats(),
           \(x) {if(x |> is.numeric()) mean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      }
+
+      if('gmean' %in% input$xg_central_tendency){
+        desc_stats$Gmean <- sapply(
+          df_stats(),
+          \(x) {if(x |> is.numeric()) Gmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      }
+
+      if('hmean' %in% input$xg_central_tendency){
+        desc_stats$Hmean <- sapply(
+          df_stats(),
+          \(x) {if(x |> is.numeric()) Hmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
       }
 
       if('median' %in% input$xg_central_tendency){
@@ -134,9 +153,22 @@ descriptive_stats_server <- function(id, df) {
           \(x) {if(x |> is.numeric()) sd(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
       }
 
+      if('skew' %in% input$xg_shape){
+        desc_stats[['Skewness']] <- sapply(
+          df_stats(),
+          \(x) {if(x |> is.numeric()) Skew(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      }
+
+      if('kurt' %in% input$xg_shape){
+        desc_stats[['Kurtosis']] <- sapply(
+          df_stats(),
+          \(x) {if(x |> is.numeric()) Kurt(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      }
+
       desc_stats
     })
 
+    # gt table ----------------------------------------------------------------
     gt_stats <- reactive({
       data.frame(
         Measures = names(desc_stats()),
@@ -150,9 +182,12 @@ descriptive_stats_server <- function(id, df) {
       gt_stats() |>
         sub_missing(missing_text = '-') |>
         sub_values(values = 'NA', replacement = '-') |>
-        opt_interactive()
+        sub_values(values = 'Gmean', replacement = 'Geometric Mean') |>
+        sub_values(values = 'Hmean', replacement = 'Harmonic Mean') |>
+        opt_interactive(page_size_default = 25)
     })
 
+    # save table module -------------------------------------------------------
     save_gt_server('pA_desciptive_stats_save_gt', gt_stats)
 
     output$conditional_save_gt <- renderUI({

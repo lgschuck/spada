@@ -19,11 +19,12 @@
 #'             layout_sidebar nav_item nav_menu nav_panel nav_select nav_spacer
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #'
-#' @importFrom DescTools Mode Outlier ZTest
+#' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
+#'             Skew ZTest
 #'
 #' @importFrom dplyr arrange filter mutate pull select
 #'
-#' @importFrom graphics abline barplot boxplot curve hist lines mtext text
+#' @importFrom graphics abline barplot boxplot curve hist lines mtext polygon text
 #'
 #' @importFrom grDevices colors
 #'
@@ -32,7 +33,7 @@
 #'             fmt_number fmt_percent gt gt_output gtsave opt_interactive
 #'             render_gt sub_missing sub_values tab_options
 #'
-#' @importFrom haven write_sav
+#' @importFrom haven as_factor is.labelled read_sav write_sav
 #'
 #' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton
 #'             radioGroupButtons statiCard
@@ -40,7 +41,7 @@
 #' @importFrom shinybusy busy_start_up spin_epic
 #'
 #' @importFrom stats cor lm sd var median rnorm IQR cor.test dnorm ks.test
-#'             qqline qqnorm shapiro.test
+#'             qnorm qqline qqnorm shapiro.test
 #'
 #' @importFrom utils object.size head
 

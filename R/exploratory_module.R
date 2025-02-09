@@ -221,8 +221,12 @@ exploratory_server <- function(id, input_df, df_metadata,
                     input$var_percentile, color_fill(), color_line())
     # render scatter plot -----------------------------------------------------
     output$g_scatter <- renderPlot({
-      if (input$scatter_lm &
-          linear_model$y_name == input$sel_vars &
+      validate(
+        need(is.numeric(var()) && is.numeric(var2()), 'Variables must be numeric')
+      )
+
+      if (input$scatter_lm &&
+          linear_model$y_name == input$sel_vars &&
           linear_model$x_name == input$sel_vars2) {
         plot(
           var2(),

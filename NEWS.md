@@ -22,6 +22,23 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.08-1
+
+Highlights: New stats in Descriptive Stats, Shapiro Francia test and bug fix
+
+### Bug Fixes
+
+1 - **Analysis > Scatter: warning if two Factors variables**: fixed, now requires numeric variables 
+([#18](https://github.com/lgschuck/spada/issues/18))
+
+### Improvements
+
+1 - **Descriptive Stats** module: added geometric mean, harmonic mean, skewness and kurtosis from DescTools package.
+
+2 - **Normality test** module: new test, Shapiro-Francia from DescTools package.
+
+3 - **Exploratory** module: bug fix in scatter. ([#18](https://github.com/lgschuck/spada/issues/18))
+
 ## 2025.02.06-1
 
 Highlights: import sav (SPSS) files and Plot in Z test
