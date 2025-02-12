@@ -6,10 +6,32 @@ filter_rows_ui <- function(id) {
   card(
     card_header('Filter Rows', class = 'mini-header'),
     card_body(
-      uiOutput(ns('ui_var_filter')),
-      selectInput(ns('operator'),
-                  'Operator', c('', filter_operators)),
-      uiOutput(ns('ui_value'))
+      radioGroupButtons(
+        ns('filter_type'), 'Filter Type',
+        c('One Variable' = 'one', 'Two Variables' = 'two', 'Sample' = 'sample'),
+        selected = character(0), size = 'sm', individual = T),
+      # panel for one var filter ----------------------------------------------
+      conditionalPanel(
+        condition = sprintf("input['%s'] == 'one'", ns('filter_type')),
+        uiOutput(ns('ui_one_var_sel')),
+        selectInput(ns('one_var_operator'), 'Operator', c('', filter_operators)),
+        uiOutput(ns('ui_one_var_value'))
+      ),
+      # panel for two var filter ----------------------------------------------
+      conditionalPanel(
+        condition = sprintf("input['%s'] == 'two'", ns('filter_type')),
+        uiOutput(ns('ui_two_var_sel1')),
+        selectInput(ns('two_var_operator'), 'Operator',
+                    c('', equal_operators, compare_operators)),
+        uiOutput(ns('ui_two_var_sel2'))
+      ),
+      # panel for sample filter -----------------------------------------------
+      conditionalPanel(
+        condition = sprintf("input['%s'] == 'sample'", ns('filter_type')),
+        sliderInput(ns('sample_size'), 'Sample Size (%)', 0, 100, 100),
+        checkboxInput(ns('x_sample_replace'), 'Replace') |>
+          ttip('Allow sample with replacement')
+      ),
     ),
     card_footer(
       btn_task(ns('btn_filter'), 'Apply filters', icon('check'))
@@ -34,35 +56,43 @@ filter_rows_server <- function(id, input_df) {
       df$df_active <- input_df()
     })
 
-    output$ui_var_filter <- renderUI(
-      selectInput(ns('var'), 'Variable', c('', df_names()))
+    # variable inputs ---------------------------------------------------------
+    output$ui_one_var_sel <- renderUI(
+      selectInput(ns('one_var_sel'), 'Variable', c('', df_names()))
     )
 
-    # selected column type
-    col_type <- reactive({
-      req(input$var)
-      if(df$df_active[[input$var]] |> is.numeric()) 'numeric'
-      else if (df$df_active[[input$var]] |> is_date()) 'date'
-      else if (df$df_active[[input$var]] |> is.factor()) 'factor'
-      else if (df$df_active[[input$var]] |> is.character()) 'char'
-      else if (df$df_active[[input$var]] |> is.logical()) 'logical'
-      else if (df$df_active[[input$var]] |> is.complex()) 'complex'
-      else 'other'
+    output$ui_two_var_sel1 <- renderUI(
+      selectInput(ns('two_var_sel1'), 'Variable 1', c('', df_names()))
+    )
+
+    output$ui_two_var_sel2 <- renderUI(
+      selectInput(ns('two_var_sel2'), 'Variable 2', c('', df_names()))
+    )
+
+    # selected column type ----------------------------------------------------
+    col_type_one_var <- reactive({
+      req(input$one_var_sel)
+      df$df_active[[input$one_var_sel]] |> obj_type()
     })
 
-    # Render UI for value input dynamically
+    col_type_two_var1 <- reactive({
+      req(input$two_var_sel1)
+      df$df_active[[input$two_var_sel1]] |> obj_type()
+    })
+
+    # render UI for value input dynamically -----------------------------------
     observe({
-      req(input$var, input$operator, df$df_active)
-      output$ui_value <- renderUI({
-        if (col_type() == 'date'){
-          if(input$operator %in% c(equal_operators, compare_operators)){
-            dateInput(ns('value'), 'Date')
-          } else if (input$operator %in% between_operators){
-            dateRangeInput(ns('value'), 'Date', end = Sys.Date() + 30)
-          } else if (input$operator %in% in_operators){
+      req(input$one_var_sel, input$one_var_operator, df$df_active)
+      output$ui_one_var_value <- renderUI({
+        if (col_type_one_var() == 'date'){
+          if(input$one_var_operator %in% c(equal_operators, compare_operators)){
+            dateInput(ns('one_var_value'), 'Date')
+          } else if (input$one_var_operator %in% between_operators){
+            dateRangeInput(ns('one_var_value'), 'Date', end = Sys.Date() + 30)
+          } else if (input$one_var_operator %in% in_operators){
             tagList(
               layout_column_wrap(
-                dateInput(ns('value'), 'Date'),
+                dateInput(ns('one_var_value'), 'Date'),
                 textInput(ns('preview_value'), 'Preview Values')
               ),
               layout_column_wrap(
@@ -71,18 +101,18 @@ filter_rows_server <- function(id, input_df) {
               )
             )
           }
-        } else if (col_type() == 'numeric'){
-          if(input$operator %in% c(equal_operators, compare_operators)){
-            numericInput(ns('value'), 'Value', value = 0)
-          } else if (input$operator %in% between_operators){
+        } else if (col_type_one_var() == 'numeric'){
+          if(input$one_var_operator %in% c(equal_operators, compare_operators)){
+            numericInput(ns('one_var_value'), 'Value', value = 0)
+          } else if (input$one_var_operator %in% between_operators){
             tagList(
-              numericInput(ns('value'), 'Inicial Value', value = 0),
-              numericInput(ns('value2'), 'Final Value', value = 0)
+              numericInput(ns('one_var_value'), 'Inicial Value', value = 0),
+              numericInput(ns('one_var_value2'), 'Final Value', value = 0)
             )
-          } else if (input$operator %in% in_operators){
+          } else if (input$one_var_operator %in% in_operators){
             tagList(
               layout_column_wrap(
-                numericInput(ns('value'), 'Value', value = 0),
+                numericInput(ns('one_var_value'), 'Value', value = 0),
                 textInput(ns('preview_value'), 'Preview Values')
               ),
               layout_column_wrap(
@@ -91,20 +121,20 @@ filter_rows_server <- function(id, input_df) {
               )
             )
           }
-        } else if (col_type() == 'factor'){
-          if(input$operator %in% c(equal_operators, in_operators)){
+        } else if (col_type_one_var() == 'factor'){
+          if(input$one_var_operator %in% c(equal_operators, in_operators)){
             selectizeInput(
-              ns('value'),
+              ns('one_var_value'),
               'Value',
-              choices = df$df_active[[input$var]] |> levels(),
+              choices = df$df_active[[input$one_var_sel]] |> levels(),
               multiple = T,
               options = list(create = T)
             )
           }
-        } else if (col_type() %in% c('char', 'complex')){
-          if(input$operator %in% c(equal_operators, in_operators)){
+        } else if (col_type_one_var() %in% c('char', 'complex')){
+          if(input$one_var_operator %in% c(equal_operators, in_operators)){
             selectizeInput(
-              ns('value'),
+              ns('one_var_value'),
               list('Value', bs_icon("info-circle")) |>
                 ttip(PLACE = 'right', 'Text should not be in quotes'),
               choices = NULL,
@@ -112,11 +142,11 @@ filter_rows_server <- function(id, input_df) {
               options = list(create = T)
             )
           }
-        } else if (col_type() == 'logical'){
+        } else if (col_type_one_var() == 'logical'){
           div()
-        } else if(isTruthy(input$var) && isTruthy(input$operator)){
+        } else if(isTruthy(input$one_var_sel) && isTruthy(input$one_var_operator)){
           selectizeInput(
-            ns('value'),
+            ns('one_var_value'),
             list('Value', bs_icon("info-circle")) |>
               ttip(PLACE = 'right', 'Text should not be in quotes'),
             choices = NULL,
@@ -125,41 +155,53 @@ filter_rows_server <- function(id, input_df) {
           )
         }
       })
-    }) |> bindEvent(input$var, input$operator)
+    }) |> bindEvent(input$one_var_sel, input$one_var_operator)
 
-    # update selectinput to show pertinent operators
+    # update selectinput to show pertinent operators --------------------------
     observe({
-      req(input$var)
+      req(input$one_var_sel)
       updateSelectInput(
         session, 'operator',
-        # label = 'Operator',
         choices =
-          if(col_type() %in% c('factor', 'char', 'complex')){
+          if(col_type_one_var() %in% c('factor', 'char', 'complex')){
             c('',
               equal_operators,
               na_operators,
               in_operators)
-          } else if (col_type() == 'logical'){
+          } else if (col_type_one_var() == 'logical'){
             c('', logical_operators)
-          } else if (col_type() == 'date'){
+          } else if (col_type_one_var() == 'date'){
             c('', filter_operators[filter_operators %notin% logical_operators])
-          } else if (col_type() == 'numeric'){
+          } else if (col_type_one_var() == 'numeric'){
             c('', filter_operators[filter_operators %notin% logical_operators])
           } else { c('', filter_operators) }
       )
-    }) |> bindEvent(input$var)
+    }) |> bindEvent(input$one_var_sel)
 
-    # Temporary values for multi-inputs
+    # update selectinput two vars filter to show pertinent operators ----------
+    observe({
+      req(input$two_var_sel1)
+      updateSelectInput(
+        session, 'two_var_operator',
+        choices =
+          if(col_type_two_var1() %in% c('factor', 'char', 'complex', 'logical')){
+            c('', equal_operators)
+          } else if (col_type_two_var1() %in% c('date', 'numeric')){
+            c('', equal_operators, compare_operators) }
+      )
+    }) |> bindEvent(input$two_var_sel1)
+
+    # temporary values for multi-inputs ---------------------------------------
     value_temp <- reactiveValues(value_temp_inserted = NULL)
 
-    # insert values
+    # insert values -----------------------------------------------------------
     observe({
-      req(input$value)
+      req(input$one_var_value)
       if(is.null(value_temp$value_temp_inserted)){
-        value_temp$value_temp_inserted <- input$value
+        value_temp$value_temp_inserted <- input$one_var_value
       } else {
         value_temp$value_temp_inserted <- c(value_temp$value_temp_inserted,
-                                            input$value)
+                                            input$one_var_value)
       }
 
       updateTextInput(session, 'preview_value',
@@ -174,90 +216,119 @@ filter_rows_server <- function(id, input_df) {
                       value = '')
     }) |> bindEvent(input$btn_clear_value)
 
-    # apply btn filter rows
+    # apply btn filter rows ---------------------------------------------------
     observe({
 
-      # test if var and operator were informed
-      if(!isTruthy(input$var)){
-        msg_error('Choose a variable')
-        return()
-      } else if(!isTruthy(input$operator)){
-        msg_error('Choose an operator')
-        return()
-      } else if (!isTruthy(input$value) &
-                 input$operator %notin% c(na_operators, logical_operators,
-                                          outlier_operators)){
-        msg_error('Insert a value')
-        return()
-      } else if(input$operator %in% between_operators){
-        if(col_type() == 'numeric' & !isTruthy(input$value2)){
-          msg_error('Inform inicial and final values')
+      # filter events for one variable ----------------------------------------
+      if(input$filter_type == 'one'){
+        # test if var and operator were informed
+        if(!isTruthy(input$one_var_sel)){
+          msg_error('Choose a variable')
           return()
-        } else if(col_type() == 'date' &
-                  (!isTruthy(input$value[1]) | !isTruthy(input$value[2]))){
-          msg_error('Inform inicial and final dates')
+        } else if(!isTruthy(input$one_var_operator)){
+          msg_error('Choose an operator')
+          return()
+        } else if (!isTruthy(input$one_var_value) &
+                   input$one_var_operator %notin% c(na_operators, logical_operators,
+                                            outlier_operators)){
+          msg_error('Insert a value')
+          return()
+        } else if(input$one_var_operator %in% between_operators){
+          if(col_type_one_var() == 'numeric' & !isTruthy(input$one_var_value2)){
+            msg_error('Inform inicial and final values')
+            return()
+          } else if(col_type_one_var() == 'date' &
+                    (!isTruthy(input$one_var_value[1]) | !isTruthy(input$one_var_value[2]))){
+            msg_error('Inform inicial and final dates')
+            return()
+          }
+        } else if(input$one_var_operator %in% in_operators &
+                  col_type_one_var() %in% c('date', 'numeric') &
+                  is.null(value_temp$value_temp_inserted)){
+          msg_error('Insert values')
           return()
         }
-      } else if(input$operator %in% in_operators &
-                col_type() %in% c('date', 'numeric') &
-                is.null(value_temp$value_temp_inserted)){
-        msg_error('Insert values')
-        return()
-      }
 
-      # use inserted values
-      if(input$operator %in% between_operators){
-        if(col_type() == 'numeric'){
-          value_temp$value_temp <- c(input$value, input$value2)
-        } else if (col_type() == 'date'){
-          value_temp$value_temp <- input$value
+        # use inserted values
+        if(input$one_var_operator %in% between_operators){
+          if(col_type_one_var() == 'numeric'){
+            value_temp$value_temp <- c(input$one_var_value, input$one_var_value2)
+          } else if (col_type_one_var() == 'date'){
+            value_temp$value_temp <- input$one_var_value
+          }
+        } else if (input$one_var_operator %in% in_operators &
+                   col_type_one_var() %notin% c('char', 'complex', 'factor')){
+          value_temp$value_temp <- value_temp$value_temp_inserted
+        } else {
+          value_temp$value_temp <- input$one_var_value
         }
-      } else if (input$operator %in% in_operators &
-                 col_type() %notin% c('char', 'complex', 'factor')){
-        value_temp$value_temp <- value_temp$value_temp_inserted
-      } else {
-        value_temp$value_temp <- input$value
-      }
-      value_temp$len <- value_temp$value_temp |> length()
+        value_temp$len <- value_temp$value_temp |> length()
 
-      # pass values to filter function
-      if (input$operator %in%
-                 c(na_operators, logical_operators, outlier_operators)){
-        df$df_active <- filter_rows(df$df_active,
-                                    input$var,
-                                    input$operator,
-                                    NULL)
+        # pass values to filter function
+        if (input$one_var_operator %in%
+                   c(na_operators, logical_operators, outlier_operators)){
+          df$df_active <- filter_rows(df$df_active,
+                                      input$one_var_sel,
+                                      input$one_var_operator,
+                                      NULL)
+          msg('Filter rows: OK')
+        } else if(value_temp$len > 1 & input$one_var_operator %in%
+                  c(equal_operators, compare_operators)){
+          msg('Operator requires value of length 1')
+          return()
+        } else {
+          df$df_active <- filter_rows(df$df_active,
+                                      input$one_var_sel,
+                                      input$one_var_operator,
+                                      value_temp$value_temp)
+          msg('Filter rows: OK')
+        }
+
+        # reset value_temp
+        value_temp$value_temp_inserted <- NULL
+        value_temp$value_temp <- NULL
+        value_temp$len <- NULL
+
+        # clear value after click in button
+        updateSelectInput(
+          session,
+          'var',
+          selected = ''
+        )
+
+        updateSelectInput(
+          session,
+          'operator',
+          selected = ''
+        )
+      # filter events for 2 variables -----------------------------------------
+      } else if(input$filter_type == 'two'){
+
+        if(!isTruthy(input$two_var_sel1) || !isTruthy(input$two_var_sel2)){
+          msg_error('Choose 2 variables')
+          return()
+        } else if(!isTruthy(input$two_var_operator)){
+          msg_error('Choose an operator')
+          return()
+        } else if(df$df_active[[input$two_var_sel1]] |> obj_type() !=
+                  df$df_active[[input$two_var_sel2]] |> obj_type()){
+          msg('Variables must be of the same type')
+        } else {
+          df$df_active <- filter_rows_2vars(
+            df$df_active, input$two_var_sel1, input$two_var_sel2, input$two_var_operator)
+          msg('Filter rows: OK')
+        }
+
+      # filter events for sample ----------------------------------------------
+      } else if(input$filter_type == 'sample'){
+        df$df_active <- df$df_active[
+          sample(1:nrow(df$df_active),
+                 input$sample_size/100 * nrow(df$df_active),
+                 replace = input$x_sample_replace), ]
+
         msg('Filter rows: OK')
-      } else if(value_temp$len > 1 & input$operator %in%
-                c(equal_operators, compare_operators)){
-        msg('Operator requires value of length 1')
-        return()
-      } else {
-        df$df_active <- filter_rows(df$df_active,
-                                    input$var,
-                                    input$operator,
-                                    value_temp$value_temp)
-        msg('Filter rows: OK')
+
       }
-
-      # reset value_temp
-      value_temp$value_temp_inserted <- NULL
-      value_temp$value_temp <- NULL
-      value_temp$len <- NULL
-
-      # clear value after click in button
-      updateSelectInput(
-        session,
-        'var',
-        selected = ''
-      )
-
-      updateSelectInput(
-        session,
-        'operator',
-        selected = ''
-      )
-
     }) |> bindEvent(input$btn_filter)
 
     return(list(df_filter_rows = reactive(df$df_active),

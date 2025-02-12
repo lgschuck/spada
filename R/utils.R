@@ -252,11 +252,38 @@ filter_rows <- function(df, var, operator, filter_value){
   }
 }
 
+# filter rows 2 vars ------------------------------------------------------
+filter_rows_2vars <- function(df, var1, var2, operator){
+  v1 <- df[[var1]]
+  v2 <- df[[var2]]
+
+  # Convert to char if factor
+  if (is.factor(v1) && is.factor(v2)) {
+    v1 <- as.character(v1)
+    v2 <- as.character(v2)
+  }
+
+  if(operator == '=='){
+    df[v1 == v2, ]
+  } else if(operator == '!='){
+    df[v1 != v2, ]
+  } else if(operator == '>'){
+    df[v1 > v2, ]
+  } else if(operator == '>='){
+    df[v1 >= v2, ]
+  } else if(operator == '<'){
+    df[v1 < v2, ]
+  } else if(operator == '<='){
+    df[v1 <= v2, ]
+  } else {
+    stop('Invalid Operator')
+  }
+}
+
 # tip place top by default ----------------------------------------------------
 ttip <- function(TRIGGER, ..., ID = NULL, PLACE = 'top'){
   tooltip(trigger = TRIGGER, ... = ..., id = ID, placement = PLACE)
 }
-
 
 # get function help -----------------------------------------------------------
 get_help_file <- function(pak, fun){
@@ -285,6 +312,16 @@ test_all_equal <- function(x){
   all(x == x[1])
 }
 
+# col type ----------------------------------------------------------------
+obj_type <- function(x){
+  if(x |> is.numeric()) 'numeric'
+  else if (x |> is_date()) 'date'
+  else if (x |> is.factor()) 'factor'
+  else if (x |> is.character()) 'char'
+  else if (x |> is.logical()) 'logical'
+  else if (x |> is.complex()) 'complex'
+  else 'other'
+}
 
 # stati_card ------------------------------------------------------------------
 stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,

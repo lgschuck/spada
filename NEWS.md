@@ -22,6 +22,18 @@ editor_options:
 
 7 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.11-1
+
+Highlights: New filter options in Filter Rows Module
+
+### Improvements
+
+1 - **Filter Rows** module: new options to filter: compare two variables and sample
+
+2 - **Config Page** module: Inicial hex color now in caps
+
+3 - **utils.R**: new function filter_rows_2vars for compare two variables and col_type
+
 ## 2025.02.08-1
 
 Highlights: New stats in Descriptive Stats, Shapiro Francia test and bug fix
