@@ -14,13 +14,23 @@ editor_options:
 
 3 - Functionalities to detect and treat duplicates
 
-4 - Sample filters for datasets
+4 - Functionalities to detect and treat outliers
 
-5 - Functionalities to detect and treat outliers
+5 - Inference: t test
 
-6 - Inference: t test
+6 - Models: linear model, logistic regression, Kmeans, Trees
 
-7 - Models: linear model, logistic regression, Kmeans, Trees
+## 2025.02.13-1
+
+Highlights: Use of selectizeInput with close and clear button for multiple selections
+
+### Improvements
+
+1 - **Convert Cols, Descriptive Stats, Order Cols, Order Rows and Select Cols** modules: now usage of selectizeInput with close and clear button for multiple selections
+
+2 - **utils.R**: filter_rows function now with env = list(var1) in data.table instead of get(var)
+
+3 - **spada.R**: now usage of importFrom for data.table package
 
 ## 2025.02.11-1
 

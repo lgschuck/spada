@@ -103,10 +103,11 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
         df$df_active[preview_sample(), ], select = input$vars_sel)
 
       preview_df_temp[
-        , preview := convert(get(input$vars_sel),
+        , preview := convert(var1,
                              type = input$sel_format,
                              date_format = input$sel_date_formats,
-                             date_origin = input$sel_date_origin)]
+                             date_origin = input$sel_date_origin),
+        env = list(var1 = input$vars_sel)]
     })
 
     output$preview_gt <- render_gt({
@@ -130,11 +131,13 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
       if(input$vars_sel == '' | input$sel_format == ''){
         msg('Choose a variable and a new format')
       } else {
+
         df$df_active[, input$vars_sel :=
-                       convert(get(input$vars_sel),
+                       convert(var1,
                                type = input$sel_format,
                                date_format = input$sel_date_formats,
-                               date_origin = input$sel_date_origin)]
+                               date_origin = input$sel_date_origin),
+                     env = list(var1 = input$vars_sel)]
         msg('Conversion applied')
       }
 

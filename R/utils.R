@@ -218,37 +218,37 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
 # filter function -------------------------------------------------------------
 filter_rows <- function(df, var, operator, filter_value){
   if(operator == '=='){
-    df[get(var) == filter_value, ]
+    df[var1 == filter_value, , env = list(var1 = var)]
   } else if(operator == '!='){
-    df[get(var) != filter_value, ]
+    df[var1 != filter_value, , env = list(var1 = var)]
   } else if(operator == '>'){
-    df[get(var) > filter_value, ]
+    df[var1 > filter_value, , env = list(var1 = var) ]
   } else if(operator == '>='){
-    df[get(var) >= filter_value, ]
+    df[var1 >= filter_value, , env = list(var1 = var) ]
   } else if(operator == '<'){
-    df[get(var) < filter_value, ]
+    df[var1 < filter_value, , env = list(var1 = var) ]
   } else if(operator == '<='){
-    df[get(var) <= filter_value, ]
+    df[var1 <= filter_value, , env = list(var1 = var) ]
   } else if(operator == 'is_na'){
-    df[is.na(get(var)), ]
+    df[is.na(var1), , env = list(var1 = var) ]
   } else if(operator == 'not_na'){
-    df[!is.na(get(var)), ]
+    df[!is.na(var1), , env = list(var1 = var) ]
   } else if(operator == 'in'){
-    df[get(var) %in% filter_value, ]
+    df[var1 %in% filter_value,  , env = list(var1 = var)]
   } else if(operator == 'not_in'){
-    df[!get(var) %in% filter_value, ]
+    df[!var1 %in% filter_value, , env = list(var1 = var) ]
   } else if(operator == 'between'){
-    df[get(var) %between% filter_value, ]
+    df[var1 %between% filter_value, , env = list(var1 = var) ]
   } else if(operator == 'not_between'){
-    df[!(get(var) %between% filter_value), ]
+    df[!(var1 %between% filter_value), , env = list(var1 = var) ]
   } else if(operator == 'outlier'){
-    df[Outlier(get(var), value = F, na.rm = T), ]
+    df[Outlier(var1, value = F, na.rm = T), , env = list(var1 = var)]
   } else if(operator == 'not_outlier'){
-    df[!Outlier(get(var), value = F, na.rm = T), ]
+    df[!Outlier(var1, value = F, na.rm = T), , env = list(var1 = var)]
   } else if(operator == 'is_true'){
-    df[get(var) == TRUE, ]
+    df[var1 == TRUE,  , env = list(var1 = var)]
   } else if(operator == 'is_false'){
-    df[get(var) == FALSE, ]
+    df[var1 == FALSE,  , env = list(var1 = var)]
   }
 }
 

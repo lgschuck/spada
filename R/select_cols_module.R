@@ -28,7 +28,9 @@ select_cols_server <- function(id, input_df) {
     })
 
     output$ui_var_sel <- renderUI(
-      selectInput(ns('vars_sel'), 'Variable', c('', df_names()), multiple = T)
+      selectizeInput(ns('vars_sel'), 'Variable', c('', df_names()), multiple = T,
+                     options = list(plugins = list('remove_button', 'clear_button'))
+                     )
     )
 
     observe({

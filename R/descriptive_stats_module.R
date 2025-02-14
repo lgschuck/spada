@@ -56,8 +56,11 @@ descriptive_stats_server <- function(id, df) {
 
     output$parameters <- renderUI({
       tagList(
-        selectInput(ns('sel_var'), 'Variables', var_analysis(),
-                    var_analysis()[1], multiple = T),
+        selectizeInput(
+          ns('sel_var'), 'Variables', var_analysis(), var_analysis()[1],
+          multiple = T,
+          options = list(plugins = list('remove_button', 'clear_button'))
+        ),
       )
     })
 

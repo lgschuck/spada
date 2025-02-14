@@ -7,10 +7,12 @@ order_rows_ui <- function(id) {
     card_header('Order Rows', class = 'mini-header'),
     card_body(
       uiOutput(ns('ui_var_rows')),
-      selectInput(ns('vars_descending'),
+      selectizeInput(ns('vars_descending'),
                   list('Vars in descending order', bs_icon('info-circle')) |>
                     ttip('If not informed, the order will be Ascending', PLACE = 'right'),
-                    '', multiple = T),
+                    '', multiple = T,
+                  options = list(plugins = list("remove_button", "clear_button"))
+                  ),
       radioButtons(ns('radio_nas'), "NA's placement",
                    c('Last' = 'last', 'First' = 'first'),
                    inline = T),
@@ -34,12 +36,14 @@ order_rows_server <- function(id, input_df) {
     })
 
     output$ui_var_rows <- renderUI(
-      selectInput(ns('vars_rows'), 'Order by', c('', df_names()), multiple = T)
+      selectizeInput(ns('vars_rows'), 'Order by', c('', df_names()), multiple = T,
+                     options = list(plugins = list('remove_button', 'clear_button'))
+                     )
     )
 
     # vars in descending order
     observe({
-      updateSelectInput(
+      updateSelectizeInput(
         session,
         'vars_descending',
         label = 'Descending Order',

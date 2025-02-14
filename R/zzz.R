@@ -18,6 +18,8 @@ utils::globalVariables(
     'x',
     'values',
     'results',
-    'value'
+    'value',
+    'var1',
+    'measure'
     )
   )

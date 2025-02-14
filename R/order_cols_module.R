@@ -34,7 +34,10 @@ order_cols_server <- function(id, input_df) {
     })
 
     output$ui_var_cols <- renderUI(
-      selectInput(ns('vars_cols'), 'Variables to move', c('', df_names()), multiple = T)
+      selectizeInput(ns('vars_cols'), 'Variables to move', c('', df_names()),
+                     multiple = T,
+                     options = list(plugins = list('remove_button', 'clear_button'))
+                     )
     )
 
     # rest of vars to order
