@@ -21,22 +21,13 @@ spada_ui <- function(){
     # close the app
     tag_js_exit,
 
-    # css style
-    tag_css,
-
     page_navbar(
       id = 'navbar',
-      theme = bs_theme(
-        bg = bg_color,
-        fg = '#000000',
-        primary = main_color,
-        secondary = '#0072B2',
-        success = '#009E73',
-        font_size_base = '1rem'
-      ),
+      theme = spada_theme,
       title = 'Spada',
 
       bg = main_color,
+      underline = F,
 
       # page sidebar ----------------------------------------------------------
       sidebar = sidebar_ui('sidebar'),
@@ -48,8 +39,7 @@ spada_ui <- function(){
 
         card(full_screen = T,
              card_body(
-               style = 'background-color: #02517d;',
-               height = '800px',
+               class = 'big-card',
                navset_card_pill(
                  id = 'navset_card_pill_data',
                  nav_panel('Highlights', data_highlights_ui('pD_highlights')),
@@ -81,8 +71,7 @@ spada_ui <- function(){
 
         card(full_screen = T,
              card_body(
-               style = 'background-color: #02517d;',
-               height = '800px',
+               class = 'big-card',
                layout_columns(
                  navset_card_pill(
                    nav_panel(
@@ -111,7 +100,6 @@ spada_ui <- function(){
                )
              ),
              card_footer(
-               div(style = "margin-bottom: -12px !important;"),
                layout_column_wrap(
                  btn_task('pE_btn_reset', 'Reset Dataset', icon('arrow-rotate-right')) |>
                    ttip('Restore to previous state (before been set as the Active dataset)'),
@@ -122,8 +110,7 @@ spada_ui <- function(){
                  btn_task('pE_btn_clear_bkp', 'Clear Backup', icon('trash-can')) |>
                    ttip('Erase the backup'),
                ),
-               div(style = "margin-bottom: -16px !important;"),
-               style = 'background-color: #02517d;')
+               class = 'big-card-footer')
         )
       ),
 

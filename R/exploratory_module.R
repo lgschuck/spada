@@ -6,8 +6,7 @@ exploratory_ui <- function(id) {
 card(
   full_screen = T,
   card_body(
-    style = 'background-color: #02517d;',
-    height = '800px',
+    class = 'big-card',
     layout_columns(
       col_widths = c(2, 7, 3),
       navset_card_pill(

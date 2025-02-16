@@ -3,7 +3,7 @@
 spada_server <- function(datasets){
   function(input, output, session) {
 
-    options(shiny.maxRequestSize = 500 * 1024 ^ 2)
+    options(shiny.maxRequestSize = 1000 * 1024 ^ 2)
 
     # data --------------------------------------------------------------------
     dt_react <- reactiveValues(data = lapply(datasets, setDT))

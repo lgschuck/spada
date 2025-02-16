@@ -5,9 +5,9 @@ descriptive_stats_ui <- function(id) {
   card(
     full_screen = T,
     card_header('Descriptive Statistics', class = 'mini-header'),
-    layout_sidebar(bg = main_color,
+    layout_sidebar(
+      class = 'card-sidebar',
       sidebar = sidebar(
-        bg = sidebar_color,
         uiOutput(ns('parameters')),
         checkboxGroupInput(
           ns('xg_central_tendency'),

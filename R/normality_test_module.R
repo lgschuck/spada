@@ -5,8 +5,9 @@ normality_test_ui <- function(id) {
   card(
     full_screen = T,
     card_header('Normality Test', class = 'mini-header'),
-    layout_sidebar(bg = main_color,
-      sidebar = sidebar(uiOutput(ns('parameters')), bg = sidebar_color),
+    layout_sidebar(
+      class = 'card-sidebar',
+      sidebar = sidebar(uiOutput(ns('parameters'))),
       navset_card_pill(
         nav_panel(
           'Histogram',

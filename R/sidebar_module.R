@@ -4,12 +4,11 @@ sidebar_ui <- function(id) {
   ns <- NS(id)
 
   sidebar(
-    bg = sidebar_color,
     open = F,
     accordion(
       open = T,
       accordion_panel(
-        style = 'background-color: #02517d; color: white;',
+        class = 'accordion-sidebar',
         'Dataset Info',
         icon = bs_icon('file-binary', size = '1.75em'),
         uiOutput(ns('df_info'))

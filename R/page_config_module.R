@@ -7,9 +7,9 @@ page_config_ui <- function(id) {
     title = 'Config',
     icon = bs_icon('sliders2'),
     card(
-      style = 'background-color: #02517d;',
+      class = 'big-card',
       layout_columns(
-        col_widths = c(9, 3),
+        col_widths = c(8, 4),
         card(
           card_body(
             h4('Colors'),
@@ -28,25 +28,35 @@ page_config_ui <- function(id) {
                 update = 'save'
               ),
               btn_task(ns('reset'), 'Reset', icon('rotate'),
-                       style = 'margin-top: 20px !important;')
+                       style = 'margin-top: 27px !important;')
             ),
             plotOutput(ns('sample_plot'))
           )
         ),
         card(
           card_body(
-            h4('Size of input files'),
-            layout_columns(
-              col_widths = c(6, 6),
-              numericInput(
-                ns('input_file_size'),
-                'Size in MB',
-                500,
-                min = 0,
-                step = 100
-              ),
-              btn_task(ns('btn_file_size'), 'Apply', icon('check'),
-                       style = 'margin-top: 20px !important;')
+            fluidRow(
+              h4('Theme'),
+              layout_columns(
+                col_widths = c(7, 5),
+                selectInput(ns('theme_choice'), NULL,
+                            choices = c('Spada' = 'spada', 'Darkly Spada' = 'dark')),
+                btn_task(ns('btn_theme'), 'Apply', icon('check'))
+              )
+            ),
+            fluidRow(
+              h4('Size of input files (MB)'),
+              layout_columns(
+                col_widths = c(7, 5),
+                numericInput(
+                  ns('input_file_size'),
+                  NULL,
+                  1000,
+                  min = 0,
+                  step = 500
+                ),
+                btn_task(ns('btn_file_size'), 'Apply', icon('check'))
+              )
             )
           )
         )
@@ -96,6 +106,18 @@ page_config_server <- function(id) {
                        value = '#EE7942')
 
     }) |> bindEvent(input$reset)
+
+    # change theme
+    observe({
+      session$setCurrentTheme(
+
+        if(input$theme_choice == 'spada'){
+          spada_theme
+        } else if(input$theme_choice == 'dark'){
+          spada_dark_theme
+        }
+      )
+    }) |> bindEvent(input$btn_theme)
 
     return(list(palette = palette))
 

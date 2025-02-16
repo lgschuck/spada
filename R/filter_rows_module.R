@@ -28,9 +28,11 @@ filter_rows_ui <- function(id) {
       # panel for sample filter -----------------------------------------------
       conditionalPanel(
         condition = sprintf("input['%s'] == 'sample'", ns('filter_type')),
-        sliderInput(ns('sample_size'), 'Sample Size (%)', 0, 100, 100),
-        checkboxInput(ns('x_sample_replace'), 'Replace') |>
-          ttip('Allow sample with replacement')
+        radioButtons(
+          ns('sample_type'), NULL,
+          c('Number of Rows' = 'rows', '% of Rows' = 'percent'),
+          inline = T),
+        uiOutput(ns('ui_sample'))
       ),
     ),
     card_footer(
@@ -56,6 +58,8 @@ filter_rows_server <- function(id, input_df) {
       df$df_active <- input_df()
     })
 
+    nrow_df_active <- reactive(nrow(df$df_active))
+
     # variable inputs ---------------------------------------------------------
     output$ui_one_var_sel <- renderUI(
       selectInput(ns('one_var_sel'), 'Variable', c('', df_names()))
@@ -78,6 +82,26 @@ filter_rows_server <- function(id, input_df) {
     col_type_two_var1 <- reactive({
       req(input$two_var_sel1)
       df$df_active[[input$two_var_sel1]] |> obj_type()
+    })
+
+    # render UI for sample type -----------------------------------------------
+    output$ui_sample <- renderUI({
+      req(input$sample_type)
+      tagList(
+
+        if (input$sample_type == 'rows') {
+          numericInput(
+            ns('n_rows'), 'Number of Rows',
+            value = (nrow_df_active()/2) |> ceiling(),
+            min = 1, max = nrow_df_active()
+          )
+        } else if (input$sample_type == 'percent') {
+          sliderInput(ns('sample_size'), 'Sample Size (%)', 1, 100, 50)
+        }
+        ,
+        checkboxInput(ns('x_sample_replace'), 'Replace') |>
+          ttip('Allow sample with replacement')
+      )
     })
 
     # render UI for value input dynamically -----------------------------------
@@ -321,12 +345,28 @@ filter_rows_server <- function(id, input_df) {
 
       # filter events for sample ----------------------------------------------
       } else if(input$filter_type == 'sample'){
-        df$df_active <- df$df_active[
-          sample(1:nrow(df$df_active),
-                 input$sample_size/100 * nrow(df$df_active),
-                 replace = input$x_sample_replace), ]
+        if(input$sample_type == 'rows'){
 
-        msg('Filter rows: OK')
+          if(!isTruthy(input$n_rows) ||
+             !between(input$n_rows, 1, nrow_df_active())){
+            msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
+          } else {
+            df$df_active <- df$df_active[
+              sample(1:nrow_df_active(),
+                     input$n_rows,
+                     replace = input$x_sample_replace), ]
+
+            msg('Filter rows: OK')
+          }
+
+        } else if(input$sample_type == 'percent'){
+          df$df_active <- df$df_active[
+            sample(1:nrow_df_active(),
+                   input$sample_size/100 * nrow_df_active(),
+                   replace = input$x_sample_replace), ]
+
+          msg('Filter rows: OK')
+        }
 
       }
     }) |> bindEvent(input$btn_filter)

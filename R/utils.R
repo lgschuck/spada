@@ -70,77 +70,6 @@ js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.clo
 
 tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 
-# css ---------------------------------------------------------------------
-
-tag_css <- tags$head(tags$style(HTML(
-  "
-    /* change color of navbar */
-    .navbar {
-      /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #008080);*/
-      /*background: linear-gradient(to right, #0277bd, #0277bd);*/
-      background: #007bb5;
-    }
-
-    /* change size of nav panel */
-    .nav-link {font-size: 17px; }
-
-    body { font-size: 0.9rem; }
-
-    .card {
-      border-radius: 0rem;
-      margin: -8px;
-    }
-
-    .mini-header {
-      color: white;
-      /*background: linear-gradient(to right, #1d3f52, #033854, #02517d, #317aa3, #20adc9, #008080);*/
-      /*background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #63a9ca, #7bbfce);*/
-      background: linear-gradient(to right, #1f4e72, #2a6485, #3a7f9d, #4b97b6, #5fa3c2, #4e96b6);
-    }
-
-    .btn-task {
-      color: #0072B2;
-      background-color: #f9f9f9;
-      border-color: #0072B2;
-    }
-
-    .btn-task:hover {
-      background-color: #0072B2;
-      border-color: #0072B2;
-      color: white;
-    }
-
-    /* border rectangular */
-
-    .card, .well {
-     --bs-card-inner-border-radius: 0;
-    }
-
-    .card-body {border-radius: 0rem;}
-
-    .nav-pills {
-      --bs-nav-pills-border-radius: 0rem;
-      --bs-nav-pills-link-active-color: #02517d;
-      /*--bs-nav-pills-link-active-bg: #d5d6d7;*/
-      --bs-nav-pills-link-active-bg: #e3e3e4;
-    }
-
-    .value-box-title {
-      font-size: 1rem !important;
-    }
-
-    .value-box-value {
-      font-size: 1.5rem !important;
-    }
-
-    .control-label {
-      margin-bottom: 3px !important;
-      padding-top: 3px !important;
-    }
-
-  "))
-)
-
 # empty plot function ---------------------------------------------------------
 empty_plot <- function(msg = 'No plot', c = 2){
   plot(1:10, 1:10, type = 'n', xlab = '', ylab = '')
@@ -338,7 +267,6 @@ stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,
             id = ID)
 }
 
-
 # plot z test -------------------------------------------------------------
 
 plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
@@ -390,17 +318,3 @@ plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
   }
 
 }
-
-# app colors --------------------------------------------------------------
-main_color <- '#02517d'
-sidebar_color <- '#e3e3e4'
-bg_color <- '#f9f9f9'
-
-# palettes --------------------------------------------------------------------
-gray_palette <- c('#ffffff', '#585858', '#232323')
-blue_palette <- c('#ffffff', '#096691', '#134359')
-yl_palette <- c('#ffffff', '#ffc107', '#f7a305')
-dg_palette <- c('#ffffff','#1c6561', '#284e4c')
-lg_palette <- c('#ffffff', '#0cb0a8', '#09918b')
-pk_palette <- c('#ffffff', '#bf007f', '#8f0360')
-red_palette <- c('#ffffff', '#b60020', '#750217')

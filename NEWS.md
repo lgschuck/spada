@@ -20,6 +20,22 @@ editor_options:
 
 6 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.16-1
+
+Highlights: New **Darkly** theme and new dependencie: **sass** package.
+
+### Improvements
+
+1 - **Correlation, Descriptive Stats, Normality Test, Sidebar, Spada UI, Z Test** modules: changes in visual parameters and elements (e.g. sidebar now has class) for usage of bs_theme
+
+2 - **Export File** module: now downloadButton has class and correct icon
+
+3 - **Filter Rows** module: new Number of Rows filter 
+
+4 - **spada_themes.R**: new objects with themes and usage of sass package
+
+5 - **Spada Server**: now shiny.maxRequestSize = 1000 MB
+
 ## 2025.02.13-1
 
 Highlights: Use of selectizeInput with close and clear button for multiple selections

@@ -6,15 +6,14 @@ correlation_ui <- function(id) {
     full_screen = T,
     card_header('Correlation Test', class = 'mini-header'),
     layout_sidebar(
-      bg = main_color,
-      sidebar = sidebar(uiOutput(ns('parameters')), bg = sidebar_color),
+      class = 'card-sidebar',
+      sidebar = sidebar(uiOutput(ns('parameters'))),
       navset_card_pill(
         nav_panel(
           'Test',
           card(
             layout_sidebar(
               sidebar = sidebar(
-                bg = sidebar_color,
                 width = 400,
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 radioButtons(ns('radio_method'), 'Method',

@@ -49,8 +49,12 @@ export_file_ui <- function(id) {
             ),
           )
         ),
-        card_footer(downloadButton(ns('down_handler'),
-                                   'Export Active dataset', icon('download')))
+        card_footer(downloadButton(
+          ns('down_handler'),
+          'Export Active dataset',
+          class = 'btn-task',
+          icon = icon('download')
+        ))
       )
     )
 }
