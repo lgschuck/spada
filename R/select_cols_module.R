@@ -20,6 +20,7 @@ select_cols_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
+    # Reactive to get column names
     df_names <- reactive(input_df() |> names())
 
     df <- reactiveValues()
@@ -37,19 +38,27 @@ select_cols_server <- function(id, input_df) {
       if(input$vars_sel |> length() == 0){
         msg('Select at least one variable')
       } else {
+
+        temp <- copy(df$df_active)
+
         if(input$radio_var_sel == 'keep') {
-          df$df_active <- subset(df$df_active, select = input$vars_sel)
+          temp <- subset(temp, select = input$vars_sel)
           msg('Select columns: OK')
         } else if (input$radio_var_sel == 'drop'){
           if(all(df_names() %in% input$vars_sel)){
             msg('Leave at least 1 variable')
           } else {
-            df$df_active <- subset(
-              df$df_active,
+            temp <- subset(
+              temp,
               select = setdiff(df_names(), input$vars_sel))
             msg('Select columns: OK')
+
           }
         }
+
+        df$df_active <- copy(temp)
+        rm(temp)
+
       }
     }) |> bindEvent(input$btn_sel)
 

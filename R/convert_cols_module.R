@@ -44,7 +44,7 @@ convert_cols_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-convert_cols_server <- function(id, input_df, input_df_trigger) {
+convert_cols_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
@@ -53,7 +53,6 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
     df <- reactiveValues()
     observe({
       df$df_active <- input_df()
-      df$df_trigger <- input_df_trigger()
     })
 
     output$ui_var_sel <- renderUI(
@@ -78,13 +77,12 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
     # sample to preview conversion
     preview_sample_trigger <- reactiveVal(1)
     preview_sample <- reactive({
-      preview_sample_trigger()
       if(nrow(df$df_active) < 8) {
         rep(TRUE, nrow(df$df_active))
       } else {
         sample(nrow(df$df_active), 8, replace = F)
       }
-    })
+    }) |> bindEvent(preview_sample_trigger())
 
     # update sample in button click
     observe({
@@ -127,24 +125,26 @@ convert_cols_server <- function(id, input_df, input_df_trigger) {
       }
     })
 
+    # apply conversions -------------------------------------------------------
     observe({
       if(input$vars_sel == '' | input$sel_format == ''){
         msg('Choose a variable and a new format')
       } else {
 
-        df$df_active[, input$vars_sel :=
+        temp <- copy(df$df_active)
+        temp[, input$vars_sel :=
                        convert(var1,
                                type = input$sel_format,
                                date_format = input$sel_date_formats,
                                date_origin = input$sel_date_origin),
                      env = list(var1 = input$vars_sel)]
+
+        df$df_active <- copy(temp)
+        rm(temp)
         msg('Conversion applied')
       }
-
-      df$df_trigger <- df$df_trigger + 1
     }) |> bindEvent(input$btn_apply)
 
-    return(list(df_convert_cols = reactive(df$df_active),
-                df_convert_cols_trigger = reactive(df$df_trigger)))
+    return(list(df_convert_cols = reactive(df$df_active)))
   })
 }

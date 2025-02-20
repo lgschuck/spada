@@ -31,14 +31,14 @@ sidebar_server <- function(id, input_metadata, app_session) {
         p('Size (MB):', (input_metadata()$size)),
         fluidRow(
           column(1),
-          column(2, btn_task(ns('df_btn_overview'), '', bs_icon('search'),
-                             style = 'padding: 5px 10px;') |>
+          column(2, actionButton(ns('df_btn_overview'), '',
+                                 icon('magnifying-glass'), class = 'mini-btn') |>
                    tooltip('Overview', placement = 'bottom')),
-          column(2, btn_task(ns('df_btn_change'), '', bs_icon('shuffle'),
-                             style = 'padding: 5px 10px;') |>
+          column(2, actionButton(ns('df_btn_change'), '', icon('shuffle'),
+                                 class = 'mini-btn') |>
                    tooltip('Change dataset', placement = 'bottom')),
-          column(2, btn_task(ns('df_btn_explore'), '', bs_icon('bar-chart-line'),
-                             style = 'padding: 5px 10px;') |>
+          column(2, actionButton(ns('df_btn_explore'), '', icon('chart-simple'),
+                                 class = 'mini-btn') |>
                    tooltip('Exploratory Analysis', placement = 'bottom')),
         )
       )

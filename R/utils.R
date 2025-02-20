@@ -1,4 +1,98 @@
 
+
+# math functions ----------------------------------------------------------
+
+math_funs <- c(
+  c('Mean' = 'mean',
+    'Geometric Mean' = 'Gmean',
+    'Harmonic Mean' = 'Hmean',
+    'Mode' = 'Mode',
+    'Standard Deviation' = 'sd',
+    'Variance' = 'var',
+    'Min' = 'mina',
+    'Max' = 'mana',
+    'First' = 'fina',
+    'Last' = 'lana',
+    'Lag' = 'shift',
+    'Range' = 'range',
+    'IQR' = 'IQR',
+    'Skewness' = 'Skew',
+    'Kurtosis' = 'Kurt',
+    'Sum' = 'suna',
+    'Cum Sum' = 'cumsum',
+    'Prod' = 'prod',
+    'Cum Prod' = 'cumprod',
+    'Square Root' = 'sqrt',
+    'Exponential' = 'exp',
+    'Log' = 'log',
+    'Log2' = 'log2',
+    'Log10' = 'log10',
+    'Ceilling' = 'ceilling',
+    'Floor' = 'floor',
+    'Trunc' = 'trunc',
+    'Signif' = 'signif',
+    'Round' = 'round',
+    'Sine' = 'sin',
+    'Cosine' = 'cos',
+    'Tangent' = 'tan',
+    'Order' = 'order',
+    'Is Numeric' = 'is.numeric',
+    'Is Double' = 'is.double',
+    'Is Integer' = 'is.integer'
+    )
+)
+
+# char functions ----------------------------------------------------------
+
+char_funs <- c(
+  'To Upper' = 'toupper',
+  'To Lower' = 'tolower',
+  'N Char' = 'nchar',
+  'Is Char' = 'is.character'
+)
+
+# date functions ----------------------------------------------------------
+
+date_funs <- c(
+  'Year' = 'year',
+  'Month' = 'month',
+  'Month Day' = 'mday',
+  'Week Day' = 'wday',
+  'Year Day' = 'yday',
+  'Week' = 'week',
+  'Quarter' = 'quarter',
+  'Hour' = 'hour',
+  'Minute' = 'minute',
+  'Second' = 'second',
+  'Is Date' = 'is_date'
+)
+
+# factor functions ----------------------------------------------------------
+
+factor_funs <- c(
+  'Number of Levels' = 'nlevels',
+  'Is Factor' = 'is.factor',
+  'Is Ordered' = 'is.ordered'
+)
+
+# logical functions ----------------------------------------------------------
+
+logical_funs <- c(
+  'All True' = 'all',
+  'Any True' = 'any',
+  'Is Logical' = 'is.logical',
+  'Number of True' = 'sum',
+  'Proportion of True' = 'mean'
+)
+
+# complex functions ----------------------------------------------------------
+
+complex_funs <- c(
+  'Real Part' = 'Re',
+  'Imaginary Part' = 'Im',
+  'Is Complex' = 'is.complex'
+)
+
 # list of filters -------------------------------------------------------------
 equal_operators <- c('== (Equal)' = '==',
                      '!= (Not Equal)' = '!=')
@@ -84,8 +178,6 @@ btn_task <- function(ID, LABEL, ICON = NULL, ...){
 
 # messages - shownotification -------------------------------------------------
 msg <- function(TEXT, DURATION = 2.3){
-  # showNotification(ui = TEXT, duration = DURATION, type = 'message')
-
   show_toast(
     title = TEXT,
     type = 'info',
@@ -97,8 +189,6 @@ msg <- function(TEXT, DURATION = 2.3){
 }
 
 msg_error <- function(TEXT, DURATION = 2.3){
-  # showNotification(ui = TEXT, duration = DURATION, type = 'error')
-
   show_toast(
     title = TEXT,
     type = 'error',

@@ -13,8 +13,7 @@ spada_server <- function(datasets){
     df <- reactiveValues(
       df_active = copy(datasets[[1]]),
       df_active_name = names(datasets)[1],
-      df_backup = NULL,
-      df_trigger = 0
+      df_backup = NULL
     )
 
     df_active_names <- reactive(df$df_active |> names())
@@ -48,21 +47,12 @@ spada_server <- function(datasets){
     sidebar_server('sidebar', reactive(df_active_resume_data), app_session = session)
 
     # data page events -----------------------------------------------------
-    df_metadata <- reactive({
-      df$df_trigger
-      df_info(df$df_active)
-    })
+    df_metadata <- reactive({ df_info(df$df_active) })
 
     output$pD_metadata_gt <- render_gt(df_metadata() |> gt_info())
 
     # overview -----------------------
-    data_overview_server(
-      'pD_overview', reactive(df$df_active),
-       reactive(list(mod_pE_convert_cols$df_convert_cols_trigger(),
-                     mod_pE_order_rows$btn_order_rows(),
-                     mod_pE_order_cols$btn_order_cols())
-                )
-    )
+    data_overview_server('pD_overview', reactive(df$df_active))
     # values for boxes -----------------------
     data_highlights_server('pD_highlights', reactive(df$df_active), df_metadata)
 
@@ -142,9 +132,7 @@ spada_server <- function(datasets){
     # update df_active after sel_cols
     observe({
       req(mod_pE_filter_rows$df_filter_rows())
-
       df$df_active <- mod_pE_filter_rows$df_filter_rows()
-
     }) |> bindEvent(mod_pE_filter_rows$df_filter_rows())
 
     # select cols ---------------------------
@@ -153,57 +141,57 @@ spada_server <- function(datasets){
     # update df_active after sel_cols
     observe({
       req(mod_pE_sel_cols$df_sel_cols())
-
       df$df_active <- mod_pE_sel_cols$df_sel_cols()
-
     }) |> bindEvent(mod_pE_sel_cols$df_sel_cols())
 
     # convert events ---------------------------
     mod_pE_convert_cols <- convert_cols_server(
       'pE_convert_cols',
-      reactive(df$df_active),
-      reactive(df$df_trigger))
+      reactive(df$df_active))
 
     # update df_active
     observe({
       req(mod_pE_convert_cols$df_convert_cols())
-      req(mod_pE_convert_cols$df_convert_cols_trigger())
-
       df$df_active <- mod_pE_convert_cols$df_convert_cols()
-      df$df_trigger <- mod_pE_convert_cols$df_convert_cols_trigger()
-
-    }) |> bindEvent(mod_pE_convert_cols$df_convert_cols(),
-                    mod_pE_convert_cols$df_convert_cols_trigger())
+    }) |> bindEvent(mod_pE_convert_cols$df_convert_cols())
 
     # order rows events ---------------------------
-    mod_pE_order_rows <- order_rows_server('pE_order_rows', reactive(df$df_active))
+    mod_pE_order_rows <- order_rows_server('pE_order_rows',
+                                           reactive(df$df_active))
 
     # update df_active
     observe({
       req(mod_pE_order_rows$df_order_rows())
-
       df$df_active <- mod_pE_order_rows$df_order_rows()
 
     }) |> bindEvent(mod_pE_order_rows$df_order_rows())
 
     # order cols events ---------------------------
-    mod_pE_order_cols <- order_cols_server('pE_order_cols', reactive(df$df_active))
+    mod_pE_order_cols <- order_cols_server('pE_order_cols',
+                                           reactive(df$df_active))
     # update df_active
     observe({
       req(mod_pE_order_cols$df_order_cols())
-
       df$df_active <- mod_pE_order_cols$df_order_cols()
-
     }) |> bindEvent(mod_pE_order_cols$df_order_cols())
 
     # rename cols events ---------------------------
-    mod_pE_rename_cols <- rename_cols_server('pE_rename_cols', reactive(df$df_active))
+    mod_pE_rename_cols <- rename_cols_server('pE_rename_cols',
+                                             reactive(df$df_active))
     # update df_active
     observe({
       req(mod_pE_rename_cols$df_rename_cols())
       df$df_active <- mod_pE_rename_cols$df_rename_cols()
-
     }) |> bindEvent(mod_pE_rename_cols$df_rename_cols())
+
+    # calculate cols events ---------------------------
+    mod_pE_calculate_cols <- calculate_cols_server('pE_calculate_cols',
+                                                   reactive(df$df_active))
+    # update df_active
+    observe({
+      req(mod_pE_calculate_cols$df_calculate_cols())
+      df$df_active <- mod_pE_calculate_cols$df_calculate_cols()
+    }) |> bindEvent(mod_pE_calculate_cols$df_calculate_cols())
 
     # reset df active ---------------------------
     observe({
@@ -238,23 +226,22 @@ spada_server <- function(datasets){
     }) |> bindEvent(input$pE_btn_clear_bkp)
 
     # analysis page events ----------------------------------------------------
-    exploratory_server('pA_exploratory', reactive(df$df_active), df_metadata,
-                       color_fill, color_line)
+    exploratory_server('pA_exploratory', reactive(df$df_active),
+                       df_metadata, color_fill, color_line)
 
     # descriptive stats -------------------------------------------------------
     descriptive_stats_server('pA_desc_stats', reactive(df$df_active))
 
     # correlation -------------------------------------------------------------
-    correlation_server('pA_correlation', reactive(df$df_active), df_metadata,
-                       color_fill)
+    correlation_server('pA_correlation', reactive(df$df_active), df_metadata, color_fill)
 
     # normality test ----------------------------------------------------------
-    normality_test_server('pA_normality_test', reactive(df$df_active),
-                       df_metadata, color_fill, color_line)
+    normality_test_server('pA_normality_test', reactive(df$df_active), df_metadata, color_fill,
+                          color_line)
 
     # normality test ----------------------------------------------------------
-    z_test_server('pA_z_test', reactive(df$df_active), df_metadata,
-                  color_fill, color_line)
+    z_test_server('pA_z_test', reactive(df$df_active),
+                  df_metadata, color_fill, color_line)
 
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')

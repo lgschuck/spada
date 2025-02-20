@@ -47,10 +47,7 @@ filter_rows_server <- function(id, input_df) {
     ns <- NS(id)
 
     # Reactive to get column names
-    df_names <- reactive({
-      req(input_df())
-      input_df() |> names()
-    })
+    df_names <- reactive(input_df() |> names())
 
     # Store active dataset
     df <- reactiveValues()
@@ -243,6 +240,7 @@ filter_rows_server <- function(id, input_df) {
     # apply btn filter rows ---------------------------------------------------
     observe({
 
+      temp <- copy(df$df_active)
       # filter events for one variable ----------------------------------------
       if(input$filter_type == 'one'){
         # test if var and operator were informed
@@ -291,20 +289,20 @@ filter_rows_server <- function(id, input_df) {
         # pass values to filter function
         if (input$one_var_operator %in%
                    c(na_operators, logical_operators, outlier_operators)){
-          df$df_active <- filter_rows(df$df_active,
-                                      input$one_var_sel,
-                                      input$one_var_operator,
-                                      NULL)
+          temp <- filter_rows(temp,
+                              input$one_var_sel,
+                              input$one_var_operator,
+                              NULL)
           msg('Filter rows: OK')
         } else if(value_temp$len > 1 & input$one_var_operator %in%
                   c(equal_operators, compare_operators)){
           msg('Operator requires value of length 1')
           return()
         } else {
-          df$df_active <- filter_rows(df$df_active,
-                                      input$one_var_sel,
-                                      input$one_var_operator,
-                                      value_temp$value_temp)
+          temp <- filter_rows(temp,
+                              input$one_var_sel,
+                              input$one_var_operator,
+                              value_temp$value_temp)
           msg('Filter rows: OK')
         }
 
@@ -334,12 +332,14 @@ filter_rows_server <- function(id, input_df) {
         } else if(!isTruthy(input$two_var_operator)){
           msg_error('Choose an operator')
           return()
-        } else if(df$df_active[[input$two_var_sel1]] |> obj_type() !=
-                  df$df_active[[input$two_var_sel2]] |> obj_type()){
+        } else if(temp[[input$two_var_sel1]] |> obj_type() !=
+                  temp[[input$two_var_sel2]] |> obj_type()){
           msg('Variables must be of the same type')
         } else {
-          df$df_active <- filter_rows_2vars(
-            df$df_active, input$two_var_sel1, input$two_var_sel2, input$two_var_operator)
+          temp <- filter_rows_2vars(temp,
+                                    input$two_var_sel1,
+                                    input$two_var_sel2,
+                                    input$two_var_operator)
           msg('Filter rows: OK')
         }
 
@@ -351,7 +351,7 @@ filter_rows_server <- function(id, input_df) {
              !between(input$n_rows, 1, nrow_df_active())){
             msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
           } else {
-            df$df_active <- df$df_active[
+            temp <- temp[
               sample(1:nrow_df_active(),
                      input$n_rows,
                      replace = input$x_sample_replace), ]
@@ -360,18 +360,18 @@ filter_rows_server <- function(id, input_df) {
           }
 
         } else if(input$sample_type == 'percent'){
-          df$df_active <- df$df_active[
+          temp <- temp[
             sample(1:nrow_df_active(),
                    input$sample_size/100 * nrow_df_active(),
                    replace = input$x_sample_replace), ]
 
           msg('Filter rows: OK')
         }
-
       }
+      df$df_active <- copy(temp)
+	  rm(temp)
     }) |> bindEvent(input$btn_filter)
 
-    return(list(df_filter_rows = reactive(df$df_active),
-                btn_filter_rows = reactive(input$btn_filter)))
+    return(list(df_filter_rows = reactive(df$df_active)))
   })
 }

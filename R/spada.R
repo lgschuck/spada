@@ -18,8 +18,9 @@
 #'             layout_sidebar nav_item nav_menu nav_panel nav_select nav_spacer
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #'
-#' @importFrom data.table %between% %notin% .SD :=  as.data.table between copy
-#'             fread fwrite setcolorder setDT setorderv
+#' @importFrom data.table %between% %notin% .SD := as.data.table between copy
+#'             fread fwrite hour mday minute month quarter second setcolorder
+#'             setDT setnames setorderv shift wday week yday year
 
 #' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest

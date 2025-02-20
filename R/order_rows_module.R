@@ -28,6 +28,7 @@ order_rows_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
+    # Reactive to get column names
     df_names <- reactive(input_df() |> names())
 
     df <- reactiveValues()
@@ -60,7 +61,8 @@ order_rows_server <- function(id, input_df) {
 
         rows_position[which(input$vars_rows %in% input$vars_descending)] <- -1
 
-        setorderv(df$df_active, cols = input$vars_rows,
+        temp <- copy(df$df_active)
+        setorderv(temp, cols = input$vars_rows,
                   order = rows_position,
                   na.last = if(input$radio_nas == 'last'){
                     TRUE
@@ -68,11 +70,14 @@ order_rows_server <- function(id, input_df) {
                     FALSE
                   } else { FALSE }
         )
+
+        df$df_active <- copy(temp)
+        rm(temp)
+
         msg('Reordering Rows: OK')
       }
     }) |> bindEvent(input$btn_order_rows)
 
-    return(list(df_order_rows = reactive(df$df_active),
-                btn_order_rows = reactive(input$btn_order_rows)))
+    return(list(df_order_rows = reactive(df$df_active)))
   })
 }

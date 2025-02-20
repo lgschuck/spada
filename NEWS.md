@@ -20,6 +20,24 @@ editor_options:
 
 6 - Models: linear model, logistic regression, Kmeans, Trees
 
+## 2025.02.19-1
+
+Highlights: New **Calculate Cols** module, better internal control over changes in datasets and many small visual improvements
+
+### Improvements
+
+1 - New **Calculate Cols** module: allow create new variable by applying a function
+
+2 - **Convert Cols, Data Overview, Filter Rows, Order Cols, Order Rows, Rename Cols and Select Cols** modules and **spada_server.R**: now uses data.table::copy to return changes in dataset properly and maintaining the correct update in reactives (problem probably caused by changes by reference in data.table). Removed all triggers (df_trigger reactiValues) used before.
+
+3 - **Data Overview, Navbar_df_info and Sidebar** modules: removed stylling code (passed to spada_themes).
+
+4 - **spada_ui.R**: some new cards (Data Page: metadata and Overview) for better look and Active dataset navbar item now shows only the name (with out 'Active dataset' prefix)
+
+5 - **spada_themes**: new mini-btn class to format small buttons in Sidebar and Navbar Df Info modules
+
+6 - **utils.R**: new objects with functions to use in Calculate Cols module. 
+
 ## 2025.02.16-1
 
 Highlights: New **Darkly** theme and new dependencie: **sass** package.

@@ -26,6 +26,7 @@ order_cols_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
+    # Reactive to get column names
     df_names <- reactive(input_df() |> names())
 
     df <- reactiveValues()
@@ -55,18 +56,24 @@ order_cols_server <- function(id, input_df) {
       if(!isTruthy(input$vars_cols)){
         msg('Choose at least one variable')
       } else {
+
+        temp <- copy(df$df_active)
+
         if(all(df_names() %in% input$vars_cols) || input$vars_rest == ''){
-          setcolorder(df$df_active, input$vars_cols)
+          setcolorder(temp, input$vars_cols)
         } else if(input$radio_cols == 'before'){
-          setcolorder(df$df_active, input$vars_cols, before = input$vars_rest)
+          setcolorder(temp, input$vars_cols, before = input$vars_rest)
         } else if (input$radio_cols == 'after') {
-          setcolorder(df$df_active, input$vars_cols, after = input$vars_rest)
+          setcolorder(temp, input$vars_cols, after = input$vars_rest)
         }
+
+        df$df_active <- copy(temp)
+        rm(temp)
+
         msg('Reordering Variables: OK')
       }
     }) |> bindEvent(input$btn_order_cols)
 
-    return(list(df_order_cols = reactive(df$df_active),
-                btn_order_cols = reactive(input$btn_order_cols)))
+    return(list(df_order_cols = reactive(df$df_active)))
   })
 }

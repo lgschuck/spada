@@ -60,9 +60,16 @@ theme_basic_rules <- as_sass(
       }
 
       .btn-task:hover {
-        background-color: $secondary;
-        border-color: $secondary;
-        color: white;
+        background-color: $secondary !important;
+        border-color: $secondary !important;
+        color: white !important;
+      }
+
+      .mini-btn {
+        padding: 5px 10px !important;
+        color: $secondary !important;
+        background-color: $bg_color !important;
+        border-color: $secondary !important;
       }
 
       .card, .well {

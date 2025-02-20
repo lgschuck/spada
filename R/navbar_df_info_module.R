@@ -19,12 +19,9 @@ navbar_df_info_server <- function(id, input_metadata, app_session) {
         ),
         p("Columns with NA's:", input_metadata()$n_nas),
         p('Size (MB):', (input_metadata()$size)),
-        btn_task(ns('df_btn_overview'), '', bs_icon('search'),
-                 style = 'padding: 5px 10px;'),
-        btn_task(ns('df_btn_change'), '', bs_icon('shuffle'),
-                 style = 'padding: 5px 10px;'),
-        btn_task(ns('df_btn_explore'), '', bs_icon('bar-chart-line'),
-                 style = 'padding: 5px 10px;')
+        actionButton(ns('df_btn_overview'), '', icon('magnifying-glass'), class = 'mini-btn'),
+        actionButton(ns('df_btn_change'), '', icon('shuffle'), class = 'mini-btn'),
+        actionButton(ns('df_btn_explore'), '', icon('chart-simple'), class = 'mini-btn')
       )
     })
 

@@ -43,20 +43,23 @@ spada_ui <- function(){
                navset_card_pill(
                  id = 'navset_card_pill_data',
                  nav_panel('Highlights', data_highlights_ui('pD_highlights')),
-                 nav_panel('Metadata', card_body(gt_output('pD_metadata_gt'))),
+                 nav_panel('Metadata', card(card_body(gt_output('pD_metadata_gt')))),
                  nav_panel('Overview', data_overview_ui('pD_overview')),
                  nav_panel(
                    'Data',
-                   card_body(
-                     uiOutput('pD_data_ui_sel_df'),
-                     textInput('pD_data_txt_new_name', 'New name'),
-                     layout_column_wrap(
-                       btn_task('pD_data_btn_new_name', 'Rename dataset', icon('file-signature')),
-                       btn_task('pD_data_btn_active', 'Make dataset Active', icon('check')),
-                       btn_task('pD_data_btn_copy_dataset', 'Copy dataset', icon('copy')),
-                       btn_task('pD_data_btn_delete_dataset', 'Delete dataset', icon('trash-can')),
-                     ),
-                   )),
+                   card(
+                     card_body(
+                       uiOutput('pD_data_ui_sel_df'),
+                       textInput('pD_data_txt_new_name', 'New name'),
+                       layout_column_wrap(
+                         btn_task('pD_data_btn_new_name', 'Rename dataset', icon('file-signature')),
+                         btn_task('pD_data_btn_active', 'Make dataset Active', icon('check')),
+                         btn_task('pD_data_btn_copy_dataset', 'Copy dataset', icon('copy')),
+                         btn_task('pD_data_btn_delete_dataset', 'Delete dataset', icon('trash-can')),
+                       )
+                     )
+                   )
+                 ),
                  nav_panel('Import', import_file_ui('pD_import')),
                  nav_panel('Export', export_file_ui('pD_export'))
                )
@@ -93,6 +96,13 @@ spada_ui <- function(){
                      'Rename',
                      layout_column_wrap(
                        rename_cols_ui('pE_rename_cols'),
+                       card()
+                     )
+                   ),
+                   nav_panel(
+                     'Calculate',
+                     layout_column_wrap(
+                       calculate_cols_ui('pE_calculate_cols'),
                        card()
                      )
                    ),
@@ -160,7 +170,6 @@ spada_ui <- function(){
 
       nav_spacer(),
       # active dataset --------------------------------------------------------
-      nav_item('Active dataset:'),
       nav_item(h4(textOutput('df_active_name')) |>
                  popover(navbar_df_info_ui('navbar_df_info'),
                          placement = 'bottom'))
