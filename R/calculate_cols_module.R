@@ -1,5 +1,4 @@
 
-
 # ui --------------------------------------------------------------------------
 calculate_cols_ui <- function(id) {
   ns <- NS(id)
@@ -8,8 +7,9 @@ calculate_cols_ui <- function(id) {
     card_header('Apply Function', class = 'mini-header'),
     card_body(
       uiOutput(ns('ui_var_sel')),
-      textInput(ns('txt_new_name'), 'New name'),
-      uiOutput(ns('ui_fun_sel'))
+      textInput(ns('txt_new_name'), 'New variable name'),
+      uiOutput(ns('ui_fun_sel')),
+      uiOutput(ns('ui_var_groupby'))
     ),
     card_footer(btn_task(
       ns('btn_apply_fun'), 'Apply', icon('check')
@@ -35,6 +35,13 @@ calculate_cols_server <- function(id, input_df) {
       selectInput(ns('vars_sel'), 'Variable', c('', df_names()))
     })
 
+    # render variables group -------------------------------------------------
+    output$ui_var_groupby <- renderUI({
+      selectizeInput(ns('vars_groupby'), 'Group by', c('None' = NULL, df_names()),
+                     multiple = T,
+                     options = list(plugins = list('remove_button', 'clear_button')))
+    })
+
     # suggest name for new variable -------------------------------------------
     observe({
       req(input$vars_sel)
@@ -48,24 +55,20 @@ calculate_cols_server <- function(id, input_df) {
       obj_type(df$df_active[[input$vars_sel]])
     })
 
-
     output$ui_fun_sel <- renderUI({
       req(input$vars_sel)
-      if (selected_var_type() == 'numeric') {
-        selectInput(ns('fun'), 'Choose a function', choices = math_funs)
-      } else if (selected_var_type() == 'char'){
-        selectInput(ns('fun'), 'Choose a function', choices = char_funs)
-      } else if (selected_var_type() == 'date'){
-        selectInput(ns('fun'), 'Choose a function', choices = date_funs)
-      } else if (selected_var_type() == 'logical'){
-        selectInput(ns('fun'), 'Choose a function', choices = logical_funs)
-      } else if (selected_var_type() == 'factor'){
-        selectInput(ns('fun'), 'Choose a function', choices = factor_funs)
-      } else if (selected_var_type() == 'complex'){
-        selectInput(ns('fun'), 'Choose a function', choices = complex_funs)
-      } else {
-        selectInput(ns('fun'), 'Choose a function', choices = character(0))
-      }
+
+      selectInput(ns('fun'), 'Choose a function', choices = switch(
+        selected_var_type(),
+        "numeric"  = math_funs,
+        "char"     = char_funs,
+        "date"     = date_funs,
+        "logical"  = logical_funs,
+        "factor"   = factor_funs,
+        "complex"  = complex_funs,
+        character(0)
+      ))
+
     })
 
     observe({
@@ -78,10 +81,11 @@ calculate_cols_server <- function(id, input_df) {
 
           temp <- copy(df$df_active)
 
-          temp[, new_var := fun(var1), env = list(
+          temp[, new_var := fun(var1), by = groupby, env = list(
             new_var = input$txt_new_name,
             fun = input$fun,
-            var1 = input$vars_sel
+            var1 = input$vars_sel,
+            groupby = input$vars_groupby |> as.list()
           )]
 
           df$df_active <- copy(temp)

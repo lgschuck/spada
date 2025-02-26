@@ -48,6 +48,8 @@
 #' @importFrom stats cor lm sd var median rnorm IQR cor.test dnorm ks.test
 #'             qnorm qqline qqnorm shapiro.test
 #'
+#' @importFrom tools toTitleCase
+#'
 #' @importFrom utils object.size head
 
 spada <- function(...) {

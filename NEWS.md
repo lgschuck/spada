@@ -6,7 +6,7 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-## TO DO
+## 0.1.0 Milestone
 
 1 - Allow filter multiple conditions
 
@@ -19,6 +19,24 @@ editor_options:
 5 - Inference: t test
 
 6 - Models: linear model, logistic regression, Kmeans, Trees
+
+## 2025.02.25-1
+
+Highlights: 
+
+### Improvements
+
+1 - **Calculate Cols** module: now allows to calculate with groupby 
+
+2 - **Rename Cols** module: now allows to rename multiple variables together
+
+3 - **spada.R**: new dependencie: tools package
+
+4 - **spada_themes.R**: new css for startup screen
+
+5 - **spada_ui.R**: change startup screen css (now in spada_themes) and busyindicator options (now the spinner is 'bars2')
+
+6 - **utils.R**: removed Range function (because it returns 2 values), correct a typo in ceilling function (now ceiling) and update in get_help_file for better visual
 
 ## 2025.02.19-1
 

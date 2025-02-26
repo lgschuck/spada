@@ -14,7 +14,7 @@ math_funs <- c(
     'First' = 'fina',
     'Last' = 'lana',
     'Lag' = 'shift',
-    'Range' = 'range',
+    # 'Range' = 'range',
     'IQR' = 'IQR',
     'Skewness' = 'Skew',
     'Kurtosis' = 'Kurt',
@@ -27,7 +27,7 @@ math_funs <- c(
     'Log' = 'log',
     'Log2' = 'log2',
     'Log10' = 'log10',
-    'Ceilling' = 'ceilling',
+    'Ceiling' = 'ceiling',
     'Floor' = 'floor',
     'Trunc' = 'trunc',
     'Signif' = 'signif',
@@ -306,8 +306,11 @@ ttip <- function(TRIGGER, ..., ID = NULL, PLACE = 'top'){
 
 # get function help -----------------------------------------------------------
 get_help_file <- function(pak, fun){
-  utils::capture.output(
-    tools::Rd2HTML(tools::Rd_db(pak)[[paste0(fun, '.Rd')]])
+  paste(
+    utils::capture.output(
+      tools::Rd2HTML(tools::Rd_db(pak)[[paste0(fun, '.Rd')]])
+    ),
+    collapse = '\n'
   )
 }
 

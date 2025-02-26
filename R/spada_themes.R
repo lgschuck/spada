@@ -6,6 +6,7 @@ bg_color <- '#f9f9f9'
 secondary <- '#0072B2'
 sucess <- '#009E73'
 
+startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------
 gray_palette <- c('#ffffff', '#585858', '#232323')
 blue_palette <- c('#ffffff', '#096691', '#134359')
@@ -30,9 +31,30 @@ theme_basic_rules <- as_sass(
          grad5 = '#5fa3c2',
          grad6 = '#4e96b6',
          navbar_bg = '#007bb5',
-         stati_card_text = '#ffffff'
+         stati_card_text = '#ffffff',
+         startup_bg = main_color
     ),
     "
+
+      .startup-screen {
+        background-color: $startup_bg;
+        width: 500000px;
+        height: 250px;
+        /*border-radius: 15px 50px 15px 50px;
+        border-style: dotted;
+        border-color: white;*/
+      }
+
+      .startup-screen h1 {
+        font-family: Times;
+        font-size: 150px;
+      }
+
+      .startup-screen h3 {
+        font-family: Times;
+        font-size: 30px;
+      }
+
       .navbar {
         background: $navbar_bg !important;
         height: 45px !important;

@@ -2,19 +2,23 @@
 # Function with the ui of spada.R
 spada_ui <- function(){
   tagList(
+
+    busyIndicatorOptions(
+      spinner_type = 'bars2',
+      spinner_color = main_color,
+      fade_opacity = '0.1'
+    ),
+
     useBusyIndicators(),
 
     busy_start_up(
-      loader = spin_epic('orbit', color = '#FFFFFF'),
+      loader = spin_epic('orbit', color = startup_text_color),
       text = tagList(
-        h1('Spada',
-        style = "font-family: 'Times'; font-size: 120px;"),
-        h3('R > Shiny > You',
-           style = "font-family: 'Times'; font-size: 20px;")
+        div(class = 'startup-screen', h1('Spada'), h3('R > Shiny > You'))
       ),
       mode = 'auto',
       timeout = 1200,
-      color = '#FFFFFF',
+      color = startup_text_color,
       background = main_color
     ),
 
@@ -94,10 +98,7 @@ spada_ui <- function(){
                    ),
                    nav_panel(
                      'Rename',
-                     layout_column_wrap(
-                       rename_cols_ui('pE_rename_cols'),
-                       card()
-                     )
+                     rename_cols_ui('pE_rename_cols')
                    ),
                    nav_panel(
                      'Calculate',
