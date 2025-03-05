@@ -61,18 +61,31 @@
 <h2 class="page-header" data-toc-text="0.1.0.9000" id="spada-0109000-development-version">Spada 0.1.0.9000 (development version)<a class="anchor" aria-label="anchor" href="#spada-0109000-development-version"></a></h2>
 <div class="section level3">
 <h3 id="id_010-milestone-0-1-0-9000">0.1.0 Milestone<a class="anchor" aria-label="anchor" href="#id_010-milestone-0-1-0-9000"></a></h3>
-<p>1 - Allow filter multiple conditions</p>
-<p>2 - Allow create and calculate variables</p>
-<p>3 - Functionalities to detect and treat duplicates</p>
-<p>4 - Functionalities to detect and treat outliers</p>
-<p>5 - Inference: t test</p>
-<p>6 - Models: linear model, logistic regression, Kmeans, Trees</p>
+<p>1 - Functionalities to detect and treat duplicates</p>
+<p>2 - Functionalities to detect and treat outliers</p>
+<p>3 - Inference: t test</p>
+<p>4 - Models: linear model, logistic regression, Kmeans, Trees</p>
+</div>
+<div class="section level3">
+<h3 id="id_20250304-0-1-0-9000">2025.03.04-1<a class="anchor" aria-label="anchor" href="#id_20250304-0-1-0-9000"></a></h3>
+<p>Highlights: new <strong>freehand filter</strong> (Filter Rows module), <strong>freehand code to calculate</strong> variable(Calculate Cols module) and new dependencie (<strong>rlang package</strong>).</p>
+<div class="section level4">
+<h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
+<p>1 - <strong>Calculate Cols</strong> module: now allows to calculate with freehand code</p>
+<p>2 - <strong>Data highlights</strong> module: inserted Values in Most unique and valid values</p>
+<p>3 - <strong>Descriptive Stats</strong> module: fixe req of gt_stats and align gt columns</p>
+<p>4 - <strong>Exploratory, Export file, Filter Rows, Import file, Rename Cols</strong> modules: change in Conditional panels (now with ns instead of sprintf)</p>
+<p>5 - <strong>Filter Rows</strong> module: now allows filter with freehand code and</p>
+<p>6 - <strong>spada.R</strong>: new dependencie (rlang package)</p>
+<p>7 - <strong>spada_ui.R</strong>: change Calculate page to receive freehand Calculate Cols</p>
+<p>8 - <strong>utils.R</strong>: new <strong>safe_env function</strong> to create env to evaluate freehand code, new test_data function and new operations to insert in safe_env function</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="id_20250225-0-1-0-9000">2025.02.25-1<a class="anchor" aria-label="anchor" href="#id_20250225-0-1-0-9000"></a></h3>
-<p>Highlights:</p>
+<p>Highlights: <strong>Calculate cols now with groupby</strong> and Rename cols allows to <strong>rename multiple variables</strong> together</p>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000"></a></h4>
+<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
 <p>1 - <strong>Calculate Cols</strong> module: now allows to calculate with groupby</p>
 <p>2 - <strong>Rename Cols</strong> module: now allows to rename multiple variables together</p>
 <p>3 - <strong>spada.R</strong>: new dependencie: tools package</p>
@@ -85,7 +98,7 @@
 <h3 id="id_20250219-0-1-0-9000">2025.02.19-1<a class="anchor" aria-label="anchor" href="#id_20250219-0-1-0-9000"></a></h3>
 <p>Highlights: New <strong>Calculate Cols</strong> module, better internal control over changes in datasets and many small visual improvements</p>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-1"></a></h4>
+<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
 <p>1 - New <strong>Calculate Cols</strong> module: allow create new variable by applying a function</p>
 <p>2 - <strong>Convert Cols, Data Overview, Filter Rows, Order Cols, Order Rows, Rename Cols and Select Cols</strong> modules and <strong>spada_server.R</strong>: now uses data.table::copy to return changes in dataset properly and maintaining the correct update in reactives (problem probably caused by changes by reference in data.table). Removed all triggers (df_trigger reactiValues) used before.</p>
 <p>3 - <strong>Data Overview, Navbar_df_info and Sidebar</strong> modules: removed stylling code (passed to spada_themes).</p>
@@ -98,7 +111,7 @@
 <h3 id="id_20250216-0-1-0-9000">2025.02.16-1<a class="anchor" aria-label="anchor" href="#id_20250216-0-1-0-9000"></a></h3>
 <p>Highlights: New <strong>Darkly</strong> theme and new dependencie: <strong>sass</strong> package.</p>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-2"></a></h4>
+<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
 <p>1 - <strong>Correlation, Descriptive Stats, Normality Test, Sidebar, Spada UI, Z Test</strong> modules: changes in visual parameters and elements (e.g. sidebar now has class) for usage of bs_theme</p>
 <p>2 - <strong>Export File</strong> module: now downloadButton has class and correct icon</p>
 <p>3 - <strong>Filter Rows</strong> module: new Number of Rows filter</p>
@@ -110,7 +123,7 @@
 <h3 id="id_20250213-0-1-0-9000">2025.02.13-1<a class="anchor" aria-label="anchor" href="#id_20250213-0-1-0-9000"></a></h3>
 <p>Highlights: Use of selectizeInput with close and clear button for multiple selections</p>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-3"></a></h4>
+<h4 id="improvements-0-1-0-9000-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-4"></a></h4>
 <p>1 - <strong>Convert Cols, Descriptive Stats, Order Cols, Order Rows and Select Cols</strong> modules: now usage of selectizeInput with close and clear button for multiple selections</p>
 <p>2 - <strong>utils.R</strong>: filter_rows function now with env = list(var1) in data.table instead of get(var)</p>
 <p>3 - <strong>spada.R</strong>: now usage of importFrom for data.table package</p>
@@ -120,7 +133,7 @@
 <h3 id="id_20250211-0-1-0-9000">2025.02.11-1<a class="anchor" aria-label="anchor" href="#id_20250211-0-1-0-9000"></a></h3>
 <p>Highlights: New filter options in Filter Rows Module</p>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-4"></a></h4>
+<h4 id="improvements-0-1-0-9000-5">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-5"></a></h4>
 <p>1 - <strong>Filter Rows</strong> module: new options to filter: compare two variables and sample</p>
 <p>2 - <strong>Config Page</strong> module: Inicial hex color now in caps</p>
 <p>3 - <strong>utils.R</strong>: new function filter_rows_2vars for compare two variables and col_type</p>
@@ -134,7 +147,7 @@
 <p>1 - <strong>Analysis &gt; Scatter: warning if two Factors variables</strong>: fixed, now requires numeric variables (<a href="https://github.com/lgschuck/spada/issues/18" class="external-link">#18</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-5">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-5"></a></h4>
+<h4 id="improvements-0-1-0-9000-6">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-6"></a></h4>
 <p>1 - <strong>Descriptive Stats</strong> module: added geometric mean, harmonic mean, skewness and kurtosis from DescTools package.</p>
 <p>2 - <strong>Normality test</strong> module: new test, Shapiro-Francia from DescTools package.</p>
 <p>3 - <strong>Exploratory</strong> module: bug fix in scatter. (<a href="https://github.com/lgschuck/spada/issues/18" class="external-link">#18</a>)</p>
@@ -148,7 +161,7 @@
 <p>1 - <strong>Data &gt; Import: check for already used name not working</strong>: the names were not beeing passed as reactive to File Import module. Fixed. (<a href="https://github.com/lgschuck/spada/issues/17" class="external-link">#17</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-6">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-6"></a></h4>
+<h4 id="improvements-0-1-0-9000-7">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-7"></a></h4>
 <p>1 - <strong>Import file</strong> module: now csv has a number of lines to read parameter and can read sav (SPSS) files</p>
 <p>2 - <strong>Z Test</strong> module: now has a plot with test results</p>
 <p>3 - <strong>utils.R</strong>: plot_z_test function</p>
@@ -163,7 +176,7 @@
 <p>1 - <strong>Analysis &gt; Descriptive Stats: error in round for factors</strong>: now f_num function only format numeric values (<a href="https://github.com/lgschuck/spada/issues/16" class="external-link">#16</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-7">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-7"></a></h4>
+<h4 id="improvements-0-1-0-9000-8">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-8"></a></h4>
 <p>1 - <strong>navbar_df_info and sidebar</strong> modules: now number of rows with 1 decimal value (function f_num) for better look (solve side effect after use of nsmall in previous release)</p>
 <p>2 - New <strong>Rename Cols</strong> module: new module for rename variables of active dataset</p>
 </div>
@@ -172,7 +185,7 @@
 <h3 id="id_20250201-0-1-0-9000">2025.02.01-1<a class="anchor" aria-label="anchor" href="#id_20250201-0-1-0-9000"></a></h3>
 <p>Only visual and formatting changes.</p>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-8">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-8"></a></h4>
+<h4 id="improvements-0-1-0-9000-9">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-9"></a></h4>
 <p>1 - <strong>Convert Cols, Data Overview and Sidebar</strong> modules: background color receive object bg_color</p>
 <p>2 - <strong>Correlation, Normality Test and Z Test</strong> modules: sidebars color now with bg_color object and stati_card with blue color</p>
 <p>3 - <strong>Descriptive Stats</strong> module: gain digits input and f_num for format values</p>
@@ -189,7 +202,7 @@
 <p>1 - <strong>Analysis &gt; Normality Test &gt; Shapiro: error if all values are equal</strong>: Shapiro does not accept all equal values. Now with check and msg_error (<a href="https://github.com/lgschuck/spada/issues/15" class="external-link">#15</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-9">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-9"></a></h4>
+<h4 id="improvements-0-1-0-9000-10">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-10"></a></h4>
 <p>1 - <strong>Correlation</strong> module: chane name of Alternatives and chance card header title to Correlation Test</p>
 <p>2 - <strong>Export file</strong> module: now writes Sav (<strong>haven package</strong>) and uses checkbox to compress RDS</p>
 <p>3 - <strong>Normality Test</strong> module: better names and better checks for Shapiro-Wilk Test (<a href="https://github.com/lgschuck/spada/issues/15" class="external-link">#15</a>)</p>
@@ -203,7 +216,7 @@
 <div class="section level3">
 <h3 id="id_20250128-0-1-0-9000">2025.01.28-1<a class="anchor" aria-label="anchor" href="#id_20250128-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-10">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-10"></a></h4>
+<h4 id="improvements-0-1-0-9000-11">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-11"></a></h4>
 <p>1 - New <strong>Z Test</strong> module: new module for Z test (DescTools::ZTest)</p>
 </div>
 </div>
@@ -215,7 +228,7 @@
 <p>2 - <strong>Analysis &gt; Correlation: not enough finite observations</strong>: stats::cor.test for Pearson demands at least 3 valid values (Spearman and Kendal a least 2 valid values). New check throughs a error message if less than 3 valid values for all methods. (<a href="https://github.com/lgschuck/spada/issues/14" class="external-link">#14</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-11">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-11"></a></h4>
+<h4 id="improvements-0-1-0-9000-12">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-12"></a></h4>
 <p>1 - <strong>Correlation</strong> module: now check if <strong>Standard Deviation</strong> of any informed variable is zero, avoiding warning. Also fixed (<a href="https://github.com/lgschuck/spada/issues/14" class="external-link">#14</a>).</p>
 <p>2 - <strong>Exploratory</strong> module: now with req (for main variable and variable 2) in render_plot (output$gt_dist)</p>
 <p>3 - <strong>Stats table</strong> module: align columns, use ‘-’ for sub_missing becasue the long dash is not an ASCII and could not be replicated in sub_values (devtools::check). Also fixed (<a href="https://github.com/lgschuck/spada/issues/14" class="external-link">#13</a>)</p>
@@ -231,7 +244,7 @@
 <p>2 - <strong>Exploratory Page &gt; Stats table: Mode NA for numeric, date, logical and complex var</strong>: the gt table was receiving tha NA value as character and the function sub_missing() does not have effect on those values. Now the Mode is passed as character only if it is not NA. (<a href="https://github.com/lgschuck/spada/issues/12" class="external-link">#12</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-12">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-12"></a></h4>
+<h4 id="improvements-0-1-0-9000-13">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-13"></a></h4>
 <p>1 - <strong>Descriptive Stats</strong> module: now Mode returns NA (not as character) and only paste/collapse values if Mode exists. Inserted sub_missing() in gt_stats for better look and consistency with other views</p>
 <p>2 - <strong>Stats table</strong> module: now Mode returns NA (not as character) and only paste/collapse values if Mode exists</p>
 <p>3 - <strong>Exploratory</strong> module: now the Variable 2 can not be float in Boxplot by Groups, because does not seam reasonable to have an infinite number of groups. Related to (<a href="https://github.com/lgschuck/spada/issues/11" class="external-link">#11</a>)</p>
@@ -244,7 +257,7 @@
 <p>1 - <strong>Filter rows: operators NA and not NA requires a value to apply the filter</strong>: fixed, filter_rows_module.R refactored, now with much more robust check for filters, operators and values (<a href="https://github.com/lgschuck/spada/issues/10" class="external-link">#10</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-13">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-13"></a></h4>
+<h4 id="improvements-0-1-0-9000-14">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-14"></a></h4>
 <p>1 - <strong>New dependencie</strong>: package <a href="https://andrisignorell.github.io/DescTools/" class="external-link">DescTools</a></p>
 <p>2 - <strong>Descriptive Stats</strong> module: now with Mode (DescTools package) for numeri, character and factor variables</p>
 <p>3 - <strong>Filter Rows</strong> module: refactored to check operators and values. New operators: Outlier (and Not Outlier) and Logical (TRUE and FALSE)</p>
@@ -255,7 +268,7 @@
 <div class="section level3">
 <h3 id="id_20250122-0-1-0-9000">2025.01.22-1<a class="anchor" aria-label="anchor" href="#id_20250122-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-14">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-14"></a></h4>
+<h4 id="improvements-0-1-0-9000-15">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-15"></a></h4>
 <p>1 - <strong>Correlation</strong> module: parameters in card sidebar for better use of space</p>
 <p>2 - <strong>df_info</strong> function: new test file and now returns empty data.frame (accepted by gt_info) in case of no columns in the entry data.frame</p>
 <p>3 - <strong>Normality test</strong> module: now Ks and Shapiro-wilk tests have gt table, save button and statiCards</p>
@@ -265,7 +278,7 @@
 <div class="section level3">
 <h3 id="id_20250121-0-1-0-9000">2025.01.21-1<a class="anchor" aria-label="anchor" href="#id_20250121-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-15">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-15"></a></h4>
+<h4 id="improvements-0-1-0-9000-16">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-16"></a></h4>
 <p>1 - <strong>Correlation</strong> module: new layout, new table with test results, help button (help documentation), save table button and statiCards (shnywidgets) with Correlation and p value.</p>
 <p>2 - <strong>Descriptive Stats</strong> module: now with variable selected by default</p>
 <p>3 - <strong>Normality test</strong> module: new Help button in Ks test and Shapiro-Wilk test</p>
@@ -276,7 +289,7 @@
 <div class="section level3">
 <h3 id="id_20250120-0-1-0-9000">2025.01.20-1<a class="anchor" aria-label="anchor" href="#id_20250120-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-16">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-16"></a></h4>
+<h4 id="improvements-0-1-0-9000-17">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-17"></a></h4>
 <p>1 - <strong>Startup page</strong>: now with startup page with shinybusy package (new dependencie)</p>
 <p>2 - <strong>radioGroupButtons</strong>: change some radioButtons (shiny) for radioGroupButtons (shinyWidgets) in data_overview_module and exploratory_module for better look</p>
 <p>3 - <strong>Page config</strong> module: colorPickr now with ‘save’ mode for better reset of values and other visual changes fo better look</p>
@@ -289,7 +302,7 @@
 <div class="section level3">
 <h3 id="id_20250117-0-1-0-9000">2025.01.17-1<a class="anchor" aria-label="anchor" href="#id_20250117-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-17">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-17"></a></h4>
+<h4 id="improvements-0-1-0-9000-18">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-18"></a></h4>
 <p>1 - <strong>New module</strong>: Filter Rows</p>
 <p>2 - <strong>Convert</strong> module: always align right the preview table</p>
 <p>3 - <strong>Descriptive Stats</strong> module: now all options inicially as TRUE</p>
@@ -304,7 +317,7 @@
 <div class="section level3">
 <h3 id="id_20250114-0-1-0-9000">2025.01.14-1<a class="anchor" aria-label="anchor" href="#id_20250114-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-18">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-18"></a></h4>
+<h4 id="improvements-0-1-0-9000-19">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-19"></a></h4>
 <p>1 - <strong>New module</strong>: Normality test</p>
 <p>2 - Module <strong>Correlation</strong> &gt; Scatter Plot now has a button to render plot</p>
 <p>3 - Module <strong>Descriptive Stats</strong> now has a button to render table</p>
@@ -318,7 +331,7 @@
 <p>1 - <strong>Edit &gt; Filter: Factor var - no levels after choose operator</strong>: fixed (inserted req(operator)). Now the levels are shown when a factor var and an operator are selected. (<a href="https://github.com/lgschuck/spada/issues/9" class="external-link">#9</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-19">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-19"></a></h4>
+<h4 id="improvements-0-1-0-9000-20">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-20"></a></h4>
 <p>1 - <strong>testthat</strong>: create structure to run tests (test-fina.R as initial test)</p>
 <p>2 - <strong>New modules</strong>: Order Rows, Convert Cols and Exploratory</p>
 <p>3 - <strong>Correlation</strong> module: insert req in scatter plot</p>
@@ -333,7 +346,7 @@
 <div class="section level3">
 <h3 id="id_20250112-0-1-0-9000">2025.01.12-1<a class="anchor" aria-label="anchor" href="#id_20250112-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-20">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-20"></a></h4>
+<h4 id="improvements-0-1-0-9000-21">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-21"></a></h4>
 <p>1 - <strong>New modules</strong>: Sidebar and Navbar Df Info</p>
 <p>2 - New function <strong>filter_rows</strong> in utils.R</p>
 <p>3 - <strong>New reactives</strong>: df_active_ncol, df_active_resume_data and df$df_trigger (to use for updates)</p>
@@ -359,7 +372,7 @@
 <p>1 - <strong>Analysis &gt; Exploratory: error ins stats table when percentile out of range 0-100</strong>: now test the range and if the input isTruphy (<a href="https://github.com/lgschuck/spada/issues/8" class="external-link">#8</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-21">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-21"></a></h4>
+<h4 id="improvements-0-1-0-9000-22">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-22"></a></h4>
 <p>1 - <strong>Stats table</strong> now is a module</p>
 <p>2 - <strong>new module Correlation</strong></p>
 <p>3 - <strong>new module Descriptive Stats</strong></p>
@@ -377,7 +390,7 @@
 <p>4 - <strong>Edit &gt; Filter: accept blank value</strong>: now the value must have length 1 or bigger (<a href="https://github.com/lgschuck/spada/issues/7" class="external-link">#7</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-22">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-22"></a></h4>
+<h4 id="improvements-0-1-0-9000-23">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-23"></a></h4>
 <p>1 - utils functions</p>
 <p>2 - page_config_module: correction of a typo</p>
 <p>3 - spada function</p>
@@ -393,7 +406,7 @@
 <p>1 - <strong>Data Overview - after Edit only refresh if updat in rows or sample</strong>: fixed with insertion of buttons inside output$pD_over_gt. (<a href="https://github.com/lgschuck/spada/issues/3" class="external-link">#3</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-23">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-23"></a></h4>
+<h4 id="improvements-0-1-0-9000-24">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-24"></a></h4>
 <p>1 - <strong>export_file_module</strong>: separator order now semicolon as default</p>
 <p>2 - new <strong>import_file_module</strong>: allows input csv and RDS files</p>
 <p>3 - <strong>page_config_module</strong>: new visual and size of input file as parameter</p>
@@ -417,7 +430,7 @@
 <p>2 - <strong>Metadata - Error in zeros count</strong>: now df_info function uses suna(x == 0) instead of length(x[x == 0]) (<a href="https://github.com/lgschuck/spada/issues/2" class="external-link">#2</a>)</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-24">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-24"></a></h4>
+<h4 id="improvements-0-1-0-9000-25">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-25"></a></h4>
 <p>1 - utils functions</p>
 <ul><li><p><strong>df_info</strong> now uses <strong>suna</strong> instead of length, this change fix errors and provide gain in speed.</p></li>
 <li><p><strong>deletion of format_color_bar and main_value_box</strong> functions given that they are now in use anymore</p></li>
@@ -435,7 +448,7 @@
 <div class="section level3">
 <h3 id="id_20241230-0-1-0-9000">2024.12.30-1<a class="anchor" aria-label="anchor" href="#id_20241230-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-25">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-25"></a></h4>
+<h4 id="improvements-0-1-0-9000-26">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-26"></a></h4>
 <p>1 - General</p>
 <ul><li><p>Created <strong>zzz.R</strong> and inserted utils::globalVariables for global variables (check note)</p></li>
 <li><p>Value boxes: <strong>resized</strong> to give more space for other elements</p></li>
@@ -455,7 +468,7 @@
 <ul><li>on changing the active dataset the selected variable may not exist in the new acive dataset and an error is raised from data.table (variable does not exist). <strong>Fix with if clause testing for presence of var in the active dataset</strong>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-26">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-26"></a></h4>
+<h4 id="improvements-0-1-0-9000-27">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-27"></a></h4>
 <p>1 - utils functions</p>
 <ul><li>
 <strong>dt_info</strong>: now return number and percentage of zeros for each variable</li>
@@ -480,7 +493,7 @@
 <div class="section level3">
 <h3 id="id_20241229-0-1-0-9000-1">2024.12.29-1<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000-1"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-27">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-27"></a></h4>
+<h4 id="improvements-0-1-0-9000-28">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-28"></a></h4>
 <p>1 - New functionality: <strong>copy dataset</strong> (Data page)</p>
 <p>2 - <strong>Config</strong> page now is a module</p>
 <p>3 - New Some reactives now with bindCache</p>
@@ -490,7 +503,7 @@
 <p>1 - gt cannot show complex in opt_interactive, now convert to char before apply gt function</p>
 </div>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-28">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-28"></a></h4>
+<h4 id="improvements-0-1-0-9000-29">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-29"></a></h4>
 <p>1 - utils functions</p>
 <ul><li><p>change color in value boxes (to <strong>gray</strong>) for better looking</p></li>
 <li><p>number of rows (value box) now with <strong>decimals</strong></p></li>
@@ -505,7 +518,7 @@
 <div class="section level3">
 <h3 id="id_20241227-0-1-0-9000">2024.12.27-1<a class="anchor" aria-label="anchor" href="#id_20241227-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-1-0-9000-29">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-29"></a></h4>
+<h4 id="improvements-0-1-0-9000-30">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-0-9000-30"></a></h4>
 <p>1 - utils functions</p>
 <ul><li><p>df_info: improvement in performance (something like half the time in big datasets - 1e6 rows)</p></li>
 <li><p>new function: gt_info to generate metadata with gt package</p></li>

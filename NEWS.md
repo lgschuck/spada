@@ -8,21 +8,39 @@ editor_options:
 
 ## 0.1.0 Milestone
 
-1 - Allow filter multiple conditions
+1 - Functionalities to detect and treat duplicates
 
-2 - Allow create and calculate variables
+2 - Functionalities to detect and treat outliers
 
-3 - Functionalities to detect and treat duplicates
+3 - Inference: t test
 
-4 - Functionalities to detect and treat outliers
+4 - Models: linear model, logistic regression, Kmeans, Trees
 
-5 - Inference: t test
+## 2025.03.04-1
 
-6 - Models: linear model, logistic regression, Kmeans, Trees
+Highlights: new **freehand filter** (Filter Rows module), **freehand code to calculate** variable(Calculate Cols module) and new dependencie (**rlang package**).
+
+### Improvements
+
+1 - **Calculate Cols** module: now allows to calculate with freehand code
+
+2 - **Data highlights** module: inserted Values in Most unique and valid values 
+
+3 - **Descriptive Stats** module: fixe req of gt_stats and align gt columns
+
+4 - **Exploratory, Export file, Filter Rows, Import file, Rename Cols** modules: change in Conditional panels (now with ns instead of sprintf)
+
+5 - **Filter Rows** module: now allows filter with freehand code and
+
+6 - **spada.R**: new dependencie (rlang package)
+
+7 - **spada_ui.R**: change Calculate page to receive freehand Calculate Cols
+
+8 - **utils.R**: new **safe_env function** to create env to evaluate freehand code, new test_data function and new operations to insert in safe_env function
 
 ## 2025.02.25-1
 
-Highlights: 
+Highlights: **Calculate cols now with groupby** and Rename cols allows to **rename multiple variables** together
 
 ### Improvements
 

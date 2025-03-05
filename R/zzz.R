@@ -22,6 +22,8 @@ utils::globalVariables(
     'var1',
     'measure',
     'new_var',
-    'fun'
+    'fun',
+    'Measures',
+    'groupby'
     )
   )

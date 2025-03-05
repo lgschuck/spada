@@ -23,7 +23,7 @@ rename_cols_ui <- function(id) {
                                  'Remove Part' = 'remove')),
 
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'prefix_suffix'", ns('rename_method')),
+          condition = "input.rename_method == 'prefix_suffix'", ns = ns,
           textInput(ns('txt_new_name_multi'), 'New name part'),
           radioButtons(ns('part_position'), 'Part Position',
                        choices = c('Prefix' = 'prefix', 'Suffix' = 'suffix')),
@@ -32,7 +32,7 @@ rename_cols_ui <- function(id) {
         ),
 
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'function'", ns('rename_method')),
+          condition = "input.rename_method == 'function'", ns = ns,
           selectInput(ns('name_function'), 'Function to Apply',
                       choices = c('Upper Case' = 'toupper',
                                   'Lower Case' = 'tolower',
@@ -40,13 +40,13 @@ rename_cols_ui <- function(id) {
         ),
 
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'replace'", ns('rename_method')),
+          condition = "input.rename_method == 'replace'", ns = ns,
           textInput(ns('txt_replace_part'), 'Part to Replace'),
           textInput(ns('txt_replace_new_part'), 'New Part'),
         ),
 
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'remove'", ns('rename_method')),
+          condition = "input.rename_method == 'remove'", ns = ns,
           textInput(ns('txt_remove_part'), 'Part to Remove')
         ),
 

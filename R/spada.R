@@ -38,6 +38,8 @@
 #'
 #' @importFrom haven as_factor is.labelled read_sav write_sav
 #'
+#' @importFrom rlang parse_expr
+#'
 #' @importFrom sass as_sass
 #'
 #' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton

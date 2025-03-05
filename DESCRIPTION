@@ -19,6 +19,7 @@ Imports:
   dplyr (>= 1.1.4),
   gt (>= 0.11.1),
   haven (>= 2.5.4),
+  rlang (>= 1.1.4),
   sass (>= 0.4.9),
   shiny (>= 1.9.1),
   shinybusy (>= 0.3.3),

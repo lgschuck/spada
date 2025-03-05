@@ -93,6 +93,92 @@ complex_funs <- c(
   'Is Complex' = 'is.complex'
 )
 
+# basic operations ---------------------------------------------------------
+
+basic_operations <- c(
+  '+', '-', '+', '-', '/', '*', '^',
+  '==', '!=', '!', '>', '>=', '<', '<=',
+  '&', '|',
+  '(', '[', '<-', ':=', '$',
+  '%in%', 'is.na', 'is.null', 'is.nan',
+  ':', 'T', 'F',
+  'list', 'try'
+)
+
+# allowed operations ------------------------------------------------------
+
+allowed_operations <- c(
+  basic_operations,
+  math_funs,
+  char_funs,
+  date_funs,
+  factor_funs,
+  logical_funs
+)
+
+# dangerous operations --------------------------------------------------------
+dangerous_operations <- c(
+  # R base - code
+  'assign', 'attach',
+  'do.call',
+  'eval', 'eval.parent', 'evalq',
+  'get', 'globalenv', 'new.env', 'parent.env', 'parse',
+  'remove', 'rm', 'setwd', 'Sys.setenv',
+
+  # R base - files system
+  'dir.create', 'dir.exists', 'dir.remove',
+  'file.copy', 'file.create', 'file.remove', 'file.rename',
+  'load', 'save', 'saveRDS', 'unlink',
+
+  # R base - network
+  'curl', 'download.file', 'httr::DELETE', 'httr::GET', 'httr::POST', 'httr::PUT',
+  'RCurl::getURL', 'RCurl::postForm', 'socketConnection', 'url',
+
+  # R base - IO
+  'read.csv', 'readLines', 'read.table', 'readRDS',
+  'write.csv', 'writeLines', 'write.table',
+
+  # R base system
+  'shell', 'shell.exec', 'system', 'system2', 'gc',
+
+  # data.table
+  ':=',
+  'set', 'setattr', 'setcolorder', 'setnames', 'setDT',
+  'setDF', 'setkey', 'setorder'
+)
+
+# safe env function -------------------------------------------------------
+
+safe_env <- function(operations = NULL){
+
+  e <- new.env(parent = emptyenv())
+
+  lapply(operations, function(x) {
+    assign(x, get(x), envir = e)
+  })
+
+  return(e)
+}
+
+# test dataset ------------------------------------------------------------
+
+test_dataset <- function(n = 1e3){
+  data.frame(
+    integer_var = rep(sample(1:100, n, replace = T)),
+    numeric_var = rnorm(n),
+    char_var = rep(sample(letters, n, replace = T)),
+    char_long_var = rep(paste(letters, collapse = ''), n),
+    char_colors_var = rep(sample(colors(), n, replace = T)),
+    date_var = Sys.Date() + rep(sample(-49:50, n, replace = T)),
+    factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n, replace = T))),
+    num_nas_var = c(rep(NA, round(n/2)), rnorm(n - round(n/2))),
+    int_nas_var = c(rep(NA, round(n/2)), sample(1:100, n - round(n/2), replace = T)),
+    logical_var = rep(sample(c(TRUE, FALSE), n, replace = T)),
+    complex_var = rep(sample(1:100, n, replace = T) |> as.complex())
+  )
+
+}
+
 # list of filters -------------------------------------------------------------
 equal_operators <- c('== (Equal)' = '==',
                      '!= (Not Equal)' = '!=')

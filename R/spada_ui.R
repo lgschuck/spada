@@ -102,11 +102,8 @@ spada_ui <- function(){
                    ),
                    nav_panel(
                      'Calculate',
-                     layout_column_wrap(
-                       calculate_cols_ui('pE_calculate_cols'),
-                       card()
-                     )
-                   ),
+                     calculate_cols_ui('pE_calculate_cols')
+                   )
                  )
                )
              ),

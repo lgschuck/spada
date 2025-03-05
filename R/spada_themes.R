@@ -35,7 +35,6 @@ theme_basic_rules <- as_sass(
          startup_bg = main_color
     ),
     "
-
       .startup-screen {
         background-color: $startup_bg;
         width: 500000px;

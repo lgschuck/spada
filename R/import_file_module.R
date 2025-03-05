@@ -12,7 +12,7 @@ import_file_ui <- function(id) {
           column(3, fileInput(ns('file'), 'Choose a File')),
         ),
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'csv'", ns('radio_file_ext')),
+          condition = "input.radio_file_ext == 'csv'", ns = ns,
           card(
             card_header('Csv Parameters', class = 'mini-header'),
             card_body(
@@ -25,7 +25,7 @@ import_file_ui <- function(id) {
                 radioButtons(ns('csv_lines'), 'Lines to read',
                              choices = c('All' = 'all', 'Specific (N)' = 'some'), inline = TRUE),
                 conditionalPanel(
-                  condition = sprintf("input['%s'] == 'some'", ns('csv_lines')),
+                  condition = "input.csv_lines == 'some'", ns = ns,
                   numericInput(ns('csv_n_lines'), NULL, width = '150px',
                                value = 100, min = 1, step = 100) |>
                     ttip('You may use Scientific Notation, e.g. 1e6')
@@ -36,7 +36,7 @@ import_file_ui <- function(id) {
           )
         ),
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'sav'", ns('radio_file_ext')),
+          condition = "input.radio_file_ext == 'sav'", ns = ns,
           card(
             card_header('SAV Parameters', class = 'mini-header'),
             card_body(
@@ -45,7 +45,7 @@ import_file_ui <- function(id) {
                 radioButtons(ns('sav_lines'), 'Lines to read',
                              choices = c('All' = 'all', 'Specific (N)' = 'some'), inline = TRUE),
                 conditionalPanel(
-                  condition = sprintf("input['%s'] == 'some'", ns('sav_lines')),
+                  condition = "input.sav_lines == 'some'", ns = ns,
                   numericInput(ns('sav_n_lines'), NULL, width = '150px',
                                value = 100, min = 1, step = 100) |>
                     ttip('You may use Scientific Notation, e.g. 1e6')

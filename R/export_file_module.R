@@ -10,7 +10,7 @@ export_file_ui <- function(id) {
                                  c('csv', 'RDS', 'sav'), inline = T))
         ),
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'csv'", ns('radio_format')),
+          condition = "input.radio_format == 'csv'", ns = ns,
           card(
             card_header('Csv Parameters', class = 'mini-header'),
             card_body(
@@ -30,7 +30,7 @@ export_file_ui <- function(id) {
           )
         ),
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'RDS'", ns('radio_format')),
+          condition = "input.radio_format == 'RDS'", ns = ns,
           card(
             card_header('RDS Parameters', class = 'mini-header'),
             card_body(
@@ -39,7 +39,7 @@ export_file_ui <- function(id) {
           )
         ),
         conditionalPanel(
-          condition = sprintf("input['%s'] == 'sav'", ns('radio_format')),
+          condition = "input.radio_format == 'sav'", ns = ns,
           card(
             card_header('Sav Parameters', class = 'mini-header'),
             card_body(

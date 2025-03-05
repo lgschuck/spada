@@ -38,14 +38,14 @@ data_highlights_ui <- function(id) {
         theme = 'bg-gradient-blue-purple'
       ),
       value_box(
-        title = 'Most valid',
+        title = 'Most valid values',
         value = textOutput(ns('var_most_valid')),
         showcase = bs_icon('list-check'),
         theme = 'bg-gradient-indigo-yellow',
         p('Number of valid:', textOutput(ns('var_most_valid_n_valid'), inline = T))
       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
       value_box(
-        title = 'Most unique',
+        title = 'Most unique values',
         value = textOutput(ns('var_most_unique')),
         showcase = bs_icon('fingerprint'),
         theme = 'bg-gradient-indigo-green',

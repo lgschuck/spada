@@ -39,7 +39,7 @@ card(
                          'Barplot' = 'barplot'), size = 'sm', individual = T)),
               column(2, numericInput(ns('var_percentile'), 'Percentile', 50, 0, 100, 5)),
               column(2, conditionalPanel(
-                condition = sprintf("input['%s'] == 'hist'", ns('radio_dist_plot')),
+                condition = "input.radio_dist_plot == 'hist'", ns = ns,
                 numericInput(ns('bins'), 'Bins', 10, 5, step = 10))
               ),
             ),

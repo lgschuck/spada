@@ -181,8 +181,10 @@ descriptive_stats_server <- function(id, df) {
     }) |> bindEvent(input$btn_stats)
 
     output$gt_stats <- render_gt({
-      req(gt_stats)
+      req(gt_stats())
       gt_stats() |>
+        cols_align(align = 'right') |>
+        cols_align('left', Measures) |>
         sub_missing(missing_text = '-') |>
         sub_values(values = 'NA', replacement = '-') |>
         sub_values(values = 'Gmean', replacement = 'Geometric Mean') |>
