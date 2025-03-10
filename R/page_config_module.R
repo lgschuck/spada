@@ -68,7 +68,7 @@ page_config_ui <- function(id) {
 # server ----------------------------------------------------------------------
 page_config_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     plot_values <- rnorm(1e3)
     palette <- reactive({

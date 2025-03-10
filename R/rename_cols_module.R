@@ -59,7 +59,7 @@ rename_cols_ui <- function(id) {
 # server ----------------------------------------------------------------------
 rename_cols_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     # Reactive to get column names
     df_names <- reactive(input_df() |> names())

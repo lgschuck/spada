@@ -65,8 +65,9 @@ filter_rows_ui <- function(id) {
           width = '800px',
           height = '200px',
           resize = 'both'
-        )
-      ),
+        ),
+        column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations'))
+      )
     ),
     card_footer(btn_task(
       ns('btn_filter'), 'Apply filters', icon('check')
@@ -77,7 +78,7 @@ filter_rows_ui <- function(id) {
 # server ----------------------------------------------------------------------
 filter_rows_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     # Store active dataset
     df <- reactiveValues()
@@ -421,8 +422,7 @@ filter_rows_server <- function(id, input_df) {
 
           e1$temp <- eval(expression(
 
-            try(temp[parsed_code, ,
-                             env = list(parsed_code = parsed_code)],
+            try(temp[parsed_code, , env = list(parsed_code = parsed_code)],
                 silent = TRUE)
             ),
             envir = e1
@@ -432,6 +432,10 @@ filter_rows_server <- function(id, input_df) {
             return(msg_error('Error in expression. Check code'))
           } else{
             temp <- copy(e1$temp)
+            rm(e1)
+            msg('Filter rows: OK')
+
+            updateTextAreaInput(session, 'txt_code_input', value = '')
           }
 
         }
@@ -439,9 +443,13 @@ filter_rows_server <- function(id, input_df) {
 
       df$df_active <- copy(temp)
       rm(temp)
-      rm(e1)
 
     }) |> bindEvent(input$btn_filter)
+
+    # show allowed operations -------------------------------------------------
+    observe({
+      show_allowed_op()
+    }) |> bindEvent(input$btn_allowed_operations)
 
     return(list(df_filter_rows = reactive(df$df_active)))
   })

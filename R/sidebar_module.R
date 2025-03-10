@@ -18,7 +18,7 @@ sidebar_ui <- function(id) {
 # server ----------------------------------------------------------------------
 sidebar_server <- function(id, input_metadata, app_session) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+  	ns <- session$ns
 
     output$df_info <- renderUI({
       tagList(

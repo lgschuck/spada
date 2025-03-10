@@ -48,7 +48,7 @@ descriptive_stats_ui <- function(id) {
 # server ----------------------------------------------------------------------
 descriptive_stats_server <- function(id, df) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     var_analysis <- reactive({
       df() |> names()

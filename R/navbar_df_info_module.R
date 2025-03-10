@@ -8,7 +8,7 @@ navbar_df_info_ui <- function(id) {
 # server ----------------------------------------------------------------------
 navbar_df_info_server <- function(id, input_metadata, app_session) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     output$navbar_df_info <- renderUI({
       tagList(

@@ -89,7 +89,7 @@ z_test_ui <- function(id) {
 # server ----------------------------------------------------------------------
 z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     ztest <- reactiveValues(results = NULL)
 

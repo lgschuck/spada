@@ -6,7 +6,7 @@ math_funs <- c(
   c('Mean' = 'mean',
     'Geometric Mean' = 'Gmean',
     'Harmonic Mean' = 'Hmean',
-    'Mode' = 'Mode',
+    # 'Mode' = 'Mode',
     'Standard Deviation' = 'sd',
     'Variance' = 'var',
     'Min' = 'mina',
@@ -32,6 +32,7 @@ math_funs <- c(
     'Trunc' = 'trunc',
     'Signif' = 'signif',
     'Round' = 'round',
+    'Abs' = 'abs',
     'Sine' = 'sin',
     'Cosine' = 'cos',
     'Tangent' = 'tan',
@@ -96,13 +97,29 @@ complex_funs <- c(
 # basic operations ---------------------------------------------------------
 
 basic_operations <- c(
+  #base package
   '+', '-', '+', '-', '/', '*', '^',
   '==', '!=', '!', '>', '>=', '<', '<=',
-  '&', '|',
-  '(', '[', '<-', ':=', '$',
-  '%in%', 'is.na', 'is.null', 'is.nan',
-  ':', 'T', 'F',
-  'list', 'try'
+  '&', '|', 'xor',
+  '(', '[', '<-', '$',
+  '%in%', 'is.na', 'is.null', 'is.nan', 'na.omit',
+  '::', ':', 'T', 'F',
+  'list', 'try',
+  'paste', 'paste0', 'substr',
+  'isTRUE', 'isFALSE',
+  'c',
+  'as.Date', 'as.POSIXct', 'as.POSIXlt',
+
+  # DescTools package
+  'Outlier',
+  # data.table package
+  '%notin%', 'between', '%between%',
+
+  #stats package
+  'quantile',
+
+  #spada ackage
+  'fina', 'lana', 'mana', 'mina', 'suna'
 )
 
 # allowed operations ------------------------------------------------------
@@ -114,7 +131,14 @@ allowed_operations <- c(
   date_funs,
   factor_funs,
   logical_funs
-)
+) |> unique() |> sort()
+
+# allowed operations function ------------------------------------------------------
+show_allowed_op <- function(){
+  showModal(modalDialog(title = "Allowed Operations", HTML(
+    paste(allowed_operations, collapse = "<br/>")
+  ), easyClose = TRUE))
+}
 
 # dangerous operations --------------------------------------------------------
 dangerous_operations <- c(

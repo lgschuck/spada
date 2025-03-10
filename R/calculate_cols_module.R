@@ -9,23 +9,23 @@ calculate_cols_ui <- function(id) {
       card_body(
         uiOutput(ns('ui_var_sel')),
         selectInput(ns('fun'), 'Choose a function', character(0)),
-        textInput(ns('txt_new_name'), 'New variable name'),
+        textInput(ns('txt_new_name_fun'), 'New variable name'),
         uiOutput(ns('ui_var_groupby_fun'))
       ),
       card_footer(btn_task(
-        ns('btn_apply_fun'), 'Apply', icon('check')
+        ns('btn_apply_fun'), 'Apply Function', icon('check')
       ))
     ),
     card(
       card_header('Freehand', class = 'mini-header'),
       card_body(
-        textInput(ns('new_name_free'), 'New var name', placeholder = 'new_var'),
-        textAreaInput(ns('txt_code_input'), 'Input code', width = '800px',
-                      height = '200px'),
+        textInput(ns('txt_new_name_free'), 'New var name', placeholder = 'new_var'),
+        textAreaInput(ns('txt_code_input'), 'Input code', width = '800px', height = '200px'),
+        column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations')),
         uiOutput(ns('ui_var_groupby_free'))
       ),
       card_footer(btn_task(
-        ns('btn_apply_free'), 'Apply', icon('check')
+        ns('btn_apply_free'), 'Run Code', icon('gears')
       ))
     )
   )
@@ -34,7 +34,7 @@ calculate_cols_ui <- function(id) {
 # server ----------------------------------------------------------------------
 calculate_cols_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     df <- reactiveValues()
     observe({
@@ -59,7 +59,7 @@ calculate_cols_server <- function(id, input_df) {
     # suggest name for new variable -------------------------------------------
     observe({
       req(input$vars_sel, input$fun)
-      updateTextInput(session, 'txt_new_name',
+      updateTextInput(session, 'txt_new_name_fun',
                       value = paste0(input$vars_sel, '_', input$fun))
     }) |> bindEvent(input$vars_sel, input$fun)
 
@@ -91,17 +91,17 @@ calculate_cols_server <- function(id, input_df) {
 
     # apply function events ---------------------------------------------------
     observe({
-      req(input$vars_sel, input$txt_new_name, df$df_active, input$fun)
+      req(input$vars_sel, input$txt_new_name_fun, df$df_active, input$fun)
       if (input$vars_sel |> length() == 0) {
         msg('Select at least one variable')
       } else {
-        if (is_valid_name(input$txt_new_name) &&
-            input$txt_new_name %notin% df_names()) {
+        if (is_valid_name(input$txt_new_name_fun) &&
+            input$txt_new_name_fun %notin% df_names()) {
 
           temp <- copy(df$df_active)
 
           temp[, new_var := fun(var1), by = groupby, env = list(
-            new_var = input$txt_new_name,
+            new_var = input$txt_new_name_fun,
             fun = input$fun,
             var1 = input$vars_sel,
             groupby = input$vars_groupby_fun |> as.list()
@@ -111,6 +111,8 @@ calculate_cols_server <- function(id, input_df) {
           rm(temp)
 
           msg('Apply function: OK')
+
+          updateTextInput(session, 'txt_new_name_fun', value = '')
 
         } else {
           msg_error('New name is not valid or already in use')
@@ -133,8 +135,8 @@ calculate_cols_server <- function(id, input_df) {
     # calculate var -----------------------------------------------------------
     observe({
 
-      if(is_valid_name(input$new_name_free) &&
-         input$new_name_free %notin% df_names()){
+      if(is_valid_name(input$txt_new_name_free) &&
+         input$txt_new_name_free %notin% df_names()){
 
         # parse code ----------------------------------------------------------
         parsed_code <- try(parse_expr(input$txt_code_input), silent = T)
@@ -162,7 +164,7 @@ calculate_cols_server <- function(id, input_df) {
           e1$temp <- copy(df$df_active)
 
           # start new variable
-          e1$new_var_name <- input$new_name_free
+          e1$new_var_name <- input$txt_new_name_free
           e1$vars_groupby <- input$vars_groupby_free |> as.list()
           e1$parsed_code <- parsed_code
 
@@ -183,7 +185,14 @@ calculate_cols_server <- function(id, input_df) {
           } else{
 
             df$df_active <- copy(e1$temp)
+            msg('Calculate new var: OK')
             rm(e1)
+
+            updateTextInput(session, 'txt_new_name_free',
+                            value = '', placeholder = 'new_var')
+
+            updateTextAreaInput(session, 'txt_code_input', value = '')
+
           }
         }
 
@@ -193,6 +202,11 @@ calculate_cols_server <- function(id, input_df) {
 
     }) |> bindEvent(input$btn_apply_free)
 
+
+    # show allowed operations -------------------------------------------------
+    observe({
+      show_allowed_op()
+    }) |> bindEvent(input$btn_allowed_operations)
 
     return(list(df_calculate_cols = reactive(df$df_active)))
   })

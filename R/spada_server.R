@@ -248,6 +248,9 @@ spada_server <- function(datasets){
     color_fill <- reactive(mod_pC$palette()[['fill']])
     color_line <- reactive(mod_pC$palette()[['line']])
 
+    # about events ------------------------------------------------------------
+    about_spada_server('about_spada')
+
     # exit app event ----------------------------------------------------------
     session$onSessionEnded(stopApp)
     observe({

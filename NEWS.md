@@ -14,7 +14,29 @@ editor_options:
 
 3 - Inference: t test
 
-4 - Models: linear model, logistic regression, Kmeans, Trees
+4 - Models: linear model, logistic regression
+
+5 - Tests: create test for the app
+
+## 2025.03.10-1
+
+Highlights: new **About** module and fix usage of ns object inside modules
+
+### Improvements
+
+1 - **About** module: shows (for now) the DESCRIPTION file of Spada package and the session info 
+
+2 - **Calculate** modules: new names for inputs and new button to show allowed operations
+
+3 - **Calculate and Filter** modules: new button to show allowed operations
+
+4 - **Server side** of modules: now ns receives session$ns instead of NS(id). See [Modularizing Shiny app code](https://shiny.posit.co/r/articles/improve/modules/)
+
+5 - **spada_ui.R**: pills now in alphabetical order (Edit page) and new about module
+
+6 - **spada_server.R**: new about module
+
+7 - **utils.R**: some new functions in allowed operations and remove of Mode function (DescTools) because returns len 2 causing error
 
 ## 2025.03.04-1
 

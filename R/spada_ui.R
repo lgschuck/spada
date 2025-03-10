@@ -82,13 +82,17 @@ spada_ui <- function(){
                layout_columns(
                  navset_card_pill(
                    nav_panel(
+                     'Calculate',
+                     calculate_cols_ui('pE_calculate_cols')
+                   ),
+                   nav_panel('Convert', convert_cols_ui('pE_convert_cols')),
+                   nav_panel(
                      'Filter',
                      layout_column_wrap(
                        filter_rows_ui('pE_filter_rows'),
                        select_cols_ui('pE_filter_sel_cols'),
-                     ),
+                     )
                    ),
-                   nav_panel('Convert', convert_cols_ui('pE_convert_cols')),
                    nav_panel(
                      'Order',
                      layout_column_wrap(
@@ -96,14 +100,7 @@ spada_ui <- function(){
                        order_cols_ui('pE_order_cols')
                      )
                    ),
-                   nav_panel(
-                     'Rename',
-                     rename_cols_ui('pE_rename_cols')
-                   ),
-                   nav_panel(
-                     'Calculate',
-                     calculate_cols_ui('pE_calculate_cols')
-                   )
+                   nav_panel('Rename', rename_cols_ui('pE_rename_cols')),
                  )
                )
              ),
@@ -153,6 +150,7 @@ spada_ui <- function(){
             target = '_blank'
           )
         ),
+        about_spada_ui('about_spada'),
         nav_panel(
           value = 'exit',
           title = 'Exit',

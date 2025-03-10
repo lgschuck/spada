@@ -46,7 +46,7 @@ convert_cols_ui <- function(id) {
 # server ----------------------------------------------------------------------
 convert_cols_server <- function(id, input_df) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     df_names <- reactive(input_df() |> names())
 

@@ -113,7 +113,7 @@ card(
 exploratory_server <- function(id, input_df, df_metadata,
                                color_fill, color_line) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     df <- reactiveValues()
     observe({

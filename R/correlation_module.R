@@ -59,7 +59,7 @@ correlation_ui <- function(id) {
 # server ----------------------------------------------------------------------
 correlation_server <- function(id, df, df_metadata, color_fill) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+	  ns <- session$ns
 
     cor_test <- reactiveValues(results = NULL)
 
