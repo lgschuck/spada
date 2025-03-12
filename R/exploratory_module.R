@@ -327,8 +327,8 @@ exploratory_server <- function(id, input_df, df_metadata,
       linear_model$model <- NULL
       linear_model$x <- NULL
       linear_model$y <- NULL
-      linear_model$x_name <-
-        linear_model$y_name <- ''
+      linear_model$x_name <- ''
+      linear_model$y_name <- ''
       msg('Lm model cleared.')
     }) |> bindEvent(input$btn_scatter_lm_clear)
 

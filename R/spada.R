@@ -38,6 +38,8 @@
 #'
 #' @importFrom haven as_factor is.labelled read_sav write_sav
 #'
+#' @importFrom htmltools save_html
+#'
 #' @importFrom rlang parse_expr
 #'
 #' @importFrom sass as_sass
@@ -52,7 +54,7 @@
 #'
 #' @importFrom tools toTitleCase
 #'
-#' @importFrom utils object.size head
+#' @importFrom utils object.size head packageDescription sessionInfo
 
 spada <- function(...) {
   datasets <- list(...)

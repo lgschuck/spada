@@ -58,7 +58,11 @@ z_test_ui <- function(id) {
                     )
                   ),
                   gt_output(ns('ztest_gt')),
-                  uiOutput(ns('conditional_save_gt'))
+                  div(
+                    uiOutput(ns('conditional_add_output')),
+                    br(), br(),
+                    uiOutput(ns('conditional_save_gt'))
+                  ),
                 )
               )
             )
@@ -87,9 +91,17 @@ z_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
+z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  # outupt objects ----------------------------------------------------------
+	  output_list <- reactiveValues(elements = NULL)
+
+	  observe({
+	    output_list$elements <- output_report()
+	  })
+
 
     ztest <- reactiveValues(results = NULL)
 
@@ -174,7 +186,7 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       ztest$results |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results')
+        cols_label('values' = 'Values', 'results' = 'Results')
     })
 
     output$ztest_gt <- render_gt({
@@ -189,6 +201,22 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       req(ztest_results_gt())
       save_gt_ui(ns('ztest_save_gt'))
     })
+
+    # insert to output --------------------------------------------------------
+    mod_insert_output <- insert_output_server('ztest_insert_output', ztest_results_gt)
+
+    output$conditional_add_output <- renderUI({
+      req(ztest_results_gt())
+      insert_output_ui(ns('ztest_insert_output'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+
+    }) |> bindEvent(mod_insert_output$output_element())
 
     # test plot ---------------------------------------------------------------
     output$conditional_plot <- renderUI({
@@ -269,6 +297,9 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line) {
             add = TRUE)
     }) |> bindCache(var(), color_fill(), input$bins) |>
       bindEvent(input$btn_hist)
+
+    # return values -----------------------------------------------------------
+    return(list(output_file = reactive(output_list$elements)))
 
   })
 }

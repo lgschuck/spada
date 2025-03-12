@@ -138,6 +138,24 @@ spada_ui <- function(){
                   icon = icon('z'),
                   z_test_ui('pA_z_test')),
       ), # end of analysis menu
+
+      # output ----------------------------------------------------------------
+      nav_panel(
+        title = 'Output',
+        icon = icon('file-lines'),
+        card(
+          full_screen = T,
+          card_body(
+            class = 'big-card',
+            navset_card_pill(
+              nav_panel('Output',
+                        output_ui('pO_output')
+              )
+            )
+          )
+        )
+      ),
+
       # menu options ----------------------------------------------------------
       nav_menu(
         title = 'Options',

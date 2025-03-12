@@ -1,4 +1,23 @@
 
+# card to insert in output ----------------------------------------------------
+report_card <- function(title = 'Spada - Output', annotation = NULL,
+                        content = NULL){
+  div(
+    div(
+      style = paste0("border: 2px solid", main_color, "; border-radius: 8px; padding: 16px;
+             box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);"),
+      h2(title, style = paste0("font-size: 1.5rem; margin-bottom: 12px; color:", main_color ,";")),
+      p(annotation),
+      content
+    ),
+    br()
+  )
+}
+
+# generate element id for outputs -----------------------------------------
+gen_element_id <- function(){
+  paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
+}
 
 # math functions ----------------------------------------------------------
 
@@ -118,7 +137,7 @@ basic_operations <- c(
   #stats package
   'quantile',
 
-  #spada ackage
+  #spada package
   'fina', 'lana', 'mana', 'mina', 'suna'
 )
 

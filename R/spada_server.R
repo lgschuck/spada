@@ -230,18 +230,53 @@ spada_server <- function(datasets){
                        df_metadata, color_fill, color_line)
 
     # descriptive stats -------------------------------------------------------
-    descriptive_stats_server('pA_desc_stats', reactive(df$df_active))
+    mod_descriptive_stats <- descriptive_stats_server('pA_desc_stats',
+                                                      reactive(df$df_active),
+                                                      reactive(output_report$elements))
+
+    observe({
+      req(mod_descriptive_stats$output_file())
+      output_report$elements <- mod_descriptive_stats$output_file()
+    }) |> bindEvent(mod_descriptive_stats$output_file())
 
     # correlation -------------------------------------------------------------
-    correlation_server('pA_correlation', reactive(df$df_active), df_metadata, color_fill)
+    mod_correlation_test <- correlation_server('pA_correlation',
+                                               reactive(df$df_active),
+                                               df_metadata,
+                                               color_fill,
+                                               reactive(output_report$elements))
+
+    observe({
+      req(mod_correlation_test$output_file())
+      output_report$elements <- mod_correlation_test$output_file()
+    }) |> bindEvent(mod_correlation_test$output_file())
 
     # normality test ----------------------------------------------------------
-    normality_test_server('pA_normality_test', reactive(df$df_active), df_metadata, color_fill,
+    normality_test_server('pA_normality_test',
+                          reactive(df$df_active),
+                          df_metadata,
+                          color_fill,
                           color_line)
 
     # normality test ----------------------------------------------------------
-    z_test_server('pA_z_test', reactive(df$df_active),
-                  df_metadata, color_fill, color_line)
+    mod_ztest <- z_test_server('pA_z_test', reactive(df$df_active),
+                               df_metadata, color_fill, color_line,
+                               reactive(output_report$elements))
+
+    observe({
+      req(mod_ztest$output_file())
+      output_report$elements <- mod_ztest$output_file()
+    }) |> bindEvent(mod_ztest$output_file())
+
+    # output events -----------------------------------------------------------
+    output_report <- reactiveValues(elements = list(report_card()))
+
+    mod_output <- output_server('pO_output', reactive(output_report$elements))
+
+    observe({
+      req(mod_output$output_file())
+      output_report$elements <- mod_output$output_file()
+    }) |> bindEvent(mod_output$output_file())
 
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')

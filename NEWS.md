@@ -16,7 +16,27 @@ editor_options:
 
 4 - Models: linear model, logistic regression
 
-5 - Tests: create test for the app
+5 - Tests: create tests for the app
+
+## 2025.03.12-1
+
+Highlights: new **Output** page with options to export all output elements to html
+
+### Improvements
+
+1 - New **Output and Insert Output** modules: modules for output generation
+
+2 - **Correlation, Descriptive Stats and Z Test** modules: now allow to add elements to output page
+
+3 - **Correlation** module: deleted output$cor_test_results (not used anymore)
+
+4 - **Descriptive Stats** module: now gt formatting passed to reactive instead to render function, allowing send the exact same gt to Output page
+
+5 - **spada_serverR**: adjust in modules that return output elements
+
+6 - **spada_ui.R**: new Output page
+
+7 - **utils.R**: new functions report_card and gen_element_id to Output modules
 
 ## 2025.03.10-1
 

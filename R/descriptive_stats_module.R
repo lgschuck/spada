@@ -36,7 +36,11 @@ descriptive_stats_ui <- function(id) {
           card(full_screen = T,
             card_body(
               gt_output(ns('gt_stats')),
-              uiOutput(ns('conditional_save_gt'))
+              layout_columns(
+                col_widths = c(2, 2),
+                uiOutput(ns('conditional_add_output')),
+                uiOutput(ns('conditional_save_gt'))
+              ),
             )
           )
         )
@@ -46,9 +50,17 @@ descriptive_stats_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-descriptive_stats_server <- function(id, df) {
+descriptive_stats_server <- function(id, df, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  # outupt objects ----------------------------------------------------------
+	  output_list <- reactiveValues(elements = NULL)
+
+	  observe({
+	    output_list$elements <- output_report()
+	  })
+
 
     var_analysis <- reactive({
       df() |> names()
@@ -177,18 +189,18 @@ descriptive_stats_server <- function(id, df) {
         Measures = names(desc_stats()),
         do.call(rbind, desc_stats())
       ) |>
-        gt()
-    }) |> bindEvent(input$btn_stats)
-
-    output$gt_stats <- render_gt({
-      req(gt_stats())
-      gt_stats() |>
+        gt() |>
         cols_align(align = 'right') |>
         cols_align('left', Measures) |>
         sub_missing(missing_text = '-') |>
         sub_values(values = 'NA', replacement = '-') |>
         sub_values(values = 'Gmean', replacement = 'Geometric Mean') |>
-        sub_values(values = 'Hmean', replacement = 'Harmonic Mean') |>
+        sub_values(values = 'Hmean', replacement = 'Harmonic Mean')
+    }) |> bindEvent(input$btn_stats)
+
+    output$gt_stats <- render_gt({
+      req(gt_stats())
+      gt_stats() |>
         opt_interactive(page_size_default = 25)
     })
 
@@ -199,6 +211,25 @@ descriptive_stats_server <- function(id, df) {
       req(gt_stats())
       save_gt_ui(ns('pA_desciptive_stats_save_gt'))
     })
+
+    # insert to output --------------------------------------------------------
+    mod_insert_output <- insert_output_server('desc_stats_insert_output', gt_stats)
+
+    output$conditional_add_output <- renderUI({
+      req(gt_stats())
+      insert_output_ui(ns('desc_stats_insert_output'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+
+    }) |> bindEvent(mod_insert_output$output_element())
+
+    # return values -----------------------------------------------------------
+    return(list(output_file = reactive(output_list$elements)))
 
   })
 }

@@ -36,7 +36,11 @@ correlation_ui <- function(id) {
                 col_widths = c(3, 7, 2),
                 uiOutput(ns('conditional_staticard_cor')),
                 gt_output(ns('cor_gt')),
-                uiOutput(ns('conditional_save_gt'))
+                div(
+                  uiOutput(ns('conditional_add_output')),
+                  br(), br(),
+                  uiOutput(ns('conditional_save_gt'))
+                ),
               )
             )
           )
@@ -57,9 +61,17 @@ correlation_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-correlation_server <- function(id, df, df_metadata, color_fill) {
+correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+    # outupt objects ----------------------------------------------------------
+	  output_list <- reactiveValues(elements = NULL)
+
+	  observe({
+	    output_list$elements <- output_report()
+	  })
+
 
     cor_test <- reactiveValues(results = NULL)
 
@@ -82,6 +94,7 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       )
     })
 
+    # run test events ---------------------------------------------------------
     observe({
       req(input$sel_var1)
       req(input$sel_var2)
@@ -120,12 +133,13 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       }
     }) |> bindEvent(input$btn_run_test)
 
+    # results -----------------------------------------------------------------
     cor_results_gt <- reactive({
       req(cor_test$results)
       cor_test$results |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results')
+        cols_label('values' = 'Values', 'results' = 'Results')
     })
 
     output$cor_gt <- render_gt({
@@ -133,6 +147,7 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       cor_results_gt()
     })
 
+    # save gt -----------------------------------------------------------------
     save_gt_server('cor_save_gt', cor_results_gt)
 
     output$conditional_save_gt <- renderUI({
@@ -140,6 +155,23 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       save_gt_ui(ns('cor_save_gt'))
     })
 
+    # insert to output --------------------------------------------------------
+    mod_insert_output <- insert_output_server('cor_insert_output', cor_results_gt)
+
+    output$conditional_add_output <- renderUI({
+      req(cor_results_gt())
+      insert_output_ui(ns('cor_insert_output'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+
+    }) |> bindEvent(mod_insert_output$output_element())
+
+    # staticards --------------------------------------------------------------
     output$conditional_staticard_cor <- renderUI({
       req(cor_results_gt())
       tagList(
@@ -159,16 +191,7 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
       )
     })
 
-    observe({
-      showModal(modalDialog(
-        HTML(get_help_file('stats', 'cor.test')),
-        easyClose = TRUE, size = 'xl'
-      ))
-    }) |> bindEvent(input$btn_help_cor)
-
-    output$cor_test_results <- renderPrint(cor_test$results) |>
-      bindEvent(input$btn_run_test)
-
+    # scatter plot ------------------------------------------------------------
     output$scatter_plot <- renderPlot({
       req(input$sel_var1)
       req(input$sel_var2)
@@ -182,5 +205,17 @@ correlation_server <- function(id, df, df_metadata, color_fill) {
 
     })|> bindCache(df_active(), input$sel_var1, input$sel_var2, color_fill()) |>
       bindEvent(input$btn_scatter)
+
+    # help events -------------------------------------------------------------
+    observe({
+      showModal(modalDialog(
+        HTML(get_help_file('stats', 'cor.test')),
+        easyClose = TRUE, size = 'xl'
+      ))
+    }) |> bindEvent(input$btn_help_cor)
+
+    # return values -----------------------------------------------------------
+    return(list(output_file = reactive(output_list$elements)))
+
   })
 }
