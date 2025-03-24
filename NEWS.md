@@ -18,6 +18,28 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+## 2025.03.23-1
+
+Highlights: add output elements in **Correlation Test**, **Normality Test** and **Z Test** modules. 
+
+### Improvements
+
+1 - **Correlation** and **Normality Test** modules: now allow to add elements to output page
+
+2 - **Exploratory** module: removed bindCache because it was being used with objects with data and the check for the bindCache was slow, especially for big datasets
+
+3 - **Insert output** module: now req(input_element())
+
+4 - **spada_serverR**: adjust in modules that return output elements
+
+5 - **utils.R**: new function to add table with 2 columns in output
+
+6 - **Z Test** module: now allow to add plot to output page
+
+7 - In many places the scatter plot now uses **dot in pch param** for big length objects (>1e4), this improves the plot speed
+
+8 - Other **small visual improvements** like icons in buttons and positioning of buttons
+
 ## 2025.03.12-1
 
 Highlights: new **Output** page with options to export all output elements to html

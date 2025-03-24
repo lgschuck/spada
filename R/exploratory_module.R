@@ -166,7 +166,7 @@ exploratory_server <- function(id, input_df, df_metadata,
          between(input$var_percentile, 0, 100)){
         pn(var(), input$var_percentile / 100)
       } else { NA }
-    ) |> bindCache(var(), input$var_percentile)
+    )
 
     # render plots ------------------------------------------------------------
     output$g_dist <- renderPlot({
@@ -211,13 +211,13 @@ exploratory_server <- function(id, input_df, df_metadata,
             boxplot(var(), horizontal = T, col = color_fill())
             abline(v = var_percentile(), col = color_line(), lwd = 2)
           } else if (input$radio_dist_plot == 'dots'){
-            plot(var(), col = color_fill(), ylab = 'Values', pch = 19)
+            plot(var(), col = color_fill(), ylab = 'Values',
+                 pch = if(length(var()) > 1e4) '.' else 20)
             abline(h = var_percentile(), col = color_line(), lwd = 2)
           }
         }
       }
-    }) |> bindCache(var(), var2(), input$radio_dist_plot, input$bins,
-                    input$var_percentile, color_fill(), color_line())
+    })
     # render scatter plot -----------------------------------------------------
     output$g_scatter <- renderPlot({
       validate(
@@ -234,7 +234,7 @@ exploratory_server <- function(id, input_df, df_metadata,
           col = color_fill(),
           xlab = input$sel_vars2,
           ylab = input$sel_vars,
-          pch = 19
+          pch = if(length(var()) > 1e4) '.' else 20
         )
         lines(
           linear_model$x,
@@ -254,23 +254,11 @@ exploratory_server <- function(id, input_df, df_metadata,
           col = color_fill(),
           xlab = input$sel_vars2,
           ylab = input$sel_vars,
-          pch = 19
+          pch = if(length(var()) > 1e4) '.' else 20
         )
         mtext(paste('Pearson Correlation:', stats_correlation() |> round(4)))
       }
-    }) |> bindCache(
-      input$scatter_lm,
-      linear_model$y_name,
-      linear_model$x_name,
-      input$sel_vars,
-      input$sel_vars2,
-      var2(),
-      var(),
-      linear_model$x,
-      linear_model$y,
-      color_fill(),
-      color_line()
-    ) |> bindEvent(input$btn_scatter)
+    }) |> bindEvent(input$btn_scatter)
 
     # tables ------------------------------------------------------------------
     output$table <- renderPrint(
@@ -279,10 +267,7 @@ exploratory_server <- function(id, input_df, df_metadata,
       } else if (input$table_type == '2d'){
         table(var(), var2())
       }
-    )|> bindCache(
-      var(),
-      var2(),
-      input$table_type)
+    )
 
     # linear model ------------------------------------------------------------
     linear_model <- reactiveValues(
@@ -338,9 +323,7 @@ exploratory_server <- function(id, input_df, df_metadata,
         'Formula' = paste(linear_model$y_name, '~', linear_model$x_name),
         'Model' = summary(linear_model$model)
       )
-    }) |> bindCache(linear_model$y_name,
-                    linear_model$x_name,
-                    linear_model$model)
+    })
 
     # plot linear model residuals ---------------------------------------------
     output$g_lm_resid <- renderPlot({

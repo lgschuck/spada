@@ -252,11 +252,17 @@ spada_server <- function(datasets){
     }) |> bindEvent(mod_correlation_test$output_file())
 
     # normality test ----------------------------------------------------------
-    normality_test_server('pA_normality_test',
+    mod_norm_test <- normality_test_server('pA_normality_test',
                           reactive(df$df_active),
                           df_metadata,
                           color_fill,
-                          color_line)
+                          color_line,
+                          reactive(output_report$elements))
+
+    observe({
+      req(mod_norm_test$output_file())
+      output_report$elements <- mod_norm_test$output_file()
+    }) |> bindEvent(mod_norm_test$output_file())
 
     # normality test ----------------------------------------------------------
     mod_ztest <- z_test_server('pA_z_test', reactive(df$df_active),

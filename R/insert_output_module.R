@@ -3,7 +3,7 @@
 insert_output_ui <- function(id) {
   ns <- NS(id)
 
-  btn_task(ns('add_output'), 'Add to output')
+  btn_task(ns('add_output'), 'Add to output', icon('plus'))
 }
 
 # server ----------------------------------------------------------------------
@@ -15,6 +15,7 @@ insert_output_server <- function(id, input_element) {
     output_element <- reactiveVal(NULL)
 
     observe({
+      req(input_element())
 
       showModal(
         modalDialog(
@@ -31,6 +32,7 @@ insert_output_server <- function(id, input_element) {
           footer = tagList(actionButton(ns('submit'), 'Submit'), modalButton('Cancel'))
         )
       )
+
     }) |> bindEvent(input$add_output)
 
     observe({

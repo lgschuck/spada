@@ -33,11 +33,11 @@ correlation_ui <- function(id) {
                 )
               ),
               layout_columns(
-                col_widths = c(3, 7, 2),
+                col_widths = c(3, 6, 3),
                 uiOutput(ns('conditional_staticard_cor')),
                 gt_output(ns('cor_gt')),
                 div(
-                  uiOutput(ns('conditional_add_output')),
+                  uiOutput(ns('cond_add_output')),
                   br(), br(),
                   uiOutput(ns('conditional_save_gt'))
                 ),
@@ -51,7 +51,11 @@ correlation_ui <- function(id) {
             full_screen = T,
             card_body(plotOutput(ns('scatter_plot'))),
             card_footer(
-              btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear'))
+              layout_columns(
+                col_widths = c(3, 3),
+                btn_task(ns('btn_scatter'), 'Show Scatter Plot', icon('gear')),
+                uiOutput(ns('cond_add_output_scatter'))
+              )
             )
           )
         )
@@ -128,8 +132,6 @@ correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
           paste(input$sel_var1, '/', input$sel_var2)
 
         cor_test$results <- df
-
-        msg('Test completed', DURATION = 1.5)
       }
     }) |> bindEvent(input$btn_run_test)
 
@@ -156,55 +158,88 @@ correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output <- insert_output_server('cor_insert_output', cor_results_gt)
+    mod_output_gt <- insert_output_server('insert_gt', cor_results_gt)
 
-    output$conditional_add_output <- renderUI({
+    output$cond_add_output <- renderUI({
       req(cor_results_gt())
-      insert_output_ui(ns('cor_insert_output'))
+      insert_output_ui(ns('insert_gt'))
     })
 
     # get return from insert output module ------------------------------------
     observe({
-      req(mod_insert_output$output_element())
+      req(mod_output_gt$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+      output_list$elements[[gen_element_id()]] <- mod_output_gt$output_element()
 
-    }) |> bindEvent(mod_insert_output$output_element())
+    }) |> bindEvent(mod_output_gt$output_element())
 
     # staticards --------------------------------------------------------------
-    output$conditional_staticard_cor <- renderUI({
+    cor_staticards <- reactive({
       req(cor_results_gt())
       tagList(
         stati_card(cor_test$results |>
-                  filter(results %in% c('estimate.cor', 'estimate.tau',
-                  'estimate.rho')) |>
-                  pull(values) |>
-                  as.numeric() |>
-                  f_num(dig = 3),
-                  'Correlation'),
+                     filter(results %in% c('estimate.cor', 'estimate.tau',
+                                           'estimate.rho')) |>
+                     pull(values) |>
+                     as.numeric() |>
+                     f_num(dig = 3),
+                   'Correlation'),
         stati_card(cor_test$results |>
-                  filter(results %in% c('p.value')) |>
-                  pull(values) |>
-                  as.numeric() |>
-                  f_num(dig = 3),
-                  'p value')
+                     filter(results %in% c('p.value')) |>
+                     pull(values) |>
+                     as.numeric() |>
+                     f_num(dig = 3),
+                   'p value')
       )
     })
 
+    output$conditional_staticard_cor <- renderUI({
+      req(cor_staticards())
+      cor_staticards()
+    })
+
     # scatter plot ------------------------------------------------------------
-    output$scatter_plot <- renderPlot({
+    scatter_plot <- reactive({
       req(input$sel_var1)
       req(input$sel_var2)
 
-      plot(df_active()[[input$sel_var1]],
-           df_active()[[input$sel_var2]],
-           xlab = input$sel_var1,
-           ylab = input$sel_var2,
-           col = color_fill(), pch = 19, cex = 0.8
-      )
+      function(){
+        plot(
+          subset(df_active(),
+                 select = c(input$sel_var1, input$sel_var2)) |>
+            unique(),
+          xlab = input$sel_var1,
+          ylab = input$sel_var2,
+          col = color_fill(),
+          pch = if(nrow(df_active()) > 1e4) '.' else 20,
+          cex = 0.9
+        )
+      }
+    })
 
-    })|> bindCache(df_active(), input$sel_var1, input$sel_var2, color_fill()) |>
-      bindEvent(input$btn_scatter)
+    output$scatter_plot <- renderPlot({
+      req(scatter_plot())
+      scatter_plot()()
+
+    }) |> bindEvent(input$btn_scatter)
+
+    # insert scatter to output --------------------------------------------------------
+    mod_output_scatter <- insert_output_server(
+      'insert_scatter',
+      reactive(plotTag(scatter_plot()(), '', width = 600, height = 400)))
+
+    output$cond_add_output_scatter <- renderUI({
+      req(scatter_plot())
+      insert_output_ui(ns('insert_scatter'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_scatter$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
+
+    }) |> bindEvent(mod_output_scatter$output_element())
 
     # help events -------------------------------------------------------------
     observe({

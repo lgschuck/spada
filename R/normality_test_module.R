@@ -17,10 +17,12 @@ normality_test_ui <- function(id) {
             card_footer(
               div(style = "margin-bottom: -8px !important;"),
               layout_columns(
-                col_widths = c(2, 3),
+                col_widths = c(1, 3, 3),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
-                btn_task(ns('btn_hist'), 'Generate Histogram', icon('gear'),
-                         style = 'margin-top: 20px')
+                btn_task(ns('btn_hist'), 'Show Histogram', icon('gear'),
+                         style = 'margin-top: 28px'),
+                div(insert_output_ui(ns('norm_insert_output_hist')),
+                    style = 'margin-top: 28px')
               ),
               div(style = "margin-bottom: -24px !important;"),
             )
@@ -31,7 +33,10 @@ normality_test_ui <- function(id) {
           card(
             full_screen = T,
             card_body(plotOutput(ns('qq_plot'))),
-            card_footer(btn_task(ns('btn_qq'), 'Generate QQ plot', icon('gear')))
+            card_footer(
+              btn_task(ns('btn_qq'), 'Show QQ plot', icon('gear')),
+              insert_output_ui(ns('norm_insert_output_qq'))
+            )
           )
         ),
         nav_panel(
@@ -43,7 +48,11 @@ normality_test_ui <- function(id) {
                 col_widths = c(3, 7, 2),
                 uiOutput(ns('conditional_staticard_ks')),
                 gt_output(ns('ks_test')),
-                uiOutput(ns('conditional_save_ks_gt'))
+                div(
+                  uiOutput(ns('conditional_save_ks_gt')),
+                  br(), br(),
+                  uiOutput(ns('conditional_add_output_ks'))
+                )
               ),
               uiOutput(ns('ks_test_obs_ui'))
             ),
@@ -62,7 +71,12 @@ normality_test_ui <- function(id) {
                 col_widths = c(3, 7, 2),
                 uiOutput(ns('conditional_staticard_sw')),
                 gt_output(ns('sw_test')),
-                uiOutput(ns('conditional_save_sw_gt')))
+                div(
+                  uiOutput(ns('conditional_save_sw_gt')),
+                  br(), br(),
+                  uiOutput(ns('conditional_add_output_sw'))
+                )
+              )
             ),
             card_footer(
               btn_task(ns('btn_sw'), 'Run Test', icon('gear')),
@@ -79,7 +93,12 @@ normality_test_ui <- function(id) {
                 col_widths = c(3, 7, 2),
                 uiOutput(ns('conditional_staticard_sf')),
                 gt_output(ns('sf_test')),
-                uiOutput(ns('conditional_save_sf_gt')))
+                div(
+                  uiOutput(ns('conditional_save_sf_gt')),
+                  br(), br(),
+                  uiOutput(ns('conditional_add_output_sf'))
+                )
+              )
             ),
             card_footer(
               btn_task(ns('btn_sf'), 'Run Test', icon('gear')),
@@ -93,9 +112,18 @@ normality_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
+normality_test_server <- function(id, df, df_metadata, color_fill, color_line,
+                                  output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  # outupt objects ----------------------------------------------------------
+	  output_list <- reactiveValues(elements = NULL)
+
+	  observe({
+	    output_list$elements <- output_report()
+	  })
+
 
     df_active <- reactive({
       req(df())
@@ -132,39 +160,85 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
 
     # histogram ---------------------------------------------------------------
     output$hist <- renderPlot({
+      validate(need(input$bins > 0, 'Bins must be 1 or higher'))
+
+      norm_hist()()
+
+    }) |> bindEvent(input$btn_hist)
+
+    norm_hist <- reactive({
       req(df_active())
       req(input$sel_var)
       req(var())
 
-      validate(need(input$bins > 0, 'Bins must be 1 or higher'))
+      function(){
+        hist(var(),
+             breaks = input$bins,
+             probability = TRUE,
+             col = color_fill(),
+             xlab = 'Values',
+             ylab = 'Density',
+             main = paste('Histogram of', input$sel_var)
+        )
+        curve(dnorm(x, mean = mean(var()),
+                    sd = sd(var())),
+              col = color_line(),
+              lwd = 2,
+              add = TRUE)
+      }
+    })
 
-      hist(var(),
-           breaks = input$bins,
-           probability = TRUE,
-           col = color_fill(),
-           xlab = 'Values',
-           ylab = 'Density',
-           main = paste('Histogram of', input$sel_var)
-           )
-      curve(dnorm(x, mean = mean(var()),
-                  sd = sd(var())),
-            col = color_line(),
-            lwd = 2,
-            add = TRUE)
-    })|> bindCache(var(), color_fill(), color_line(), input$bins) |>
-      bindEvent(input$btn_hist)
+    # insert histogram to output ----------------------------------------------
+    mod_insert_output_hist <- insert_output_server(
+      'norm_insert_output_hist',
+      reactive(
+        plotTag(norm_hist()(), '', width = 600, height = 400)
+      )
+    )
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output_hist$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
+
+    }) |> bindEvent(mod_insert_output_hist$output_element())
 
     # qq plot -----------------------------------------------------------------
     output$qq_plot <- renderPlot({
+      norm_qq_plot()()
+
+    })|> bindEvent(input$btn_qq)
+
+    norm_qq_plot <- reactive({
       req(input$sel_var)
       req(var())
 
-      qqnorm(var(), main = paste('Normal QQ Plot:', input$sel_var),
-                                 col = color_fill())
-      qqline(var(), col = color_line())
+      function(){
+        qqnorm(var(), main = paste('Normal QQ Plot:', input$sel_var),
+               col = color_fill())
+        qqline(var(), col = color_line())
+      }
+    })
 
-    })|> bindCache(var(), color_fill(), color_line()) |>
-      bindEvent(input$btn_qq)
+    # insert to output --------------------------------------------------------
+    mod_insert_output_qq <- insert_output_server(
+      'norm_insert_output_qq',
+      reactive(plotTag(norm_qq_plot()(), '', width = 600, height = 400))
+    )
+
+    output$conditional_add_output_qq <- renderUI({
+      req(norm_qq_plot())
+      insert_output_ui(ns('norm_insert_output_qq'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output_qq$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output_qq$output_element()
+
+    }) |> bindEvent(mod_insert_output_qq$output_element())
 
     # ks test -----------------------------------------------------------------
     ks_results <- reactive({
@@ -214,6 +288,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         gt::cols_label('values' = 'Values', 'results' = 'Results')
     })
 
+    # ks staticards -----------------------------------------------------------
     output$conditional_staticard_ks <- renderUI({
       req(ks_results())
       tagList(
@@ -254,6 +329,26 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       save_gt_ui(ns('ks_save_gt'))
     })
 
+    # insert to output --------------------------------------------------------
+    mod_insert_output_ks <- insert_output_server(
+      'norm_insert_output_ks',
+      reactive(ks_results_gt())
+    )
+
+    output$conditional_add_output_ks <- renderUI({
+      req(ks_results_gt())
+      insert_output_ui(ns('norm_insert_output_ks'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output_ks$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output_ks$output_element()
+
+    }) |> bindEvent(mod_insert_output_ks$output_element())
+
+    # help ks function --------------------------------------------------------
     observe({
       showModal(modalDialog(
         HTML(get_help_file('stats', 'ks.test')),
@@ -297,6 +392,7 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         gt::cols_label('values' = 'Values', 'results' = 'Results')
     })
 
+    # sharpiro-wilk staticards ------------------------------------------------
     output$conditional_staticard_sw <- renderUI({
       req(sw_results())
       tagList(
@@ -326,6 +422,25 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       req(sw_results_gt())
       save_gt_ui(ns('sw_save_gt'))
     })
+
+    # insert to output --------------------------------------------------------
+    mod_insert_output_sw <- insert_output_server(
+      'norm_insert_output_sw',
+      reactive(sw_results_gt())
+    )
+
+    output$conditional_add_output_sw <- renderUI({
+      req(sw_results_gt())
+      insert_output_ui(ns('norm_insert_output_sw'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output_sw$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output_sw$output_element()
+
+    }) |> bindEvent(mod_insert_output_sw$output_element())
 
     # help file of shapiro.test
     observe({
@@ -371,6 +486,8 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         gt::cols_label('values' = 'Values', 'results' = 'Results')
     })
 
+
+    # sharpiro-francia staticards ---------------------------------------------
     output$conditional_staticard_sf <- renderUI({
       req(sf_results())
       tagList(
@@ -401,6 +518,25 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
       save_gt_ui(ns('sf_save_gt'))
     })
 
+    # insert to output --------------------------------------------------------
+    mod_insert_output_sf <- insert_output_server(
+      'norm_insert_output_sf',
+      reactive(sf_results_gt())
+    )
+
+    output$conditional_add_output_sf <- renderUI({
+      req(sf_results_gt())
+      insert_output_ui(ns('norm_insert_output_sf'))
+    })
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output_sf$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output_sf$output_element()
+
+    }) |> bindEvent(mod_insert_output_sf$output_element())
+
     # help file of ShapiroFranciaTest
     observe({
       showModal(modalDialog(
@@ -408,6 +544,9 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line) {
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_sf)
+
+    # return values -----------------------------------------------------------
+    return(list(output_file = reactive(output_list$elements)))
 
   })
 }

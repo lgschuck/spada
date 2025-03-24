@@ -1,16 +1,32 @@
 
+
+# generate 2 column table in html -----------------------------------------
+gen_table2 <- function(element1, element2) {
+  div(
+    tags$table(
+      style = 'width: 95%',
+      tags$tr(
+        tags$td(style = 'padding: 10px; width: 50%;', element1),
+        tags$td(style = 'padding: 10px; width: 50%;', element2)
+      )
+    )
+  )
+}
+
 # card to insert in output ----------------------------------------------------
 report_card <- function(title = 'Spada - Output', annotation = NULL,
                         content = NULL){
   div(
     div(
-      style = paste0("border: 2px solid", main_color, "; border-radius: 8px; padding: 16px;
-             box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);"),
-      h2(title, style = paste0("font-size: 1.5rem; margin-bottom: 12px; color:", main_color ,";")),
+      style = paste0("border: 2px solid", main_color,
+      "; border-radius: 8px; padding: 16px; box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);"),
+      h2(title, style = paste0("font-size: 1.5rem; margin-bottom: 12px; color:",
+                               main_color ,";")),
       p(annotation),
       content
     ),
-    br()
+    br(),
+    p(Sys.time())
   )
 }
 

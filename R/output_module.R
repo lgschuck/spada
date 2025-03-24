@@ -10,7 +10,7 @@ output_ui <- function(id) {
     card_footer(
       layout_columns(
         col_widths = c(2, 2),
-        btn_task(ns('btn_reset'), 'Reset'),
+        btn_task(ns('btn_reset'), 'Reset', icon('rotate-right')),
         downloadButton(ns('save_html'), 'Save HTML', class = 'btn-task',
                        icon = icon('download'))
       )

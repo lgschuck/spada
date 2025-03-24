@@ -14,7 +14,7 @@ z_test_ui <- function(id) {
           card(
             layout_sidebar(
               sidebar = sidebar(
-                width = 400,
+                width = 380,
                 fluidRow(
                   h5('Sampe Values'),
                   column(6, p(textOutput(ns('sample_mean')))),
@@ -46,24 +46,23 @@ z_test_ui <- function(id) {
               ),
               card_body(
                 layout_columns(
-                  col_widths = c(3, 7, 2),
+                  col_widths = c(2, 7, 3),
                   fluidRow(
                     div(
                       style = 'margin-bottom: 10px;',
                       uiOutput(ns('conditional_staticard_ztest')),
-                    ),
-                    div(
-                      style = 'margin-bottom: 10px;',
-                      uiOutput(ns('conditional_plot'))
                     )
                   ),
-                  gt_output(ns('ztest_gt')),
+                  uiOutput(ns('conditional_plot')),
                   div(
-                    uiOutput(ns('conditional_add_output')),
+                    gt_output(ns('ztest_gt')),
                     br(), br(),
                     uiOutput(ns('conditional_save_gt'))
-                  ),
+                  )
                 )
+              ),
+              card_footer(
+                uiOutput(ns('conditional_add_output'))
               )
             )
           )
@@ -76,10 +75,12 @@ z_test_ui <- function(id) {
             card_footer(
               div(style = 'margin-bottom: -8px !important;'),
               layout_columns(
-                col_widths = c(2, 3),
+                col_widths = c(1, 3, 3),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
-                btn_task(ns('btn_hist'), 'Generate Histogram', icon('gear'),
-                         style = 'margin-top: 20px')
+                btn_task(ns('btn_hist'), 'Show Histogram', icon('gear'),
+                         style = 'margin-top: 28px'),
+                div(insert_output_ui(ns('ztest_insert_output_hist')),
+                    style = 'margin-top: 28px')
               ),
               div(style = 'margin-bottom: -24px !important;'),
             )
@@ -175,8 +176,6 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
         ztest$results <- df
 
         ztest$confidence <- input$confidence/100
-
-        msg('Test completed', DURATION = 1.5)
       }
     }) |> bindEvent(input$btn_run_test)
 
@@ -203,7 +202,15 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output <- insert_output_server('ztest_insert_output', ztest_results_gt)
+    mod_insert_output <- insert_output_server(
+      'ztest_insert_output',
+      reactive(
+        gen_table2(
+          plotTag(ztest_plot()(), '', width = 600, height = 400),
+          ztest_results_gt()
+        )
+      )
+    )
 
     output$conditional_add_output <- renderUI({
       req(ztest_results_gt())
@@ -220,33 +227,35 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
 
     # test plot ---------------------------------------------------------------
     output$conditional_plot <- renderUI({
+      req(ztest_plot())
+      plotOutput(ns('ztest_plot'))
+    })
+
+    ztest_plot <- reactive({
       req(ztest$results)
-      btn_task(ns('btn_plot'), 'Show Plot')
+      req(ztest$confidence)
+
+      function(){
+        plot_z_test(
+          confidence = ztest$confidence,
+          test_type = ztest$results |>
+            filter(results == 'alternative') |>
+            pull(values),
+          z_value = ztest$results |>
+            filter(results == 'statistic.z') |>
+            pull(values) |>
+            as.numeric()
+        )
+      }
     })
 
     output$ztest_plot <- renderPlot({
       req(ztest$results)
       req(ztest$confidence)
+      req(ztest_plot())
 
-      plot_z_test(
-        confidence = ztest$confidence,
-        test_type = ztest$results |>
-          filter(results == 'alternative') |>
-          pull(values),
-        z_value = ztest$results |>
-          filter(results == 'statistic.z') |>
-          pull(values) |>
-          as.numeric()
-      )
+      ztest_plot()()
     })
-
-    observe({
-      showModal(modalDialog(
-        title = 'Z Test - Plot',
-        plotOutput(ns('ztest_plot')),
-        easyClose = TRUE, size = 'xl', footer = NULL)
-      )
-    }) |> bindEvent(input$btn_plot)
 
     # staticards --------------------------------------------------------------
     output$conditional_staticard_ztest <- renderUI({
@@ -277,26 +286,48 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
 
     # histogram ---------------------------------------------------------------
     output$hist <- renderPlot({
+      req(ztest_hist())
+      validate(need(input$bins > 0, 'Bins must be 1 or higher'))
+
+      ztest_hist()()
+    }) |> bindEvent(input$btn_hist)
+
+    ztest_hist <- reactive({
       req(df_active())
       req(input$sel_var)
 
-      validate(need(input$bins > 0, 'Bins must be 1 or higher'))
+      function(){
+        hist(var(),
+             breaks = input$bins,
+             probability = TRUE,
+             col = color_fill(),
+             xlab = 'Values',
+             ylab = 'Density',
+             main = paste('Histogram of', input$sel_var)
+        )
+        curve(dnorm(x, mean = mean(var(), na.rm = T),
+                    sd = sd(var(), na.rm = T)),
+              col = color_line(),
+              lwd = 2,
+              add = TRUE)
+      }
+    })
 
-      hist(var(),
-           breaks = input$bins,
-           probability = TRUE,
-           col = color_fill(),
-           xlab = 'Values',
-           ylab = 'Density',
-           main = paste('Histogram of', input$sel_var)
+    # insert histogram to output ----------------------------------------------
+    mod_insert_output_hist <- insert_output_server(
+      'ztest_insert_output_hist',
+      reactive(
+        plotTag(ztest_hist()(), '', width = 600, height = 400)
       )
-      curve(dnorm(x, mean = mean(var(), na.rm = T),
-                  sd = sd(var(), na.rm = T)),
-            col = color_line(),
-            lwd = 2,
-            add = TRUE)
-    }) |> bindCache(var(), color_fill(), input$bins) |>
-      bindEvent(input$btn_hist)
+    )
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_insert_output_hist$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
+
+    }) |> bindEvent(mod_insert_output_hist$output_element())
 
     # return values -----------------------------------------------------------
     return(list(output_file = reactive(output_list$elements)))
