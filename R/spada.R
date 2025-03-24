@@ -38,7 +38,7 @@
 #'
 #' @importFrom haven as_factor is.labelled read_sav write_sav
 #'
-#' @importFrom htmltools save_html
+#' @importFrom htmltools plotTag save_html
 #'
 #' @importFrom rlang parse_expr
 #'
