@@ -81,6 +81,10 @@
 <p>7 - In many places the scatter plot now uses <strong>dot in pch param</strong> for big length objects (&gt;1e4), this improves the plot speed</p>
 <p>8 - Other <strong>small visual improvements</strong> like icons in buttons and positioning of buttons</p>
 </div>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000"></a></h4>
+<p>1 - Update in NAMESPACE: <strong>htmltools::plotTag</strong> function</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="id_20250312-0-1-0-9000">2025.03.12-1<a class="anchor" aria-label="anchor" href="#id_20250312-0-1-0-9000"></a></h3>
@@ -187,7 +191,7 @@
 <h3 id="id_20250208-0-1-0-9000">2025.02.08-1<a class="anchor" aria-label="anchor" href="#id_20250208-0-1-0-9000"></a></h3>
 <p>Highlights: New stats in Descriptive Stats, Shapiro Francia test and bug fix</p>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-1"></a></h4>
 <p>1 - <strong>Analysis &gt; Scatter: warning if two Factors variables</strong>: fixed, now requires numeric variables (<a href="https://github.com/lgschuck/spada/issues/18" class="external-link">#18</a>)</p>
 </div>
 <div class="section level4">
@@ -201,7 +205,7 @@
 <h3 id="id_20250206-0-1-0-9000">2025.02.06-1<a class="anchor" aria-label="anchor" href="#id_20250206-0-1-0-9000"></a></h3>
 <p>Highlights: import sav (SPSS) files and Plot in Z test</p>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-1"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-2"></a></h4>
 <p>1 - <strong>Data &gt; Import: check for already used name not working</strong>: the names were not beeing passed as reactive to File Import module. Fixed. (<a href="https://github.com/lgschuck/spada/issues/17" class="external-link">#17</a>)</p>
 </div>
 <div class="section level4">
@@ -216,7 +220,7 @@
 <h3 id="id_20250202-0-1-0-9000">2025.02.02-1<a class="anchor" aria-label="anchor" href="#id_20250202-0-1-0-9000"></a></h3>
 <p>Highlights: new module Rename Cols and bug fix</p>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-2"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-3">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-3"></a></h4>
 <p>1 - <strong>Analysis &gt; Descriptive Stats: error in round for factors</strong>: now f_num function only format numeric values (<a href="https://github.com/lgschuck/spada/issues/16" class="external-link">#16</a>)</p>
 </div>
 <div class="section level4">
@@ -242,7 +246,7 @@
 <div class="section level3">
 <h3 id="id_20250129-0-1-0-9000">2025.01.29-1<a class="anchor" aria-label="anchor" href="#id_20250129-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-3">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-3"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-4">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-4"></a></h4>
 <p>1 - <strong>Analysis &gt; Normality Test &gt; Shapiro: error if all values are equal</strong>: Shapiro does not accept all equal values. Now with check and msg_error (<a href="https://github.com/lgschuck/spada/issues/15" class="external-link">#15</a>)</p>
 </div>
 <div class="section level4">
@@ -267,7 +271,7 @@
 <div class="section level3">
 <h3 id="id_20250127-0-1-0-9000">2025.01.27-1<a class="anchor" aria-label="anchor" href="#id_20250127-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-4">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-4"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-5">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-5"></a></h4>
 <p>1 - <strong>Exploratory &gt; Stats Table: digits input has no effect</strong>: the input was been passed to gt functions (fmt_numeric) but the <strong>value</strong> column was char given the paste command for Mode values. Fixed with new function f_dec. (<a href="https://github.com/lgschuck/spada/issues/13" class="external-link">#13</a>)</p>
 <p>2 - <strong>Analysis &gt; Correlation: not enough finite observations</strong>: stats::cor.test for Pearson demands at least 3 valid values (Spearman and Kendal a least 2 valid values). New check throughs a error message if less than 3 valid values for all methods. (<a href="https://github.com/lgschuck/spada/issues/14" class="external-link">#14</a>)</p>
 </div>
@@ -283,7 +287,7 @@
 <div class="section level3">
 <h3 id="id_20250126-0-1-0-9000">2025.01.26-2<a class="anchor" aria-label="anchor" href="#id_20250126-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-5">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-5"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-6">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-6"></a></h4>
 <p>1 - <strong>Exploratory Page &gt; Boxplot by groups: error when plot Integer vs Numeric</strong>: The error occurs because there is more unique values in Variable 2 than in colors() function tha is used to sample colors. Changed to replace = T. (<a href="https://github.com/lgschuck/spada/issues/11" class="external-link">#11</a>)</p>
 <p>2 - <strong>Exploratory Page &gt; Stats table: Mode NA for numeric, date, logical and complex var</strong>: the gt table was receiving tha NA value as character and the function sub_missing() does not have effect on those values. Now the Mode is passed as character only if it is not NA. (<a href="https://github.com/lgschuck/spada/issues/12" class="external-link">#12</a>)</p>
 </div>
@@ -297,7 +301,7 @@
 <div class="section level3">
 <h3 id="id_20250126-0-1-0-9000-1">2025.01.26-1<a class="anchor" aria-label="anchor" href="#id_20250126-0-1-0-9000-1"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-6">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-6"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-7">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-7"></a></h4>
 <p>1 - <strong>Filter rows: operators NA and not NA requires a value to apply the filter</strong>: fixed, filter_rows_module.R refactored, now with much more robust check for filters, operators and values (<a href="https://github.com/lgschuck/spada/issues/10" class="external-link">#10</a>)</p>
 </div>
 <div class="section level4">
@@ -371,7 +375,7 @@
 <div class="section level3">
 <h3 id="id_20250113-0-1-0-9000">2025.01.13-1<a class="anchor" aria-label="anchor" href="#id_20250113-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-7">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-7"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-8">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-8"></a></h4>
 <p>1 - <strong>Edit &gt; Filter: Factor var - no levels after choose operator</strong>: fixed (inserted req(operator)). Now the levels are shown when a factor var and an operator are selected. (<a href="https://github.com/lgschuck/spada/issues/9" class="external-link">#9</a>)</p>
 </div>
 <div class="section level4">
@@ -412,7 +416,7 @@
 <div class="section level3">
 <h3 id="id_20250110-0-1-0-9000">2025.01.10-1<a class="anchor" aria-label="anchor" href="#id_20250110-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-8">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-8"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-9">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-9"></a></h4>
 <p>1 - <strong>Analysis &gt; Exploratory: error ins stats table when percentile out of range 0-100</strong>: now test the range and if the input isTruphy (<a href="https://github.com/lgschuck/spada/issues/8" class="external-link">#8</a>)</p>
 </div>
 <div class="section level4">
@@ -427,7 +431,7 @@
 <div class="section level3">
 <h3 id="id_20250105-0-1-0-9000">2025.01.05-1<a class="anchor" aria-label="anchor" href="#id_20250105-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-9">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-9"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-10">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-10"></a></h4>
 <p>1 - <strong>Metadata - object color_fn not found</strong>: new icon for logical and color format (function data_color) applied only if there is valid (non NA) min and max values (<a href="https://github.com/lgschuck/spada/issues/4" class="external-link">#4</a>)</p>
 <p>2 - <strong>Edit &gt; Convert - error in preview complex variable convertion</strong>: fixed converting complex to character in the preview given that gt table in opt_interactive does not show complex properly (<a href="https://github.com/lgschuck/spada/issues/5" class="external-link">#5</a>)</p>
 <p>3 - <strong>Edit &gt; Filter: error in filtering complex</strong>: now only show/allow operators ‘== (Equal)’, ‘!= (Not Equal)’, ‘Is NA (is.na)’, ‘Not NA (! is.na)’, ‘In (%in%)’ and ‘Not In (! %in%)’ (same for character and factors) (<a href="https://github.com/lgschuck/spada/issues/6" class="external-link">#6</a>)</p>
@@ -446,7 +450,7 @@
 <div class="section level3">
 <h3 id="id_20250103-0-1-0-9000">2025.01.03-1<a class="anchor" aria-label="anchor" href="#id_20250103-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-10">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-10"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-11">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-11"></a></h4>
 <p>1 - <strong>Data Overview - after Edit only refresh if updat in rows or sample</strong>: fixed with insertion of buttons inside output$pD_over_gt. (<a href="https://github.com/lgschuck/spada/issues/3" class="external-link">#3</a>)</p>
 </div>
 <div class="section level4">
@@ -463,13 +467,13 @@
 <li><p>new <strong>buttons in active dataset popover</strong> navigate through pages</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-11">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-11"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-12">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-12"></a></h4>
 </div>
 </div>
 <div class="section level3">
 <h3 id="id_20250102-0-1-0-9000">2025.01.02-1<a class="anchor" aria-label="anchor" href="#id_20250102-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-12">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-12"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-13">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-13"></a></h4>
 <p>1 - <strong>Analysis page - q1 object not found</strong>: back to calculate q1 and q3. (<a href="https://github.com/lgschuck/spada/issues/1" class="external-link">#1</a>)</p>
 <p>2 - <strong>Metadata - Error in zeros count</strong>: now df_info function uses suna(x == 0) instead of length(x[x == 0]) (<a href="https://github.com/lgschuck/spada/issues/2" class="external-link">#2</a>)</p>
 </div>
@@ -507,7 +511,7 @@
 <div class="section level3">
 <h3 id="id_20241229-0-1-0-9000">2024.12.29-2<a class="anchor" aria-label="anchor" href="#id_20241229-0-1-0-9000"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-13">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-13"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-14">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-14"></a></h4>
 <p>1 - ‘Edit’ Page &gt; Convert</p>
 <ul><li>on changing the active dataset the selected variable may not exist in the new acive dataset and an error is raised from data.table (variable does not exist). <strong>Fix with if clause testing for presence of var in the active dataset</strong>.</li>
 </ul></div>
@@ -543,7 +547,7 @@
 <p>3 - New Some reactives now with bindCache</p>
 </div>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-0-9000-14">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-14"></a></h4>
+<h4 id="bug-fixes-0-1-0-9000-15">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-9000-15"></a></h4>
 <p>1 - gt cannot show complex in opt_interactive, now convert to char before apply gt function</p>
 </div>
 <div class="section level4">

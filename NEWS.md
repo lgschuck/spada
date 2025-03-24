@@ -40,6 +40,10 @@ Highlights: add output elements in **Correlation Test**, **Normality Test** and 
 
 8 - Other **small visual improvements** like icons in buttons and positioning of buttons
 
+### Bug Fixes
+
+1 - Update in NAMESPACE: **htmltools::plotTag** function
+
 ## 2025.03.12-1
 
 Highlights: new **Output** page with options to export all output elements to html
