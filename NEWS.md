@@ -18,6 +18,14 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+## 2025.04.01-1
+
+Highlights: speed improvement in **Analysis > Exploratory** page. 
+
+### Improvements
+
+1 - **Stats Table** module: removed bindCache that was causing delay in the return of module and plots
+
 ## 2025.03.23-1
 
 Highlights: add output elements in **Correlation Test**, **Normality Test** and **Z Test** modules. 

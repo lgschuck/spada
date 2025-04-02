@@ -36,6 +36,8 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
     stats_q3 <- reactive(if(is.numeric(var1())) p75(var1()) else NA)
     stats_max <- reactive(if(is.numeric(var1())) mana(var1()) else NA)
 
+
+    # table -------------------------------------------------------------------
     stats_table <- reactive({
 
       fmt_digits <- min(max(0, input$table_digits), 9)
@@ -71,6 +73,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
       )
     })
 
+    # format tabe -------------------------------------------------------------
     stats_table_fmt <- reactive({
       stats_table() |>
         gt() |>
@@ -81,6 +84,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
         cols_align('right', value)
     })
 
+    # render table ------------------------------------------------------------
     output$gt_stats <- render_gt({
       validate(
         need(
@@ -96,12 +100,10 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
       stats_table_fmt() |>
         opt_interactive(use_pagination = F,
                         use_highlight = T,
-                        use_compact_mode = T) |>
+                        use_compact_mode = T,
+                        use_sorting = F) |>
         tab_options(table.background.color = '#ffffff')
-    }) |> bindCache(
-      input$table_digits,
-      stats_table_fmt()
-    )
+    })
 
     save_gt_server('pA_stats_table_save_gt', stats_table_fmt)
 
