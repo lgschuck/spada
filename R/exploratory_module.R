@@ -49,14 +49,14 @@ card(
         nav_panel(
           'Scatter',
           full_screen = T,
-          card_body(plotOutput(ns('g_scatter'), click = 'plot_brush')),
+          card_body(plotOutput(ns('g_scatter'))),
           card_footer(
             layout_column_wrap(
               checkboxInput(
                 ns('scatter_lm'),
                 list('Plot Linear Model', bs_icon('info-circle')) |>
                   ttip('Show the line only if LM model was created')),
-              btn_task(ns('btn_scatter'), 'Generate Plot', icon('gear'))
+              btn_task(ns('btn_scatter'), 'Generate Plot', icon('chart-simple'))
             ),
             div(style = "margin-bottom: -18px !important;"),
           )
@@ -175,7 +175,16 @@ exploratory_server <- function(id, input_df, df_metadata,
 
       if (input$radio_dist_plot == 'barplot'){
         validate(need(!is.numeric(var()), 'Var can not be numeric'))
-        barplot(table(var()), col = color_fill())
+
+        ggplot(data = data.frame(x = var()), aes(x = factor(x))) +
+          geom_bar(fill = color_fill()) +
+          labs(x = '', y = 'Count') +
+          theme_classic() +
+          theme(axis.text.x = element_text(size = 14),
+                axis.text.y = element_text(size = 14),
+                axis.title.y = element_text(size = 16)
+          )
+
       } else {
         validate(need(is.numeric(var()), 'Var must be numeric'))
 
@@ -186,12 +195,23 @@ exploratory_server <- function(id, input_df, df_metadata,
             need(!is.complex(var2()), 'Variable 2 can not be complex')
           )
 
-          g_dist_boxg_col <- colors()[sample.int(
-            colors() |> length(), unique(var2()) |> length(), replace = T)]
+          ggplot(data = data.frame(x = var2(), y = var()),
+                 aes(x = x, y = y, fill = x)) +
+            stat_boxplot(geom = 'errorbar', width = 0.3) +
+            geom_boxplot(orientation = 'x') +
+            geom_hline(yintercept = var_percentile(),  color = color_line()) +
+            coord_flip() +
+            labs(x = '', y = '') +
+            theme_classic() +
+            theme(
+              legend.position = 'none',
+              axis.ticks.y = element_blank(),
+              axis.line.y  = element_blank(),
+              panel.border = element_rect(color = 'black', fill = NA),
+              axis.text.x = element_text(size = 14),
+              axis.text.y = element_text(size = 14)
+            )
 
-          boxplot(var() ~ var2(), horizontal = T,
-                  col = g_dist_boxg_col, xlab = '', ylab = '')
-          abline(v = var_percentile(), col = color_line())
         } else {
           validate(
             need(isTruthy(input$var_percentile)
@@ -200,65 +220,103 @@ exploratory_server <- function(id, input_df, df_metadata,
 
           if(input$radio_dist_plot == 'hist'){
             validate(need(input$bins > 0, 'Bins must be 1 or higher'))
-            hist(var(),
-                 col = color_fill(),
-                 breaks = input$bins,
-                 main = '',
-                 xlab = '',
-                 ylab = 'Count')
-            abline(v = var_percentile(), col = color_line(), lwd = 2)
+
+            ggplot(data = data.frame(x = var()), aes(x = x)) +
+              geom_histogram(
+                bins = input$bins,
+                fill = color_fill(),
+                color = '#000000'
+              ) +
+              geom_vline(xintercept = var_percentile(), color = color_line()) +
+              labs(x = '', y = 'Count', title = '') +
+              theme_classic() +
+              theme(axis.text.x = element_text(size = 14),
+                    axis.text.y = element_text(size = 14),
+                    axis.title.y = element_text(size = 16)
+                    )
+
           } else if (input$radio_dist_plot == 'boxplot'){
-            boxplot(var(), horizontal = T, col = color_fill())
-            abline(v = var_percentile(), col = color_line(), lwd = 2)
+            ggplot(data = data.frame(x = var()), aes(x = x)) +
+              stat_boxplot(geom = 'errorbar', width = 0.3) +
+              geom_boxplot(fill = color_fill()) +
+              ylim(-1.2, 1.2) +
+              geom_vline(xintercept = var_percentile(), color = color_line()) +
+              labs(x = '', y = '') +
+              theme_classic() +
+              theme(
+                axis.ticks.y = element_blank(),
+                axis.text.y  = element_blank(),
+                axis.line.y  = element_blank(),
+                panel.border = element_rect(color = '#000000', fill = NA),
+                axis.text.x = element_text(size = 14)
+              )
+
           } else if (input$radio_dist_plot == 'dots'){
-            plot(var(), col = color_fill(), ylab = 'Values',
-                 pch = if(length(var()) > 1e4) '.' else 20)
-            abline(h = var_percentile(), col = color_line(), lwd = 2)
+            point_shape <- if(length(var()) > 1e4) '.' else 20
+
+            ggplot(data = data.frame(x = seq_along(var()),
+                                     y = var()), aes(x = x, y = y)) +
+              geom_point(shape = point_shape, color = color_fill()) +
+              geom_hline(yintercept = var_percentile(), color = color_line()) +
+              labs(x = 'Index', y = 'Values') +
+              theme_classic() +
+              theme(axis.text.x = element_text(size = 14),
+                    axis.text.y = element_text(size = 14),
+                    axis.title.x = element_text(size = 16),
+                    axis.title.y = element_text(size = 16)
+              )
           }
         }
       }
-    })
+    }, res = 96)
     # render scatter plot -----------------------------------------------------
     output$g_scatter <- renderPlot({
       validate(
         need(is.numeric(var()) && is.numeric(var2()), 'Variables must be numeric')
       )
 
+      point_shape <- if(length(var()) > 1e4) "." else 20
+
       if (input$scatter_lm &&
           linear_model$y_name == input$sel_vars &&
           linear_model$x_name == input$sel_vars2) {
-        plot(
-          var2(),
-          var(),
-          type = 'p',
-          col = color_fill(),
-          xlab = input$sel_vars2,
-          ylab = input$sel_vars,
-          pch = if(length(var()) > 1e4) '.' else 20
-        )
-        lines(
-          linear_model$x,
-          linear_model$y,
-          col = color_line(),
-          lty = 'dotdash',
-          lwd = 2
-        )
-        mtext(paste('Adjusted R Squared:',
-                    summary(linear_model$model)$r.squared |> round(4)),
-              side = 3)
+
+        ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
+          geom_point(color = color_fill(), shape = point_shape) +
+          geom_line(
+            data.frame(x = linear_model$x, y = linear_model$y),
+            aes(x = x, y = y),
+            color = color_line(),
+            linewidth = 1
+          ) +
+          labs(
+            title = paste(
+              'Adjusted R Squared:',
+              summary(linear_model$model)$r.squared |> round(4)
+            ),
+            x = input$sel_vars2,
+            y = input$sel_vars
+          )+
+          theme_classic() +
+          theme(axis.text.x = element_text(size = 14),
+                axis.text.y = element_text(size = 14),
+                axis.title.x = element_text(size = 16),
+                axis.title.y = element_text(size = 16)
+                )
+
       } else {
-        plot(
-          var2(),
-          var(),
-          type = 'p',
-          col = color_fill(),
-          xlab = input$sel_vars2,
-          ylab = input$sel_vars,
-          pch = if(length(var()) > 1e4) '.' else 20
-        )
-        mtext(paste('Pearson Correlation:', stats_correlation() |> round(4)))
+        ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
+          geom_point(color = color_fill(), shape = point_shape) +
+          labs(title = paste('Pearson Correlation:', stats_correlation() |> round(4)),
+               x = input$sel_vars2, y = input$sel_vars) +
+          theme_classic() +
+          theme(axis.text.x = element_text(size = 14),
+                axis.text.y = element_text(size = 14),
+                axis.title.x = element_text(size = 16),
+                axis.title.y = element_text(size = 16)
+                )
       }
-    }) |> bindEvent(input$btn_scatter)
+    }, res = 96) |> bindEvent(input$btn_scatter)
 
     # tables ------------------------------------------------------------------
     output$table <- renderPrint(
@@ -331,20 +389,47 @@ exploratory_server <- function(id, input_df, df_metadata,
       validate(need(isTruthy(linear_model$model), 'No residuals to plot'))
 
       if(input$radio_lm_resid == 'hist'){
-        hist(linear_model$model$residuals,
-             col = color_fill(),
-             main = '',
-             xlab = '',
-             ylab = 'Count')
+        ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
+          geom_histogram(bins = 10, fill = color_fill(), color = '#000000') +
+          labs(x = '', y = 'Count', title = '') +
+          theme_classic() +
+          theme(axis.text.x = element_text(size = 14),
+                axis.text.y = element_text(size = 14),
+                axis.title.y = element_text(size = 16)
+          )
+
       } else if (input$radio_lm_resid == 'boxplot'){
-        boxplot(linear_model$model$residuals,
-                horizontal = T, col = color_fill())
+        ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
+          stat_boxplot(geom = 'errorbar', width = 0.3) +
+          geom_boxplot(fill = color_fill()) +
+          ylim(-1.2, 1.2) +
+          labs(x = '', y = '') +
+          theme_classic() +
+          theme(
+            axis.ticks.y = element_blank(),
+            axis.text.y  = element_blank(),
+            axis.line.y  = element_blank(),
+            panel.border = element_rect(color = '#000000', fill = NA),
+            axis.text.x = element_text(size = 14)
+          )
+
       } else if (input$radio_lm_resid == 'dots'){
-        plot(linear_model$model$residuals, col = color_fill(),
-             ylab = 'Residuals', pch = 19)
-        abline(h = 0, col = color_line(), lty = 'dotdash', lwd = 2)
+        point_shape <- if(length(linear_model$model$residuals) > 1e4) '.' else 20
+
+        ggplot(data = data.frame(x = seq_along(linear_model$model$residuals),
+                                 y = linear_model$model$residuals),
+               aes(x = x, y = y)) +
+          geom_point(shape = point_shape, color = color_fill()) +
+          geom_hline(yintercept = 0, color = color_line(), linetype = 2) +
+          labs(x = 'Index', y = 'Values') +
+          theme_classic() +
+          theme(axis.text.x = element_text(size = 14),
+                axis.text.y = element_text(size = 14),
+                axis.title.x = element_text(size = 16),
+                axis.title.y = element_text(size = 16)
+          )
       }
-    }) |> bindEvent(input$btn_lm_resid)
+    }, res = 96) |> bindEvent(input$btn_lm_resid)
 
     # metrics -----------------------------------------------------------------
     stats_sd <- reactive(if(is.numeric(var())) sd(var(), na.rm = T) else NA)

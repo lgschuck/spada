@@ -16,6 +16,7 @@ utils::globalVariables(
     'cols',
     'rows',
     'x',
+    'y',
     'values',
     'results',
     'value',
@@ -24,6 +25,7 @@ utils::globalVariables(
     'new_var',
     'fun',
     'Measures',
-    'groupby'
+    'groupby',
+    'density'
     )
   )

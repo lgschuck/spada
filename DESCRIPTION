@@ -17,6 +17,7 @@ Imports:
   data.table (>= 1.16.0),
   DescTools (>= 0.99.58),
   dplyr (>= 1.1.4),
+  ggplot2 (>= 3.5.1),
   gt (>= 0.11.1),
   haven (>= 2.5.4),
   htmltools (>= 0.5.8.1),

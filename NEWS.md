@@ -18,6 +18,20 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+
+## 2025.04.10-1
+
+Highlights: New dependencie **ggplot2** (all plots now are generated as ggplot objects).
+
+### Improvements
+
+1 - **Plots**: all plots now are genereted with ggplot2 (**Correlation Test, Exploratory, Normality Test, Z Test** modules)
+
+### Bug Fixes
+
+1 - **Add plot to output x Action button**: fixed, now plots are generated with ggplot2
+([#19](https://github.com/lgschuck/spada/issues/19))
+
 ## 2025.04.01-1
 
 Highlights: speed improvement in **Analysis > Exploratory** page. 

@@ -53,8 +53,8 @@ correlation_ui <- function(id) {
             card_footer(
               layout_columns(
                 col_widths = c(3, 3),
-                btn_task(ns('btn_scatter'), 'Show Scatter Plot', icon('gear')),
-                uiOutput(ns('cond_add_output_scatter'))
+                btn_task(ns('btn_scatter'), 'Show Scatter Plot', icon('chart-simple')),
+                insert_output_ui(ns('insert_scatter'))
               )
             )
           )
@@ -75,7 +75,6 @@ correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
 	  observe({
 	    output_list$elements <- output_report()
 	  })
-
 
     cor_test <- reactiveValues(results = NULL)
 
@@ -203,35 +202,29 @@ correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
       req(input$sel_var1)
       req(input$sel_var2)
 
-      function(){
-        plot(
-          subset(df_active(),
-                 select = c(input$sel_var1, input$sel_var2)) |>
-            unique(),
-          xlab = input$sel_var1,
-          ylab = input$sel_var2,
-          col = color_fill(),
-          pch = if(nrow(df_active()) > 1e4) '.' else 20,
-          cex = 0.9
+      ggplot(df_active(), aes(x = .data[[input$sel_var1]],
+                              y = .data[[input$sel_var2]])) +
+        geom_point(color = color_fill(),
+                   pch = if(nrow(df_active()) > 1e4) '.' else 20) +
+        labs(x = input$sel_var1, y = input$sel_var2) +
+        theme_classic() +
+        theme(axis.text.x = element_text(size = 14),
+              axis.text.y = element_text(size = 14),
+              axis.title.x = element_text(size = 16),
+              axis.title.y = element_text(size = 16)
         )
-      }
-    })
+
+    }) |> bindEvent(input$btn_scatter)
 
     output$scatter_plot <- renderPlot({
       req(scatter_plot())
-      scatter_plot()()
-
-    }) |> bindEvent(input$btn_scatter)
+      scatter_plot()
+    }, res = 96)
 
     # insert scatter to output --------------------------------------------------------
     mod_output_scatter <- insert_output_server(
       'insert_scatter',
-      reactive(plotTag(scatter_plot()(), '', width = 600, height = 400)))
-
-    output$cond_add_output_scatter <- renderUI({
-      req(scatter_plot())
-      insert_output_ui(ns('insert_scatter'))
-    })
+      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)))
 
     # get return from insert output module ------------------------------------
     observe({

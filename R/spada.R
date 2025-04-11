@@ -27,6 +27,12 @@
 #'
 #' @importFrom dplyr arrange filter mutate pull select
 #'
+#' @importFrom ggplot2 .data aes after_stat coord_flip element_blank
+#'             element_rect element_text geom_bar geom_boxplot geom_histogram
+#'             geom_hline geom_line geom_point geom_vline ggplot labs
+#'             stat_boxplot stat_function stat_qq stat_qq_line theme
+#'             theme_classic ylim
+#'
 #' @importFrom graphics abline barplot boxplot curve hist lines mtext polygon text
 #'
 #' @importFrom grDevices colors

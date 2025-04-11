@@ -77,7 +77,7 @@ z_test_ui <- function(id) {
               layout_columns(
                 col_widths = c(1, 3, 3),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
-                btn_task(ns('btn_hist'), 'Show Histogram', icon('gear'),
+                btn_task(ns('btn_hist'), 'Show Histogram', icon('chart-simple'),
                          style = 'margin-top: 28px'),
                 div(insert_output_ui(ns('ztest_insert_output_hist')),
                     style = 'margin-top: 28px')
@@ -206,7 +206,7 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
       'ztest_insert_output',
       reactive(
         gen_table2(
-          plotTag(ztest_plot()(), '', width = 600, height = 400),
+          plotTag(ztest_plot()(), '', width = 1000, height = 500),
           ztest_results_gt()
         )
       )
@@ -289,35 +289,37 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
       req(ztest_hist())
       validate(need(input$bins > 0, 'Bins must be 1 or higher'))
 
-      ztest_hist()()
-    }) |> bindEvent(input$btn_hist)
+      ztest_hist()
+    }, res = 96)
 
     ztest_hist <- reactive({
       req(df_active())
       req(input$sel_var)
 
-      function(){
-        hist(var(),
-             breaks = input$bins,
-             probability = TRUE,
-             col = color_fill(),
-             xlab = 'Values',
-             ylab = 'Density',
-             main = paste('Histogram of', input$sel_var)
+      ggplot(data.frame(x = var()), aes(x = x)) +
+        geom_histogram(aes(y = after_stat(density)),
+                       bins = input$bins,
+                       fill = color_fill(),
+                       color = '#000000') +
+        stat_function(fun = dnorm,
+                      args = list(mean = mean(var(), na.rm = TRUE),
+                                  sd = sd(var(), na.rm = TRUE)),
+                      color = color_line(),
+                      linewidth = 1) +
+        labs(x = 'Values', y = 'Density') +
+        theme_classic() +
+        theme(axis.text.x = element_text(size = 14),
+              axis.text.y = element_text(size = 14),
+              axis.title.x = element_text(size = 16),
+              axis.title.y = element_text(size = 16)
         )
-        curve(dnorm(x, mean = mean(var(), na.rm = T),
-                    sd = sd(var(), na.rm = T)),
-              col = color_line(),
-              lwd = 2,
-              add = TRUE)
-      }
-    })
+    }) |> bindEvent(input$btn_hist)
 
     # insert histogram to output ----------------------------------------------
     mod_insert_output_hist <- insert_output_server(
       'ztest_insert_output_hist',
       reactive(
-        plotTag(ztest_hist()(), '', width = 600, height = 400)
+        plotTag(ztest_hist(), '', width = 1000, height = 500)
       )
     )
 

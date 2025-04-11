@@ -19,7 +19,7 @@ normality_test_ui <- function(id) {
               layout_columns(
                 col_widths = c(1, 3, 3),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
-                btn_task(ns('btn_hist'), 'Show Histogram', icon('gear'),
+                btn_task(ns('btn_hist'), 'Show Histogram', icon('chart-simple'),
                          style = 'margin-top: 28px'),
                 div(insert_output_ui(ns('norm_insert_output_hist')),
                     style = 'margin-top: 28px')
@@ -34,7 +34,7 @@ normality_test_ui <- function(id) {
             full_screen = T,
             card_body(plotOutput(ns('qq_plot'))),
             card_footer(
-              btn_task(ns('btn_qq'), 'Show QQ plot', icon('gear')),
+              btn_task(ns('btn_qq'), 'Show QQ plot', icon('chart-simple')),
               insert_output_ui(ns('norm_insert_output_qq'))
             )
           )
@@ -162,37 +162,39 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line,
     output$hist <- renderPlot({
       validate(need(input$bins > 0, 'Bins must be 1 or higher'))
 
-      norm_hist()()
-
-    }) |> bindEvent(input$btn_hist)
+      norm_hist()
+    }, res = 96)
 
     norm_hist <- reactive({
       req(df_active())
       req(input$sel_var)
       req(var())
 
-      function(){
-        hist(var(),
-             breaks = input$bins,
-             probability = TRUE,
-             col = color_fill(),
-             xlab = 'Values',
-             ylab = 'Density',
-             main = paste('Histogram of', input$sel_var)
+      ggplot(data.frame(x = var()), aes(x = x)) +
+        geom_histogram(aes(y = after_stat(density)),
+                       bins = input$bins,
+                       fill = color_fill(),
+                       color = "black") +
+        stat_function(fun = dnorm,
+                      args = list(mean = mean(var(), na.rm = TRUE),
+                                  sd = sd(var(), na.rm = TRUE)),
+                      color = color_line(),
+                      linewidth = 1) +
+        labs(x = "Values",
+             y = "Density") +
+        theme_classic() +
+        theme(axis.text.x = element_text(size = 14),
+              axis.text.y = element_text(size = 14),
+              axis.title.x = element_text(size = 16),
+              axis.title.y = element_text(size = 16)
         )
-        curve(dnorm(x, mean = mean(var()),
-                    sd = sd(var())),
-              col = color_line(),
-              lwd = 2,
-              add = TRUE)
-      }
-    })
+    }) |> bindEvent(input$btn_hist)
 
     # insert histogram to output ----------------------------------------------
     mod_insert_output_hist <- insert_output_server(
       'norm_insert_output_hist',
       reactive(
-        plotTag(norm_hist()(), '', width = 600, height = 400)
+        plotTag(norm_hist(), '', width = 1000, height = 500)
       )
     )
 
@@ -206,25 +208,31 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line,
 
     # qq plot -----------------------------------------------------------------
     output$qq_plot <- renderPlot({
-      norm_qq_plot()()
-
-    })|> bindEvent(input$btn_qq)
+      norm_qq_plot()
+    }, res = 96)
 
     norm_qq_plot <- reactive({
       req(input$sel_var)
       req(var())
 
-      function(){
-        qqnorm(var(), main = paste('Normal QQ Plot:', input$sel_var),
-               col = color_fill())
-        qqline(var(), col = color_line())
-      }
-    })
+      ggplot(data.frame(x = var()), aes(sample = x)) +
+        stat_qq(color = color_fill()) +
+        stat_qq_line(color = color_line()) +
+        labs(title = paste('Normal QQ Plot:', input$sel_var),
+             x = 'Theoretical Quantiles',
+             y = 'Sample Quantiles') +
+        theme_classic() +
+        theme(axis.text.x = element_text(size = 14),
+              axis.text.y = element_text(size = 14),
+              axis.title.x = element_text(size = 16),
+              axis.title.y = element_text(size = 16)
+        )
+    }) |> bindEvent(input$btn_qq)
 
     # insert to output --------------------------------------------------------
     mod_insert_output_qq <- insert_output_server(
       'norm_insert_output_qq',
-      reactive(plotTag(norm_qq_plot()(), '', width = 600, height = 400))
+      reactive(plotTag(norm_qq_plot(), '', width = 1000, height = 500))
     )
 
     output$conditional_add_output_qq <- renderUI({
