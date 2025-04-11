@@ -176,7 +176,7 @@ exploratory_server <- function(id, input_df, df_metadata,
       if (input$radio_dist_plot == 'barplot'){
         validate(need(!is.numeric(var()), 'Var can not be numeric'))
 
-        ggplot(data = data.frame(x = var()), aes(x = factor(x))) +
+        ggplot(data.frame(x = var()), aes(x = factor(x))) +
           geom_bar(fill = color_fill()) +
           labs(x = '', y = 'Count') +
           theme_classic() +
@@ -195,7 +195,7 @@ exploratory_server <- function(id, input_df, df_metadata,
             need(!is.complex(var2()), 'Variable 2 can not be complex')
           )
 
-          ggplot(data = data.frame(x = var2(), y = var()),
+          ggplot(data.frame(x = var2(), y = var()),
                  aes(x = x, y = y, fill = x)) +
             stat_boxplot(geom = 'errorbar', width = 0.3) +
             geom_boxplot(orientation = 'x') +
@@ -221,7 +221,7 @@ exploratory_server <- function(id, input_df, df_metadata,
           if(input$radio_dist_plot == 'hist'){
             validate(need(input$bins > 0, 'Bins must be 1 or higher'))
 
-            ggplot(data = data.frame(x = var()), aes(x = x)) +
+            ggplot(data.frame(x = var()), aes(x = x)) +
               geom_histogram(
                 bins = input$bins,
                 fill = color_fill(),
@@ -284,7 +284,7 @@ exploratory_server <- function(id, input_df, df_metadata,
         ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
           geom_point(color = color_fill(), shape = point_shape) +
           geom_line(
-            data.frame(x = linear_model$x, y = linear_model$y),
+            data = data.frame(x = linear_model$x, y = linear_model$y),
             aes(x = x, y = y),
             color = color_line(),
             linewidth = 1
@@ -296,7 +296,7 @@ exploratory_server <- function(id, input_df, df_metadata,
             ),
             x = input$sel_vars2,
             y = input$sel_vars
-          )+
+          ) +
           theme_classic() +
           theme(axis.text.x = element_text(size = 14),
                 axis.text.y = element_text(size = 14),
