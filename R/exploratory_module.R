@@ -3,118 +3,154 @@
 exploratory_ui <- function(id) {
   ns <- NS(id)
 
-card(
-  full_screen = T,
-  card_body(
-    class = 'big-card',
-    layout_columns(
-      col_widths = c(2, 7, 3),
-      navset_card_pill(
-        full_screen = T,
-        nav_panel('Parameters',
-                  uiOutput(ns('ui_var_names')),
-                  uiOutput(ns('ui_var_names2'))),
-        nav_panel('Filters',
-                  checkboxInput(ns('outliers'),
-                                list('Remove Outliers', bs_icon('info-circle')) |>
-                                  ttip('Only for numeric vars'))
-        )
-      ),
-      navset_card_pill(
-        full_screen = T,
-        nav_panel(
-          'Distribution',
+  card(
+    full_screen = T,
+    card_body(
+      class = 'big-card',
+      layout_columns(
+        col_widths = c(2, 7, 3),
+        navset_card_pill(
           full_screen = T,
-          card_body(plotOutput(ns('g_dist'))),
-          card_footer(
-            fluidRow(
-              column(8,
-                     radioGroupButtons(
-                       ns('radio_dist_plot'),
-                       'Plot type:',
-                       c('Histogram' = 'hist',
-                         'Boxplot' = 'boxplot',
-                         'Boxplot by Groups' = 'boxplot_group',
-                         'Dots' = 'dots',
-                         'Barplot' = 'barplot'), size = 'sm', individual = T)),
-              column(2, numericInput(ns('var_percentile'), 'Percentile', 50, 0, 100, 5)),
-              column(2, conditionalPanel(
-                condition = "input.radio_dist_plot == 'hist'", ns = ns,
-                numericInput(ns('bins'), 'Bins', 10, 5, step = 10))
-              ),
-            ),
-            div(style = "margin-bottom: -8px !important;"),
+          nav_panel('Parameters',
+                    uiOutput(ns('ui_var_names')),
+                    uiOutput(ns('ui_var_names2'))),
+          nav_panel('Filters',
+                    checkboxInput(ns('outliers'),
+                                  list('Remove Outliers', bs_icon('info-circle')) |>
+                                    ttip('Only for numeric vars'))
           )
         ),
-        nav_panel(
-          'Scatter',
+        navset_card_pill(
           full_screen = T,
-          card_body(plotOutput(ns('g_scatter'))),
-          card_footer(
-            layout_column_wrap(
-              checkboxInput(
-                ns('scatter_lm'),
-                list('Plot Linear Model', bs_icon('info-circle')) |>
-                  ttip('Show the line only if LM model was created')),
-              btn_task(ns('btn_scatter'), 'Generate Plot', icon('chart-simple'))
-            ),
-            div(style = "margin-bottom: -18px !important;"),
-          )
-        ),
-        nav_panel(
-          'Table',
-          full_screen = T,
-          card_body(
-            radioGroupButtons(ns('table_type'), 'Table type:',
-                         c('1 Variable' = '1d',
-                           '2 Variables' = '2d'), size = 'sm', individual = T),
-            verbatimTextOutput(ns('table'), placeholder = T),
-          )
-        ),
-        nav_panel(
-          'Linear Model',
-          full_screen = T,
-          navset_card_pill(
-            nav_panel(
-              'Parameters',
-              sliderInput(ns('sample_size'), 'Sample Size (%)', 0, 100, 100) |>
-                tooltip('Applied only if valid values are greater than 10.000'),
-              layout_column_wrap(
-                btn_task(ns('btn_scatter_lm_run'), 'Run Linear Model', icon('gear')),
-                btn_task(ns('btn_scatter_lm_clear'), 'Clear Linear Model', icon('trash-can'))
-              )
-            ),
-            nav_panel('Output', verbatimTextOutput(ns('linear_model'))),
-            nav_panel(
-              'Residuals',
-              plotOutput(ns('g_lm_resid')),
-              card_footer(
-                layout_column_wrap(
-                  radioGroupButtons(ns('radio_lm_resid'), 'Plot type:',
-                               c('Histogram' = 'hist', 'Boxplot' = 'boxplot',
-                                 'Dots' = 'dots'), size = 'sm', individual = T),
-                  btn_task(ns('btn_lm_resid'), 'Plot residuals', icon('chart-simple'))
+          nav_panel(
+            'Distribution',
+            full_screen = T,
+            card_body(plotOutput(ns('dist_plot'))),
+            card_footer(
+              fluidRow(
+                column(6,
+                       radioGroupButtons(
+                         ns('radio_dist_plot'),
+                         'Plot type:',
+                         c('Histogram' = 'hist',
+                           'Boxplot' = 'boxplot',
+                           'Boxplot by Groups' = 'boxplot_group',
+                           'Dots' = 'dots',
+                           'Barplot' = 'barplot'), size = 'sm', individual = T)),
+                column(2, numericInput(ns('var_percentile'), 'Percentile', 50, 0, 100, 5)),
+                column(1, conditionalPanel(
+                  condition = "input.radio_dist_plot == 'hist'", ns = ns,
+                  numericInput(ns('bins'), 'Bins', 10, 5, step = 10))
                 ),
-                div(style = "margin-bottom: -24px !important;"),
-              )
+                column(3, div(insert_output_ui(ns('insert_dist_plot'))),
+                    style = 'margin-top: 28px')
+              ),
+              div(style = "margin-bottom: -8px !important;"),
+            )
+          ),
+          nav_panel(
+            'Scatter',
+            full_screen = T,
+            card_body(plotOutput(ns('scatter_plot'))),
+            card_footer(
+              layout_column_wrap(
+                checkboxInput(
+                  ns('scatter_lm'),
+                  list('Plot Linear Model', bs_icon('info-circle')) |>
+                    ttip('Show the line only if LM model was created')),
+                btn_task(ns('btn_scatter'), 'Generate Plot', icon('chart-simple')),
+                insert_output_ui(ns('insert_scatter'))
+              ),
+              div(style = "margin-bottom: -18px !important;"),
+            )
+          ),
+          nav_panel(
+            'Table',
+            full_screen = T,
+            card_body(
+              fluidRow(
+                column(4,
+                  radioGroupButtons(
+                    ns('table_var'),
+                    'Table variables:',
+                    c('1 Variable' = '1v', '2 Variables' = '2v'),
+                    size = 'sm',
+                    individual = T
+                  )
+                ),
+                column(4,
+                  radioGroupButtons(
+                    ns('table_type'),
+                    'Table type:',
+                    c('Absolute Values' = 'abs_table', 'Percent Values' = 'perc_table'),
+                    size = 'sm',
+                    individual = T
+                  )
+                ),
+              ),
+              gt_output(ns('table')),
             ),
-          )),
-      ),
-      navset_card_pill(
-        nav_panel('Stats', full_screen = T, stats_table_ui(ns('pA_stats')))
+            card_footer(
+              insert_output_ui(ns('insert_table_values'))
+            )
+          ),
+          nav_panel(
+            'Linear Model',
+            full_screen = T,
+            navset_card_pill(
+              nav_panel(
+                'Parameters',
+                sliderInput(ns('sample_size'), 'Sample Size (%)', 0, 100, 100) |>
+                  tooltip('Applied only if valid values are greater than 10.000'),
+                layout_column_wrap(
+                  btn_task(ns('btn_scatter_lm_run'), 'Run Linear Model', icon('gear')),
+                  btn_task(ns('btn_scatter_lm_clear'), 'Clear Linear Model', icon('trash-can'))
+                )
+              ),
+              nav_panel('Output', verbatimTextOutput(ns('linear_model'))),
+              nav_panel(
+                'Residuals',
+                plotOutput(ns('lm_resid_plot')),
+                card_footer(
+                  layout_column_wrap(
+                    radioGroupButtons(ns('radio_lm_resid'), 'Plot type:',
+                                 c('Histogram' = 'hist', 'Boxplot' = 'boxplot',
+                                   'Dots' = 'dots'), size = 'sm', individual = T),
+                    btn_task(ns('btn_lm_resid'), 'Plot residuals', icon('chart-simple'),
+                             style = 'margin-top: 28px'),
+                    div(insert_output_ui(ns('insert_lm_resid_plot')),
+                        style = 'margin-top: 28px')
+                  ),
+                  div(style = "margin-bottom: -24px !important;"),
+                )
+              ),
+            )
+          ),
+        ),
+        navset_card_pill(
+          nav_panel('Stats', full_screen = T, stats_table_ui(ns('pA_stats')),
+                    card_footer(insert_output_ui(ns('insert_stats_table')))
+          )
+        )
       )
     )
   )
-)
-
 }
 
 # server ----------------------------------------------------------------------
 exploratory_server <- function(id, input_df, df_metadata,
-                               color_fill, color_line) {
+                               color_fill, color_line, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
+    # outupt objects ----------------------------------------------------------
+    output_list <- reactiveValues(elements = NULL)
+
+    observe({
+      output_list$elements <- output_report()
+    })
+
+    # df active ---------------------------------------------------------------
     df <- reactiveValues()
     observe({
       df$df_active <- input_df()
@@ -169,7 +205,7 @@ exploratory_server <- function(id, input_df, df_metadata,
     )
 
     # render plots ------------------------------------------------------------
-    output$g_dist <- renderPlot({
+    dist_plot <- reactive({
       req(var())
       req(var2())
 
@@ -233,7 +269,7 @@ exploratory_server <- function(id, input_df, df_metadata,
               theme(axis.text.x = element_text(size = 14),
                     axis.text.y = element_text(size = 14),
                     axis.title.y = element_text(size = 16)
-                    )
+              )
 
           } else if (input$radio_dist_plot == 'boxplot'){
             ggplot(data = data.frame(x = var()), aes(x = x)) +
@@ -268,13 +304,14 @@ exploratory_server <- function(id, input_df, df_metadata,
           }
         }
       }
+    })
+
+    output$dist_plot <- renderPlot({
+      req(dist_plot())
+      dist_plot()
     }, res = 96)
     # render scatter plot -----------------------------------------------------
-    output$g_scatter <- renderPlot({
-      validate(
-        need(is.numeric(var()) && is.numeric(var2()), 'Variables must be numeric')
-      )
-
+    scatter_plot <- reactive({
       point_shape <- if(length(var()) > 1e4) "." else 20
 
       if (input$scatter_lm &&
@@ -302,8 +339,7 @@ exploratory_server <- function(id, input_df, df_metadata,
                 axis.text.y = element_text(size = 14),
                 axis.title.x = element_text(size = 16),
                 axis.title.y = element_text(size = 16)
-                )
-
+          )
       } else {
         ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
           geom_point(color = color_fill(), shape = point_shape) +
@@ -314,18 +350,86 @@ exploratory_server <- function(id, input_df, df_metadata,
                 axis.text.y = element_text(size = 14),
                 axis.title.x = element_text(size = 16),
                 axis.title.y = element_text(size = 16)
-                )
+          )
       }
-    }, res = 96) |> bindEvent(input$btn_scatter)
+    })|> bindEvent(input$btn_scatter)
+
+    output$scatter_plot <- renderPlot({
+      validate(
+        need(is.numeric(var()) && is.numeric(var2()), 'Variables must be numeric')
+      )
+
+      scatter_plot()
+    }, res = 96)
 
     # tables ------------------------------------------------------------------
-    output$table <- renderPrint(
-      if(input$table_type == '1d') {
-        table(var())
-      } else if (input$table_type == '2d'){
-        table(var(), var2())
+    table_values <- reactive({
+      req(var())
+
+      if(input$table_var == '1v') {
+
+        validate(need(is.character(var()) || is.factor(var()) || is.logical(var()),
+                      'Var must be character, factor or logical'))
+
+        if(input$table_type == 'abs_table'){
+          tab1 <- var() |> table()
+          y_label <- 'Frequency'
+        } else if(input$table_type == 'perc_table'){
+          tab1 <- var() |> table() |> prop.table() * 100
+          y_label <- 'Relative Frequency (%)'
+        }
+
+        tab1 |>
+          as.data.frame() |>
+          gt() |>
+          cols_label(
+            Var1 = input$sel_vars,
+            Freq = y_label
+          )
+
+      } else if (input$table_var == '2v'){
+        req(var())
+        req(var2())
+
+        validate(need(
+          input$sel_vars != input$sel_vars2 &
+          (is.character(var()) || is.factor(var()) || is.logical(var())) &
+            (is.character(var2()) || is.factor(var2()) || is.logical(var2())),
+          'Select two diferent variables of type character, factor or logical'))
+
+        if(input$table_type == 'abs_table'){
+          tab1 <- table(var(), var2())
+          y_label <- input$sel_vars2
+        } else if(input$table_type == 'perc_table'){
+          tab1 <- table(var(), var2()) |> prop.table() * 100
+          y_label <- paste(input$sel_vars2, '(%)')
+        }
+
+        tab1 <- tab1 |>
+          as.data.frame.matrix()
+
+        var2_names <- names(tab1)
+
+        df <- cbind(var1 = rownames(tab1), tab1)
+
+        df |> gt() |>
+          cols_label(var1 = "") |>
+          tab_spanner(
+            label = input$sel_vars,
+            columns = var1
+          ) |>
+          tab_spanner(
+            label = y_label,
+            columns = var2_names
+          )
       }
-    )
+    })
+
+    output$table <- render_gt({
+      req(table_values())
+      table_values() |>
+        opt_interactive()
+    })
 
     # linear model ------------------------------------------------------------
     linear_model <- reactiveValues(
@@ -368,10 +472,15 @@ exploratory_server <- function(id, input_df, df_metadata,
 
     observe({
       linear_model$model <- NULL
+      linear_model$model$residuals <- NULL
       linear_model$x <- NULL
       linear_model$y <- NULL
       linear_model$x_name <- ''
       linear_model$y_name <- ''
+
+      # clear the residual plot to avoid incorrect output element
+      update_lm_resid_plot(update_lm_resid_plot() + 1)
+
       msg('Lm model cleared.')
     }) |> bindEvent(input$btn_scatter_lm_clear)
 
@@ -384,9 +493,14 @@ exploratory_server <- function(id, input_df, df_metadata,
     })
 
     # plot linear model residuals ---------------------------------------------
-    output$g_lm_resid <- renderPlot({
+    update_lm_resid_plot <- reactiveVal(0)
 
-      validate(need(isTruthy(linear_model$model), 'No residuals to plot'))
+    observe({
+      update_lm_resid_plot(update_lm_resid_plot() + 1)
+    }) |> bindEvent(input$btn_lm_resid)
+
+    lm_resid_plot <- reactive({
+      req(linear_model$model$residuals)
 
       if(input$radio_lm_resid == 'hist'){
         ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
@@ -429,7 +543,13 @@ exploratory_server <- function(id, input_df, df_metadata,
                 axis.title.y = element_text(size = 16)
           )
       }
-    }, res = 96) |> bindEvent(input$btn_lm_resid)
+    }) |> bindEvent(update_lm_resid_plot())
+
+    output$lm_resid_plot <- renderPlot({
+      validate(need(isTruthy(linear_model$model), 'No residuals to plot'))
+
+      lm_resid_plot()
+    }, res = 96)
 
     # metrics -----------------------------------------------------------------
     stats_sd <- reactive(if(is.numeric(var())) sd(var(), na.rm = T) else NA)
@@ -446,10 +566,88 @@ exploratory_server <- function(id, input_df, df_metadata,
       } else { NA }
     )
     # stats table -------------------------------------------------------------
-    stats_table_server('pA_stats', var, var2,
-                       reactive(input$var_percentile),
-                       var_percentile,
-                       stats_sd, stats_correlation)
+    mod_stats_table <- stats_table_server(
+      'pA_stats',
+      var,
+      var2,
+      reactive(input$var_percentile),
+      var_percentile,
+      stats_sd,
+      stats_correlation
+    )
 
-  })
+    # get return from stats table ---------------------------------------------
+    stats_table <- reactive({
+      req(mod_stats_table$table())
+      mod_stats_table$table()
+    })
+
+    # insert dist plot to output ----------------------------------------------
+    mod_output_dist_plot <- insert_output_server(
+      'insert_dist_plot',
+      reactive(plotTag(dist_plot(), '', width = 1000, height = 500)))
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_dist_plot$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_dist_plot$output_element()
+
+    }) |> bindEvent(mod_output_dist_plot$output_element())
+
+    # insert scatter to output ------------------------------------------------
+    mod_output_scatter <- insert_output_server(
+      'insert_scatter',
+      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)))
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_scatter$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
+
+    }) |> bindEvent(mod_output_scatter$output_element())
+
+    # insert lm residual plot to output ---------------------------------------
+    mod_output_lm_resid_plot <- insert_output_server(
+      'insert_lm_resid_plot',
+      reactive(plotTag(lm_resid_plot(), '', width = 1000, height = 500)))
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_lm_resid_plot$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_lm_resid_plot$output_element()
+
+    }) |> bindEvent(mod_output_lm_resid_plot$output_element())
+
+    # insert stats table ------------------------------------------------------
+    mod_output_stats_table <- insert_output_server(
+      'insert_stats_table', stats_table)
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_stats_table$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_stats_table$output_element()
+
+    }) |> bindEvent(mod_output_stats_table$output_element())
+
+    # insert table of values to output ----------------------------------------
+    mod_output_table_values <- insert_output_server(
+      'insert_table_values',
+      table_values
+    )
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_table_values$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_table_values$output_element()
+
+    }) |> bindEvent(mod_output_table_values$output_element())
+
+    # return values -----------------------------------------------------------
+    return(list(output_file = reactive(output_list$elements)))
+    })
 }

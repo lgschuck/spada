@@ -107,5 +107,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
 
     save_gt_server('pA_stats_table_save_gt', stats_table_fmt)
 
+    # return values -----------------------------------------------------------
+    return(list(table = stats_table_fmt))
   })
 }

@@ -226,8 +226,13 @@ spada_server <- function(datasets){
     }) |> bindEvent(input$pE_btn_clear_bkp)
 
     # analysis page events ----------------------------------------------------
-    exploratory_server('pA_exploratory', reactive(df$df_active),
-                       df_metadata, color_fill, color_line)
+    mod_exploratory <- exploratory_server('pA_exploratory', reactive(df$df_active),
+                       df_metadata, color_fill, color_line,
+                       reactive(output_report$elements))
+    observe({
+      req(mod_exploratory$output_file())
+      output_report$elements <- mod_exploratory$output_file()
+    }) |> bindEvent(mod_exploratory$output_file())
 
     # descriptive stats -------------------------------------------------------
     mod_descriptive_stats <- descriptive_stats_server('pA_desc_stats',

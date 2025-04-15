@@ -18,6 +18,20 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+## 2025.04.14-1
+
+Highlights: Now **Exploratory Module** allow insert element to output
+
+### Improvements
+
+1 - **Exploratory Page** tables: improved tables with absolute and percent values
+
+2 - **Exploratory Page: insert elements to output**: now elements of Exploratory Page can be added to output
+([#25](https://github.com/lgschuck/spada/issues/25))
+
+3 - **spada_server.R**: exploratory module now provide return (output element)
+
+4 - **Stats table** module: now returns table to be added to output
 
 ## 2025.04.10-1
 
