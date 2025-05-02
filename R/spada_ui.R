@@ -126,7 +126,7 @@ spada_ui <- function(){
                   icon = bs_icon('bar-chart-line'),
                   exploratory_ui('pA_exploratory')),
         nav_panel('Descriptive Stats',
-                  icon = bs_icon('graph-up'),
+                  icon = bs_icon('list-columns-reverse'),
                   descriptive_stats_ui('pA_desc_stats')),
         nav_panel('Correlation Test',
                   icon = bs_icon('magnet'),
@@ -137,6 +137,9 @@ spada_ui <- function(){
         nav_panel('Z Test',
                   icon = icon('z'),
                   z_test_ui('pA_z_test')),
+        nav_panel('Linear Model',
+                  icon = bs_icon('graph-up'),
+                  lm_ui('pA_lm')),
       ), # end of analysis menu
 
       # output ----------------------------------------------------------------

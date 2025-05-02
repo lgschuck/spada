@@ -2,7 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-libs
+.Rprofile
 inst/doc
 /doc/
 /Meta/
+install_pkgs.R

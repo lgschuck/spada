@@ -40,7 +40,7 @@
 #' @importFrom gt cols_align cols_hide cols_label cols_merge cols_move
 #'             cols_width data_color fmt_bytes fmt_icon fmt_integer
 #'             fmt_number fmt_percent gt gt_output gtsave opt_interactive
-#'             render_gt sub_missing sub_values tab_options
+#'             render_gt sub_missing sub_values tab_options tab_spanner
 #'
 #' @importFrom haven as_factor is.labelled read_sav write_sav
 #'
@@ -55,8 +55,8 @@
 #'
 #' @importFrom shinybusy busy_start_up spin_epic
 #'
-#' @importFrom stats cor lm sd var median rnorm IQR cor.test dnorm ks.test
-#'             qnorm qqline qqnorm shapiro.test
+#' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm
+#'             qnorm qqline qqnorm rnorm sd shapiro.test var
 #'
 #' @importFrom tools toTitleCase
 #'

@@ -6,19 +6,19 @@ if(interactive()){
   rm(repo)
 
   .libPaths('../.spada_libs')
-
-  library(shiny)
-  library(bslib)
-  library(DT)
-  library(bsicons)
-  library(data.table)
-  library(dplyr)
-  library(conflicted)
-  library(shinyWidgets)
-  library(shinybusy)
-  library(DescTools)
-
-  conflicted::conflict_prefer('filter', 'dplyr')
-  conflicted::conflict_prefer('between', 'data.table')
+#
+#   library(shiny)
+#   library(bslib)
+#   library(DT)
+#   library(bsicons)
+#   library(data.table)
+#   library(dplyr)
+#   library(conflicted)
+#   library(shinyWidgets)
+#   library(shinybusy)
+#   library(DescTools)
+#
+#   conflicted::conflict_prefer('filter', 'dplyr')
+#   conflicted::conflict_prefer('between', 'data.table')
 
 }

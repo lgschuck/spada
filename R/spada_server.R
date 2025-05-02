@@ -269,7 +269,7 @@ spada_server <- function(datasets){
       output_report$elements <- mod_norm_test$output_file()
     }) |> bindEvent(mod_norm_test$output_file())
 
-    # normality test ----------------------------------------------------------
+    # z test ------------------------------------------------------------------
     mod_ztest <- z_test_server('pA_z_test', reactive(df$df_active),
                                df_metadata, color_fill, color_line,
                                reactive(output_report$elements))
@@ -278,6 +278,15 @@ spada_server <- function(datasets){
       req(mod_ztest$output_file())
       output_report$elements <- mod_ztest$output_file()
     }) |> bindEvent(mod_ztest$output_file())
+
+    # linear model ------------------------------------------------------------
+    mod_lm <- lm_server('pA_lm', reactive(df$df_active),
+                        df_metadata, reactive(output_report$elements))
+
+    observe({
+      req(mod_lm$output_file())
+      output_report$elements <- mod_lm$output_file()
+    }) |> bindEvent(mod_lm$output_file())
 
     # output events -----------------------------------------------------------
     output_report <- reactiveValues(elements = list(report_card()))

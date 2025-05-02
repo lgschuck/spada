@@ -10,11 +10,11 @@ License: AGPL (>= 3) + file LICENSE
 URL: https://github.com/lgschuck/spada
 BugReports: https://github.com/lgschuck/spada/issues
 Depends:
-  R (>= 4.1.0)
+  R (>= 4.4.0)
 Imports:
   bsicons (>= 0.1.2),
   bslib (>= 0.8.0),
-  data.table (>= 1.16.0),
+  data.table (>= 1.16.4),
   DescTools (>= 0.99.58),
   dplyr (>= 1.1.4),
   ggplot2 (>= 3.5.1),

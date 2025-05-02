@@ -29,11 +29,16 @@ This package is inspired in many other tools like:
 ## Installation
 
 You can install the development version of spada from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/) using the command below. This way you will
+get the same packages used in the Spada development.
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("lgschuck/spada")
+install.packages("remotes")
+remotes::install_github(
+  "lgschuck/spada",
+  dependencies = TRUE,
+  repos = 'https://packagemanager.posit.co/cran/2024-12-10'
+  )
 ```
 
 For a specific release visit
@@ -43,7 +48,12 @@ ref parameter bellow for the tag name:
 ![](man/figures/install_release.png)
 
 ``` r
-devtools::install_github("lgschuck/spada", ref = "2025.01.13-1")
+remotes::install_github(
+  "lgschuck/spada",
+  dependencies = TRUE,
+  repos = 'https://packagemanager.posit.co/cran/2024-12-10',
+  ref = "2025.01.13-1"
+  )
 ```
 
 ## Loading the package
