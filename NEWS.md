@@ -29,7 +29,7 @@ Highlights: Removed docx format in save table and change in plot colors (interna
 ### Bug Fixes
 
 1 - **Error when Save Table in docx**: docx demandsd pandoc. Format removed
-([#19](https://github.com/lgschuck/spada/issues/6))
+([#26](https://github.com/lgschuck/spada/issues/26))
 
 ## 2025.04.14-1
 
