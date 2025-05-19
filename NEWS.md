@@ -18,6 +18,19 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+## 2025.05.19-1
+
+Highlights: Removed docx format in save table and change in plot colors (internal use)
+
+### Improvements
+
+1 - **Plot colors fill and line** now use session$userData, avoid passing meny times as a module parameter
+
+### Bug Fixes
+
+1 - **Error when Save Table in docx**: docx demandsd pandoc. Format removed
+([#19](https://github.com/lgschuck/spada/issues/6))
+
 ## 2025.04.14-1
 
 Highlights: Now **Exploratory Module** allow insert element to output

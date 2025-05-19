@@ -112,8 +112,7 @@ normality_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-normality_test_server <- function(id, df, df_metadata, color_fill, color_line,
-                                  output_report) {
+normality_test_server <- function(id, df, df_metadata, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
@@ -173,12 +172,12 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line,
       ggplot(data.frame(x = var()), aes(x = x)) +
         geom_histogram(aes(y = after_stat(density)),
                        bins = input$bins,
-                       fill = color_fill(),
+                       fill = session$userData$fill_color,
                        color = "black") +
         stat_function(fun = dnorm,
                       args = list(mean = mean(var(), na.rm = TRUE),
                                   sd = sd(var(), na.rm = TRUE)),
-                      color = color_line(),
+                      color = session$userData$line_color,
                       linewidth = 1) +
         labs(x = "Values",
              y = "Density") +
@@ -216,8 +215,8 @@ normality_test_server <- function(id, df, df_metadata, color_fill, color_line,
       req(var())
 
       ggplot(data.frame(x = var()), aes(sample = x)) +
-        stat_qq(color = color_fill()) +
-        stat_qq_line(color = color_line()) +
+        stat_qq(color = session$userData$fill_color) +
+        stat_qq_line(color = session$userData$line_color) +
         labs(title = paste('Normal QQ Plot:', input$sel_var),
              x = 'Theoretical Quantiles',
              y = 'Sample Quantiles') +

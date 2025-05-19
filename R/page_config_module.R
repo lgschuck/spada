@@ -75,6 +75,11 @@ page_config_server <- function(id) {
       list('fill' = input$sel_fill, 'line' = input$sel_line)
     })
 
+    observe({
+      session$userData$fill_color <- palette()[['fill']]
+      session$userData$line_color <- palette()[['line']]
+    })
+
     output$sample_plot <- renderPlot({
       req(palette())
       hist(
@@ -118,8 +123,6 @@ page_config_server <- function(id) {
         }
       )
     }) |> bindEvent(input$btn_theme)
-
-    return(list(palette = palette))
 
   })
 }

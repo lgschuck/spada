@@ -65,7 +65,7 @@ correlation_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
+correlation_server <- function(id, df, df_metadata, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
@@ -204,7 +204,7 @@ correlation_server <- function(id, df, df_metadata, color_fill, output_report) {
 
       ggplot(df_active(), aes(x = .data[[input$sel_var1]],
                               y = .data[[input$sel_var2]])) +
-        geom_point(color = color_fill(),
+        geom_point(color = session$userData$fill_color,
                    pch = if(nrow(df_active()) > 1e4) '.' else 20) +
         labs(x = input$sel_var1, y = input$sel_var2) +
         theme_classic() +

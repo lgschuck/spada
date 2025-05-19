@@ -92,7 +92,7 @@ z_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_report) {
+z_test_server <- function(id, df, df_metadata, output_report) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
@@ -299,12 +299,12 @@ z_test_server <- function(id, df, df_metadata, color_fill, color_line, output_re
       ggplot(data.frame(x = var()), aes(x = x)) +
         geom_histogram(aes(y = after_stat(density)),
                        bins = input$bins,
-                       fill = color_fill(),
+                       fill = session$userData$fill_color,
                        color = '#000000') +
         stat_function(fun = dnorm,
                       args = list(mean = mean(var(), na.rm = TRUE),
                                   sd = sd(var(), na.rm = TRUE)),
-                      color = color_line(),
+                      color = session$userData$line_color,
                       linewidth = 1) +
         labs(x = 'Values', y = 'Density') +
         theme_classic() +

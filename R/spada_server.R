@@ -227,8 +227,7 @@ spada_server <- function(datasets){
 
     # analysis page events ----------------------------------------------------
     mod_exploratory <- exploratory_server('pA_exploratory', reactive(df$df_active),
-                       df_metadata, color_fill, color_line,
-                       reactive(output_report$elements))
+                       df_metadata, reactive(output_report$elements))
     observe({
       req(mod_exploratory$output_file())
       output_report$elements <- mod_exploratory$output_file()
@@ -248,7 +247,6 @@ spada_server <- function(datasets){
     mod_correlation_test <- correlation_server('pA_correlation',
                                                reactive(df$df_active),
                                                df_metadata,
-                                               color_fill,
                                                reactive(output_report$elements))
 
     observe({
@@ -260,8 +258,6 @@ spada_server <- function(datasets){
     mod_norm_test <- normality_test_server('pA_normality_test',
                           reactive(df$df_active),
                           df_metadata,
-                          color_fill,
-                          color_line,
                           reactive(output_report$elements))
 
     observe({
@@ -271,8 +267,7 @@ spada_server <- function(datasets){
 
     # z test ------------------------------------------------------------------
     mod_ztest <- z_test_server('pA_z_test', reactive(df$df_active),
-                               df_metadata, color_fill, color_line,
-                               reactive(output_report$elements))
+                               df_metadata, reactive(output_report$elements))
 
     observe({
       req(mod_ztest$output_file())
@@ -300,8 +295,6 @@ spada_server <- function(datasets){
 
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')
-    color_fill <- reactive(mod_pC$palette()[['fill']])
-    color_line <- reactive(mod_pC$palette()[['line']])
 
     # about events ------------------------------------------------------------
     about_spada_server('about_spada')
