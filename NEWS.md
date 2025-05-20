@@ -18,13 +18,25 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+## 2025.05.20-1
+
+Highlights: New operations to use in freehand Calculate var (Edit page)
+
+### Improvements
+
+1 - **Calculate Module** received some new operations: as.integer, as.numeric, as.characater, as.double, ifelse, fifelse and if_else.
+
+2 - **Dangerous functions**: now substitute and substitute2 are in the dangerous functions list (internal use)
+
 ## 2025.05.19-1
 
-Highlights: Removed docx format in save table and change in plot colors (internal use)
+Highlights: New **Linear Model** module, removed docx format in save table and change in plot colors (internal use)
 
 ### Improvements
 
 1 - **Plot colors fill and line** now use session$userData, avoid passing meny times as a module parameter
+
+2 - New **Linear Model** module
 
 ### Bug Fixes
 

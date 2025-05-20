@@ -72,9 +72,15 @@ math_funs <- c(
     'Cosine' = 'cos',
     'Tangent' = 'tan',
     'Order' = 'order',
+    'As Numeric' = 'as.numeric',
     'Is Numeric' = 'is.numeric',
+    'As Double' = 'as.double',
     'Is Double' = 'is.double',
-    'Is Integer' = 'is.integer'
+    'As Integer' = 'as.integer',
+    'Is Integer' = 'is.integer',
+    'Is Integer' = 'is.integer',
+    'As Numeric' = 'as.numeric',
+    'Is Numeric' = 'is.numeric'
     )
 )
 
@@ -84,6 +90,7 @@ char_funs <- c(
   'To Upper' = 'toupper',
   'To Lower' = 'tolower',
   'N Char' = 'nchar',
+  'As Char' = 'as.character',
   'Is Char' = 'is.character'
 )
 
@@ -132,7 +139,7 @@ complex_funs <- c(
 # basic operations ---------------------------------------------------------
 
 basic_operations <- c(
-  #base package
+  # base package
   '+', '-', '+', '-', '/', '*', '^',
   '==', '!=', '!', '>', '>=', '<', '<=',
   '&', '|', 'xor',
@@ -144,11 +151,16 @@ basic_operations <- c(
   'isTRUE', 'isFALSE',
   'c',
   'as.Date', 'as.POSIXct', 'as.POSIXlt',
+  'ifelse',
+
+  # data.table package
+  '%notin%', 'between', '%between%', 'fifelse',
 
   # DescTools package
   'Outlier',
-  # data.table package
-  '%notin%', 'between', '%between%',
+
+  # dplyr package
+  'if_else',
 
   #stats package
   'quantile',
@@ -182,7 +194,7 @@ dangerous_operations <- c(
   'do.call',
   'eval', 'eval.parent', 'evalq',
   'get', 'globalenv', 'new.env', 'parent.env', 'parse',
-  'remove', 'rm', 'setwd', 'Sys.setenv',
+  'remove', 'rm', 'setwd', 'substitute', 'Sys.setenv',
 
   # R base - files system
   'dir.create', 'dir.exists', 'dir.remove',
@@ -203,7 +215,7 @@ dangerous_operations <- c(
   # data.table
   ':=',
   'set', 'setattr', 'setcolorder', 'setnames', 'setDT',
-  'setDF', 'setkey', 'setorder'
+  'setDF', 'setkey', 'setorder', 'substitute2'
 )
 
 # safe env function -------------------------------------------------------

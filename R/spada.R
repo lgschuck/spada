@@ -19,13 +19,13 @@
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
-#'             fread fwrite hour mday minute month quarter second setcolorder
+#'             fifelse fread fwrite hour mday minute month quarter second setcolorder
 #'             setDT setnames setorderv shift wday week yday year
 
 #' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest
 #'
-#' @importFrom dplyr arrange filter mutate pull select
+#' @importFrom dplyr arrange if_else filter mutate pull select
 #'
 #' @importFrom ggplot2 .data aes after_stat coord_flip element_blank
 #'             element_rect element_text geom_bar geom_boxplot geom_histogram

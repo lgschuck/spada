@@ -1,5 +1,6 @@
 ---
 title: "Intro"
+date: "`r format(Sys.Date(), '%d/%m/%Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Intro}
@@ -64,7 +65,3 @@ The dataset in which the operations will be applied are the Active dataset. One 
 Spada uses a page_navbar from bslib package. In the left side are the menus that lead to the app pages. In the right side are the Active dataset name.
 
 ![](images/navbar_active_dataset.PNG)
-
-------------------------------------------------------------------------
-
-Last Update: `r file.info('./vignettes/Intro.Rmd')$mtime`
