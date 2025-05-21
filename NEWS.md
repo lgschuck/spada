@@ -18,6 +18,15 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+
+## 2025.05.21-1
+
+Highlights: New tests (testthat) for **Data Overview** module
+
+### Improvements
+
+1 - **Data Overview** module: new testthat file and creation idx and data_gt as reactives for automated tests.
+
 ## 2025.05.20-1
 
 Highlights: New operations to use in freehand Calculate var (Edit page)

@@ -20,34 +20,44 @@ data_overview_ui <- function(id) {
 data_overview_server <- function(id, df) {
   moduleServer(id, function(input, output, session) {
 
+    idx <- reactive({
+      req(input$size_sample)
+
+      validate(need(input$size_sample > 0, 'Number of rows must be > 0'))
+
+      n_show <- max(1, input$size_sample)
+      n_show <- min(n_show, nrow(df()))
+
+      if(input$radio_sample == 'first'){
+        idx <- 1:n_show
+      } else if (input$radio_sample == 'sample'){
+        idx <- sample.int(nrow(df()), n_show, replace = F)
+      }
+    })
+
+    data_gt <- reactive({
+      req(idx())
+
+      df()[idx(), ] |>
+        lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
+        as.data.frame()
+    })
+
     output$gt <- render_gt({
-        req(input$size_sample)
+      req(data_gt())
 
-        validate(need(input$size_sample > 0, 'Number of rows must be > 0'))
-
-        n_show <- max(1, input$size_sample)
-        n_show <- min(n_show, nrow(df()))
-
-        if(input$radio_sample == 'first'){
-          idx <- 1:n_show
-        } else if (input$radio_sample == 'sample'){
-          idx <- sample.int(nrow(df()), n_show, replace = F)
-        }
-
-        df()[idx, ] |>
-          lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
-          as.data.frame() |>
-          gt() |>
-          opt_interactive(
-            page_size_default = 9,
-            use_filters = T,
-            use_resizers = T,
-            use_highlight = T,
-            use_compact_mode = T,
-            use_text_wrapping = F,
-            use_page_size_select = T
-          ) |>
-          tab_options(table.background.color = bg_color)
+      data_gt() |>
+        gt() |>
+        opt_interactive(
+          page_size_default = 9,
+          use_filters = T,
+          use_resizers = T,
+          use_highlight = T,
+          use_compact_mode = T,
+          use_text_wrapping = F,
+          use_page_size_select = T
+        ) |>
+        tab_options(table.background.color = bg_color)
     })
   })
 }
