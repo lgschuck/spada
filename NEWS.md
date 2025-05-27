@@ -18,6 +18,16 @@ editor_options:
 
 5 - Tests: create tests for the app
 
+6 - Session$userData: userData to save datasets instead of reactives. This should reduce many passages of the active data set between modules.
+
+## 2025.05.26-1
+
+Highlights: fixed selection of variables in **Linear Model** module
+
+### Bug Fixes
+
+1 - **Linear Model: error in variable selection**: fixed to update list of variables intead of renderUI.
+([#29](https://github.com/lgschuck/spada/issues/29))
 
 ## 2025.05.21-1
 

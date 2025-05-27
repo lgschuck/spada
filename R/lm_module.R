@@ -7,7 +7,13 @@ lm_ui <- function(id) {
     card_header('Linear Model', class = 'mini-header'),
     layout_sidebar(
       class = 'card-sidebar',
-      sidebar = sidebar(uiOutput(ns('parameters'))),
+      sidebar = sidebar(
+        # uiOutput(ns('parameters'))
+        selectInput(ns('sel_yvar'), 'Dependent Variable', NULL),
+        selectizeInput(ns('sel_xvar'), 'Independent Variables', NULL,
+                       multiple = T,
+                       options = list(plugins = list('remove_button', 'clear_button')))
+        ),
       navset_card_pill(
         nav_panel(
           'Model',
@@ -49,15 +55,13 @@ lm_server <- function(id, df, df_metadata, output_report) {
 	    output_list$elements <- output_report()
 	  })
 
-    df_active <- df
-
     var_analysis <- reactive({
-      var_analysis <- df_metadata() |> filter(perc_nas != 1) |> pull(var)
+      df_metadata() |> filter(perc_nas != 1) |> pull(var)
     })
 
     yvar <- reactive({
       req(var_analysis())
-      var_analysis()
+      intersect(var_analysis(), names(df())[sapply(df(), is.numeric)])
     })
 
     xvar <- reactive({
@@ -65,13 +69,21 @@ lm_server <- function(id, df, df_metadata, output_report) {
       var_analysis()[var_analysis() %notin% input$sel_yvar]
     })
 
-    output$parameters <- renderUI({
-      tagList(
-        selectInput(ns('sel_yvar'), 'Dependent Variable', yvar()),
-        selectizeInput(ns('sel_xvar'), 'Independent Variables', xvar(),
-                       multiple = T,
-                       options = list(plugins = list('remove_button', 'clear_button')))
-      )
+    # output$parameters <- renderUI({
+    #   tagList(
+    #     selectInput(ns('sel_yvar'), 'Dependent Variable', yvar()),
+    #     selectizeInput(ns('sel_xvar'), 'Independent Variables', xvar(),
+    #                    multiple = T,
+    #                    options = list(plugins = list('remove_button', 'clear_button')))
+    #   )
+    # })
+
+    observe({
+      updateSelectInput(session, 'sel_yvar', choices = yvar())
+    })
+
+    observe({
+      updateSelectizeInput(session, 'sel_xvar', choices = xvar())
     })
 
     # linear model ------------------------------------------------------------
@@ -92,7 +104,7 @@ lm_server <- function(id, df, df_metadata, output_report) {
 
       form <- formula(paste(linear_model$y_name, '~', linear_model$x_name))
 
-      linear_model$model <- lm(form, data = df_active(), model = F)
+      linear_model$model <- lm(form, data = df(), model = F)
 
       linear_model$summary <- summary(linear_model$model)
 
