@@ -6,19 +6,22 @@ navbar_df_info_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-navbar_df_info_server <- function(id, input_metadata, app_session) {
+navbar_df_info_server <- function(id, app_session) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
     output$navbar_df_info <- renderUI({
       tagList(
-        h5(input_metadata()$name),
+        h5(session$userData$df$act_name),
         p('Rows/Columns:',
-          paste(input_metadata()$nrow |> f_num(dig = 1), '/',
-                input_metadata()$ncol |> f_num())
+          paste(session$userData$df$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1), '/',
+                session$userData$df$act_meta() |> pull(cols) |> head(1) |> f_num())
         ),
-        p("Columns with NA's:", input_metadata()$n_nas),
-        p('Size (MB):', (input_metadata()$size)),
+        p("Columns with NA's:", session$userData$df$act_meta() |>
+            filter(n_nas > 0) |>
+            nrow()),
+        p('Size (MB):', (object.size(session$userData$df$act) / 2^20) |>
+            as.numeric() |> round(2)),
         actionButton(ns('df_btn_overview'), '', icon('magnifying-glass'), class = 'mini-btn'),
         actionButton(ns('df_btn_change'), '', icon('shuffle'), class = 'mini-btn'),
         actionButton(ns('df_btn_explore'), '', icon('chart-simple'), class = 'mini-btn')

@@ -26,6 +26,7 @@ utils::globalVariables(
     'fun',
     'Measures',
     'groupby',
-    'density'
+    'density',
+    'dt_names_react'
     )
   )

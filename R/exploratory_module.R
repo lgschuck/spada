@@ -138,25 +138,25 @@ exploratory_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-exploratory_server <- function(id, input_df, df_metadata, output_report) {
+exploratory_server <- function(id, output_report) {
   moduleServer(id, function(input, output, session) {
-	  ns <- session$ns
+    ns <- session$ns
 
     # outupt objects ----------------------------------------------------------
     output_list <- reactiveValues(elements = NULL)
 
     observe({
-      output_list$elements <- output_report()
+      output_list$elements <- session$userData$out$elements
     })
 
     # df active ---------------------------------------------------------------
     df <- reactiveValues()
     observe({
-      df$df_active <- input_df()
+      df$df_active <- session$userData$df$act
     })
 
     var_analysis <- reactive({
-      df_metadata() |> filter(perc_nas != 1) |>  pull(var)
+      session$userData$df$act_meta() |> filter(perc_nas != 1) |>  pull(var)
     })
 
     output$ui_var_names <- renderUI(
@@ -646,7 +646,10 @@ exploratory_server <- function(id, input_df, df_metadata, output_report) {
 
     }) |> bindEvent(mod_output_table_values$output_element())
 
-    # return values -----------------------------------------------------------
-    return(list(output_file = reactive(output_list$elements)))
+    # update output -----------------------------------------------------------
+    observe({
+      session$userData$out$elements <- output_list$elements
     })
+
+  })
 }

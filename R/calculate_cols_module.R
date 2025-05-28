@@ -32,13 +32,13 @@ calculate_cols_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-calculate_cols_server <- function(id, input_df) {
+calculate_cols_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
     df <- reactiveValues()
     observe({
-      df$df_active <- input_df()
+      df$df_active <- session$userData$df$act
     })
 
     # Reactive to get column names
@@ -208,6 +208,11 @@ calculate_cols_server <- function(id, input_df) {
       show_allowed_op()
     }) |> bindEvent(input$btn_allowed_operations)
 
-    return(list(df_calculate_cols = reactive(df$df_active)))
+    # update active dataset ---------------------------------------------------
+    observe({
+      req(df$df_active)
+      session$userData$df$act <- df$df_active
+    })
+
   })
 }

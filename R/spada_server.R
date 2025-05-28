@@ -6,292 +6,183 @@ spada_server <- function(datasets){
     options(shiny.maxRequestSize = 1000 * 1024 ^ 2)
 
     # data --------------------------------------------------------------------
-    dt_react <- reactiveValues(data = lapply(datasets, setDT))
-    dt_names_react <- reactive(names(dt_react$data))
+    session$userData$dt <- reactiveValues(dt = lapply(datasets, setDT))
+    session$userData$dt_names <- reactive(names(session$userData$dt$dt))
 
-    # inicialize with the first dataset informed
-    df <- reactiveValues(
-      df_active = copy(datasets[[1]]),
-      df_active_name = names(datasets)[1],
-      df_backup = NULL
+    # start values
+    session$userData$df <- reactiveValues(
+      act = copy(datasets[[1]]),
+      act_name = names(datasets)[1],
+      bkp = NULL
     )
 
-    df_active_names <- reactive(df$df_active |> names())
-
     output$df_active_name <- renderText(
-      if(nchar(df$df_active_name) <= 20){
-        df$df_active_name
+      if(nchar(session$userData$df$act_name) <= 20){
+        session$userData$df$act_name
       } else {
-        paste0(substr(df$df_active_name, 1, 17) , '...')
+        paste0(substr(session$userData$df$act_name, 1, 17) , '...')
       }
     )
 
     # navbar ------------------------------------------------------------------
-    # info used in navbar and sidebar
-    df_active_resume_data <- reactiveValues()
+    navbar_df_info_server('navbar_df_info', app_session = session)
 
-    observe({
-      df_active_resume_data$nrow <- df_metadata() |> pull(rows) |> head(1)
-      df_active_resume_data$ncol <- df_metadata() |> pull(cols) |> head(1)
-      df_active_resume_data$name <- df$df_active_name
-      df_active_resume_data$n_nas <- df_metadata() |> filter(n_nas > 0) |> nrow()
-      df_active_resume_data$size <- (object.size(df$df_active) / 2^20) |>
-        as.numeric() |> round(2)
-    })
+    # side bar ----------------------------------------------------------------
+    sidebar_server('sidebar', app_session = session)
 
-    navbar_df_info_server('navbar_df_info',
-                          reactive(df_active_resume_data),
-                          app_session = session)
+    # data page events --------------------------------------------------------
+    session$userData$df$act_meta <- reactive({ df_info(session$userData$df$act) })
 
-    # side bar --------------------------------------------------------
-    sidebar_server('sidebar', reactive(df_active_resume_data), app_session = session)
+    output$pD_metadata_gt <- render_gt(session$userData$df$act_meta() |> gt_info())
 
-    # data page events -----------------------------------------------------
-    df_metadata <- reactive({ df_info(df$df_active) })
+    # overview -------------------------------
+    data_overview_server('pD_overview')
 
-    output$pD_metadata_gt <- render_gt(df_metadata() |> gt_info())
-
-    # overview -----------------------
-    data_overview_server('pD_overview', reactive(df$df_active))
     # values for boxes -----------------------
-    data_highlights_server('pD_highlights', reactive(df$df_active), df_metadata)
+    data_highlights_server('pD_highlights')
 
     # define active dataset ---------------------------------------------------
     output$pD_data_ui_sel_df <- renderUI(
-      selectInput('pD_data_sel_df', 'Select a dataset', dt_names_react())
+      selectInput('pD_data_sel_df', 'Select a dataset', session$userData$dt_names())
     )
 
+    # make active dataset event --------------
     observe({
       # save active to original data
-      dt_react$data[[df$df_active_name]] <- df$df_active
+      session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
       # choose new dataset to be active
-      df$df_active <- dt_react$data[[input$pD_data_sel_df]]
-      df$df_backup <- NULL
+      session$userData$df$act <- session$userData$dt$dt[[input$pD_data_sel_df]]
+      session$userData$df$bkp <- NULL
 
-      df$df_active_name <- input$pD_data_sel_df
+      session$userData$df$act_name <- input$pD_data_sel_df
 
-      msg(paste('Dataset', df$df_active_name, 'is the active one'))
+      msg(paste('Dataset', session$userData$df$act_name, 'is the active one'))
       gc()
     }) |> bindEvent(input$pD_data_btn_active)
 
+    # rename event ---------------------------
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) |
-         input$pD_data_txt_new_name %in% dt_names_react()){
+         input$pD_data_txt_new_name %in% session$userData$dt_names()){
         msg_error('New name is not valid or already in use')
       } else {
-        names(dt_react$data)[dt_names_react() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
+        names(session$userData$dt$dt)[dt_names_react() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         # update active dataset if necessary
-        if(df$df_active_name == input$pD_data_sel_df){
-          df$df_active <- dt_react$data[[input$pD_data_txt_new_name]]
+        if(session$userData$df$act_name == input$pD_data_sel_df){
+          session$userData$df$act <- session$userData$dt$dt[[input$pD_data_txt_new_name]]
 
-          df$df_active_name <- input$pD_data_txt_new_name
+          session$userData$df$act_name <- input$pD_data_txt_new_name
         }
         msg('New name applied')
       }
     }) |> bindEvent(input$pD_data_btn_new_name)
 
+    # copy dataset event ---------------------
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) ||
          (input$pD_data_txt_new_name %in% dt_names_react())){
         msg_error('New name is not valid or already in use')
       } else {
-        dt_react$data[[ input$pD_data_txt_new_name ]] <- df$df_active
+        session$userData$dt$dt[[ input$pD_data_txt_new_name ]] <- session$userData$df$act
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
         gc()
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
+    # delete dataset event -------------------
     observe({
-      if(df$df_active_name == input$pD_data_sel_df){
+      if(session$userData$df$act_name == input$pD_data_sel_df){
         msg_error('You can not delete the active dataset')
       } else {
-        dt_react$data[[ input$pD_data_sel_df ]] <- NULL
+        session$userData$dt$dt[[ input$pD_data_sel_df ]] <- NULL
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
         gc()
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
-    # export file ----------------------------------------------------
-    export_file_server('pD_export', reactive(df$df_active))
+    # export file -------------------------------------------------------------
+    export_file_server('pD_export')
 
-    # import file ----------------------------------------------------
-    mod_pD_import <- import_file_server('pD_import', dt_names_react)
-
-    observe({
-      req(mod_pD_import$data_imported())
-
-      dt_react$data[[mod_pD_import$data_imported()[['data_name']]]] <- mod_pD_import$data_imported()[['data']]
-
-    }) |> bindEvent(mod_pD_import$data_imported())
+    # import file -------------------------------------------------------------
+    import_file_server('pD_import')
 
     # edit page events --------------------------------------------------------
 
-    # filter events ---------------------------
-    mod_pE_filter_rows <- filter_rows_server('pE_filter_rows',
-                                             reactive(df$df_active))
-    # update df_active after sel_cols
+    # filter events --------------------------
+    filter_rows_server('pE_filter_rows')
+
+    # select cols ----------------------------
+    select_cols_server('pE_filter_sel_cols')
+
+    # convert events -------------------------
+    convert_cols_server('pE_convert_cols')
+
+    # order rows events ----------------------
+    order_rows_server('pE_order_rows')
+
+    # order cols events ----------------------
+    order_cols_server('pE_order_cols')
+
+    # rename cols events ---------------------
+    rename_cols_server('pE_rename_cols')
+
+    # calculate cols events ------------------
+    calculate_cols_server('pE_calculate_cols')
+
+    # reset df active ------------------------
     observe({
-      req(mod_pE_filter_rows$df_filter_rows())
-      df$df_active <- mod_pE_filter_rows$df_filter_rows()
-    }) |> bindEvent(mod_pE_filter_rows$df_filter_rows())
-
-    # select cols ---------------------------
-    mod_pE_sel_cols <- select_cols_server('pE_filter_sel_cols',
-                                          reactive(df$df_active))
-    # update df_active after sel_cols
-    observe({
-      req(mod_pE_sel_cols$df_sel_cols())
-      df$df_active <- mod_pE_sel_cols$df_sel_cols()
-    }) |> bindEvent(mod_pE_sel_cols$df_sel_cols())
-
-    # convert events ---------------------------
-    mod_pE_convert_cols <- convert_cols_server(
-      'pE_convert_cols',
-      reactive(df$df_active))
-
-    # update df_active
-    observe({
-      req(mod_pE_convert_cols$df_convert_cols())
-      df$df_active <- mod_pE_convert_cols$df_convert_cols()
-    }) |> bindEvent(mod_pE_convert_cols$df_convert_cols())
-
-    # order rows events ---------------------------
-    mod_pE_order_rows <- order_rows_server('pE_order_rows',
-                                           reactive(df$df_active))
-
-    # update df_active
-    observe({
-      req(mod_pE_order_rows$df_order_rows())
-      df$df_active <- mod_pE_order_rows$df_order_rows()
-
-    }) |> bindEvent(mod_pE_order_rows$df_order_rows())
-
-    # order cols events ---------------------------
-    mod_pE_order_cols <- order_cols_server('pE_order_cols',
-                                           reactive(df$df_active))
-    # update df_active
-    observe({
-      req(mod_pE_order_cols$df_order_cols())
-      df$df_active <- mod_pE_order_cols$df_order_cols()
-    }) |> bindEvent(mod_pE_order_cols$df_order_cols())
-
-    # rename cols events ---------------------------
-    mod_pE_rename_cols <- rename_cols_server('pE_rename_cols',
-                                             reactive(df$df_active))
-    # update df_active
-    observe({
-      req(mod_pE_rename_cols$df_rename_cols())
-      df$df_active <- mod_pE_rename_cols$df_rename_cols()
-    }) |> bindEvent(mod_pE_rename_cols$df_rename_cols())
-
-    # calculate cols events ---------------------------
-    mod_pE_calculate_cols <- calculate_cols_server('pE_calculate_cols',
-                                                   reactive(df$df_active))
-    # update df_active
-    observe({
-      req(mod_pE_calculate_cols$df_calculate_cols())
-      df$df_active <- mod_pE_calculate_cols$df_calculate_cols()
-    }) |> bindEvent(mod_pE_calculate_cols$df_calculate_cols())
-
-    # reset df active ---------------------------
-    observe({
-      df$df_active <- copy(dt_react$data[[df$df_active_name]])
+      session$userData$df$act <- copy(session$userData$dt$dt[[session$userData$df$act_name]])
       msg('Active Dataset Reseted')
     }) |> bindEvent(input$pE_btn_reset)
 
-    # create backup ---------------------------
+    # create backup --------------------------
     observe({
-      df$df_backup <- copy(df$df_active)
+      session$userData$df$bkp <- copy(session$userData$df$act)
       msg('Backup created')
     }) |> bindEvent(input$pE_btn_bkp)
 
-    # restore backup ---------------------------
+    # restore backup -------------------------
     observe({
-      if(is.null(df$df_backup)){
+      if(is.null(session$userData$df$bkp)){
         msg('No backup to restore')
       } else {
-        df$df_active <- copy(df$df_backup)
+        session$userData$df$act <- copy(session$userData$df$bkp)
         msg('Backup restored')
       }
     }) |> bindEvent(input$pE_btn_restore)
 
     # clear backup ---------------------------
     observe({
-      if(is.null(df$df_backup)){
+      if(is.null(session$userData$df$bkp)){
         msg('No backup to clear')
       } else {
-        df$df_backup <- NULL
+        session$userData$df$bkp <- NULL
         msg('Backup cleared')
       }
     }) |> bindEvent(input$pE_btn_clear_bkp)
 
     # analysis page events ----------------------------------------------------
-    mod_exploratory <- exploratory_server('pA_exploratory', reactive(df$df_active),
-                       df_metadata, reactive(output_report$elements))
-    observe({
-      req(mod_exploratory$output_file())
-      output_report$elements <- mod_exploratory$output_file()
-    }) |> bindEvent(mod_exploratory$output_file())
+    exploratory_server('pA_exploratory')
 
     # descriptive stats -------------------------------------------------------
-    mod_descriptive_stats <- descriptive_stats_server('pA_desc_stats',
-                                                      reactive(df$df_active),
-                                                      reactive(output_report$elements))
-
-    observe({
-      req(mod_descriptive_stats$output_file())
-      output_report$elements <- mod_descriptive_stats$output_file()
-    }) |> bindEvent(mod_descriptive_stats$output_file())
+    descriptive_stats_server('pA_desc_stats')
 
     # correlation -------------------------------------------------------------
-    mod_correlation_test <- correlation_server('pA_correlation',
-                                               reactive(df$df_active),
-                                               df_metadata,
-                                               reactive(output_report$elements))
-
-    observe({
-      req(mod_correlation_test$output_file())
-      output_report$elements <- mod_correlation_test$output_file()
-    }) |> bindEvent(mod_correlation_test$output_file())
+    correlation_server('pA_correlation')
 
     # normality test ----------------------------------------------------------
-    mod_norm_test <- normality_test_server('pA_normality_test',
-                          reactive(df$df_active),
-                          df_metadata,
-                          reactive(output_report$elements))
-
-    observe({
-      req(mod_norm_test$output_file())
-      output_report$elements <- mod_norm_test$output_file()
-    }) |> bindEvent(mod_norm_test$output_file())
+    normality_test_server('pA_normality_test')
 
     # z test ------------------------------------------------------------------
-    mod_ztest <- z_test_server('pA_z_test', reactive(df$df_active),
-                               df_metadata, reactive(output_report$elements))
-
-    observe({
-      req(mod_ztest$output_file())
-      output_report$elements <- mod_ztest$output_file()
-    }) |> bindEvent(mod_ztest$output_file())
+    z_test_server('pA_z_test')
 
     # linear model ------------------------------------------------------------
-    mod_lm <- lm_server('pA_lm', reactive(df$df_active),
-                        df_metadata, reactive(output_report$elements))
-
-    observe({
-      req(mod_lm$output_file())
-      output_report$elements <- mod_lm$output_file()
-    }) |> bindEvent(mod_lm$output_file())
+    lm_server('pA_lm')
 
     # output events -----------------------------------------------------------
-    output_report <- reactiveValues(elements = list(report_card()))
+    session$userData$out <- reactiveValues(elements = list(report_card()))
 
-    mod_output <- output_server('pO_output', reactive(output_report$elements))
-
-    observe({
-      req(mod_output$output_file())
-      output_report$elements <- mod_output$output_file()
-    }) |> bindEvent(mod_output$output_file())
+    output_server('pO_output')
 
     # config events -----------------------------------------------------------
     mod_pC <- page_config_server('pC')

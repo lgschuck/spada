@@ -6,7 +6,7 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-## 0.1.0 Milestone
+## 0.2.0 Milestone (dec/25)
 
 1 - Functionalities to detect and treat duplicates
 
@@ -14,11 +14,21 @@ editor_options:
 
 3 - Inference: t test
 
-4 - Models: linear model, logistic regression
+4 - Models: logistic regression
 
-5 - Tests: create tests for the app
+## 0.1.0 Milestone (sep/25)
 
-6 - Session$userData: userData to save datasets instead of reactives. This should reduce many passages of the active data set between modules.
+1 - Models: linear model
+
+2 - Tests: create tests for the app
+
+## 2025.05.28-1
+
+Highlights: Many reactives as **session$userData** to avoid passing as module args.
+
+### Improvements
+
+1 - **Session$userData**: now using df_active, output and other reactives as userData to avoid passing reactives as module args. Internal use, increases readbility and maintenance of code.
 
 ## 2025.05.26-1
 

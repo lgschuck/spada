@@ -50,17 +50,18 @@ descriptive_stats_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-descriptive_stats_server <- function(id, df, output_report) {
+descriptive_stats_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  df <- reactive(session$userData$df$act)
 
 	  # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
 
 	  observe({
-	    output_list$elements <- output_report()
+	    output_list$elements <- session$userData$out$elements
 	  })
-
 
     var_analysis <- reactive({
       df() |> names()
@@ -80,7 +81,6 @@ descriptive_stats_server <- function(id, df, output_report) {
       req(input$sel_var)
       subset(df(), select = input$sel_var)
     })
-
 
     # calculate stats ---------------------------------------------------------
     desc_stats <- reactive({
@@ -228,8 +228,10 @@ descriptive_stats_server <- function(id, df, output_report) {
 
     }) |> bindEvent(mod_insert_output$output_element())
 
-    # return values -----------------------------------------------------------
-    return(list(output_file = reactive(output_list$elements)))
+    # update output -----------------------------------------------------------
+    observe({
+      session$userData$out$elements <- output_list$elements
+    })
 
   })
 }

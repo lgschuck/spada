@@ -112,17 +112,18 @@ normality_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-normality_test_server <- function(id, df, df_metadata, output_report) {
+normality_test_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  df <- reactive(session$userData$df$act)
 
 	  # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
 
 	  observe({
-	    output_list$elements <- output_report()
+	    output_list$elements <- session$userData$out$elements
 	  })
-
 
     df_active <- reactive({
       req(df())
@@ -134,7 +135,7 @@ normality_test_server <- function(id, df, df_metadata, output_report) {
 
       df_names <- df_active() |> names()
 
-      var_analysis <- df_metadata() |> filter(perc_nas != 1) |> pull(var)
+      var_analysis <- session$userData$df$act_meta() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
     })
@@ -552,8 +553,10 @@ normality_test_server <- function(id, df, df_metadata, output_report) {
       ))
     }) |> bindEvent(input$btn_help_sf)
 
-    # return values -----------------------------------------------------------
-    return(list(output_file = reactive(output_list$elements)))
+    # update output -----------------------------------------------------------
+    observe({
+      session$userData$out$elements <- output_list$elements
+    })
 
   })
 }

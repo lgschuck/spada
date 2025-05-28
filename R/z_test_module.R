@@ -92,17 +92,18 @@ z_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-z_test_server <- function(id, df, df_metadata, output_report) {
+z_test_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  df <- reactive(session$userData$df$act)
 
 	  # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
 
 	  observe({
-	    output_list$elements <- output_report()
+	    output_list$elements <- session$userData$out$elements
 	  })
-
 
     ztest <- reactiveValues(results = NULL)
 
@@ -111,7 +112,7 @@ z_test_server <- function(id, df, df_metadata, output_report) {
     var_analysis <- reactive({
       df_names <- df_active() |> names()
 
-      var_analysis <- df_metadata() |> filter(perc_nas != 1) |> pull(var)
+      var_analysis <- session$userData$df$act_meta() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
       })
@@ -331,8 +332,10 @@ z_test_server <- function(id, df, df_metadata, output_report) {
 
     }) |> bindEvent(mod_insert_output_hist$output_element())
 
-    # return values -----------------------------------------------------------
-    return(list(output_file = reactive(output_list$elements)))
+    # update output -----------------------------------------------------------
+    observe({
+      session$userData$out$elements <- output_list$elements
+    })
 
   })
 }

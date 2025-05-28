@@ -94,8 +94,11 @@ data_highlights_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-data_highlights_server <- function(id, df, df_metadata) {
+data_highlights_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+
+    df <- reactive(session$userData$df$act)
+    df_metadata <- reactive(session$userData$df$act_meta())
 
     output$var_num_vars <- renderText(sapply(df(), is.numeric) |> sum())
     output$var_char_vars <- renderText(sapply(df(), is.character) |> sum())

@@ -17,8 +17,10 @@ data_overview_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-data_overview_server <- function(id, df) {
+data_overview_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+
+    df <- reactive(session$userData$df$act)
 
     idx <- reactive({
       req(input$size_sample)

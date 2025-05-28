@@ -44,19 +44,21 @@ lm_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-lm_server <- function(id, df, df_metadata, output_report) {
+lm_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
+
+	  df <- reactive(session$userData$df$act)
 
     # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
 
 	  observe({
-	    output_list$elements <- output_report()
+	    output_list$elements <- session$userData$out$elements
 	  })
 
     var_analysis <- reactive({
-      df_metadata() |> filter(perc_nas != 1) |> pull(var)
+      session$userData$df$act_meta() |> filter(perc_nas != 1) |> pull(var)
     })
 
     yvar <- reactive({
@@ -68,15 +70,6 @@ lm_server <- function(id, df, df_metadata, output_report) {
       req(yvar())
       var_analysis()[var_analysis() %notin% input$sel_yvar]
     })
-
-    # output$parameters <- renderUI({
-    #   tagList(
-    #     selectInput(ns('sel_yvar'), 'Dependent Variable', yvar()),
-    #     selectizeInput(ns('sel_xvar'), 'Independent Variables', xvar(),
-    #                    multiple = T,
-    #                    options = list(plugins = list('remove_button', 'clear_button')))
-    #   )
-    # })
 
     observe({
       updateSelectInput(session, 'sel_yvar', choices = yvar())
@@ -161,8 +154,7 @@ lm_server <- function(id, df, df_metadata, output_report) {
       ))
     }) |> bindEvent(input$btn_help_lm)
 
-
-    # insert model to output ----------------------------------------------
+    # insert model to output --------------------------------------------------
     mod_insert_output_model <- insert_output_server(
       'lm_insert_output',
       reactive(gen_table2(lm_var_table(), lm_metrics()))
@@ -181,8 +173,10 @@ lm_server <- function(id, df, df_metadata, output_report) {
 
     }) |> bindEvent(mod_insert_output_model$output_element())
 
-    # return values -----------------------------------------------------------
-    return(list(output_file = reactive(output_list$elements)))
+    # update output -----------------------------------------------------------
+    observe({
+      session$userData$out$elements <- output_list$elements
+    })
 
   })
 }

@@ -62,7 +62,7 @@ import_file_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-import_file_server <- function(id, current_names) {
+import_file_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
     data <- reactiveValues(data = NULL, data_name = NULL)
@@ -71,7 +71,7 @@ import_file_server <- function(id, current_names) {
     observe({
       if(is.null(input$file)){
         msg_error('Insert a file')
-      } else if(!is_valid_name(input$dataset_name) || input$dataset_name %in% current_names()){
+      } else if(!is_valid_name(input$dataset_name) || input$dataset_name %in% session$userData$dt_names()){
         msg_error('Name invalid or already in use')
       } else {
         file <- input$file
@@ -137,6 +137,7 @@ import_file_server <- function(id, current_names) {
 
           data$data <- data_temp
           data$data_name <- input$dataset_name
+
           msg('File imported')
 
         } else {
@@ -167,19 +168,12 @@ import_file_server <- function(id, current_names) {
         }
       }) |> bindEvent(input$btn_preview_raw)
 
-    # data to return ----------------------------------------------------------
-    data_imported <- reactive({
+    # update dt ---------------------------------------------------------------
+    observe({
       req(data$data)
       req(data$data_name)
-      req(input$dataset_name)
-      list('data' = data$data,
-           'data_name' = data$data_name,
-           # return the click integer for update the value outside the module
-           # even if the name and file was used before
-           'btn_click' = input$btn_import)
+      session$userData$dt$dt[[data$data_name]] <- data$data
     })
-
-    return(list(data_imported = data_imported))
 
   })
 }

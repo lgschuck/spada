@@ -60,7 +60,7 @@ export_file_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-export_file_server <- function(id, df_active) {
+export_file_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     output$down_handler <- downloadHandler(
 
@@ -76,7 +76,7 @@ export_file_server <- function(id, df_active) {
       },
       content = function(file) {
         if(input$radio_format == 'csv'){
-          fwrite(df_active(), file,
+          fwrite(session$userData$df$act, file,
                  row.names = input$x_rownames,
                  sep = input$radio_separator,
                  dec = input$radio_decimal,
@@ -84,9 +84,9 @@ export_file_server <- function(id, df_active) {
                  scipen = as.integer(input$radio_scientific)
           )
         } else if (input$radio_format == 'RDS'){
-          saveRDS(df_active(), file, compress = input$checkbox_rds_compress)
+          saveRDS(session$userData$df$act, file, compress = input$checkbox_rds_compress)
         } else if (input$radio_format == 'sav') {
-          write_sav(df_active(), file, compress = input$radio_sav_compress)
+          write_sav(session$userData$df$act, file, compress = input$radio_sav_compress)
         }
       }
     )

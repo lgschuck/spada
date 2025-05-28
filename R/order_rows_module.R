@@ -24,16 +24,16 @@ order_rows_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-order_rows_server <- function(id, input_df) {
+order_rows_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
     # Reactive to get column names
-    df_names <- reactive(input_df() |> names())
+    df_names <- reactive(session$userData$df$act |> names())
 
     df <- reactiveValues()
     observe({
-      df$df_active <- input_df()
+      df$df_active <- session$userData$df$act
     })
 
     output$ui_var_rows <- renderUI(
@@ -78,6 +78,11 @@ order_rows_server <- function(id, input_df) {
       }
     }) |> bindEvent(input$btn_order_rows)
 
-    return(list(df_order_rows = reactive(df$df_active)))
+    # update active dataset ---------------------------------------------------
+    observe({
+      req(df$df_active)
+      session$userData$df$act <- df$df_active
+    })
+
   })
 }

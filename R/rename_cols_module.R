@@ -57,16 +57,16 @@ rename_cols_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-rename_cols_server <- function(id, input_df) {
+rename_cols_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
     # Reactive to get column names
-    df_names <- reactive(input_df() |> names())
+    df_names <- reactive(session$userData$df$act |> names())
 
     df <- reactiveValues()
     observe({
-      df$df_active <- input_df()
+      df$df_active <- session$userData$df$act
     })
 
     # rename 1 variable ------------------------------------------------------
@@ -153,7 +153,10 @@ rename_cols_server <- function(id, input_df) {
       }
     }) |> bindEvent(input$btn_rename_multi)
 
-    # return of module --------------------------------------------------------
-    return(list(df_rename_cols = reactive(df$df_active)))
+    # update active dataset ---------------------------------------------------
+    observe({
+      req(df$df_active)
+      session$userData$df$act <- df$df_active
+    })
   })
 }

@@ -76,18 +76,18 @@ filter_rows_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-filter_rows_server <- function(id, input_df) {
+filter_rows_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
     # Store active dataset
     df <- reactiveValues()
     observe({
-      df$df_active <- input_df()
+      df$df_active <- session$userData$df$act
     })
 
     # Reactive to get column names
-    df_names <- reactive(df$df_active |> names())
+    df_names <- reactive(session$userData$df$act |> names())
 
     nrow_df_active <- reactive(nrow(df$df_active))
 
@@ -451,6 +451,11 @@ filter_rows_server <- function(id, input_df) {
       show_allowed_op()
     }) |> bindEvent(input$btn_allowed_operations)
 
-    return(list(df_filter_rows = reactive(df$df_active)))
+    # update active dataset ---------------------------------------------------
+    observe({
+      req(df$df_active)
+      session$userData$df$act <- df$df_active
+    })
+
   })
 }

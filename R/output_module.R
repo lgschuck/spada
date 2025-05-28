@@ -20,24 +20,18 @@ output_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-output_server <- function(id, output_report) {
+output_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- NS(id)
 
-    output_list <- reactiveValues(elements = NULL)
-
-    observe({
-      output_list$elements <- output_report()
-    })
-
     # render panel ------------------------------------------------------------
     output$panel <- renderUI({
-      output_list$elements
+      session$userData$out$elements
     })
 
     # reset output ------------------------------------------------------------
     observe({
-      output_list$elements <- list(report_card())
+      session$userData$out$elements <- list(report_card())
     }) |> bindEvent(input$btn_reset)
 
     # save html ---------------------------------------------------------------
@@ -47,12 +41,10 @@ output_server <- function(id, output_report) {
       },
       content = function(file) {
 
-        save_html(do.call('tagList', output_list$elements), file)
+        save_html(do.call('tagList', session$userData$out$elements), file)
 
       }
     )
-
-    return(list(output_file = reactive(output_list$elements)))
 
   })
 }
