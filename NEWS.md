@@ -22,6 +22,21 @@ editor_options:
 
 2 - Tests: create tests for the app
 
+## 2025.05.30-1
+
+Highlights: New tests for **spada_server.R** and **order_cols and select_cols** modules.
+
+### Improvements
+
+1 - New tests for **spada_server.R** and **order_cols and select_cols** modules.
+
+2 - In Data > Data: now after click a button the New Name textInput is cleared
+
+### Bug Fixes
+
+1 - **Error in Data > Data: rename and copy datasets**: fixed, error introduced in 2025.05.28-1 release
+([#31](https://github.com/lgschuck/spada/issues/31))
+
 ## 2025.05.28-1
 
 Highlights: Many reactives as **session$userData** to avoid passing as module args.

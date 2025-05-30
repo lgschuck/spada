@@ -42,9 +42,10 @@ spada_server <- function(datasets){
     data_highlights_server('pD_highlights')
 
     # define active dataset ---------------------------------------------------
-    output$pD_data_ui_sel_df <- renderUI(
-      selectInput('pD_data_sel_df', 'Select a dataset', session$userData$dt_names())
-    )
+    output$pD_data_ui_sel_df <- renderUI({
+      req(session$userData$dt_names())
+       selectInput('pD_data_sel_df', 'Select a dataset', session$userData$dt_names())
+    })
 
     # make active dataset event --------------
     observe({
@@ -58,6 +59,7 @@ spada_server <- function(datasets){
 
       msg(paste('Dataset', session$userData$df$act_name, 'is the active one'))
       gc()
+      updateTextInput(session, "pD_data_txt_new_name", value = '')
     }) |> bindEvent(input$pD_data_btn_active)
 
     # rename event ---------------------------
@@ -66,7 +68,7 @@ spada_server <- function(datasets){
          input$pD_data_txt_new_name %in% session$userData$dt_names()){
         msg_error('New name is not valid or already in use')
       } else {
-        names(session$userData$dt$dt)[dt_names_react() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
+        names(session$userData$dt$dt)[session$userData$dt_names() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         # update active dataset if necessary
         if(session$userData$df$act_name == input$pD_data_sel_df){
           session$userData$df$act <- session$userData$dt$dt[[input$pD_data_txt_new_name]]
@@ -74,18 +76,20 @@ spada_server <- function(datasets){
           session$userData$df$act_name <- input$pD_data_txt_new_name
         }
         msg('New name applied')
+        updateTextInput(session, "pD_data_txt_new_name", value = '')
       }
     }) |> bindEvent(input$pD_data_btn_new_name)
 
     # copy dataset event ---------------------
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) ||
-         (input$pD_data_txt_new_name %in% dt_names_react())){
+         (input$pD_data_txt_new_name %in% session$userData$dt_names())){
         msg_error('New name is not valid or already in use')
       } else {
         session$userData$dt$dt[[ input$pD_data_txt_new_name ]] <- session$userData$df$act
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
         gc()
+        updateTextInput(session, "pD_data_txt_new_name", value = '')
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
@@ -97,6 +101,7 @@ spada_server <- function(datasets){
         session$userData$dt$dt[[ input$pD_data_sel_df ]] <- NULL
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
         gc()
+        updateTextInput(session, "pD_data_txt_new_name", value = '')
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
@@ -193,6 +198,7 @@ spada_server <- function(datasets){
     # exit app event ----------------------------------------------------------
     session$onSessionEnded(stopApp)
     observe({
+      req(input$navbar)
       if (input$navbar == 'exit') {
         session$sendCustomMessage(type = 'closeWindow', message = 'message')
         stopApp()
