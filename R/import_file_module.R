@@ -65,19 +65,26 @@ import_file_ui <- function(id) {
 import_file_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
-    data <- reactiveValues(data = NULL, data_name = NULL)
+    data <- reactiveValues(
+      data = NULL,
+      data_name = NULL,
+      temp = NULL,
+      ext = NULL,
+      file = NULL
+      )
 
     # import file -------------------------------------------------------------
     observe({
       if(is.null(input$file)){
         msg_error('Insert a file')
-      } else if(!is_valid_name(input$dataset_name) || input$dataset_name %in% session$userData$dt_names()){
+      } else if(!is_valid_name(input$dataset_name) ||
+                input$dataset_name %in% session$userData$dt_names()){
         msg_error('Name invalid or already in use')
       } else {
-        file <- input$file
-        ext <- tools::file_ext(file$datapath)
+        data$file <- input$file
+        data$ext <- tools::file_ext(data$file$datapath)
 
-        if (ext == 'csv' && input$radio_file_ext == 'csv') {
+        if (data$ext == 'csv' && input$radio_file_ext == 'csv') {
 
           if (input$csv_lines == 'all') {
             n <- Inf
@@ -90,7 +97,7 @@ import_file_server <- function(id) {
 
           tryCatch(
             { data$data <- fread(
-              file = file$datapath,
+              file = data$file$datapath,
               sep = input$radio_separator,
               dec = input$radio_decimal,
               check.names = T,
@@ -106,19 +113,19 @@ import_file_server <- function(id) {
             error = \(e) msg_error('Check parameters')
           )
 
-        } else if (ext == 'RDS' && input$radio_file_ext == 'RDS') {
+        } else if (data$ext == 'RDS' && input$radio_file_ext == 'RDS') {
 
-          data_temp <- readRDS(file$datapath)
+          data$temp <- readRDS(data$file$datapath)
 
-          if(data_temp |> is.data.frame()){
-            data$data <- data_temp |> as.data.table()
+          if(data$temp |> is.data.frame()){
+            data$data <- data$temp |> as.data.table()
             data$data_name <- input$dataset_name
 
             msg('File imported')
           } else {
             msg_error('Object must be data.frame')
           }
-        } else if(ext == 'sav' && input$radio_file_ext == 'sav'){
+        } else if(data$ext == 'sav' && input$radio_file_ext == 'sav'){
           if (input$sav_lines == 'all') {
             n <- Inf
           } else if(!isTruthy(input$sav_n_lines) || input$sav_n_lines < 1){
@@ -128,7 +135,7 @@ import_file_server <- function(id) {
             n <- as.integer(input$sav_n_lines)
           }
 
-          data_temp <- read_sav(file$datapath, n_max = n ,
+          data_temp <- read_sav(data$file$datapath, n_max = n ,
                                 .name_repair = make.names) |>
             as.data.table()
 
@@ -151,11 +158,11 @@ import_file_server <- function(id) {
     observe({
       req(input$file)
 
-        file <- input$file
-        ext <- tools::file_ext(file$datapath)
+        data$file <- input$file
+        data$ext <- tools::file_ext(data$file$datapath)
 
-        if (ext == 'csv' && input$radio_file_ext == 'csv') {
-          preview_data <- readLines(file$datapath, n = 8)
+        if (data$ext == 'csv' && input$radio_file_ext == 'csv') {
+          preview_data <- readLines(data$file$datapath, n = 8)
 
           showModal(modalDialog(
             size = 'xl',

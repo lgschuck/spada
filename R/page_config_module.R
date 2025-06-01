@@ -80,6 +80,7 @@ page_config_server <- function(id) {
       session$userData$line_color <- palette()[['line']]
     })
 
+    # sample plot to show picked colors ------
     output$sample_plot <- renderPlot({
       req(palette())
       hist(
@@ -93,15 +94,19 @@ page_config_server <- function(id) {
 
     }) |> bindCache(palette())
 
+    # input file size ------------------------
+    max_request_size <- reactive(input$input_file_size * 1024 ^ 2)
+
     observe({
       if(!isTruthy(input$input_file_size) || input$input_file_size < 1) {
         msg('Value must be > 1')
       } else {
-        options(shiny.maxRequestSize = input$input_file_size * 1024 ^ 2)
+        options(shiny.maxRequestSize = max_request_size())
         msg('New limit applied')
       }
     }) |> bindEvent(input$btn_file_size)
 
+    # reset colors ---------------------------
     observe({
       updateColorPickr(session = session,
                        inputId = 'sel_fill',
@@ -112,7 +117,7 @@ page_config_server <- function(id) {
 
     }) |> bindEvent(input$reset)
 
-    # change theme
+    # change theme ---------------------------
     observe({
       session$setCurrentTheme(
 
