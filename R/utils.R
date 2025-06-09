@@ -1,6 +1,6 @@
 
 
-# generate 2 column table in html -----------------------------------------
+# generate 2 column table in html ---------------------------------------------
 gen_table2 <- function(element1, element2) {
   div(
     tags$table(
@@ -30,12 +30,12 @@ report_card <- function(title = 'Spada - Output', annotation = NULL,
   )
 }
 
-# generate element id for outputs -----------------------------------------
+# generate element id for outputs ---------------------------------------------
 gen_element_id <- function(){
   paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
 }
 
-# math functions ----------------------------------------------------------
+# math functions --------------------------------------------------------------
 
 math_funs <- c(
   c('Mean' = 'mean',
@@ -84,7 +84,7 @@ math_funs <- c(
     )
 )
 
-# char functions ----------------------------------------------------------
+# char functions --------------------------------------------------------------
 
 char_funs <- c(
   'To Upper' = 'toupper',
@@ -94,7 +94,7 @@ char_funs <- c(
   'Is Char' = 'is.character'
 )
 
-# date functions ----------------------------------------------------------
+# date functions --------------------------------------------------------------
 
 date_funs <- c(
   'Year' = 'year',
@@ -110,7 +110,7 @@ date_funs <- c(
   'Is Date' = 'is_date'
 )
 
-# factor functions ----------------------------------------------------------
+# factor functions ------------------------------------------------------------
 
 factor_funs <- c(
   'Number of Levels' = 'nlevels',
@@ -118,7 +118,7 @@ factor_funs <- c(
   'Is Ordered' = 'is.ordered'
 )
 
-# logical functions ----------------------------------------------------------
+# logical functions -----------------------------------------------------------
 
 logical_funs <- c(
   'All True' = 'all',
@@ -128,7 +128,7 @@ logical_funs <- c(
   'Proportion of True' = 'mean'
 )
 
-# complex functions ----------------------------------------------------------
+# complex functions -----------------------------------------------------------
 
 complex_funs <- c(
   'Real Part' = 'Re',
@@ -136,7 +136,7 @@ complex_funs <- c(
   'Is Complex' = 'is.complex'
 )
 
-# basic operations ---------------------------------------------------------
+# basic operations ------------------------------------------------------------
 
 basic_operations <- c(
   # base package
@@ -169,7 +169,7 @@ basic_operations <- c(
   'fina', 'lana', 'mana', 'mina', 'suna'
 )
 
-# allowed operations ------------------------------------------------------
+# allowed operations ----------------------------------------------------------
 
 allowed_operations <- c(
   basic_operations,
@@ -180,7 +180,7 @@ allowed_operations <- c(
   logical_funs
 ) |> unique() |> sort()
 
-# allowed operations function ------------------------------------------------------
+# allowed operations function -------------------------------------------------
 show_allowed_op <- function(){
   showModal(modalDialog(title = "Allowed Operations", HTML(
     paste(allowed_operations, collapse = "<br/>")
@@ -218,7 +218,7 @@ dangerous_operations <- c(
   'setDF', 'setkey', 'setorder', 'substitute2'
 )
 
-# safe env function -------------------------------------------------------
+# safe env function -----------------------------------------------------------
 
 safe_env <- function(operations = NULL){
 
@@ -231,7 +231,7 @@ safe_env <- function(operations = NULL){
   return(e)
 }
 
-# test dataset ------------------------------------------------------------
+# test dataset ----------------------------------------------------------------
 
 test_dataset <- function(n = 1e3){
   data.frame(
@@ -428,7 +428,7 @@ filter_rows <- function(df, var, operator, filter_value){
   }
 }
 
-# filter rows 2 vars ------------------------------------------------------
+# filter rows 2 vars ----------------------------------------------------------
 filter_rows_2vars <- function(df, var1, var2, operator){
   v1 <- df[[var1]]
   v2 <- df[[var2]]
@@ -491,7 +491,7 @@ test_all_equal <- function(x){
   all(x == x[1])
 }
 
-# col type ----------------------------------------------------------------
+# col type --------------------------------------------------------------------
 obj_type <- function(x){
   if(x |> is.numeric()) 'numeric'
   else if (x |> is_date()) 'date'
@@ -517,7 +517,18 @@ stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,
             id = ID)
 }
 
-# plot z test -------------------------------------------------------------
+# make valid cols -------------------------------------------------------------
+
+make_valid_cols <- function(x){
+
+  if(is.raw(x)){
+    as.character(x)
+  } else {
+    x
+  }
+}
+
+# plot z test -----------------------------------------------------------------
 
 plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
                         z_value = qnorm(confidence),

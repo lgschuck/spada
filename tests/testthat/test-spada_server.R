@@ -5,17 +5,26 @@ dfs <- list('df_iris' = iris, 'df_mtcars' = mtcars)
 # test inputed datasets -------------------------------------------------------
 test_that('Test inputed datasets', {
   testServer(spada_server(datasets = dfs), {
-    expect_equal(session$userData$dt$dt[[1]], iris)
-    expect_equal(session$userData$dt$dt[[2]], mtcars)
+    expect_equal(session$userData$dt$dt[[1]], iris |> as.data.table())
+    expect_equal(session$userData$dt$dt[[2]], mtcars |> as.data.table())
     expect_equal(names(session$userData$dt$dt), c('df_iris', 'df_mtcars'))
     expect_equal(session$userData$dt_names(), c('df_iris', 'df_mtcars'))
+  })
+})
+
+# test check datasets classes -------------------------------------------------
+test_that('Test inputed datasets', {
+  testServer(spada_server(datasets = dfs), {
+    expect_equal(session$userData$dt$dt[[1]] |> class(), c('data.table', 'data.frame'))
+    expect_equal(session$userData$dt$dt[[2]] |> class(), c('data.table', 'data.frame'))
+    expect_equal(session$userData$df$act |> class(), c('data.table', 'data.frame'))
   })
 })
 
 # test active df --------------------------------------------------------------
 test_that('Test active df', {
   testServer(spada_server(datasets = dfs), {
-    expect_equal(session$userData$df$act, iris)
+    expect_equal(session$userData$df$act, iris |> as.data.table())
     expect_equal(session$userData$df$act_name, 'df_iris')
     expect_equal(session$userData$df$bkp, NULL)
   })
@@ -37,7 +46,7 @@ test_that('Test change active df', {
     session$setInputs(pD_data_btn_active = 1)
 
     expect_equal(session$userData$df$act_name, 'df_mtcars')
-    expect_equal(session$userData$df$act, mtcars)
+    expect_equal(session$userData$df$act, mtcars |> as.data.table())
 
   })
 })
@@ -74,7 +83,7 @@ test_that('Test copy df', {
     session$setInputs(pD_data_btn_copy_dataset = 1)
 
     expect_equal(session$userData$dt_names(), c('df_iris', 'df_mtcars', 'df_iris2'))
-    expect_equal(session$userData$dt$dt[[3]], iris)
+    expect_equal(session$userData$dt$dt[[3]], iris |> as.data.table())
     expect_equal(session$userData$dt$dt |> length(), 3)
   })
 })
@@ -87,7 +96,7 @@ test_that('Test delete non active df', {
     session$setInputs(pD_data_btn_delete_dataset = 1)
 
     expect_equal(session$userData$dt_names(), 'df_iris')
-    expect_equal(session$userData$dt$dt[[1]], iris)
+    expect_equal(session$userData$dt$dt[[1]], iris |> as.data.table())
     expect_equal(session$userData$dt$dt |> length(), 1)
   })
 })
@@ -99,7 +108,7 @@ test_that('Test delete active df', {
     session$setInputs(pD_data_btn_delete_dataset = 1)
 
     expect_equal(session$userData$df$act_name, 'df_iris')
-    expect_equal(session$userData$df$act, iris)
+    expect_equal(session$userData$df$act, iris |> as.data.table())
   })
 })
 

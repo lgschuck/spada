@@ -6,13 +6,25 @@ spada_server <- function(datasets){
     options(shiny.maxRequestSize = 1000 * 1024 ^ 2)
 
     # data --------------------------------------------------------------------
-    session$userData$dt <- reactiveValues(dt = lapply(datasets, setDT))
-    session$userData$dt_names <- reactive(names(session$userData$dt$dt))
+    session$userData$dt <- reactiveValues(
+      dt = lapply(
+        datasets,
+        \(df) {
+          df_temp <- lapply(df, make_valid_cols) |> as.data.frame()
+          df_temp |> setDT()
+        }
+      )
+    )
+
+    session$userData$dt_names <- reactive({
+      req(session$userData$dt$dt)
+      names(session$userData$dt$dt)
+    })
 
     # start values
     session$userData$df <- reactiveValues(
-      act = copy(datasets[[1]]),
-      act_name = names(datasets)[1],
+      act = lapply(datasets[[1]], make_valid_cols) |> setDT(),
+      act_name = names(datasets[1]),
       bkp = NULL
     )
 

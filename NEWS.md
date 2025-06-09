@@ -4,7 +4,7 @@ editor_options:
     wrap: 72
 ---
 
-# Spada 0.1.0.9000 (development version)
+# Spada 0.2.0 - Future Version
 
 ## 0.2.0 Milestone (dec/25)
 
@@ -16,11 +16,26 @@ editor_options:
 
 4 - Models: logistic regression
 
+# Spada 0.1.0.9000 (development version)
+
 ## 0.1.0 Milestone (sep/25)
 
 1 - Models: linear model
 
 2 - Tests: create tests for the app
+
+## 2025.06.08-1
+
+Highlights: **Convert columns of raw** type (from inputed data.frames) to character and better extensions test in **Import file** module
+
+### Improvements
+
+1 - **Import file** module: now accepts extensions in lower and upper case.
+
+### Bug Fixes
+
+1 - **Data.frame with raw column: error and malfunction in several places**: now in the input the columns of raw type are converted to character
+([#28](https://github.com/lgschuck/spada/issues/28))
 
 ## 2025.05.30-1
 

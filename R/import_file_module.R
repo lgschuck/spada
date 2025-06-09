@@ -1,7 +1,7 @@
 
 # ui --------------------------------------------------------------------------
 import_file_ui <- function(id) {
-  file_extensions <- c('csv', 'RDS', 'sav')
+  file_extensions <- c('csv', 'rds', 'sav')
   ns <- NS(id)
     card(
       card_body(
@@ -84,7 +84,7 @@ import_file_server <- function(id) {
         data$file <- input$file
         data$ext <- tools::file_ext(data$file$datapath)
 
-        if (data$ext == 'csv' && input$radio_file_ext == 'csv') {
+        if (tolower(data$ext) == 'csv' && input$radio_file_ext == 'csv') {
 
           if (input$csv_lines == 'all') {
             n <- Inf
@@ -113,7 +113,7 @@ import_file_server <- function(id) {
             error = \(e) msg_error('Check parameters')
           )
 
-        } else if (data$ext == 'RDS' && input$radio_file_ext == 'RDS') {
+        } else if (tolower(data$ext) == 'rds' && input$radio_file_ext == 'rds') {
 
           data$temp <- readRDS(data$file$datapath)
 
@@ -125,7 +125,7 @@ import_file_server <- function(id) {
           } else {
             msg_error('Object must be data.frame')
           }
-        } else if(data$ext == 'sav' && input$radio_file_ext == 'sav'){
+        } else if(tolower(data$ext) == 'sav' && input$radio_file_ext == 'sav'){
           if (input$sav_lines == 'all') {
             n <- Inf
           } else if(!isTruthy(input$sav_n_lines) || input$sav_n_lines < 1){
@@ -161,7 +161,7 @@ import_file_server <- function(id) {
         data$file <- input$file
         data$ext <- tools::file_ext(data$file$datapath)
 
-        if (data$ext == 'csv' && input$radio_file_ext == 'csv') {
+        if (tolower(data$ext) == 'csv' && input$radio_file_ext == 'csv') {
           preview_data <- readLines(data$file$datapath, n = 8)
 
           showModal(modalDialog(
@@ -179,6 +179,9 @@ import_file_server <- function(id) {
     observe({
       req(data$data)
       req(data$data_name)
+
+      data$data <- lapply(data$data, make_valid_cols) |> as.data.table()
+
       session$userData$dt$dt[[data$data_name]] <- data$data
     })
 
