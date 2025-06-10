@@ -195,7 +195,8 @@ descriptive_stats_server <- function(id) {
         sub_missing(missing_text = '-') |>
         sub_values(values = 'NA', replacement = '-') |>
         sub_values(values = 'Gmean', replacement = 'Geometric Mean') |>
-        sub_values(values = 'Hmean', replacement = 'Harmonic Mean')
+        sub_values(values = 'Hmean', replacement = 'Harmonic Mean') |>
+        tab_header('Descriptive Statistics')
     }) |> bindEvent(input$btn_stats)
 
     output$gt_stats <- render_gt({

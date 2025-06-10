@@ -202,7 +202,7 @@ spada_server <- function(datasets){
     output_server('pO_output')
 
     # config events -----------------------------------------------------------
-    mod_pC <- page_config_server('pC')
+    mod_pC <- config_server('pC')
 
     # about events ------------------------------------------------------------
     about_spada_server('about_spada')

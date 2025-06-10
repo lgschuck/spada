@@ -1,8 +1,8 @@
-# tests/testthat/test-page_config_module.R
+# tests/testthat/test-config_module.R
 
 # test colors -----------------------------------------------------------------
 test_that('Test chose colors', {
-  testServer(page_config_server, {
+  testServer(config_server, {
 
     session$setInputs(sel_fill = '#aaccff')
     session$setInputs(sel_line = '#ccee55')
@@ -15,7 +15,7 @@ test_that('Test chose colors', {
 # test input file size --------------------------------------------------------
 
 test_that('Test input file size', {
-  testServer(page_config_server, {
+  testServer(config_server, {
 
     session$setInputs(input_file_size = 1, btn_file_size = 1)
 

@@ -186,7 +186,8 @@ z_test_server <- function(id) {
       ztest$results |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        cols_label('values' = 'Values', 'results' = 'Results')
+        cols_label('values' = 'Values', 'results' = 'Results') |>
+        tab_header('Z Test')
     })
 
     output$ztest_gt <- render_gt({

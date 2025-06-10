@@ -293,7 +293,8 @@ normality_test_server <- function(id) {
       ks_results()$results |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results')
+        gt::cols_label('values' = 'Values', 'results' = 'Results') |>
+        tab_header('Kolmogorov-Smirnov Normality Test')
     })
 
     # ks staticards -----------------------------------------------------------
@@ -397,7 +398,8 @@ normality_test_server <- function(id) {
       sw_results() |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results')
+        gt::cols_label('values' = 'Values', 'results' = 'Results') |>
+        tab_header('Shapiro-Wilk Normality Test')
     })
 
     # sharpiro-wilk staticards ------------------------------------------------
@@ -491,7 +493,8 @@ normality_test_server <- function(id) {
       sf_results() |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results')
+        gt::cols_label('values' = 'Values', 'results' = 'Results') |>
+        tab_header('Shapiro-Francia Normality Test')
     })
 
 

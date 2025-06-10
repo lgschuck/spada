@@ -21,7 +21,6 @@ lm_ui <- function(id) {
             layout_sidebar(
               sidebar = sidebar(
                 width = 400,
-                h5('Parameters', style = 'margin-bottom: -18px;'),
                 layout_columns(
                   col_widths = c(6, 6),
                   btn_task(ns('btn_run_lm'), 'Run Model', icon('gear')),
@@ -115,25 +114,34 @@ lm_server <- function(id) {
       table_summary$Variable <- rownames(table_summary)
       rownames(table_summary) <- NULL
 
-      table_summary <- table_summary[, c("Variable", "Estimate", "Std. Error", "t value", "Pr(>|t|)")]
+      table_summary <- table_summary[, c("Variable", "Estimate", "Std. Error",
+                                         "t value", "Pr(>|t|)")]
 
-      table_summary |> gt()
+      table_summary <- table_summary |> as.data.table()
+      table_summary[, `Sig Levels` := fcase(
+        `Pr(>|t|)` < 0.001, '***',
+        `Pr(>|t|)` < 0.01, '**',
+        `Pr(>|t|)` < 0.05, '*',
+        `Pr(>|t|)` < 0.1, '.',
+        default = ''
+      )]
+
+      table_summary |> gt() |>
+        tab_header(title = 'Linear Model',
+                   subtitle = paste('Independent Variable:', linear_model$y_name))
+
     })
 
     lm_metrics <- reactive({
       req(linear_model$model)
 
-      # Criar data.frame manualmente
       data.frame(
-        Metric = c("R-squared",
-                    "Adjusted R-squared",
-                    "F-statistic",
-                    "F p-value"),
+        Metric = c('R-squared', 'Adjusted R-squared', 'F-statistic', 'F p-value'),
         Value = c(linear_model$summary$r.squared,
                   linear_model$summary$adj.r.squared,
                   linear_model$summary$fstatistic[1],
                   linear_model$summary$fstatistic[3])
-      ) |> gt()
+      ) |> gt() |> tab_header('Model metrics')
     })
 
     output$lm_var_table <- render_gt({

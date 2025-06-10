@@ -44,8 +44,10 @@ math_funs <- c(
     # 'Mode' = 'Mode',
     'Standard Deviation' = 'sd',
     'Variance' = 'var',
-    'Min' = 'mina',
-    'Max' = 'mana',
+    'Min' = 'min',
+    'Mina' = 'mina',
+    'Max' = 'max',
+    'Mana' = 'mana',
     'First' = 'fina',
     'Last' = 'lana',
     'Lag' = 'shift',
@@ -53,7 +55,8 @@ math_funs <- c(
     'IQR' = 'IQR',
     'Skewness' = 'Skew',
     'Kurtosis' = 'Kurt',
-    'Sum' = 'suna',
+    'Sum' = 'sum',
+    'Suna' = 'suna',
     'Cum Sum' = 'cumsum',
     'Prod' = 'prod',
     'Cum Prod' = 'cumprod',
@@ -97,6 +100,7 @@ char_funs <- c(
 # date functions --------------------------------------------------------------
 
 date_funs <- c(
+  # data.table package
   'Year' = 'year',
   'Month' = 'month',
   'Month Day' = 'mday',
@@ -107,6 +111,7 @@ date_funs <- c(
   'Hour' = 'hour',
   'Minute' = 'minute',
   'Second' = 'second',
+  # spada package
   'Is Date' = 'is_date'
 )
 
@@ -154,7 +159,7 @@ basic_operations <- c(
   'ifelse',
 
   # data.table package
-  '%notin%', 'between', '%between%', 'fifelse',
+  '%notin%', 'between', '%between%', 'fifelse', 'fcase',
 
   # DescTools package
   'Outlier',

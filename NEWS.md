@@ -20,9 +20,25 @@ editor_options:
 
 ## 0.1.0 Milestone (sep/25)
 
-1 - Models: linear model
+1 - Tests: create tests for the app
 
-2 - Tests: create tests for the app
+## 2025.06.10-1
+
+Highlights: Mainly **visual** improvements in Gt tables and **Output** module now asks confirmation to reset
+
+### Improvements
+
+1 - **Output** module: now reset button asks confirmation via modal and the buttons have icons
+
+2 - **Insert Output** module: changed order of button for consistency with other modals and new icons in the buttons.
+
+3 - **Gt Tables**: now Gt tables have a Title for better output (impact in several modules)
+
+4 - **Lm** module: some small visual improvements and now **module is considered completed** for version 0.1.0 (will only receive visuals change and fixes if needed)
+
+5 - **Config** module: now module is called config (before was page_config) and has accordions for better look
+
+6 - **Allowed Functions**: inserted fcase, sum, min and max functions
 
 ## 2025.06.08-1
 

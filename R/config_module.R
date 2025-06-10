@@ -1,6 +1,6 @@
 
 # ui --------------------------------------------------------------------------
-page_config_ui <- function(id) {
+config_ui <- function(id) {
   ns <- NS(id)
   nav_panel(
     value = 'config',
@@ -35,29 +35,40 @@ page_config_ui <- function(id) {
         ),
         card(
           card_body(
-            fluidRow(
-              h4('Theme'),
-              layout_columns(
-                col_widths = c(7, 5),
-                selectInput(ns('theme_choice'), NULL,
-                            choices = c('Spada' = 'spada', 'Darkly Spada' = 'dark')),
-                btn_task(ns('btn_theme'), 'Apply', icon('check'))
-              )
-            ),
-            fluidRow(
-              h4('Size of input files (MB)'),
-              layout_columns(
-                col_widths = c(7, 5),
-                numericInput(
-                  ns('input_file_size'),
-                  NULL,
-                  1000,
-                  min = 0,
-                  step = 500
+            fluidRow(accordion(
+              accordion_panel(
+                'Theme',
+                layout_columns(
+                  col_widths = c(7, 5),
+                  selectInput(
+                    ns('theme_choice'),
+                    NULL,
+                    choices = c('Spada' = 'spada', 'Darkly Spada' = 'dark')
+                  ),
+                  btn_task(ns('btn_theme'), 'Apply', icon('check'))
                 ),
-                btn_task(ns('btn_file_size'), 'Apply', icon('check'))
-              )
-            )
+                icon = bs_icon('palette')
+              ),
+              open = F
+            )),
+            fluidRow(accordion(
+              accordion_panel(
+                'Size of input files (MB)',
+                layout_columns(
+                  col_widths = c(7, 5),
+                  numericInput(
+                    ns('input_file_size'),
+                    NULL,
+                    1000,
+                    min = 0,
+                    step = 500
+                  ),
+                  btn_task(ns('btn_file_size'), 'Apply', icon('check'))
+                ),
+                icon = bs_icon('upload')
+              ),
+              open = F
+            ))
           )
         )
       )
@@ -66,7 +77,7 @@ page_config_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-page_config_server <- function(id) {
+config_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 

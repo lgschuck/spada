@@ -3,7 +3,7 @@
 insert_output_ui <- function(id) {
   ns <- NS(id)
 
-  btn_task(ns('add_output'), 'Add to output', icon('plus'))
+  btn_task(ns('btn_add_output'), 'Add to output', icon('plus'))
 }
 
 # server ----------------------------------------------------------------------
@@ -14,6 +14,7 @@ insert_output_server <- function(id, input_element) {
 
     output_element <- reactiveVal(NULL)
 
+    # add output
     observe({
       req(input_element())
 
@@ -29,12 +30,21 @@ insert_output_server <- function(id, input_element) {
             rows = 10,
             resize = 'both'
           ),
-          footer = tagList(actionButton(ns('submit'), 'Submit'), modalButton('Cancel'))
+          footer = tagList(
+            actionButton(ns('btn_cancel_add_output'), 'Cancel', icon = icon('xmark')),
+            actionButton(ns('btn_confirm_add_output'), 'Submit', icon = icon('check'))
+          )
         )
       )
 
-    }) |> bindEvent(input$add_output)
+    }) |> bindEvent(input$btn_add_output)
 
+    # cancel_add_output
+    observe({
+      removeModal()
+    }) |> bindEvent(input$btn_cancel_add_output)
+
+    # confirm add output
     observe({
       removeModal()
 
@@ -42,9 +52,9 @@ insert_output_server <- function(id, input_element) {
 
       msg('Added to output', DURATION = 1)
 
-    }) |> bindEvent(input$submit)
+    }) |> bindEvent(input$btn_confirm_add_output)
 
-
+    # return
     return(list(output_element = reactive(output_element())))
   })
 }

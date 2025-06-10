@@ -31,8 +31,26 @@ output_server <- function(id) {
 
     # reset output ------------------------------------------------------------
     observe({
-      session$userData$out$elements <- list(report_card())
+      showModal(modalDialog(
+        title = 'Reset Output',
+        'Do you wanto to remove all the elements?',
+        easyClose = FALSE,
+        size = 'l',
+        footer = tagList(
+          actionButton(ns('btn_cancel_reset'), 'Cancel', icon = icon('xmark')),
+          actionButton(ns('btn_confirm_reset'), 'Confirm', icon = icon('check'))
+        )
+      ))
     }) |> bindEvent(input$btn_reset)
+
+    observe({
+      session$userData$out$elements <- list(report_card())
+      removeModal()
+    }) |> bindEvent(input$btn_confirm_reset)
+
+    observe({
+      removeModal()
+    }) |> bindEvent(input$btn_cancel_reset)
 
     # save html ---------------------------------------------------------------
     output$save_html <- downloadHandler(

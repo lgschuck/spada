@@ -162,7 +162,7 @@ spada_ui <- function(){
       # menu options ----------------------------------------------------------
       nav_menu(
         title = 'Options',
-        page_config_ui('pC'),
+        config_ui('pC'),
         nav_item(
           tags$a(
             icon('book'),

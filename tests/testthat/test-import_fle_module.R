@@ -13,7 +13,7 @@ test_that('Test import RDS', {
 
     session$setInputs(
       dataset_name = 'df_test',
-      radio_file_ext = 'rds',
+      radio_file_ext = 'RDS',
       file = list(datapath = tmp)
     )
 

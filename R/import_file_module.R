@@ -1,7 +1,7 @@
 
 # ui --------------------------------------------------------------------------
 import_file_ui <- function(id) {
-  file_extensions <- c('csv', 'rds', 'sav')
+  file_extensions <- c('csv', 'RDS', 'sav')
   ns <- NS(id)
     card(
       card_body(
@@ -38,7 +38,7 @@ import_file_ui <- function(id) {
         conditionalPanel(
           condition = "input.radio_file_ext == 'sav'", ns = ns,
           card(
-            card_header('SAV Parameters', class = 'mini-header'),
+            card_header('Sav Parameters', class = 'mini-header'),
             card_body(
               layout_columns(
                 col_widths = c(2, 2),
@@ -113,7 +113,7 @@ import_file_server <- function(id) {
             error = \(e) msg_error('Check parameters')
           )
 
-        } else if (tolower(data$ext) == 'rds' && input$radio_file_ext == 'rds') {
+        } else if (tolower(data$ext) == 'rds' && input$radio_file_ext == 'RDS') {
 
           data$temp <- readRDS(data$file$datapath)
 

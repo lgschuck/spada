@@ -142,7 +142,8 @@ correlation_server <- function(id) {
       cor_test$results |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        cols_label('values' = 'Values', 'results' = 'Results')
+        cols_label('values' = 'Values', 'results' = 'Results') |>
+        tab_header('Correlation Test')
     })
 
     output$cor_gt <- render_gt({

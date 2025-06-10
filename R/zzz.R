@@ -27,6 +27,8 @@ utils::globalVariables(
     'Measures',
     'groupby',
     'density',
-    'dt_names_react'
+    'dt_names_react',
+    'Sig Levels',
+    'Pr(>|t|)'
     )
   )
