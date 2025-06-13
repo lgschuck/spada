@@ -1,6 +1,6 @@
 
 # Function with the ui of spada.R
-spada_ui <- function(){
+spada_ui <- function(conf){
   tagList(
 
     busyIndicatorOptions(
@@ -27,7 +27,7 @@ spada_ui <- function(){
 
     page_navbar(
       id = 'navbar',
-      theme = spada_theme,
+      theme = get(conf$theme),
       title = 'Spada',
 
       bg = main_color,

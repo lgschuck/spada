@@ -523,9 +523,7 @@ stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,
 }
 
 # make valid cols -------------------------------------------------------------
-
 make_valid_cols <- function(x){
-
   if(is.raw(x)){
     as.character(x)
   } else {
@@ -533,8 +531,53 @@ make_valid_cols <- function(x){
   }
 }
 
-# plot z test -----------------------------------------------------------------
+# exit spada with saving session -------------------------------------------
+exit_with_save <- function(session = session){
+  show_modal_progress_line(value = 0.3, text = 'Saving Output...', color = main_color)
+  Sys.sleep(1)
 
+  saveRDS(session$userData$out$elements,
+          paste0(session$userData$conf$data_dir, '/output.RDS'),
+          compress = F)
+
+  Sys.sleep(1)
+  update_modal_progress(value = 0.5, 'Saving Data...')
+
+  saveRDS(session$userData$dt$dt,
+          paste0(session$userData$conf$data_dir, '/data.RDS'),
+          compress = F)
+  update_modal_progress(value = .7, 'Saving Data...')
+  Sys.sleep(1.5)
+  update_modal_progress(value = 1, 'Closing Spada...')
+
+  Sys.sleep(1)
+
+  saveRDS(reactiveValuesToList(session$userData$conf),
+          paste0(session$userData$conf$conf_dir, '/conf.RDS'),
+          compress = F)
+
+  session$sendCustomMessage(type = 'closeWindow', message = 'message')
+  stopApp()
+}
+
+# exit spada without saving session -------------------------------------------
+exit_without_save <- function(session = session){
+  show_modal_progress_line(text = 'Closing Spada...', color = main_color)
+  update_modal_progress(value = 0.3)
+  Sys.sleep(0.7)
+  saveRDS(reactiveValuesToList(session$userData$conf),
+          paste0(session$userData$conf$conf_dir, '/conf.RDS'),
+          compress = F)
+
+  update_modal_progress(value = 0.6)
+  Sys.sleep(0.7)
+  update_modal_progress(value = 1)
+  Sys.sleep(1)
+  session$sendCustomMessage(type = 'closeWindow', message = 'message')
+  stopApp()
+}
+
+# plot z test -----------------------------------------------------------------
 plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
                         z_value = qnorm(confidence),
                         color_fill = 'brown3', color_line = 'steelblue') {

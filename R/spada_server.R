@@ -1,9 +1,19 @@
 
 # Function with the server of spada.R
-spada_server <- function(datasets){
+spada_server <- function(datasets, conf){
   function(input, output, session) {
 
-    options(shiny.maxRequestSize = 1000 * 1024 ^ 2)
+    options(shiny.maxRequestSize = conf$file_size * 1024 ^ 2)
+
+    # conf values -------------------------------------------------------------
+    session$userData$conf <- reactiveValues(
+      conf_dir = conf$conf_dir,
+      data_dir = conf$data_dir,
+      theme = conf$theme,
+      file_size = conf$file_size,
+      restore_session = conf$restore_session,
+      save_session = conf$save_session
+    )
 
     # data --------------------------------------------------------------------
     session$userData$dt <- reactiveValues(
@@ -212,9 +222,45 @@ spada_server <- function(datasets){
     observe({
       req(input$navbar)
       if (input$navbar == 'exit') {
-        session$sendCustomMessage(type = 'closeWindow', message = 'message')
-        stopApp()
+
+        if(session$userData$conf$save_session == 'ask'){
+          # ask to save data and ouput
+          showModal(modalDialog(
+            title = 'Save Session',
+            'Do you want to save data and output objects?',
+            easyClose = FALSE,
+            size = 'm',
+            footer = tagList(
+              actionButton('btn_cancel_exit', 'Cancel', icon = icon('xmark'), class = 'btn-task'),
+              actionButton('btn_cancel_save_session', 'No', icon = icon('xmark'), class = 'btn-task'),
+              actionButton('btn_confirm_save_session', 'Yes', icon = icon('check'), class = 'btn-task')
+            )
+          ))
+        } else if (session$userData$conf$save_session == 'never'){
+          exit_without_save(session)
+        } else if (session$userData$conf$save_session == 'always'){
+          exit_with_save(session)
+        }
       }
     })
+
+    # cancel exit ----------------------------
+    observe({
+      removeModal()
+      nav_select('navbar', selected = 'about', session = session)
+    }) |> bindEvent(input$btn_cancel_exit)
+
+    # cancel save session --------------------
+    observe({
+      removeModal()
+      exit_without_save(session)
+    }) |> bindEvent(input$btn_cancel_save_session)
+
+    # confirm save session -------------------
+    observe({
+      removeModal()
+      exit_with_save(session)
+    }) |> bindEvent(input$btn_confirm_save_session)
+
   }
 }

@@ -51,14 +51,15 @@
 #' @importFrom sass as_sass
 #'
 #' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton
-#'             radioGroupButtons statiCard
+#'             radioGroupButtons statiCard updateRadioGroupButtons
 #'
-#' @importFrom shinybusy busy_start_up spin_epic
+#' @importFrom shinybusy busy_start_up show_modal_progress_line spin_epic
+#'             update_modal_progress
 #'
 #' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm
 #'             qnorm qqline qqnorm rnorm sd shapiro.test var
 #'
-#' @importFrom tools toTitleCase
+#' @importFrom tools R_user_dir toTitleCase
 #'
 #' @importFrom utils object.size head packageDescription sessionInfo
 
@@ -85,7 +86,41 @@ spada <- function(...) {
   # make sure all datasets variables are valid names
   datasets <- lapply(datasets, make_var_names)
 
+  # read conf values ----------------------------------------------------------
+  r_user_conf_dir <- normalizePath(R_user_dir('spada', 'config'), winslash = '/')
+  r_user_data_dir <- normalizePath(R_user_dir('spada', 'data'), winslash = '/')
+
+  if(!dir.exists(r_user_conf_dir)) {
+    dir.create(r_user_conf_dir, recursive = T)
+  }
+
+  if(!dir.exists(r_user_data_dir)) {
+    dir.create(r_user_data_dir, recursive = T)
+  }
+
+  temp_conf <- list(
+    'conf_dir' = r_user_conf_dir,
+    'data_dir' = r_user_data_dir,
+    'theme' = 'spada_theme',
+    'file_size' = 1000,
+    'restore_session' = 'always',
+    'save_session' = 'always'
+  )
+
+  if(file.exists(paste0(r_user_conf_dir, '/conf.RDS'))) {
+    temp_conf_saved <- readRDS(paste0(r_user_conf_dir, '/conf.RDS'))
+
+    temp_conf$theme <- temp_conf_saved$theme
+    temp_conf$file_size <- temp_conf_saved$file_size
+    temp_conf$restore_session <- temp_conf_saved$restore_session
+    temp_conf$save_session <- temp_conf_saved$save_session
+  } else {
+    saveRDS(temp_conf,
+            paste0(r_user_conf_dir, '/conf.RDS'),
+            compress = F)
+  }
+
   ### Run App -----------------------------------------------------------------
-  shinyApp(spada_ui(), spada_server(datasets),
+  shinyApp(spada_ui(temp_conf), spada_server(datasets, temp_conf),
            options = list(launch.browser = T))
 }
