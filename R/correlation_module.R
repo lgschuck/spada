@@ -207,7 +207,7 @@ correlation_server <- function(id) {
 
       ggplot(df_active(), aes(x = .data[[input$sel_var1]],
                               y = .data[[input$sel_var2]])) +
-        geom_point(color = session$userData$fill_color,
+        geom_point(color = session$userData$conf$plot_fill_color,
                    pch = if(nrow(df_active()) > 1e4) '.' else 20) +
         labs(x = input$sel_var1, y = input$sel_var2) +
         theme_classic() +

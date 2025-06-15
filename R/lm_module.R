@@ -47,7 +47,7 @@ lm_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  df <- reactive(session$userData$df$act)
+	  df <- reactive({ session$userData$df$act })
 
     # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
@@ -71,10 +71,12 @@ lm_server <- function(id) {
     })
 
     observe({
+      req(yvar())
       updateSelectInput(session, 'sel_yvar', choices = yvar())
     })
 
     observe({
+      req(xvar())
       updateSelectizeInput(session, 'sel_xvar', choices = xvar())
     })
 

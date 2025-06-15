@@ -73,19 +73,38 @@ output_server <- function(id) {
     # save session output -----------------------------------------------------
     observe({
 
-      saveRDS(session$userData$out$elements,
-              paste0(session$userData$conf_dir$data, '/output.RDS'))
-
-      msg(paste('Output saved in', session$userData$conf_dir$data), 2.5)
+      showModal(modalDialog(
+        title = 'Save Output',
+        'Do you want to save the current Output? This will overwrite the previous one.',
+        easyClose = FALSE,
+        size = 'l',
+        footer = tagList(
+          actionButton(ns('btn_cancel_save_output'), 'No',
+                       icon = icon('xmark'), class = 'btn-task'),
+          actionButton(ns('btn_confirm_save_output'), 'Yes',
+                       icon = icon('check'), class = 'btn-task')
+        )
+      ))
     }) |> bindEvent(input$btn_save_output_session)
+
+    # cancel save output
+    observe({ removeModal() }) |> bindEvent(input$btn_cancel_save_output)
+
+    # confirm save output
+    observe({
+      removeModal()
+      saveRDS(session$userData$out$elements,
+              paste0(session$userData$conf$data_dir, '/output.RDS'))
+
+      msg(paste('Output saved in', session$userData$conf$data_dir), 2.5)
+    }) |> bindEvent(input$btn_confirm_save_output)
 
     # import session output ---------------------------------------------------
     observe({
-
-      # ask to save data and ouput
       showModal(modalDialog(
         title = 'Import Output',
-        'Do you want to import the previous saved output? This will erase the current Output elements.',
+        'Do you want to import the previous saved Output? This will erase
+        the current Output elements.',
         easyClose = FALSE,
         size = 'l',
         footer = tagList(
@@ -95,19 +114,22 @@ output_server <- function(id) {
                        icon = icon('check'), class = 'btn-task')
         )
       ))
-
     }) |> bindEvent(input$btn_import_output_session)
 
     # cancel import output
-    observe({  removeModal() }) |> bindEvent(input$btn_cancel_import_output)
+    observe({ removeModal() }) |> bindEvent(input$btn_cancel_import_output)
 
     # confirm import output
     observe({
-      session$userData$out$elements <- readRDS(paste0(session$userData$conf_dir$data, '/output.RDS'))
-
       removeModal()
-      msg(paste('Output imported from', session$userData$conf_dir$data), 2.5)
+      temp_output <- readRDS(paste0(session$userData$conf$data_dir, '/output.RDS'))
 
+      if(test_output_format(temp_output)){
+        session$userData$out$elements <- temp_output
+        msg(paste('Output imported from', session$userData$conf$data_dir), 2.5)
+      } else {
+        msg_error('Output in invalid format')
+      }
     }) |> bindEvent(input$btn_confirm_import_output)
 
   })

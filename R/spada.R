@@ -50,11 +50,11 @@
 #'
 #' @importFrom sass as_sass
 #'
-#' @importFrom shinyWidgets colorPickr updateColorPickr show_toast dropdownButton
-#'             radioGroupButtons statiCard updateRadioGroupButtons
+#' @importFrom shinyWidgets colorPickr dropdownButton show_toast radioGroupButtons
+#'             statiCard updateColorPickr updateRadioGroupButtons
 #'
-#' @importFrom shinybusy busy_start_up show_modal_progress_line spin_epic
-#'             update_modal_progress
+#' @importFrom shinybusy busy_start_up remove_modal_progress
+#'             show_modal_progress_line spin_epic update_modal_progress
 #'
 #' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm
 #'             qnorm qqline qqnorm rnorm sd shapiro.test var
@@ -98,29 +98,59 @@ spada <- function(...) {
     dir.create(r_user_data_dir, recursive = T)
   }
 
-  temp_conf <- list(
+  start_conf <- list(
     'conf_dir' = r_user_conf_dir,
     'data_dir' = r_user_data_dir,
     'theme' = 'spada_theme',
     'file_size' = 1000,
-    'restore_session' = 'always',
-    'save_session' = 'always'
+    'restore_session' = 'never',
+    'save_session' = 'ask',
+    'restore_data_status' = 0,
+    'restore_output_status' = 0,
+    'restore_status' = NULL,
+    'plot_fill_color' = plot_fill_color,
+    'plot_line_color' = plot_line_color
   )
 
   if(file.exists(paste0(r_user_conf_dir, '/conf.RDS'))) {
-    temp_conf_saved <- readRDS(paste0(r_user_conf_dir, '/conf.RDS'))
+    conf_saved <- readRDS(paste0(r_user_conf_dir, '/conf.RDS'))
 
-    temp_conf$theme <- temp_conf_saved$theme
-    temp_conf$file_size <- temp_conf_saved$file_size
-    temp_conf$restore_session <- temp_conf_saved$restore_session
-    temp_conf$save_session <- temp_conf_saved$save_session
+    if(is.list(conf_saved) &&
+       all(c('theme',
+             'file_size',
+             'restore_session',
+             'save_session',
+             'plot_fill_color',
+             'plot_line_color') %in% names(conf_saved)
+    )){
+      if(isTRUE(conf_saved$theme %in% themes_names)) start_conf$theme <- conf_saved$theme
+      if(is.numeric(conf_saved$file_size) && conf_saved$file_size > 0){
+        start_conf$file_size <- conf_saved$file_size
+      }
+      if(isTRUE(conf_saved$restore_session %in% c('always', 'ask', 'never'))){
+        start_conf$restore_session <- conf_saved$restore_session
+      }
+
+      if(isTRUE(conf_saved$save_session %in% c('always', 'ask', 'never'))){
+        start_conf$save_session <- conf_saved$save_session
+      }
+
+      if(isTRUE(is_hex_color(conf_saved$plot_fill_color))){
+        start_conf$plot_fill_color <- conf_saved$plot_fill_color
+      }
+
+      if(isTRUE(is_hex_color(conf_saved$plot_line_color))){
+        start_conf$plot_line_color <- conf_saved$plot_line_color
+      }
+    }
+
   } else {
-    saveRDS(temp_conf,
+    saveRDS(start_conf,
             paste0(r_user_conf_dir, '/conf.RDS'),
             compress = F)
   }
 
   ### Run App -----------------------------------------------------------------
-  shinyApp(spada_ui(temp_conf), spada_server(datasets, temp_conf),
+  shinyApp(spada_ui(start_conf), spada_server(datasets, start_conf),
            options = list(launch.browser = T))
 }

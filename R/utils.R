@@ -1,5 +1,4 @@
 
-
 # generate 2 column table in html ---------------------------------------------
 gen_table2 <- function(element1, element2) {
   div(
@@ -534,14 +533,17 @@ make_valid_cols <- function(x){
 # exit spada with saving session -------------------------------------------
 exit_with_save <- function(session = session){
   show_modal_progress_line(value = 0.3, text = 'Saving Output...', color = main_color)
-  Sys.sleep(1)
+  Sys.sleep(0.5)
 
   saveRDS(session$userData$out$elements,
           paste0(session$userData$conf$data_dir, '/output.RDS'),
           compress = F)
 
-  Sys.sleep(1)
+  Sys.sleep(0.5)
   update_modal_progress(value = 0.5, 'Saving Data...')
+
+  # update dt$dt with active df
+  session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
 
   saveRDS(session$userData$dt$dt,
           paste0(session$userData$conf$data_dir, '/data.RDS'),
@@ -564,17 +566,34 @@ exit_with_save <- function(session = session){
 exit_without_save <- function(session = session){
   show_modal_progress_line(text = 'Closing Spada...', color = main_color)
   update_modal_progress(value = 0.3)
-  Sys.sleep(0.7)
+  Sys.sleep(0.3)
   saveRDS(reactiveValuesToList(session$userData$conf),
           paste0(session$userData$conf$conf_dir, '/conf.RDS'),
           compress = F)
 
   update_modal_progress(value = 0.6)
-  Sys.sleep(0.7)
+  Sys.sleep(0.3)
   update_modal_progress(value = 1)
   Sys.sleep(1)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   stopApp()
+}
+
+# make names append lists -------------------------------------------------
+make_names_append_list <- function(new_list, actual_names,
+                                   suffix = '_previous', index = 1) {
+
+    names(new_list) <- make.names(names(new_list), unique = TRUE)
+
+    while (any(grepl(paste0("^.*", suffix, "$"), actual_names))) {
+      suffix <- paste0(suffix, "_", i)
+      index <- index + 1
+    }
+
+    conflict_names <- names(new_list) %in% actual_names
+    names(new_list)[conflict_names] <- paste0(names(new_list)[conflict_names], suffix)
+
+    return(new_list)
 }
 
 # plot z test -----------------------------------------------------------------
@@ -626,4 +645,24 @@ plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
     abline(v = z_value, col = 'black', lwd = 2, lty = 2)
   }
 
+}
+
+# test if is hex color --------------------------------------------------------
+is_hex_color <- function(x) {
+  grepl("^#[A-Fa-f0-9]{6}$", x)
+}
+
+# test output format-----------------------------------------------------------
+test_output_format <- function(output){
+  is.list(output) &&
+   length(output) > 0 &&
+   all(lapply(output, class) == 'shiny.tag')
+}
+
+# test data format-------------------------------------------------------------
+test_data_format <- function(data){
+  is.list(data) &&
+     length(data) > 0 &&
+     (sapply(data, is.data.frame) |> all()) &&
+     (all(sapply(data, nrow) > 0))
 }

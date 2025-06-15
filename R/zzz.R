@@ -29,6 +29,7 @@ utils::globalVariables(
     'density',
     'dt_names_react',
     'Sig Levels',
-    'Pr(>|t|)'
+    'Pr(>|t|)',
+    'i'
     )
   )

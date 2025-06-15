@@ -173,12 +173,12 @@ normality_test_server <- function(id) {
       ggplot(data.frame(x = var()), aes(x = x)) +
         geom_histogram(aes(y = after_stat(density)),
                        bins = input$bins,
-                       fill = session$userData$fill_color,
+                       fill = session$userData$conf$plot_fill_color,
                        color = "black") +
         stat_function(fun = dnorm,
                       args = list(mean = mean(var(), na.rm = TRUE),
                                   sd = sd(var(), na.rm = TRUE)),
-                      color = session$userData$line_color,
+                      color = session$userData$conf$plot_line_color,
                       linewidth = 1) +
         labs(x = "Values",
              y = "Density") +
@@ -216,8 +216,8 @@ normality_test_server <- function(id) {
       req(var())
 
       ggplot(data.frame(x = var()), aes(sample = x)) +
-        stat_qq(color = session$userData$fill_color) +
-        stat_qq_line(color = session$userData$line_color) +
+        stat_qq(color = session$userData$conf$plot_fill_color) +
+        stat_qq_line(color = session$userData$conf$plot_line_color) +
         labs(title = paste('Normal QQ Plot:', input$sel_var),
              x = 'Theoretical Quantiles',
              y = 'Sample Quantiles') +

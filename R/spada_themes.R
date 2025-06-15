@@ -1,10 +1,15 @@
 
+# themes names ----------------------------------------------------------------
+themes_names <- c('spada_theme', 'spada_dark_theme')
+
 # app colors ------------------------------------------------------------------
 main_color <- '#02517d'
 sidebar_color <- '#e3e3e4'
 bg_color <- '#f9f9f9'
 secondary <- '#0072B2'
 sucess <- '#009E73'
+plot_fill_color <- '#5CACEE'
+plot_line_color <- '#EE7942'
 
 startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------

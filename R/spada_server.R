@@ -12,8 +12,115 @@ spada_server <- function(datasets, conf){
       theme = conf$theme,
       file_size = conf$file_size,
       restore_session = conf$restore_session,
-      save_session = conf$save_session
+      save_session = conf$save_session,
+      restore_data_status = conf$restore_data_status,
+      restore_output_status = conf$restore_output_status,
+      restore_status = conf$restore_status,
+      plot_fill_color = conf$plot_fill_color,
+      plot_line_color = conf$plot_line_color
     )
+
+    # restore saved session data -----------------------------------------------
+    observe({
+      req(session$userData$conf$data_dir,
+          session$userData$conf$restore_session,
+          session$userData$conf$restore_data_status,
+          session$userData$conf$restore_output_status,
+          session$userData$dt$dt,
+          session$userData$df$act
+          )
+
+      if(session$userData$conf$restore_session == 'always') {
+
+        if(!file.exists(paste0(session$userData$conf$data_dir, '/data.RDS'))){
+          session$userData$conf$restore_data_status <- 2
+
+        } else {
+
+          previous_data <- readRDS(
+            paste0(session$userData$conf$data_dir, '/data.RDS'))
+
+          # check data format
+          if(!test_data_format(previous_data)){
+            session$userData$conf$restore_data_status <- 3
+          } else {
+            previous_data <- make_names_append_list(
+              previous_data,
+              names(session$userData$dt$dt)
+            )
+
+            previous_data <- lapply(previous_data, as.data.table)
+
+            session$userData$dt$dt <- append(previous_data, session$userData$dt$dt)
+            session$userData$df$act <- session$userData$dt$dt[[1]]
+            session$userData$df$act_name <- names(session$userData$dt$dt[1])
+
+            session$userData$conf$restore_data_status <- 1
+          }
+        }
+
+        # import output
+        if(!file.exists(paste0(session$userData$conf$data_dir, '/output.RDS'))){
+          session$userData$conf$restore_output_status <- 2
+
+        } else {
+          previous_output <- readRDS(paste0(session$userData$conf$data_dir, '/output.RDS'))
+
+          # check output format
+          if(!test_output_format(previous_output)){
+            session$userData$conf$restore_output_status <- 3
+          } else {
+            session$userData$out$elements <- previous_output
+            session$userData$conf$restore_output_status <- 1
+          }
+        }
+      }
+
+      session$userData$conf$restore_status <- paste0(
+        session$userData$conf$restore_data_status, '.',
+        session$userData$conf$restore_output_status
+      )
+
+    }) |> bindEvent(session$userData$conf$restore_session, once = T)
+
+    # show modal with restored status
+    observe({
+      req(session$userData$conf$restore_status)
+
+      if(any(session$userData$conf$restore_session %in% c('always', 'ask'))){
+
+        list_check_restore <-
+          tags$span(
+            switch(
+              substr(session$userData$conf$restore_status, 1, 1),
+              '1' = h5(tagList(icon('check', style = 'color: green; margin-right: 5px;'), 'Data restored')),
+              '2' = h5(tagList(icon('times', style = 'color: red; margin-right: 5px;'), 'Data not found')),
+              '3' = h5(tagList(icon('circle-question', style = 'color: red; margin-right: 5px;'), 'Data in invalid format'))
+            ),
+            tags$br(),
+            switch(
+              substr(session$userData$conf$restore_status, 3, 3),
+              '1' = h5(tagList(icon('check', style = 'color: green; margin-right: 5px;'), 'Output restored')),
+              '2' = h5(tagList(icon('times', style = 'color: red; margin-right: 5px;'), 'Output not found')),
+              '3' = h5(tagList(icon('circle-question', style = 'color: red; margin-right: 5px;'), 'Output in invalid format'))
+            )
+          )
+
+        showModal(modalDialog(
+          title = 'Session Restore Status',
+          list_check_restore,
+          easyClose = FALSE,
+          size = 'l',
+          footer = tagList(
+            actionButton('btn_dismiss_restore_sesison', 'OK', class = 'btn-task')
+          )
+        ))
+      }
+    }) |> bindEvent(session$userData$conf$restore_status, once = T)
+
+    observe({
+      removeModal()
+    }) |> bindEvent(input$btn_dismiss_restore_sesison)
 
     # data --------------------------------------------------------------------
     session$userData$dt <- reactiveValues(
@@ -21,7 +128,7 @@ spada_server <- function(datasets, conf){
         datasets,
         \(df) {
           df_temp <- lapply(df, make_valid_cols) |> as.data.frame()
-          df_temp |> setDT()
+          df_temp |> as.data.table()
         }
       )
     )
@@ -31,9 +138,9 @@ spada_server <- function(datasets, conf){
       names(session$userData$dt$dt)
     })
 
-    # start values
+    # # start values
     session$userData$df <- reactiveValues(
-      act = lapply(datasets[[1]], make_valid_cols) |> setDT(),
+      act = lapply(datasets[[1]], make_valid_cols) |> as.data.table(),
       act_name = names(datasets[1]),
       bkp = NULL
     )
@@ -53,7 +160,10 @@ spada_server <- function(datasets, conf){
     sidebar_server('sidebar', app_session = session)
 
     # data page events --------------------------------------------------------
-    session$userData$df$act_meta <- reactive({ df_info(session$userData$df$act) })
+    session$userData$df$act_meta <- reactive({
+      req(session$userData$df$act)
+      df_info(session$userData$df$act)
+    })
 
     output$pD_metadata_gt <- render_gt(session$userData$df$act_meta() |> gt_info())
 
@@ -84,17 +194,17 @@ spada_server <- function(datasets, conf){
       updateTextInput(session, "pD_data_txt_new_name", value = '')
     }) |> bindEvent(input$pD_data_btn_active)
 
-    # rename event ---------------------------
+    # rename dataset event -------------------
     observe({
       if(!is_valid_name(input$pD_data_txt_new_name) |
          input$pD_data_txt_new_name %in% session$userData$dt_names()){
         msg_error('New name is not valid or already in use')
       } else {
+        # save active to original data
+        session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
         names(session$userData$dt$dt)[session$userData$dt_names() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         # update active dataset if necessary
         if(session$userData$df$act_name == input$pD_data_sel_df){
-          session$userData$df$act <- session$userData$dt$dt[[input$pD_data_txt_new_name]]
-
           session$userData$df$act_name <- input$pD_data_txt_new_name
         }
         msg('New name applied')
@@ -108,7 +218,10 @@ spada_server <- function(datasets, conf){
          (input$pD_data_txt_new_name %in% session$userData$dt_names())){
         msg_error('New name is not valid or already in use')
       } else {
-        session$userData$dt$dt[[ input$pD_data_txt_new_name ]] <- session$userData$df$act
+        # save active to original data
+        session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
+
+        session$userData$dt$dt[[input$pD_data_txt_new_name]] <- session$userData$dt$dt[[input$pD_data_sel_df]]
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
         gc()
         updateTextInput(session, "pD_data_txt_new_name", value = '')
@@ -120,7 +233,7 @@ spada_server <- function(datasets, conf){
       if(session$userData$df$act_name == input$pD_data_sel_df){
         msg_error('You can not delete the active dataset')
       } else {
-        session$userData$dt$dt[[ input$pD_data_sel_df ]] <- NULL
+        session$userData$dt$dt[[input$pD_data_sel_df]] <- NULL
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
         gc()
         updateTextInput(session, "pD_data_txt_new_name", value = '')

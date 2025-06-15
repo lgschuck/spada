@@ -22,6 +22,33 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+## 2025.06.14-1
+
+Highlights: **Save/Restore data and settings** between user session and **bug fix in copy/rename datasets**
+
+### Improvements
+
+1 - **Save/Restore** data and settings: now **it's possible to save and restore** the data (datasets), output and settings from current/previous session.
+
+2 - **Exiting Spada**: on Exit there is the possibility to **save session data**. Also, some new modals for  better user experience.
+
+3 - **Config** module: now there are options for restoring and saving the previous/current session. Also, the **conf directories** are shown allowing the user to track the session data.
+
+4 - **Data Highlights and LM** modules: **new req** functions for better dependencies management.
+
+5 - **Correlation, Exploratory, Normality Test and Z test** modules: change in name of **color objects** (session$userData)
+
+6 - **Output** module: **new modals** for better user experience and **2 new buttons** to save and restore current/previous output.
+
+7 - **spada.R, spada_server.R, utils.R**: new code to accommodate the **Save/Restore** session data events. Some **new functions** to check **format of data** to be restored. 
+
+8 - **spada_themes.R**: new vector with themes names and objects with default values for plot colors.
+
+### Bug Fixes
+
+1 - **Data > Copy dataset and rename dataset: error with active dataset**: fixed, the session$userData$dt$dt onject was not updated befone renaming and in copy dataset the selection was always in the qactive dataset.
+([#32](https://github.com/lgschuck/spada/issues/32))
+
 ## 2025.06.10-1
 
 Highlights: Mainly **visual** improvements in Gt tables and **Output** module now asks confirmation to reset

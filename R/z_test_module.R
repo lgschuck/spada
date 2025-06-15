@@ -301,12 +301,12 @@ z_test_server <- function(id) {
       ggplot(data.frame(x = var()), aes(x = x)) +
         geom_histogram(aes(y = after_stat(density)),
                        bins = input$bins,
-                       fill = session$userData$fill_color,
+                       fill = session$userData$conf$plot_fill_color,
                        color = '#000000') +
         stat_function(fun = dnorm,
                       args = list(mean = mean(var(), na.rm = TRUE),
                                   sd = sd(var(), na.rm = TRUE)),
-                      color = session$userData$line_color,
+                      color = session$userData$conf$plot_line_color,
                       linewidth = 1) +
         labs(x = 'Values', y = 'Density') +
         theme_classic() +

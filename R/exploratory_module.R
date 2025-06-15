@@ -212,7 +212,7 @@ exploratory_server <- function(id, output_report) {
         validate(need(!is.numeric(var()), 'Var can not be numeric'))
 
         ggplot(data.frame(x = var()), aes(x = factor(x))) +
-          geom_bar(fill = session$userData$fill_color) +
+          geom_bar(fill = session$userData$conf$plot_fill_color) +
           labs(x = '', y = 'Count') +
           theme_classic() +
           theme(axis.text.x = element_text(size = 14),
@@ -234,7 +234,7 @@ exploratory_server <- function(id, output_report) {
                  aes(x = x, y = y, fill = x)) +
             stat_boxplot(geom = 'errorbar', width = 0.3) +
             geom_boxplot(orientation = 'x') +
-            geom_hline(yintercept = var_percentile(),  color = session$userData$line_color) +
+            geom_hline(yintercept = var_percentile(),  color = session$userData$conf$plot_line_color) +
             coord_flip() +
             labs(x = '', y = '') +
             theme_classic() +
@@ -259,10 +259,10 @@ exploratory_server <- function(id, output_report) {
             ggplot(data.frame(x = var()), aes(x = x)) +
               geom_histogram(
                 bins = input$bins,
-                fill = session$userData$fill_color,
+                fill = session$userData$conf$plot_fill_color,
                 color = '#000000'
               ) +
-              geom_vline(xintercept = var_percentile(), color = session$userData$line_color) +
+              geom_vline(xintercept = var_percentile(), color = session$userData$conf$plot_line_color) +
               labs(x = '', y = 'Count', title = '') +
               theme_classic() +
               theme(axis.text.x = element_text(size = 14),
@@ -273,9 +273,9 @@ exploratory_server <- function(id, output_report) {
           } else if (input$radio_dist_plot == 'boxplot'){
             ggplot(data = data.frame(x = var()), aes(x = x)) +
               stat_boxplot(geom = 'errorbar', width = 0.3) +
-              geom_boxplot(fill = session$userData$fill_color) +
+              geom_boxplot(fill = session$userData$conf$plot_fill_color) +
               ylim(-1.2, 1.2) +
-              geom_vline(xintercept = var_percentile(), color = session$userData$line_color) +
+              geom_vline(xintercept = var_percentile(), color = session$userData$conf$plot_line_color) +
               labs(x = '', y = '') +
               theme_classic() +
               theme(
@@ -291,8 +291,8 @@ exploratory_server <- function(id, output_report) {
 
             ggplot(data = data.frame(x = seq_along(var()),
                                      y = var()), aes(x = x, y = y)) +
-              geom_point(shape = point_shape, color = session$userData$fill_color) +
-              geom_hline(yintercept = var_percentile(), color = session$userData$line_color) +
+              geom_point(shape = point_shape, color = session$userData$conf$plot_fill_color) +
+              geom_hline(yintercept = var_percentile(), color = session$userData$conf$plot_line_color) +
               labs(x = 'Index', y = 'Values') +
               theme_classic() +
               theme(axis.text.x = element_text(size = 14),
@@ -318,11 +318,11 @@ exploratory_server <- function(id, output_report) {
           linear_model$x_name == input$sel_vars2) {
 
         ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
-          geom_point(color = session$userData$fill_color, shape = point_shape) +
+          geom_point(color = session$userData$conf$plot_fill_color, shape = point_shape) +
           geom_line(
             data = data.frame(x = linear_model$x, y = linear_model$y),
             aes(x = x, y = y),
-            color = session$userData$line_color,
+            color = session$userData$conf$plot_line_color,
             linewidth = 1
           ) +
           labs(
@@ -341,7 +341,7 @@ exploratory_server <- function(id, output_report) {
           )
       } else {
         ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
-          geom_point(color = session$userData$fill_color, shape = point_shape) +
+          geom_point(color = session$userData$conf$plot_fill_color, shape = point_shape) +
           labs(title = paste('Pearson Correlation:', stats_correlation() |> round(4)),
                x = input$sel_vars2, y = input$sel_vars) +
           theme_classic() +
@@ -503,7 +503,7 @@ exploratory_server <- function(id, output_report) {
 
       if(input$radio_lm_resid == 'hist'){
         ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
-          geom_histogram(bins = 10, fill = session$userData$fill_color, color = '#000000') +
+          geom_histogram(bins = 10, fill = session$userData$conf$plot_fill_color, color = '#000000') +
           labs(x = '', y = 'Count', title = '') +
           theme_classic() +
           theme(axis.text.x = element_text(size = 14),
@@ -514,7 +514,7 @@ exploratory_server <- function(id, output_report) {
       } else if (input$radio_lm_resid == 'boxplot'){
         ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
           stat_boxplot(geom = 'errorbar', width = 0.3) +
-          geom_boxplot(fill = session$userData$fill_color) +
+          geom_boxplot(fill = session$userData$conf$plot_fill_color) +
           ylim(-1.2, 1.2) +
           labs(x = '', y = '') +
           theme_classic() +
@@ -532,8 +532,8 @@ exploratory_server <- function(id, output_report) {
         ggplot(data = data.frame(x = seq_along(linear_model$model$residuals),
                                  y = linear_model$model$residuals),
                aes(x = x, y = y)) +
-          geom_point(shape = point_shape, color = session$userData$fill_color) +
-          geom_hline(yintercept = 0, color = session$userData$line_color, linetype = 2) +
+          geom_point(shape = point_shape, color = session$userData$conf$plot_fill_color) +
+          geom_hline(yintercept = 0, color = session$userData$conf$plot_line_color, linetype = 2) +
           labs(x = 'Index', y = 'Values') +
           theme_classic() +
           theme(axis.text.x = element_text(size = 14),

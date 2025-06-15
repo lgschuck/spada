@@ -15,19 +15,9 @@ config_ui <- function(id) {
             h4('Colors'),
             layout_columns(
               col_widths = c(3, 3, 3),
-              colorPickr(
-                inputId = ns('sel_fill'),
-                label = 'Fill color',
-                selected = '#5CACEE',
-                update = 'save'
-              ),
-              colorPickr(
-                inputId = ns('sel_line'),
-                label = 'Line color',
-                selected = '#EE7942',
-                update = 'save'
-              ),
-              btn_task(ns('reset'), 'Reset', icon('rotate'),
+              uiOutput(ns('ui_fill_color')),
+              uiOutput(ns('ui_line_color')),
+              btn_task(ns('btn_reset_colors'), 'Reset', icon('rotate'),
                        style = 'margin-top: 27px !important;')
             ),
             plotOutput(ns('sample_plot'))
@@ -85,7 +75,7 @@ config_ui <- function(id) {
                 'Session',
                 radioGroupButtons(
                   ns('radio_restore_session'), 'Restore Session data at startup',
-                  c('Always' = 'always', 'Ask' = 'ask', 'Never' = 'never'),
+                  c('Always' = 'always', 'Never' = 'never'),
                   size = 'sm', individual = T),
                 radioGroupButtons(
                   ns('radio_save_session'), 'Save Session data on exit',
@@ -108,7 +98,64 @@ config_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  # directories
+	  # render colorpickr -----------------------
+	  output$ui_fill_color <- renderUI({
+	    req(session$userData$conf$plot_fill_color)
+	    colorPickr(
+  	    inputId = ns('sel_fill'),
+  	    label = 'Fill color',
+  	    selected = session$userData$conf$plot_fill_color,
+  	    update = 'save'
+	    )
+	  })
+
+	  output$ui_line_color <- renderUI({
+	    req(session$userData$conf$plot_line_color)
+	    colorPickr(
+	      inputId = ns('sel_line'),
+	      label = 'Line color',
+	      selected = session$userData$conf$plot_line_color,
+	      update = 'save'
+	    )
+	  })
+
+	  # palette ---------------------------------
+	  palette <- reactive({
+	    list('fill' = input$sel_fill, 'line' = input$sel_line)
+	  })
+
+	  observe({
+	    req(input$sel_fill, input$sel_line)
+	    session$userData$conf$plot_fill_color <- palette()[['fill']]
+	    session$userData$conf$plot_line_color <- palette()[['line']]
+	  })
+
+	  # reset colors ---------------------------
+	  observe({
+	    updateColorPickr(session = session,
+	                     inputId = 'sel_fill',
+	                     value = plot_fill_color)
+	    updateColorPickr(session = session,
+	                     inputId = 'sel_line',
+	                     value = plot_line_color)
+	  }) |> bindEvent(input$btn_reset_colors)
+
+	  # sample plot to show picked colors ------
+	  plot_values <- rnorm(1e3)
+	  output$sample_plot <- renderPlot({
+	    req(palette())
+	    hist(
+	      plot_values,
+	      col = palette()[['fill']],
+	      xlab = '',
+	      ylab = '',
+	      main = ''
+	    )
+	    abline(h = 100, col = palette()[['line']], lwd = 3)
+
+	  }) |> bindCache(palette())
+
+	  # directories -----------------------------
 	  output$conf_dir <- renderText({
 	    req(session$userData$conf$conf_dir)
 	    session$userData$conf$conf_dir
@@ -159,31 +206,6 @@ config_server <- function(id) {
 	    )
 	  })
 
-	  # palette ---------------------------------
-    palette <- reactive({
-      list('fill' = input$sel_fill, 'line' = input$sel_line)
-    })
-
-    observe({
-      session$userData$fill_color <- palette()[['fill']]
-      session$userData$line_color <- palette()[['line']]
-    })
-
-    # sample plot to show picked colors ------
-    plot_values <- rnorm(1e3)
-    output$sample_plot <- renderPlot({
-      req(palette())
-      hist(
-        plot_values,
-        col = palette()[['fill']],
-        xlab = '',
-        ylab = '',
-        main = ''
-      )
-      abline(h = 100, col = palette()[['line']], lwd = 3)
-
-    }) |> bindCache(palette())
-
     # input file size ------------------------
     max_request_size <- reactive(input$input_file_size * 1024 ^ 2)
 
@@ -196,17 +218,6 @@ config_server <- function(id) {
         msg('New limit applied')
       }
     }) |> bindEvent(input$btn_file_size)
-
-    # reset colors ---------------------------
-    observe({
-      updateColorPickr(session = session,
-                       inputId = 'sel_fill',
-                       value = '#5cacee')
-      updateColorPickr(session = session,
-                       inputId = 'sel_line',
-                       value = '#EE7942')
-
-    }) |> bindEvent(input$reset)
 
     # change theme ---------------------------
     observe({
