@@ -8,6 +8,7 @@ sidebar_color <- '#e3e3e4'
 bg_color <- '#f9f9f9'
 secondary <- '#0072B2'
 sucess <- '#009E73'
+danger <- '#b60020'
 plot_fill_color <- '#5CACEE'
 plot_line_color <- '#EE7942'
 
@@ -133,6 +134,7 @@ spada_theme <- bs_theme(
   primary = main_color,
   secondary = secondary,
   success = sucess,
+  danger = danger,
   font_size_base = '1rem',
   'nav-pills-border-radius' = '0rem',
   'nav-pills-link-active-color' = main_color,
@@ -164,6 +166,18 @@ spada_theme <- bs_theme(
         border-color: $secondary !important;
         padding-top: 6px !important;
         padding-bottom: 6px !important;
+      }
+
+      .btn-task-cancel {
+        color: #dc3545 !important;
+        background-color: white !important;
+        border-color: #dc3545 !important;
+      }
+
+      .btn-task-cancel:hover {
+        background-color: $danger !important;
+        border-color: $danger !important;
+        color: white !important;
       }
 
       .control-label {

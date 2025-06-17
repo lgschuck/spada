@@ -7,6 +7,7 @@ spada_server <- function(datasets, conf){
 
     # conf values -------------------------------------------------------------
     session$userData$conf <- reactiveValues(
+      empty_datasets = conf$empty_datasets,
       conf_dir = conf$conf_dir,
       data_dir = conf$data_dir,
       theme = conf$theme,
@@ -44,14 +45,20 @@ spada_server <- function(datasets, conf){
           if(!test_data_format(previous_data)){
             session$userData$conf$restore_data_status <- 3
           } else {
-            previous_data <- make_names_append_list(
-              previous_data,
-              names(session$userData$dt$dt)
-            )
 
             previous_data <- lapply(previous_data, as.data.table)
 
-            session$userData$dt$dt <- append(previous_data, session$userData$dt$dt)
+            # if empty entry only keep loaded data
+            if(session$userData$conf$empty_datasets == 1){
+              session$userData$dt$dt <- previous_data
+            } else {
+              previous_data <- make_names_append_list(
+                previous_data,
+                names(session$userData$dt$dt)
+              )
+              session$userData$dt$dt <- append(previous_data, session$userData$dt$dt)
+            }
+
             session$userData$df$act <- session$userData$dt$dt[[1]]
             session$userData$df$act_name <- names(session$userData$dt$dt[1])
 
@@ -340,11 +347,11 @@ spada_server <- function(datasets, conf){
           # ask to save data and ouput
           showModal(modalDialog(
             title = 'Save Session',
-            'Do you want to save data and output objects?',
+            'Do you want to save Data and Output objects?',
             easyClose = FALSE,
             size = 'm',
             footer = tagList(
-              actionButton('btn_cancel_exit', 'Cancel', icon = icon('xmark'), class = 'btn-task'),
+              actionButton('btn_cancel_exit', 'Cancel', icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
               actionButton('btn_cancel_save_session', 'No', icon = icon('xmark'), class = 'btn-task'),
               actionButton('btn_confirm_save_session', 'Yes', icon = icon('check'), class = 'btn-task')
             )
@@ -360,7 +367,8 @@ spada_server <- function(datasets, conf){
     # cancel exit ----------------------------
     observe({
       removeModal()
-      nav_select('navbar', selected = 'about', session = session)
+      nav_select('navbar', selected = 'Data', session = session)
+      nav_select('navset_card_pill_data', selected = 'Highlights', session = session)
     }) |> bindEvent(input$btn_cancel_exit)
 
     # cancel save session --------------------

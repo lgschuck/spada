@@ -22,7 +22,22 @@ editor_options:
 
 1 - Tests: create tests for the app
 
-## 2025.06.14-1
+## 2025.06.15
+
+Highlights: **Change behaviour when no datasets are inputed**, new **btn-task-cancel** css class and **bug fix in filter One variable Operator**
+
+### Improvements
+
+1 - **No inputed datasets**: now when Spada function is called with no datasets, iris and mtcars are loaded only when the previous session are not restored.
+
+2 - **btn-task-cancel**: new class for cancel actionButtons.
+
+### Bug Fixes
+
+1 - **Edit > Filter Rows: operator is not being updated**: fixed, updateSelectInput was using wrong id
+([#34](https://github.com/lgschuck/spada/issues/34))
+
+## 2025.06.14
 
 Highlights: **Save/Restore data and settings** between user session and **bug fix in copy/rename datasets**
 

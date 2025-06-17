@@ -216,7 +216,7 @@ filter_rows_server <- function(id) {
     observe({
       req(input$one_var_sel)
       updateSelectInput(
-        session, 'operator',
+        session, 'one_var_operator',
         choices =
           if(col_type_one_var() %in% c('factor', 'char', 'complex')){
             c('',

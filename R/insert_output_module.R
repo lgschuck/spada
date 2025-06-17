@@ -32,7 +32,7 @@ insert_output_server <- function(id, input_element) {
           ),
           footer = tagList(
             actionButton(ns('btn_cancel_add_output'), 'Cancel',
-                         icon = icon('xmark'), class = 'btn-task'),
+                         icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
             actionButton(ns('btn_confirm_add_output'), 'Submit',
                          icon = icon('check'), class = 'btn-task')
           )

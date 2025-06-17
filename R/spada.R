@@ -65,8 +65,13 @@
 
 spada <- function(...) {
   datasets <- list(...)
-  if(length(datasets) == 0) datasets <- list('iris' = datasets::iris,
-                                             'mtcars' = datasets::mtcars)
+  if(length(datasets) == 0){
+    datasets <- list('iris' = datasets::iris, 'mtcars' = datasets::mtcars)
+    empty_datasets <- 1
+  } else{
+    empty_datasets <- 0
+  }
+
   stopifnot('Objects must be data.frame and have at least 1 row each' =
     sapply(datasets, is.data.frame) |> all() && all(sapply(datasets, nrow) > 0))
 
@@ -99,6 +104,7 @@ spada <- function(...) {
   }
 
   start_conf <- list(
+    'empty_datasets' = empty_datasets,
     'conf_dir' = r_user_conf_dir,
     'data_dir' = r_user_data_dir,
     'theme' = 'spada_theme',

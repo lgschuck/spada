@@ -42,7 +42,7 @@ output_server <- function(id) {
         size = 'l',
         footer = tagList(
           actionButton(ns('btn_cancel_reset'), 'No',
-                       icon = icon('xmark'), class = 'btn-task'),
+                       icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
           actionButton(ns('btn_confirm_reset'), 'Yes',
                        icon = icon('check'), class = 'btn-task')
         )
@@ -80,7 +80,7 @@ output_server <- function(id) {
         size = 'l',
         footer = tagList(
           actionButton(ns('btn_cancel_save_output'), 'No',
-                       icon = icon('xmark'), class = 'btn-task'),
+                       icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
           actionButton(ns('btn_confirm_save_output'), 'Yes',
                        icon = icon('check'), class = 'btn-task')
         )
@@ -109,7 +109,7 @@ output_server <- function(id) {
         size = 'l',
         footer = tagList(
           actionButton(ns('btn_cancel_import_output'), 'No',
-                       icon = icon('xmark'), class = 'btn-task'),
+                       icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
           actionButton(ns('btn_confirm_import_output'), 'Yes',
                        icon = icon('check'), class = 'btn-task')
         )
