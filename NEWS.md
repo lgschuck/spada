@@ -22,6 +22,21 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+## 2025.06.18
+
+Highlights: **New tests** for df metadata (spada_server) and about spada, export file and rename cols modules. Fixed error when **importing Output** (file not found).
+
+### Improvements
+
+1 - **New tests**: df metadata (spada_server) and about spada, export file and rename cols modules
+
+2 - **check_dir** function: new function to check the existance of a directorie just before save or import files
+
+### Bug Fixes
+
+1 - **Output > Import Output: error to import Output if file does not exist**: fixed, now always check the file before import
+([#35](https://github.com/lgschuck/spada/issues/35))
+
 ## 2025.06.15
 
 Highlights: **Change behaviour when no datasets are inputed**, new **btn-task-cancel** css class and **bug fix in filter One variable Operator**

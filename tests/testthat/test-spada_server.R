@@ -29,7 +29,7 @@ test_that('Test inputed datasets', {
 })
 
 # test check datasets classes -------------------------------------------------
-test_that('Test inputed datasets', {
+test_that('Test inputed datasets - classes', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
     expect_equal(session$userData$dt$dt[[1]] |> class(), c('data.table', 'data.frame'))
     expect_equal(session$userData$dt$dt[[2]] |> class(), c('data.table', 'data.frame'))
@@ -50,6 +50,45 @@ test_that('Test active df', {
 test_that('Test active df metadata', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
     expect_equal(session$userData$df$act_meta(), df_info(iris))
+  })
+})
+
+# test metadata - df info -----------------------------------------------------
+test_that('Test metadata - df_info', {
+  testServer(spada_server(datasets = dfs, conf = start_conf), {
+
+    session$userData$df$act <- mtcars
+
+    expect_equal(df_info(session$userData$df$act) |> nrow(), 11)
+    expect_equal(df_info(session$userData$df$act), df_info(mtcars))
+  })
+})
+
+# test metadata - df info -----------------------------------------------------
+test_that('Test metadata - gt class', {
+  testServer(spada_server(datasets = dfs, conf = start_conf), {
+
+    session$userData$df$act <- mtcars
+
+    expect_true('gt_tbl' %in% class(session$userData$df$act_meta() |> gt_info()))
+
+  })
+})
+
+# test metadata - gt metadata -------------------------------------------------
+test_that('Test metadata - gt metadata', {
+  testServer(spada_server(datasets = dfs, conf = start_conf), {
+
+    mtcars_meta <- mtcars |> df_info() |> gt_info()
+    session$userData$df$act <- mtcars
+
+    gt_temp <- session$userData$df$act_meta() |> gt_info()
+
+    expect_equal(gt_temp$`_data`, mtcars_meta$`_data`)
+    expect_equal(gt_temp$`_data` |> nrow(), 11)
+    expect_equal(gt_temp$`_data`$var, names(mtcars))
+    expect_equal(gt_temp$`_data`$type, sapply(mtcars, typeof) |> unname())
+    expect_equal(gt_temp$`_data`$class, sapply(mtcars, class) |> unname())
   })
 })
 
@@ -127,4 +166,3 @@ test_that('Test delete active df', {
     expect_equal(session$userData$df$act, iris |> as.data.table())
   })
 })
-

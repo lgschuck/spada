@@ -535,6 +535,7 @@ exit_with_save <- function(session = session){
   show_modal_progress_line(value = 0.3, text = 'Saving Output...', color = main_color)
   Sys.sleep(0.5)
 
+  check_dir(session$userData$conf$data_dir)
   saveRDS(session$userData$out$elements,
           paste0(session$userData$conf$data_dir, '/output.RDS'),
           compress = F)
@@ -545,6 +546,7 @@ exit_with_save <- function(session = session){
   # update dt$dt with active df
   session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
 
+  check_dir(session$userData$conf$data_dir)
   saveRDS(session$userData$dt$dt,
           paste0(session$userData$conf$data_dir, '/data.RDS'),
           compress = F)
@@ -554,6 +556,7 @@ exit_with_save <- function(session = session){
 
   Sys.sleep(1)
 
+  check_dir(session$userData$conf$conf_dir)
   saveRDS(reactiveValuesToList(session$userData$conf),
           paste0(session$userData$conf$conf_dir, '/conf.RDS'),
           compress = F)
@@ -567,6 +570,8 @@ exit_without_save <- function(session = session){
   show_modal_progress_line(text = 'Closing Spada...', color = main_color)
   update_modal_progress(value = 0.3)
   Sys.sleep(0.3)
+
+  check_dir(session$userData$conf$conf_dir)
   saveRDS(reactiveValuesToList(session$userData$conf),
           paste0(session$userData$conf$conf_dir, '/conf.RDS'),
           compress = F)
@@ -666,3 +671,9 @@ test_data_format <- function(data){
      (sapply(data, is.data.frame) |> all()) &&
      (all(sapply(data, nrow) > 0))
 }
+
+# check existence of directory --------------------------------------------
+check_dir <- function(dir){
+  if(!dir.exists(dir)) dir.create(dir, recursive = T)
+}
+

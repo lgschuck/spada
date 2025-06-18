@@ -93,6 +93,8 @@ output_server <- function(id) {
     # confirm save output
     observe({
       removeModal()
+
+      check_dir(session$userData$conf$data_dir)
       saveRDS(session$userData$out$elements,
               paste0(session$userData$conf$data_dir, '/output.RDS'))
 
@@ -122,13 +124,19 @@ output_server <- function(id) {
     # confirm import output
     observe({
       removeModal()
-      temp_output <- readRDS(paste0(session$userData$conf$data_dir, '/output.RDS'))
 
-      if(test_output_format(temp_output)){
-        session$userData$out$elements <- temp_output
-        msg(paste('Output imported from', session$userData$conf$data_dir), 2.5)
+      if(!file.exists(paste0(session$userData$conf$data_dir, '/output.RDS'))){
+        msg_error('Output file not found')
       } else {
-        msg_error('Output in invalid format')
+        check_dir(session$userData$conf$data_dir)
+        temp_output <- readRDS(paste0(session$userData$conf$data_dir, '/output.RDS'))
+
+        if(test_output_format(temp_output)){
+          session$userData$out$elements <- temp_output
+          msg(paste('Output imported from', session$userData$conf$data_dir), 2.5)
+        } else {
+          msg_error('Output in invalid format')
+        }
       }
     }) |> bindEvent(input$btn_confirm_import_output)
 
