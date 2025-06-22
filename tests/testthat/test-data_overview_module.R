@@ -3,7 +3,17 @@
 # test validate number of rows ------------------------------------------------
 test_that("Test sample rows", {
   testServer(data_overview_server, {
-    session$setInputs(size_sample = 0)
+
+    session$userData$dt <- reactiveValues(dt = list('iris' = as.data.table(iris),
+                                                    'mtcars' = as.data.table(mtcars)))
+
+    session$userData$df <- reactiveValues(act = iris |> as.data.table())
+    session$userData$df$act_name = 'iris'
+
+    session$setInputs(
+      dataset_sel = 'iris',
+      size_sample = 0)
+
     expect_error(idx(), "Number of rows must be > 0")
   })
 })
@@ -12,12 +22,16 @@ test_that("Test sample rows", {
 test_that("Test first rows", {
   testServer(data_overview_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
-    # Simulate inputs
-    session$setInputs(size_sample = 5)
-    session$setInputs(radio_sample = "first")
+    session$userData$dt <- reactiveValues(dt = list('iris' = as.data.table(iris),
+                                                    'mtcars' = as.data.table(mtcars)))
+    session$userData$df <- reactiveValues(act = iris |> as.data.table())
+    session$userData$df$act_name = 'iris'
 
-    expect_equal(data_gt(), iris[1:5,])
+    session$setInputs(size_sample = 5,
+                      dataset_sel = 'iris',
+                      radio_sample = 'first')
+
+    expect_equal(data_filtered(), iris[1:5,])
 
   })
 })
@@ -26,14 +40,16 @@ test_that("Test first rows", {
 test_that("Test sample rows", {
   testServer(data_overview_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(dt = list('iris' = as.data.table(iris),
+                                                    'mtcars' = as.data.table(mtcars)))
+    session$userData$df <- reactiveValues(act = iris |> as.data.table())
+    session$userData$df$act_name = 'iris'
 
-    # Simulate inputs
-    session$setInputs(size_sample = 5)
-    session$setInputs(radio_sample = "sample")
+    session$setInputs(size_sample = 5,
+                      dataset_sel = 'iris',
+                      radio_sample = 'first')
 
     # test for equality (unlist to avoid error caused by row.names)
-    expect_equal(data_gt() |> unlist(),
-                 iris[idx(),] |> unlist())
+    expect_equal(data_filtered() |> unlist(), iris[idx(),] |> unlist())
   })
 })

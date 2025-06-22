@@ -26,7 +26,7 @@ save_gt_server <- function(id, input_table) {
 
       filename = function() {
         req(input_table())
-        paste(input$file_name,
+        paste0(input$file_name,
               switch(input$radio_format,
                     html = '.html', rtf = '.rtf'))
       },

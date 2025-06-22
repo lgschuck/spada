@@ -22,6 +22,30 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+## 2025.06.21
+
+Highlights: **New tests** for several modules, **Data Overview** allows to choose which dataset to show and insert it to the Output and **fixed bug #38**.
+
+### Improvements
+
+1 - **Data Overview** module: now is possible to choose which dataset to show and insert it to the Output
+
+2 - **Exploratory** module: now the linear model has a gt table for results and metrics (as in Lm module) and button to insert it to the Output. In the boxplot, fixed bug #38.
+
+3 - **Insert Output** module: now there is a warning when the input_element is a gt table with a data.frame (warns if the data.frame has more than 250 rows or cols). nInserted the warning because large gt_table in the Output causes performance degradation.
+
+4 - **Lm** module: new functions to linear model output and metrics (as gt tables)
+
+5 - **utils.R**: new functions to linear model output and metrics (as gt tables), **as.factor** now is an allowed function, busy_label in **btn_task is 'Running'** instead of 'Processing' and internal function **test_dataset** has two parameters (n_row and n_col)
+
+6 - **New tests** for: calculate_cols, descriptive_stats, filter_rows, gt_info, insert_output and save_gt modules.
+
+### Bug Fixes
+
+1 - **Exploratory > Boxplot: warning when variable 2 is integer**: now numeric variable is converted to factor in ggplot function
+([#38](https://github.com/lgschuck/spada/issues/38))
+
+
 ## 2025.06.18
 
 Highlights: **New tests** for df metadata (spada_server) and about spada, export file and rename cols modules. Fixed error when **importing Output** (file not found).

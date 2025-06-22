@@ -69,9 +69,7 @@ filter_rows_ui <- function(id) {
         column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations'))
       )
     ),
-    card_footer(btn_task(
-      ns('btn_filter'), 'Apply filters', icon('check')
-    ))
+    card_footer(btn_task(ns('btn_filter'), 'Apply filters', icon('check')))
   )
 }
 
@@ -267,8 +265,7 @@ filter_rows_server <- function(id) {
     observe({
       value_temp$value_temp_inserted <- NULL
 
-      updateTextInput(session, 'preview_value',
-                      value = '')
+      updateTextInput(session, 'preview_value', value = '')
     }) |> bindEvent(input$btn_clear_value)
 
     # apply btn filter rows ---------------------------------------------------

@@ -110,40 +110,17 @@ lm_server <- function(id) {
     # linear model output -----------------------------------------------------
     lm_var_table <- reactive({
       req(linear_model$model)
-
-      table_summary <- as.data.frame(linear_model$summary$coefficients)
-
-      table_summary$Variable <- rownames(table_summary)
-      rownames(table_summary) <- NULL
-
-      table_summary <- table_summary[, c("Variable", "Estimate", "Std. Error",
-                                         "t value", "Pr(>|t|)")]
-
-      table_summary <- table_summary |> as.data.table()
-      table_summary[, `Sig Levels` := fcase(
-        `Pr(>|t|)` < 0.001, '***',
-        `Pr(>|t|)` < 0.01, '**',
-        `Pr(>|t|)` < 0.05, '*',
-        `Pr(>|t|)` < 0.1, '.',
-        default = ''
-      )]
-
-      table_summary |> gt() |>
+      lm_model_df_output(linear_model$summary, linear_model$y_name) |>
+        gt() |>
         tab_header(title = 'Linear Model',
-                   subtitle = paste('Independent Variable:', linear_model$y_name))
-
+                   subtitle = paste('Independent Variable:',
+                                    linear_model$y_name))
     })
 
     lm_metrics <- reactive({
       req(linear_model$model)
-
-      data.frame(
-        Metric = c('R-squared', 'Adjusted R-squared', 'F-statistic', 'F p-value'),
-        Value = c(linear_model$summary$r.squared,
-                  linear_model$summary$adj.r.squared,
-                  linear_model$summary$fstatistic[1],
-                  linear_model$summary$fstatistic[3])
-      ) |> gt() |> tab_header('Model metrics')
+      lm_model_df_metrics(linear_model$summary) |>
+        gt() |> tab_header('Model metrics')
     })
 
     output$lm_var_table <- render_gt({

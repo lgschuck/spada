@@ -118,6 +118,7 @@ date_funs <- c(
 
 factor_funs <- c(
   'Number of Levels' = 'nlevels',
+  'As factor' = 'as.factor',
   'Is Factor' = 'is.factor',
   'Is Ordered' = 'is.ordered'
 )
@@ -236,22 +237,30 @@ safe_env <- function(operations = NULL){
 }
 
 # test dataset ----------------------------------------------------------------
-
-test_dataset <- function(n = 1e3){
-  data.frame(
-    integer_var = rep(sample(1:100, n, replace = T)),
-    numeric_var = rnorm(n),
-    char_var = rep(sample(letters, n, replace = T)),
-    char_long_var = rep(paste(letters, collapse = ''), n),
-    char_colors_var = rep(sample(colors(), n, replace = T)),
-    date_var = Sys.Date() + rep(sample(-49:50, n, replace = T)),
-    factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n, replace = T))),
-    num_nas_var = c(rep(NA, round(n/2)), rnorm(n - round(n/2))),
-    int_nas_var = c(rep(NA, round(n/2)), sample(1:100, n - round(n/2), replace = T)),
-    logical_var = rep(sample(c(TRUE, FALSE), n, replace = T)),
-    complex_var = rep(sample(1:100, n, replace = T) |> as.complex())
+test_dataset <- function(n_row = 1e3, n_col = 11){
+  test_data <- data.frame(
+    integer_var = rep(sample(1:100, n_row, replace = T)),
+    numeric_var = rnorm(n_row),
+    char_var = rep(sample(letters, n_row, replace = T)),
+    char_long_var = rep(paste(letters, collapse = ''), n_row),
+    char_colors_var = rep(sample(colors(), n_row, replace = T)),
+    date_var = Sys.Date() + rep(sample(-49:50, n_row, replace = T)),
+    factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n_row, replace = T))),
+    num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
+    int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
+    logical_var = rep(sample(c(TRUE, FALSE), n_row, replace = T)),
+    complex_var = rep(sample(1:100, n_row, replace = T) |> as.complex())
   )
 
+  extra_cols <- n_col - ncol(test_data)
+
+  if (extra_cols > 0) {
+    for (i in seq_len(extra_cols)) {
+      test_data[[paste0("extra_col_", i)]] <- rnorm(n_row)
+    }
+  }
+
+  test_data
 }
 
 # list of filters -------------------------------------------------------------
@@ -332,9 +341,9 @@ empty_plot <- function(msg = 'No plot', c = 2){
 }
 
 # bslib btn task --------------------------------------------------------------
-btn_task <- function(ID, LABEL, ICON = NULL, ...){
+btn_task <- function(ID, LABEL, ICON = NULL, LABEL_BUSY = "Running...", ...){
   bslib::input_task_button(id = ID, label = LABEL, icon = ICON,
-                           class = 'btn-task', ...)
+                           label_busy = LABEL_BUSY, class = 'btn-task', ...)
 }
 
 # messages - shownotification -------------------------------------------------
@@ -672,8 +681,38 @@ test_data_format <- function(data){
      (all(sapply(data, nrow) > 0))
 }
 
-# check existence of directory --------------------------------------------
+# check existence of directory ------------------------------------------------
 check_dir <- function(dir){
   if(!dir.exists(dir)) dir.create(dir, recursive = T)
 }
 
+# lm model gt output ----------------------------------------------------------
+lm_model_df_output <- function(model_summary, y_var_name){
+  table_summary <- as.data.frame(model_summary$coefficients)
+
+  table_summary$Variable <- rownames(table_summary)
+  rownames(table_summary) <- NULL
+
+  table_summary <- table_summary[, c("Variable", "Estimate", "Std. Error",
+                                     "t value", "Pr(>|t|)")]
+
+  table_summary <- table_summary |> as.data.table()
+  table_summary[, `Sig Levels` := fcase(
+    `Pr(>|t|)` < 0.001, '***',
+    `Pr(>|t|)` < 0.01, '**',
+    `Pr(>|t|)` < 0.05, '*',
+    `Pr(>|t|)` < 0.1, '.',
+    default = ''
+  )]
+}
+
+# lm model gt metrics ---------------------------------------------------------
+lm_model_df_metrics <- function(model_summary){
+  data.frame(
+    Metric = c('R-squared', 'Adjusted R-squared', 'F-statistic', 'F p-value'),
+    Value = c(model_summary$r.squared,
+              model_summary$adj.r.squared,
+              model_summary$summary$fstatistic[1],
+              model_summary$summary$fstatistic[3])
+  )
+}

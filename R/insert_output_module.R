@@ -14,7 +14,14 @@ insert_output_server <- function(id, input_element) {
 
     output_element <- reactiveVal(NULL)
 
-    # add output
+    is_large_data_frame <- reactive({
+      if('gt_tbl' %in% (input_element() |> class()) &&
+         'data.frame' %in% (input_element()$`_data` |> class()) &&
+         ((input_element()$`_data` |> nrow()) > 250 ||
+          (input_element()$`_data` |> ncol()) > 250)) TRUE else FALSE
+    })
+
+    # add output -----------------------------
     observe({
       req(input_element())
 
@@ -22,6 +29,14 @@ insert_output_server <- function(id, input_element) {
         modalDialog(
           title = 'Add element to Output',
           size = 'l',
+          tagList(
+            if (is_large_data_frame()) {
+              div(
+                class = 'alert alert-warning',
+                icon('triangle-exclamation'),
+                'Inserting an extensive data.frame in the Output may cause performance degradation'
+              )
+            },
           textInput(ns('output_title'), 'Title'),
           textAreaInput(
             ns('output_annot'),
@@ -29,6 +44,8 @@ insert_output_server <- function(id, input_element) {
             width = '90%',
             rows = 10,
             resize = 'both'
+          )
+
           ),
           footer = tagList(
             actionButton(ns('btn_cancel_add_output'), 'Cancel',
@@ -41,12 +58,12 @@ insert_output_server <- function(id, input_element) {
 
     }) |> bindEvent(input$btn_add_output)
 
-    # cancel_add_output
+    # cancel_add_output ----------------------
     observe({
       removeModal()
     }) |> bindEvent(input$btn_cancel_add_output)
 
-    # confirm add output
+    # confirm add output ---------------------
     observe({
       removeModal()
 

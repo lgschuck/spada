@@ -90,9 +90,7 @@ exploratory_ui <- function(id) {
               ),
               gt_output(ns('table')),
             ),
-            card_footer(
-              insert_output_ui(ns('insert_table_values'))
-            )
+            card_footer(insert_output_ui(ns('insert_table_values')))
           ),
           nav_panel(
             'Linear Model',
@@ -107,7 +105,11 @@ exploratory_ui <- function(id) {
                   btn_task(ns('btn_scatter_lm_clear'), 'Clear Linear Model', icon('trash-can'))
                 )
               ),
-              nav_panel('Output', verbatimTextOutput(ns('linear_model'))),
+              nav_panel(
+                'Output',
+                card_body(gt_output(ns('lm_var_table')), gt_output(ns('lm_metrics'))),
+                card_footer(insert_output_ui(ns('insert_lm_model_output')))
+              ),
               nav_panel(
                 'Residuals',
                 plotOutput(ns('lm_resid_plot')),
@@ -230,11 +232,16 @@ exploratory_server <- function(id, output_report) {
             need(!is.complex(var2()), 'Variable 2 can not be complex')
           )
 
-          ggplot(data.frame(x = var2(), y = var()),
-                 aes(x = x, y = y, fill = x)) +
+          ggplot(data.frame(x = {
+            if (var2() |> is.numeric())
+              as.factor(var2())
+            else
+              var2()
+          }, y = var()), aes(x = x, y = y, fill = x)) +
             stat_boxplot(geom = 'errorbar', width = 0.3) +
             geom_boxplot(orientation = 'x') +
-            geom_hline(yintercept = var_percentile(),  color = session$userData$conf$plot_line_color) +
+            geom_hline(yintercept = var_percentile(),
+                       color = session$userData$conf$plot_line_color) +
             coord_flip() +
             labs(x = '', y = '') +
             theme_classic() +
@@ -357,7 +364,6 @@ exploratory_server <- function(id, output_report) {
       validate(
         need(is.numeric(var()) && is.numeric(var2()), 'Variables must be numeric')
       )
-
       scatter_plot()
     }, res = 96)
 
@@ -404,9 +410,7 @@ exploratory_server <- function(id, output_report) {
           y_label <- paste(input$sel_vars2, '(%)')
         }
 
-        tab1 <- tab1 |>
-          as.data.frame.matrix()
-
+        tab1 <- tab1 |> as.data.frame.matrix()
         var2_names <- names(tab1)
 
         df <- cbind(var1 = rownames(tab1), tab1)
@@ -484,11 +488,32 @@ exploratory_server <- function(id, output_report) {
     }) |> bindEvent(input$btn_scatter_lm_clear)
 
     # print linear model ------------------------------------------------------
-    output$linear_model <- renderPrint({
-      list(
-        'Formula' = paste(linear_model$y_name, '~', linear_model$x_name),
-        'Model' = summary(linear_model$model)
-      )
+    lm_var_table <- reactive({
+      req(linear_model$model)
+      output <- lm_model_df_output(linear_model$model |> summary(), linear_model$y_name)
+      output$Variable <- gsub('var_x', linear_model$x_name, output$Variable)
+
+      output |>
+        gt() |>
+        tab_header(title = 'Linear Model',
+                   subtitle = paste('Independent Variable:',
+                                    linear_model$y_name))
+    })
+
+    lm_metrics <- reactive({
+      req(linear_model$model)
+      lm_model_df_metrics(linear_model$model |> summary()) |>
+        gt() |> tab_header('Model metrics')
+    })
+
+    output$lm_var_table <- render_gt({
+      req(lm_var_table())
+      lm_var_table()
+    })
+
+    output$lm_metrics <- render_gt({
+      req(lm_metrics())
+      lm_metrics()
     })
 
     # plot linear model residuals ---------------------------------------------
@@ -503,7 +528,9 @@ exploratory_server <- function(id, output_report) {
 
       if(input$radio_lm_resid == 'hist'){
         ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
-          geom_histogram(bins = 10, fill = session$userData$conf$plot_fill_color, color = '#000000') +
+          geom_histogram(bins = 10,
+                         fill = session$userData$conf$plot_fill_color,
+                         color = '#000000') +
           labs(x = '', y = 'Count', title = '') +
           theme_classic() +
           theme(axis.text.x = element_text(size = 14),
@@ -532,8 +559,11 @@ exploratory_server <- function(id, output_report) {
         ggplot(data = data.frame(x = seq_along(linear_model$model$residuals),
                                  y = linear_model$model$residuals),
                aes(x = x, y = y)) +
-          geom_point(shape = point_shape, color = session$userData$conf$plot_fill_color) +
-          geom_hline(yintercept = 0, color = session$userData$conf$plot_line_color, linetype = 2) +
+          geom_point(shape = point_shape,
+                     color = session$userData$conf$plot_fill_color) +
+          geom_hline(yintercept = 0,
+                     color = session$userData$conf$plot_line_color,
+                     linetype = 2) +
           labs(x = 'Index', y = 'Values') +
           theme_classic() +
           theme(axis.text.x = element_text(size = 14),
@@ -606,6 +636,20 @@ exploratory_server <- function(id, output_report) {
       output_list$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
 
     }) |> bindEvent(mod_output_scatter$output_element())
+
+    # insert lm model output --------------------------------------------------
+    mod_output_lm_model_output <- insert_output_server(
+      'insert_lm_model_output',
+      reactive(gen_table2(lm_var_table(), lm_metrics()))
+    )
+
+    # get return from insert output module ------------------------------------
+    observe({
+      req(mod_output_lm_model_output$output_element())
+
+      output_list$elements[[gen_element_id()]] <- mod_output_lm_model_output$output_element()
+
+    }) |> bindEvent(mod_output_lm_model_output$output_element())
 
     # insert lm residual plot to output ---------------------------------------
     mod_output_lm_resid_plot <- insert_output_server(
