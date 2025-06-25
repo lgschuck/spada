@@ -22,6 +22,29 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+## 2025.06.25
+
+Highlights: **Fixed bugs #43, #44 e #45** and new button to **save Linear Model** (#42)
+
+### Improvements
+
+1 - **Minor visuals**: changed some btn_task for actionButton, new class btn-task-cancel and changed the behaviour of buttons when clicked 
+
+3 - **Lm** module: new button to save model tabels (#42)
+
+4 - **utils.R**: removed arg not used in linear_model_df_output function
+
+### Bug Fixes
+
+1 - **Linear model: error in Variables inputs**: fixed, inserted if(lenght(yar) > 0) before generate xvar.
+([#43](https://github.com/lgschuck/spada/issues/43))
+
+2 - **Edit > Filter Rows: crashes if nothing is selected**: fixed, inserted req(col_type_one_var())
+([#44](https://github.com/lgschuck/spada/issues/44))
+
+3 - **Linear model: F statistic and F p-value are wrong**: fixed function linear_model_df_metrics
+([#45](https://github.com/lgschuck/spada/issues/45))
+
 ## 2025.06.21
 
 Highlights: **New tests** for several modules, **Data Overview** allows to choose which dataset to show and insert it to the Output and **fixed bug #38**.
@@ -44,7 +67,6 @@ Highlights: **New tests** for several modules, **Data Overview** allows to choos
 
 1 - **Exploratory > Boxplot: warning when variable 2 is integer**: now numeric variable is converted to factor in ggplot function
 ([#38](https://github.com/lgschuck/spada/issues/38))
-
 
 ## 2025.06.18
 

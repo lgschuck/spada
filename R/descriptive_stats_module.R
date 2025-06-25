@@ -34,13 +34,13 @@ descriptive_stats_ui <- function(id) {
         nav_panel(
           'Stats',
           card(full_screen = T,
-            card_body(
-              gt_output(ns('gt_stats')),
+            card_body(gt_output(ns('gt_stats'))),
+            card_footer(
               layout_columns(
-                col_widths = c(2, 2),
+                col_widths = c(3, 3),
                 uiOutput(ns('conditional_add_output')),
                 uiOutput(ns('conditional_save_gt'))
-              ),
+              )
             )
           )
         )

@@ -10,13 +10,13 @@ output_ui <- function(id) {
     card_footer(
       layout_columns(
         col_widths = c(2, 2),
-        btn_task(ns('btn_reset'), 'Reset', icon('rotate-right')),
+        actionButton(ns('btn_reset'), 'Reset', icon('rotate-right'), class = 'btn-task'),
         downloadButton(ns('btn_save_html'), 'Save HTML', class = 'btn-task',
                        icon = icon('download')),
-        btn_task(ns('btn_save_output_session'), 'Save Output',
-                 class = 'btn-task', icon('download')),
-        btn_task(ns('btn_import_output_session'), 'Import Output',
-                 class = 'btn-task', icon('upload'))
+        actionButton(ns('btn_save_output_session'), 'Save Output', icon('download'),
+                     class = 'btn-task', ),
+        actionButton(ns('btn_import_output_session'), 'Import Output', icon('upload'),
+                     class = 'btn-task')
       )
     )
   )
@@ -41,10 +41,9 @@ output_server <- function(id) {
         easyClose = FALSE,
         size = 'l',
         footer = tagList(
-          actionButton(ns('btn_cancel_reset'), 'No',
-                       icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
-          actionButton(ns('btn_confirm_reset'), 'Yes',
-                       icon = icon('check'), class = 'btn-task')
+          actionButton(ns('btn_cancel_reset'), 'No', icon('xmark'),
+                       class = 'btn-task btn-task-cancel'),
+          btn_task(ns('btn_confirm_reset'), 'Yes', icon('check'))
         )
       ))
     }) |> bindEvent(input$btn_reset)
@@ -79,10 +78,9 @@ output_server <- function(id) {
         easyClose = FALSE,
         size = 'l',
         footer = tagList(
-          actionButton(ns('btn_cancel_save_output'), 'No',
-                       icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
-          actionButton(ns('btn_confirm_save_output'), 'Yes',
-                       icon = icon('check'), class = 'btn-task')
+          actionButton(ns('btn_cancel_save_output'), 'No', icon('xmark'),
+                   class = 'btn-task btn-task-cancel'),
+          btn_task(ns('btn_confirm_save_output'), 'Yes', icon('check'))
         )
       ))
     }) |> bindEvent(input$btn_save_output_session)
@@ -110,10 +108,9 @@ output_server <- function(id) {
         easyClose = FALSE,
         size = 'l',
         footer = tagList(
-          actionButton(ns('btn_cancel_import_output'), 'No',
-                       icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
-          actionButton(ns('btn_confirm_import_output'), 'Yes',
-                       icon = icon('check'), class = 'btn-task')
+          actionButton(ns('btn_cancel_import_output'), 'No', icon('xmark'),
+                   class = 'btn-task btn-task-cancel'),
+          btn_task(ns('btn_confirm_import_output'), 'Yes', icon('check'))
         )
       ))
     }) |> bindEvent(input$btn_import_output_session)

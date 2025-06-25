@@ -135,7 +135,7 @@ filter_rows_server <- function(id) {
 
     # render UI for value input dynamically -----------------------------------
     observe({
-      req(input$one_var_sel, input$one_var_operator, df$df_active)
+      req(input$one_var_sel, input$one_var_operator, df$df_active, col_type_one_var())
       output$ui_one_var_value <- renderUI({
         if (col_type_one_var() == 'date'){
           if(input$one_var_operator %in% c(equal_operators, compare_operators)){
@@ -212,7 +212,7 @@ filter_rows_server <- function(id) {
 
     # update selectinput to show pertinent operators --------------------------
     observe({
-      req(input$one_var_sel)
+      req(input$one_var_sel, col_type_one_var())
       updateSelectInput(
         session, 'one_var_operator',
         choices =
@@ -270,6 +270,7 @@ filter_rows_server <- function(id) {
 
     # apply btn filter rows ---------------------------------------------------
     observe({
+      req(col_type_one_var())
       temp <- copy(df$df_active)
       # filter events for one variable ----------------------------------------
       if (input$filter_type == 'one') {

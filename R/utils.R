@@ -687,7 +687,7 @@ check_dir <- function(dir){
 }
 
 # lm model gt output ----------------------------------------------------------
-lm_model_df_output <- function(model_summary, y_var_name){
+linear_model_df_output <- function(model_summary){
   table_summary <- as.data.frame(model_summary$coefficients)
 
   table_summary$Variable <- rownames(table_summary)
@@ -707,12 +707,19 @@ lm_model_df_output <- function(model_summary, y_var_name){
 }
 
 # lm model gt metrics ---------------------------------------------------------
-lm_model_df_metrics <- function(model_summary){
+linear_model_df_metrics <- function(model_summary){
+
+  f <- model_summary$fstatistic
+  f_p_value <- pf(f['value'], f['numdf'], f['dendf'], lower.tail = FALSE)
   data.frame(
-    Metric = c('R-squared', 'Adjusted R-squared', 'F-statistic', 'F p-value'),
-    Value = c(model_summary$r.squared,
-              model_summary$adj.r.squared,
-              model_summary$summary$fstatistic[1],
-              model_summary$summary$fstatistic[3])
+    Metric = c('Residual Std Error', 'R-squared', 'Adjusted R-squared',
+               'F-statistic', 'F p-value'),
+    Value = c(
+      model_summary$sigma,
+      model_summary$r.squared,
+      model_summary$adj.r.squared,
+      model_summary$fstatistic[1],
+      f_p_value
+    )
   )
 }

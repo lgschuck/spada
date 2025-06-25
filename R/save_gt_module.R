@@ -11,8 +11,7 @@ save_gt_ui <- function(id) {
       textInput(ns('file_name'), 'File name', value = 'table'),
       radioGroupButtons(ns('radio_format'), 'Format',
                         c('html', 'rtf'), size = 'sm', individual = T),
-      downloadButton(ns('down_handler'),
-                     'Save table', icon('download')),
+      downloadButton(ns('down_handler'), 'Save table', icon('download')),
       br()),
     circle = F, size = 'sm', icon = icon('download')
   )
@@ -26,9 +25,7 @@ save_gt_server <- function(id, input_table) {
 
       filename = function() {
         req(input_table())
-        paste0(input$file_name,
-              switch(input$radio_format,
-                    html = '.html', rtf = '.rtf'))
+        paste0(input$file_name, switch(input$radio_format, html = '.html', rtf = '.rtf'))
       },
       content = function(file) {
         req(input_table())

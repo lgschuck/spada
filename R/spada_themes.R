@@ -86,9 +86,27 @@ theme_basic_rules <- as_sass(
         background: linear-gradient(to right, $grad1, $grad2, $grad3, $grad4, $grad5, $grad6);
       }
 
+      .btn-task:active {
+        background-color: darken($bg_color, 10%) !important;
+        transform: scale(0.99); /* efeito de afundar */
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
       .btn-task:hover {
         background-color: $secondary !important;
         border-color: $secondary !important;
+        color: white !important;
+      }
+
+      .btn-task-cancel {
+        color: #dc3545 !important;
+        background-color: white !important;
+        border-color: #dc3545 !important;
+      }
+
+      .btn-task-cancel:hover {
+        background-color: $danger !important;
+        border-color: $danger !important;
         color: white !important;
       }
 

@@ -3,6 +3,18 @@
 df_test <- iris
 df_test[150, 1:5] <- NA
 
+# test filter rows - empty inputs ---------------------------------------------
+test_that("Test filter rows - empty inputs - should not crash", {
+  testServer(filter_rows_server, {
+
+    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(df$df_active, as.data.table(df_test))
+
+  })
+})
+
 # test filter rows - one variable ---------------------------------------------
 test_that("Test filter rows - one variable - equal operator", {
   testServer(filter_rows_server, {

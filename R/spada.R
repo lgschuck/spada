@@ -56,7 +56,7 @@
 #' @importFrom shinybusy busy_start_up remove_modal_progress
 #'             show_modal_progress_line spin_epic update_modal_progress
 #'
-#' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm
+#' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm pf
 #'             qnorm qqline qqnorm rnorm sd shapiro.test var
 #'
 #' @importFrom tools R_user_dir toTitleCase

@@ -490,7 +490,7 @@ exploratory_server <- function(id, output_report) {
     # print linear model ------------------------------------------------------
     lm_var_table <- reactive({
       req(linear_model$model)
-      output <- lm_model_df_output(linear_model$model |> summary(), linear_model$y_name)
+      output <- linear_model_df_output(linear_model$model |> summary())
       output$Variable <- gsub('var_x', linear_model$x_name, output$Variable)
 
       output |>
@@ -502,7 +502,7 @@ exploratory_server <- function(id, output_report) {
 
     lm_metrics <- reactive({
       req(linear_model$model)
-      lm_model_df_metrics(linear_model$model |> summary()) |>
+      linear_model_df_metrics(linear_model$model |> summary()) |>
         gt() |> tab_header('Model metrics')
     })
 

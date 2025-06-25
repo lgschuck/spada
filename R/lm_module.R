@@ -1,6 +1,7 @@
 
 # ui --------------------------------------------------------------------------
 lm_ui <- function(id) {
+
   ns <- NS(id)
   card(
     full_screen = T,
@@ -8,7 +9,6 @@ lm_ui <- function(id) {
     layout_sidebar(
       class = 'card-sidebar',
       sidebar = sidebar(
-        # uiOutput(ns('parameters'))
         selectInput(ns('sel_yvar'), 'Dependent Variable', NULL),
         selectizeInput(ns('sel_xvar'), 'Independent Variables', NULL,
                        multiple = T,
@@ -32,7 +32,8 @@ lm_ui <- function(id) {
                 gt_output(ns('lm_metrics'))
               ),
               card_footer(
-                uiOutput(ns('conditional_add_output'))
+                  uiOutput(ns('conditional_add_output')),
+                  uiOutput(ns('conditional_save_model'))
               )
             )
           )
@@ -66,18 +67,19 @@ lm_server <- function(id) {
     })
 
     xvar <- reactive({
-      req(yvar())
-      var_analysis()[var_analysis() %notin% input$sel_yvar]
+      if(length(yvar()) > 0){
+        var_analysis()[var_analysis() %notin% input$sel_yvar]
+      } else {
+        character(0)
+      }
     })
 
     observe({
-      req(yvar())
       updateSelectInput(session, 'sel_yvar', choices = yvar())
     })
 
     observe({
-      req(xvar())
-      updateSelectizeInput(session, 'sel_xvar', choices = xvar())
+        updateSelectizeInput(session, 'sel_xvar', choices = xvar())
     })
 
     # linear model ------------------------------------------------------------
@@ -106,11 +108,10 @@ lm_server <- function(id) {
 
     }) |> bindEvent(input$btn_run_lm)
 
-
     # linear model output -----------------------------------------------------
     lm_var_table <- reactive({
       req(linear_model$model)
-      lm_model_df_output(linear_model$summary, linear_model$y_name) |>
+      linear_model_df_output(linear_model$summary) |>
         gt() |>
         tab_header(title = 'Linear Model',
                    subtitle = paste('Independent Variable:',
@@ -119,7 +120,7 @@ lm_server <- function(id) {
 
     lm_metrics <- reactive({
       req(linear_model$model)
-      lm_model_df_metrics(linear_model$summary) |>
+      linear_model_df_metrics(linear_model$summary) |>
         gt() |> tab_header('Model metrics')
     })
 
@@ -165,5 +166,49 @@ lm_server <- function(id) {
       session$userData$out$elements <- output_list$elements
     })
 
+    # save model object -------------------------------------------------------
+    output$conditional_save_model <- renderUI({
+      req(linear_model$model)
+      actionButton(ns('btn_save_model'), 'Save Model', icon('download'), class = 'btn-task')
+    })
+
+    observe({
+      showModal(
+        modalDialog(
+          title = 'Save Model',
+          h5('This will save the Model Output and the Metrics tables.'),
+          textInput(ns('model_filename'), 'File name', value = 'model'),
+          footer = tagList(
+            actionButton(ns('btn_close_save_model'), 'Close', icon('xmark'),
+                     class = 'btn-task btn-task-cancel'),
+            downloadButton(ns('down_handler'), 'Save model',
+                           class = 'btn-task', icon = icon('download'))
+          ),
+          size = 'l'
+        )
+      )
+    }) |> bindEvent(input$btn_save_model)
+
+    observe({
+      removeModal()
+    }) |> bindEvent(input$btn_close_save_model)
+
+    # download handler for the model file ----
+    output$down_handler <- downloadHandler(
+
+      filename = function() {
+        paste0(input$model_filename, '.RDS')
+      },
+      content = function(file) {
+        saveRDS(
+          list(
+            'model' = linear_model_df_output(linear_model$summary),
+            'metrics' = linear_model_df_metrics(linear_model$summary)
+          ),
+          file,
+          compress = F
+        )
+      }
+    )
   })
 }
