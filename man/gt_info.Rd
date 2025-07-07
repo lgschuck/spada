@@ -4,15 +4,17 @@
 \alias{gt_info}
 \title{Show in interactive gt table a data.frame from df_info function}
 \usage{
-gt_info(df)
+gt_info(df, df_name)
 }
 \arguments{
 \item{df}{A data.frame object from df_info function}
+
+\item{df_name}{A name for the data.frame. Will be used as tab_header in gt table}
 }
 \description{
 Show in interactive gt table a data.frame from df_info function
 }
 \examples{
-mtcars |> df_info() |> gt_info()
+mtcars |> df_info() |> gt_info(df_name = 'mtcars')
 
 }

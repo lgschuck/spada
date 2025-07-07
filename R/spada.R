@@ -39,7 +39,7 @@
 #'
 #' @importFrom gt cols_align cols_hide cols_label cols_merge cols_move
 #'             cols_width data_color fmt_bytes fmt_icon fmt_integer
-#'             fmt_number fmt_percent gt gt_output gtsave opt_interactive
+#'             fmt_number fmt_percent gt gt_output gtsave opt_interactive pct
 #'             render_gt sub_missing sub_values tab_header tab_options tab_spanner
 #'
 #' @importFrom haven as_factor is.labelled read_sav write_sav

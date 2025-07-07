@@ -15,7 +15,7 @@ data_overview_ui <- function(id) {
           c('First rows' = 'first', 'Sample' = 'sample'),
           size = 'sm', individual = T)),
         column(2, div(
-          uiOutput(ns('conditional_add_output'))),
+          insert_output_ui(ns('data_overview_insert_output'))),
           style = 'margin-top: 28px'
         )
       )
@@ -100,11 +100,6 @@ data_overview_server <- function(id) {
 
     # insert to output module -------------------------------------------------
     mod_insert_output <- insert_output_server('data_overview_insert_output', data_gt)
-
-    output$conditional_add_output <- renderUI({
-      req(data_gt())
-      insert_output_ui(ns('data_overview_insert_output'))
-    })
 
     # get return from insert output module ------------------------------------
     observe({

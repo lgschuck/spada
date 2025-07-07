@@ -91,11 +91,13 @@ calculate_cols_server <- function(id) {
 
     # apply function events ---------------------------------------------------
     observe({
-      req(input$vars_sel, input$txt_new_name_fun, df$df_active, input$fun)
-      if (input$vars_sel |> length() == 0) {
+      req(df$df_active)
+      if(!isTruthy(input$vars_sel)) {
         msg('Select at least one variable')
+      } else if(!isTruthy(input$fun)){
+        msg('Select a function')
       } else {
-        if (is_valid_name(input$txt_new_name_fun) &&
+        if(is_valid_name(input$txt_new_name_fun) &&
             input$txt_new_name_fun %notin% df_names()) {
 
           temp <- copy(df$df_active)

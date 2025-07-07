@@ -70,7 +70,8 @@ test_that('Test metadata - gt class', {
 
     session$userData$df$act <- mtcars
 
-    expect_true('gt_tbl' %in% class(session$userData$df$act_meta() |> gt_info()))
+    expect_true('gt_tbl' %in% class(session$userData$df$act_meta() |>
+                                      gt_info(df_name = names(dfs)[2])))
 
   })
 })
@@ -79,10 +80,10 @@ test_that('Test metadata - gt class', {
 test_that('Test metadata - gt metadata', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
 
-    mtcars_meta <- mtcars |> df_info() |> gt_info()
+    mtcars_meta <- mtcars |> df_info() |> gt_info(df_name = 'df_mtcars')
     session$userData$df$act <- mtcars
 
-    gt_temp <- session$userData$df$act_meta() |> gt_info()
+    gt_temp <- session$userData$df$act_meta() |> gt_info(df_name = names(dfs)[2])
 
     expect_equal(gt_temp$`_data`, mtcars_meta$`_data`)
     expect_equal(gt_temp$`_data` |> nrow(), 11)

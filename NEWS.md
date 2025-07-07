@@ -22,7 +22,33 @@ editor_options:
 
 1 - Tests: create tests for the app
 
-## 2025.06.25
+## 2025.07.07
+
+Highlights: **Insert** metadata to output, better Rename/Calulate variables funcionalities, fix (#44)
+
+### Improvements
+
+1 - New **metadata** module: now this it is possible to add metadata gt table to output.
+
+2 - **Rename Cols** module: better messages and checkings
+
+3 - **spada server and ui**: new metadata module
+
+4 - **spada.R**: new function **pct** from gt package
+
+5 - **gt_info**: new arg **df_name**
+
+6 - **Data Overview**: now the button to insert to output is not conditionally generated (UI)
+
+7 - **Calculate** module: now instead of nothing happen when there is no selection, a message is shown (same as in many other places).
+
+### Bug Fixes
+
+1 - **Edit > Filter Rows: crashes if nothing is selected**: fixed, now checking if operator was informed and show a message otherwise
+([#44](https://github.com/lgschuck/spada/issues/44))
+
+
+## 2025.06.24
 
 Highlights: **Fixed bugs #43, #44 e #45** and new button to **save Linear Model** (#42)
 

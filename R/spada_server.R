@@ -160,19 +160,20 @@ spada_server <- function(datasets, conf){
       }
     )
 
+    # df active metadata ---------------------
+    session$userData$df$act_meta <- reactive({
+      req(session$userData$df$act)
+      df_info(session$userData$df$act)
+    })
+
     # navbar ------------------------------------------------------------------
     navbar_df_info_server('navbar_df_info', app_session = session)
 
     # side bar ----------------------------------------------------------------
     sidebar_server('sidebar', app_session = session)
 
-    # data page events --------------------------------------------------------
-    session$userData$df$act_meta <- reactive({
-      req(session$userData$df$act)
-      df_info(session$userData$df$act)
-    })
-
-    output$pD_metadata_gt <- render_gt(session$userData$df$act_meta() |> gt_info())
+    # metadata ----------------------------------------------------------------
+    metadata_server('pD_metadata')
 
     # overview -------------------------------
     data_overview_server('pD_overview')

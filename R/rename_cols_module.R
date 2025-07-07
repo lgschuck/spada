@@ -24,7 +24,7 @@ rename_cols_ui <- function(id) {
 
         conditionalPanel(
           condition = "input.rename_method == 'prefix_suffix'", ns = ns,
-          textInput(ns('txt_new_name_multi'), 'New name part'),
+          textInput(ns('txt_new_name_multi'), 'New part to insert'),
           radioButtons(ns('part_position'), 'Part Position',
                        choices = c('Prefix' = 'prefix', 'Suffix' = 'suffix')),
           radioButtons(ns('name_separator'), 'Separator',
@@ -75,8 +75,8 @@ rename_cols_server <- function(id) {
     })
 
     observe({
-      req(input$vars_sel, input$txt_new_name, df$df_active)
-      if(input$vars_sel |> length() == 0){
+      req(df$df_active)
+      if(!isTruthy(input$vars_sel)){
         msg('Select at least one variable')
       } else {
         if(is_valid_name(input$txt_new_name) &&
@@ -106,40 +106,59 @@ rename_cols_server <- function(id) {
     })
 
     observe({
-      req(input$vars_sel_multi, df$df_active)
-      if(input$vars_sel_multi |> length() == 0){
+      req(df$df_active)
+      if(!isTruthy(input$vars_sel_multi)){
         msg('Select at least one variable')
       } else {
 
         temp <- copy(df$df_active)
-        new_names <- input$vars_sel_multi
+        selected_names <- input$vars_sel_multi
 
         if (input$rename_method == 'prefix_suffix') {
-          req(input$txt_new_name_multi)
-          if (input$part_position == 'prefix') {
-            new_names <- paste0(input$txt_new_name_multi,
-                                input$name_separator, new_names)
-          } else if (input$part_position == 'suffix'){
-            new_names <- paste0(new_names, input$name_separator,
-                                input$txt_new_name_multi)
+
+          if(!isTruthy(input$txt_new_name_multi)){
+            msg('Inform a new part to insert')
+            return()
+          } else {
+            if(input$part_position == 'prefix') {
+              new_names <- paste0(input$txt_new_name_multi,
+                                  input$name_separator, selected_names)
+            } else if(input$part_position == 'suffix'){
+              new_names <- paste0(selected_names, input$name_separator,
+                                  input$txt_new_name_multi)
+            }
           }
-        } else if (input$rename_method == 'function') {
-          new_names <- sapply(new_names, match.fun(input$name_function))
-        } else if (input$rename_method == 'replace') {
-          req(input$txt_replace_part, input$txt_replace_new_part)
-          new_names <- gsub(input$txt_replace_part, input$txt_replace_new_part,
-                            new_names, fixed = TRUE)
-        } else if (input$rename_method == 'remove') {
-          req(input$txt_remove_part)
-          new_names <- gsub(input$txt_remove_part, '', new_names, fixed = TRUE)
+        } else if(input$rename_method == 'function') {
+          new_names <- sapply(selected_names, match.fun(input$name_function))
+        } else if(input$rename_method == 'replace') {
+
+          if(!isTruthy(input$txt_replace_part) || !isTruthy(input$txt_replace_new_part)){
+            msg('Inform the text to replace')
+            return()
+          } else {
+            new_names <- gsub(input$txt_replace_part, input$txt_replace_new_part,
+                              selected_names, fixed = TRUE)
+          }
+
+        } else if(input$rename_method == 'remove') {
+
+          if(!isTruthy(input$txt_remove_part)){
+            msg('Inform the text to be removed')
+            return()
+          } else {
+            print('remove')
+            new_names <- gsub(input$txt_remove_part, '', selected_names, fixed = TRUE)
+          }
         }
 
         # Validação de nomes únicos e válidos --------------------------------
         if (is_valid_name(new_names) |> all()) {
 
-          if(all(new_names %in% df_names())) {
+          if(all(new_names == selected_names)){
             msg('No changes to apply')
-          } else if (any(new_names %in% df_names())) {
+          } else if(anyDuplicated(new_names)){
+            msg_error('There is duplication in the new names')
+          } else if(any(new_names %in% setdiff(df_names(), selected_names))){
             msg_error('Some new names already in use')
           } else {
             setnames(temp, input$vars_sel_multi, new_names)

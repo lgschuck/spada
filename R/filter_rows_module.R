@@ -270,177 +270,180 @@ filter_rows_server <- function(id) {
 
     # apply btn filter rows ---------------------------------------------------
     observe({
-      req(col_type_one_var())
-      temp <- copy(df$df_active)
-      # filter events for one variable ----------------------------------------
-      if (input$filter_type == 'one') {
-        # test if var and operator were informed
-        if (!isTruthy(input$one_var_sel)) {
-          msg_error('Choose a variable')
-          return()
-        } else if (!isTruthy(input$one_var_operator)) {
-          msg_error('Choose an operator')
-          return()
-        } else if (!isTruthy(input$one_var_value) &
-                   input$one_var_operator %notin% c(na_operators, logical_operators, outlier_operators)) {
-          msg_error('Insert a value')
-          return()
-        } else if (input$one_var_operator %in% between_operators) {
-          if (col_type_one_var() == 'numeric' &
-              !isTruthy(input$one_var_value2)) {
-            msg_error('Inform inicial and final values')
+      if(!isTruthy(input$filter_type)){
+        msg('Select the Filter type')
+      } else {
+        temp <- copy(df$df_active)
+        # filter events for one variable ----------------------------------------
+        if (input$filter_type == 'one') {
+          # test if var and operator were informed
+          if (!isTruthy(input$one_var_sel)) {
+            msg_error('Choose a variable')
             return()
-          } else if (col_type_one_var() == 'date' &
-                     (!isTruthy(input$one_var_value[1]) |
-                      !isTruthy(input$one_var_value[2]))) {
-            msg_error('Inform inicial and final dates')
+          } else if (!isTruthy(input$one_var_operator)) {
+            msg_error('Choose an operator')
+            return()
+          } else if (!isTruthy(input$one_var_value) &
+                     input$one_var_operator %notin% c(na_operators, logical_operators, outlier_operators)) {
+            msg_error('Insert a value')
+            return()
+          } else if (input$one_var_operator %in% between_operators) {
+            if (col_type_one_var() == 'numeric' &
+                !isTruthy(input$one_var_value2)) {
+              msg_error('Inform inicial and final values')
+              return()
+            } else if (col_type_one_var() == 'date' &
+                       (!isTruthy(input$one_var_value[1]) |
+                        !isTruthy(input$one_var_value[2]))) {
+              msg_error('Inform inicial and final dates')
+              return()
+            }
+          } else if (input$one_var_operator %in% in_operators &
+                     col_type_one_var() %in% c('date', 'numeric') &
+                     is.null(value_temp$value_temp_inserted)) {
+            msg_error('Insert values')
             return()
           }
-        } else if (input$one_var_operator %in% in_operators &
-                   col_type_one_var() %in% c('date', 'numeric') &
-                   is.null(value_temp$value_temp_inserted)) {
-          msg_error('Insert values')
-          return()
-        }
 
-        # use inserted values
-        if (input$one_var_operator %in% between_operators) {
-          if (col_type_one_var() == 'numeric') {
-            value_temp$value_temp <- c(input$one_var_value, input$one_var_value2)
-          } else if (col_type_one_var() == 'date') {
+          # use inserted values
+          if (input$one_var_operator %in% between_operators) {
+            if (col_type_one_var() == 'numeric') {
+              value_temp$value_temp <- c(input$one_var_value, input$one_var_value2)
+            } else if (col_type_one_var() == 'date') {
+              value_temp$value_temp <- input$one_var_value
+            }
+          } else if (input$one_var_operator %in% in_operators &
+                     col_type_one_var() %notin% c('char', 'complex', 'factor')) {
+            value_temp$value_temp <- value_temp$value_temp_inserted
+          } else {
             value_temp$value_temp <- input$one_var_value
           }
-        } else if (input$one_var_operator %in% in_operators &
-                   col_type_one_var() %notin% c('char', 'complex', 'factor')) {
-          value_temp$value_temp <- value_temp$value_temp_inserted
-        } else {
-          value_temp$value_temp <- input$one_var_value
-        }
-        value_temp$len <- value_temp$value_temp |> length()
+          value_temp$len <- value_temp$value_temp |> length()
 
-        # pass values to filter function
-        if (input$one_var_operator %in%
-            c(na_operators, logical_operators, outlier_operators)) {
-          temp <- filter_rows(temp, input$one_var_sel, input$one_var_operator, NULL)
-          msg('Filter rows: OK')
-        } else if (value_temp$len > 1 & input$one_var_operator %in%
-                   c(equal_operators, compare_operators)) {
-          msg('Operator requires value of length 1')
-          return()
-        } else {
-          temp <- filter_rows(temp,
-                              input$one_var_sel,
-                              input$one_var_operator,
-                              value_temp$value_temp)
-          msg('Filter rows: OK')
-        }
-
-        # reset value_temp
-        value_temp$value_temp_inserted <- NULL
-        value_temp$value_temp <- NULL
-        value_temp$len <- NULL
-
-        # clear value after click in button
-        updateSelectInput(session, 'var', selected = '')
-
-        updateSelectInput(session, 'operator', selected = '')
-
-        # filter events for 2 variables -----------------------------------------
-      } else if (input$filter_type == 'two') {
-        if (!isTruthy(input$two_var_sel1) || !isTruthy(input$two_var_sel2)) {
-          msg_error('Choose 2 variables')
-          return()
-        } else if (!isTruthy(input$two_var_operator)) {
-          msg_error('Choose an operator')
-          return()
-        } else if (temp[[input$two_var_sel1]] |> obj_type() !=
-                   temp[[input$two_var_sel2]] |> obj_type()) {
-          msg('Variables must be of the same type')
-        } else {
-          temp <- filter_rows_2vars(temp,
-                                    input$two_var_sel1,
-                                    input$two_var_sel2,
-                                    input$two_var_operator)
-          msg('Filter rows: OK')
-        }
-
-        # filter events for sample ----------------------------------------------
-      } else if (input$filter_type == 'sample') {
-        if (input$sample_type == 'rows') {
-          if (!isTruthy(input$n_rows) ||
-              !between(input$n_rows, 1, nrow_df_active())) {
-            msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
+          # pass values to filter function
+          if (input$one_var_operator %in%
+              c(na_operators, logical_operators, outlier_operators)) {
+            temp <- filter_rows(temp, input$one_var_sel, input$one_var_operator, NULL)
+            msg('Filter rows: OK')
+          } else if (value_temp$len > 1 & input$one_var_operator %in%
+                     c(equal_operators, compare_operators)) {
+            msg('Operator requires value of length 1')
+            return()
           } else {
-            temp <- temp[sample(1:nrow_df_active(),
-                                input$n_rows,
-                                replace = input$x_sample_replace), ]
+            temp <- filter_rows(temp,
+                                input$one_var_sel,
+                                input$one_var_operator,
+                                value_temp$value_temp)
+            msg('Filter rows: OK')
+          }
+
+          # reset value_temp
+          value_temp$value_temp_inserted <- NULL
+          value_temp$value_temp <- NULL
+          value_temp$len <- NULL
+
+          # clear value after click in button
+          updateSelectInput(session, 'var', selected = '')
+
+          updateSelectInput(session, 'operator', selected = '')
+
+          # filter events for 2 variables -----------------------------------------
+        } else if (input$filter_type == 'two') {
+          if (!isTruthy(input$two_var_sel1) || !isTruthy(input$two_var_sel2)) {
+            msg_error('Choose 2 variables')
+            return()
+          } else if (!isTruthy(input$two_var_operator)) {
+            msg_error('Choose an operator')
+            return()
+          } else if (temp[[input$two_var_sel1]] |> obj_type() !=
+                     temp[[input$two_var_sel2]] |> obj_type()) {
+            msg('Variables must be of the same type')
+          } else {
+            temp <- filter_rows_2vars(temp,
+                                      input$two_var_sel1,
+                                      input$two_var_sel2,
+                                      input$two_var_operator)
+            msg('Filter rows: OK')
+          }
+
+          # filter events for sample ----------------------------------------------
+        } else if (input$filter_type == 'sample') {
+          if (input$sample_type == 'rows') {
+            if (!isTruthy(input$n_rows) ||
+                !between(input$n_rows, 1, nrow_df_active())) {
+              msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
+            } else {
+              temp <- temp[sample(1:nrow_df_active(),
+                                  input$n_rows,
+                                  replace = input$x_sample_replace), ]
+
+              msg('Filter rows: OK')
+            }
+
+          } else if (input$sample_type == 'percent') {
+            temp <- temp[sample(
+              1:nrow_df_active(),
+              input$sample_size / 100 * nrow_df_active(),
+              replace = input$x_sample_replace
+            ), ]
 
             msg('Filter rows: OK')
           }
 
-        } else if (input$sample_type == 'percent') {
-          temp <- temp[sample(
-            1:nrow_df_active(),
-            input$sample_size / 100 * nrow_df_active(),
-            replace = input$x_sample_replace
-          ), ]
+          # filter events for freehand --------------------------------------------
+        } else if (input$filter_type == 'free') {
 
-          msg('Filter rows: OK')
-        }
+          # parse code ----------------------------------------------------------
+          parsed_code <- try(parse_expr(input$txt_code_input), silent = T)
 
-      # filter events for freehand --------------------------------------------
-      } else if (input$filter_type == 'free') {
+          if(inherits(parsed_code, "try-error")){
+            return(msg_error('Error to validate expression. Check code'))
+          }
 
-        # parse code ----------------------------------------------------------
-        parsed_code <- try(parse_expr(input$txt_code_input), silent = T)
+          # get operations and variables ----------------------------------------
+          code_operations <- all.names(parsed_code, unique = T)
+          code_vars <- all.vars(parsed_code)
 
-        if(inherits(parsed_code, "try-error")){
-          return(msg_error('Error to validate expression. Check code'))
-        }
+          code_operations <- code_operations[!code_operations %in% code_vars]
 
-        # get operations and variables ----------------------------------------
-        code_operations <- all.names(parsed_code, unique = T)
-        code_vars <- all.vars(parsed_code)
+          #  check variables and operations -------------------------------------
+          if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
+            msg_error('Some variables are not present in the dataset')
+          } else if (!all(code_operations %in% allowed_operations)) {
+            msg_error('Some operations are not allowed')
+          } else {
+            # create safe env for evaluation ------------------------------------
+            e1 <- safe_env(allowed_operations)
 
-        code_operations <- code_operations[!code_operations %in% code_vars]
+            # run code ----------------------------------------------------------
 
-        #  check variables and operations -------------------------------------
-        if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
-          msg_error('Some variables are not present in the dataset')
-        } else if (!all(code_operations %in% allowed_operations)) {
-          msg_error('Some operations are not allowed')
-        } else {
-          # create safe env for evaluation ------------------------------------
-          e1 <- safe_env(allowed_operations)
+            e1$temp <- copy(temp)
+            e1$parsed_code <- parsed_code
 
-          # run code ----------------------------------------------------------
+            e1$temp <- eval(expression(
 
-          e1$temp <- copy(temp)
-          e1$parsed_code <- parsed_code
-
-          e1$temp <- eval(expression(
-
-            try(temp[parsed_code, , env = list(parsed_code = parsed_code)],
-                silent = TRUE)
+              try(temp[parsed_code, , env = list(parsed_code = parsed_code)],
+                  silent = TRUE)
             ),
             envir = e1
-          )
+            )
 
-          if(inherits(e1$temp, "try-error")){
-            return(msg_error('Error in expression. Check code'))
-          } else{
-            temp <- copy(e1$temp)
-            rm(e1)
-            msg('Filter rows: OK')
+            if(inherits(e1$temp, "try-error")){
+              return(msg_error('Error in expression. Check code'))
+            } else{
+              temp <- copy(e1$temp)
+              rm(e1)
+              msg('Filter rows: OK')
 
-            updateTextAreaInput(session, 'txt_code_input', value = '')
+              updateTextAreaInput(session, 'txt_code_input', value = '')
+            }
+
           }
-
         }
-      }
 
-      df$df_active <- copy(temp)
-      rm(temp)
+        df$df_active <- copy(temp)
+        rm(temp)
+      }
 
     }) |> bindEvent(input$btn_filter)
 

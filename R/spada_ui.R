@@ -47,7 +47,7 @@ spada_ui <- function(conf){
                navset_card_pill(
                  id = 'navset_card_pill_data',
                  nav_panel('Highlights', data_highlights_ui('pD_highlights')),
-                 nav_panel('Metadata', card(card_body(gt_output('pD_metadata_gt')))),
+                 nav_panel('Metadata', metadata_ui('pD_metadata')),
                  nav_panel('Overview', data_overview_ui('pD_overview')),
                  nav_panel(
                    'Data',

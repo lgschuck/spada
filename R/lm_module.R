@@ -114,8 +114,7 @@ lm_server <- function(id) {
       linear_model_df_output(linear_model$summary) |>
         gt() |>
         tab_header(title = 'Linear Model',
-                   subtitle = paste('Independent Variable:',
-                                    linear_model$y_name))
+                   subtitle = paste('Dependent Variable:', linear_model$y_name))
     })
 
     lm_metrics <- reactive({

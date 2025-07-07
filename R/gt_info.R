@@ -2,9 +2,10 @@
 #' Show in interactive gt table a data.frame from df_info function
 #'
 #' @param df A data.frame object from df_info function
+#' @param df_name A name for the data.frame. Will be used as tab_header in gt table
 #'
 #' @examples
-#' mtcars |> df_info() |> gt_info()
+#' mtcars |> df_info() |> gt_info(df_name = 'mtcars')
 #'
 #' @export
 #'
@@ -13,7 +14,7 @@
 #'             fmt_bytes fmt_icon fmt_integer fmt_number fmt_percent gt
 #'             gt_output opt_interactive render_gt sub_missing tab_options
 
-gt_info <- function(df){
+gt_info <- function(df, df_name){
   stopifnot(is.data.frame(df))
 
   setDT(df)
@@ -47,6 +48,7 @@ gt_info <- function(df){
   }
 
   df_gt |>
+    tab_header(df_name) |>
     cols_hide(columns = c('rows', 'cols')) |>
     fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
     fmt_bytes(columns = 'size') |>
@@ -58,14 +60,6 @@ gt_info <- function(df){
     fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
     fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
     sub_missing() |>
-    opt_interactive(
-      use_filters = T,
-      use_resizers = T,
-      use_highlight = T,
-      use_compact_mode = T,
-      use_text_wrapping = F,
-      use_page_size_select = T
-    ) |>
     cols_move(columns = 'f_icon', after = 'var') |>
     fmt_icon(columns = f_icon) |>
     cols_label(

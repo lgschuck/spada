@@ -3,7 +3,7 @@
 # test gt info ----------------------------------------------------------------
 test_that('Test gt info', {
 
-  gt_info_test <- iris |> df_info() |> gt_info()
+  gt_info_test <- iris |> df_info() |> gt_info(df_name = 'iris')
   expect_equal(gt_info_test |> class(), c('gt_tbl', 'list'))
   expect_equal(gt_info_test |> length(), 18)
 
