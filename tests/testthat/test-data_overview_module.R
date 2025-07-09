@@ -9,6 +9,9 @@ test_that("Test sample rows", {
 
     session$userData$df <- reactiveValues(act = iris |> as.data.table())
     session$userData$df$act_name = 'iris'
+    session$userData$dt_names <- reactive({
+      names(session$userData$dt$dt)
+    })
 
     session$setInputs(
       dataset_sel = 'iris',
@@ -26,6 +29,9 @@ test_that("Test first rows", {
                                                     'mtcars' = as.data.table(mtcars)))
     session$userData$df <- reactiveValues(act = iris |> as.data.table())
     session$userData$df$act_name = 'iris'
+    session$userData$dt_names <- reactive({
+      names(session$userData$dt$dt)
+    })
 
     session$setInputs(size_sample = 5,
                       dataset_sel = 'iris',
@@ -44,6 +50,9 @@ test_that("Test sample rows", {
                                                     'mtcars' = as.data.table(mtcars)))
     session$userData$df <- reactiveValues(act = iris |> as.data.table())
     session$userData$df$act_name = 'iris'
+    session$userData$dt_names <- reactive({
+      names(session$userData$dt$dt)
+    })
 
     session$setInputs(size_sample = 5,
                       dataset_sel = 'iris',

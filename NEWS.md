@@ -22,6 +22,22 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+## 2025.07.09
+
+Highlights: **Metadata** module now shows info for all datasets
+
+### Improvements
+
+1 - **spada_server.R**: new reactives for metadata (df_info and gt_info)
+
+2 - **Data overview** module: changed uiOutput/renderUI for updateSelectInput
+
+3 - **Metadata** module: now module uses reactives from spada_server (df_info and gt_info) and changed uiOutput/renderUI for updateSelectInput
+
+4 - **gt_info.R**: names of variables now as character and use as.data.table instead of setDT
+
+5 - **New test** for metadata module
+
 ## 2025.07.07
 
 Highlights: **Insert** metadata to output, better Rename/Calulate variables funcionalities, fix (#44)

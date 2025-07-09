@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-#' @importFrom data.table setDT
+#' @importFrom data.table as.data.table
 #' @importFrom gt cols_hide cols_label cols_merge cols_move cols_width data_color
 #'             fmt_bytes fmt_icon fmt_integer fmt_number fmt_percent gt
 #'             gt_output opt_interactive render_gt sub_missing tab_options
@@ -17,7 +17,7 @@
 gt_info <- function(df, df_name){
   stopifnot(is.data.frame(df))
 
-  setDT(df)
+  df <- as.data.table(df)
   df[, f_icon := fcase(
     class == 'integer', '1',
     class == 'character', 'a',
@@ -61,7 +61,7 @@ gt_info <- function(df, df_name){
     fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
     sub_missing() |>
     cols_move(columns = 'f_icon', after = 'var') |>
-    fmt_icon(columns = f_icon) |>
+    fmt_icon(columns = 'f_icon') |>
     cols_label(
       var = 'Variable',
       type = 'Type',
@@ -76,10 +76,10 @@ gt_info <- function(df, df_name){
       f_icon = ''
     ) |>
     cols_width(f_icon ~ px(30)) |>
-    cols_merge(columns = c(class, f_icon), pattern = "{2} {1}") |>
-    cols_merge(columns = c(n_valid, perc_valid), pattern = "{1} / {2}") |>
-    cols_merge(columns = c(n_unique, perc_unique), pattern = "{1} / {2}") |>
-    cols_merge(columns = c(n_zero, perc_zero), pattern = "{1} / {2}") |>
-    cols_merge(columns = c(n_nas, perc_nas), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('class', 'f_icon'), pattern = "{2} {1}") |>
+    cols_merge(columns = c('n_valid', 'perc_valid'), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('n_unique', 'perc_unique'), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('n_zero', 'perc_zero'), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('n_nas', 'perc_nas'), pattern = "{1} / {2}") |>
     tab_options(table.background.color = '#ffffff')
 }

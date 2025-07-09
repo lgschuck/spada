@@ -4,7 +4,11 @@ data_overview_ui <- function(id) {
   ns <- NS(id)
   card(
     card_body(
-      uiOutput(ns('ui_dataset_sel')),
+      selectInput(
+        inputId = ns('dataset_sel'),
+        label = 'Dataset',
+        choices = NULL
+      ),
       gt_output(ns('gt'))
     ),
     card_footer(
@@ -28,12 +32,15 @@ data_overview_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    output$ui_dataset_sel <- renderUI(
-      selectInput(
-        inputId = ns('dataset_sel'),
-        label = 'Dataset',
-        choices = session$userData$dt_names())
-    )
+    observe({
+      req(session$userData$dt_names())
+
+      updateSelectInput(
+        session,
+        inputId = 'dataset_sel',
+        choices = session$userData$dt_names()
+      )
+    })
 
     df <- reactive({
       req(session$userData$dt$dt, input$dataset_sel)
@@ -87,8 +94,7 @@ data_overview_server <- function(id) {
           use_compact_mode = T,
           use_text_wrapping = F,
           use_page_size_select = T
-        ) |>
-        tab_options(table.background.color = bg_color)
+        )
     })
 
     # output ------------------------------------------------------------------
@@ -99,7 +105,10 @@ data_overview_server <- function(id) {
     })
 
     # insert to output module -------------------------------------------------
-    mod_insert_output <- insert_output_server('data_overview_insert_output', data_gt)
+    mod_insert_output <- insert_output_server(
+      'data_overview_insert_output',
+      reactive(data_gt() |> tab_options(table.width = pct(90)))
+    )
 
     # get return from insert output module ------------------------------------
     observe({

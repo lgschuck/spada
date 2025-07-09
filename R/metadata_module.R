@@ -3,7 +3,14 @@
 metadata_ui <- function(id) {
   ns <- NS(id)
   card(
-    card_body(gt_output(ns('metadata_gt'))),
+    card_body(
+      selectInput(
+        inputId = ns('dataset_sel'),
+        label = 'Dataset',
+        choices = NULL
+      ),
+      gt_output(ns('gt'))
+    ),
     card_footer(insert_output_ui(ns('metadata_insert_output')))
   )
 }
@@ -14,13 +21,19 @@ metadata_server <- function(id) {
     ns <- session$ns
 
     # metadata ----------------------------------------------------------------
-    act_meta_gt <- reactive({
-      req(session$userData$df$act_meta())
-      gt_info(session$userData$df$act_meta(), session$userData$df$act_name)
+    observe({
+      req(session$userData$dt$gt_info())
+
+      updateSelectInput(
+        session,
+        inputId = 'dataset_sel',
+        choices = names(session$userData$dt$gt_info())
+      )
     })
 
-    output$metadata_gt <- render_gt({
+    output$gt <- render_gt({
       req(act_meta_gt())
+
       act_meta_gt() |>
         opt_interactive(
           use_filters = T,
@@ -30,6 +43,11 @@ metadata_server <- function(id) {
           use_text_wrapping = F,
           use_page_size_select = T
         )
+    })
+
+    act_meta_gt <- reactive({
+      req(session$userData$dt$gt_info(), input$dataset_sel)
+      session$userData$dt$gt_info()[[input$dataset_sel]]
     })
 
     # output ------------------------------------------------------------------
