@@ -74,7 +74,7 @@ spada_ui <- function(conf){
       # page edit -------------------------------------------------------------
       nav_panel(
         'Edit',
-        icon = bs_icon('funnel'),
+        icon = icon('screwdriver-wrench'),
 
         card(full_screen = T,
              card_body(
@@ -145,7 +145,7 @@ spada_ui <- function(conf){
       # output ----------------------------------------------------------------
       nav_panel(
         title = 'Output',
-        icon = icon('file-lines'),
+        icon = icon('tablet-screen-button'),
         card(
           full_screen = T,
           card_body(

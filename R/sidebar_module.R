@@ -9,10 +9,24 @@ sidebar_ui <- function(id) {
       open = T,
       accordion_panel(
         class = 'accordion-sidebar',
-        'Dataset Info',
-        icon = bs_icon('file-binary', size = '1.75em'),
+        'Active Dataset',
+        icon = bs_icon('check2-square', size = '1.75em'),
         uiOutput(ns('df_info'))
-      )))
+      )
+    ),
+    accordion(
+      open = F,
+      accordion_panel(
+        class = 'accordion-sidebar',
+        'Datasets',
+        icon = bs_icon('table', size = '1.75em'),
+        selectInput(ns('datasets_names'), '', choices = NULL),
+        actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
+                     class = 'mini-btn') |>
+          popover(htmlOutput(ns('df_preview')))
+      )
+    )
+  )
 }
 
 # server ----------------------------------------------------------------------
@@ -20,6 +34,7 @@ sidebar_server <- function(id, app_session) {
   moduleServer(id, function(input, output, session) {
   	ns <- session$ns
 
+  	# active dataset info -----------------------------------------------------
     output$df_info <- renderUI({
       tagList(
         h5(session$userData$df$act_name),
@@ -61,6 +76,43 @@ sidebar_server <- function(id, app_session) {
       nav_select('navbar', selected = 'Analysis', session = app_session)
       nav_select('navbar', selected = 'Exploratory', session = app_session)
     }) |> bindEvent(input$df_btn_explore)
+
+    # list of datasets --------------------------------------------------------
+    observe({
+      req(session$userData$dt$dt, session$userData$df$act, session$userData$df$act_name)
+      choices <- c(
+        session$userData$df$act_name,
+        names(session$userData$dt$dt)[names(session$userData$dt$dt) != session$userData$df$act_name]
+      )
+
+      updateSelectInput(session, 'datasets_names', choices = choices)
+    })
+
+    # review dataset -------------------------
+    output$df_preview <- renderUI({
+      req(session$userData$dt$dt,
+          session$userData$df$act,
+          session$userData$df$act_name,
+          input$datasets_names)
+
+      if (input$datasets_names == session$userData$df$act_name) {
+        df <- session$userData$df$act[1:5, ]
+      } else {
+        df <- session$userData$dt$dt[[input$datasets_names]][1:5, ]
+      }
+
+      df <- lapply(df, \(x) if (is.complex(x))
+        as.character(x)
+        else
+          x) |>
+        as.data.frame()
+
+      gt::gt(df) |>
+        tab_header(input$datasets_names) |>
+        tab_options(heading.align = 'left') |>
+        gt::as_raw_html() |>
+        HTML()
+    })
 
   })
 }

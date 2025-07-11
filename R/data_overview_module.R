@@ -16,7 +16,7 @@ data_overview_ui <- function(id) {
         column(2, numericInput(ns('size_sample'), 'Number of rows', 500, 0, 1e4, 500)),
         column(2, radioGroupButtons(
           ns('radio_sample'), 'Show',
-          c('First rows' = 'first', 'Sample' = 'sample'),
+          c('First rows' = 'first', 'Last rows' = 'last', 'Sample' = 'sample'),
           size = 'sm', individual = T)),
         column(2, div(
           insert_output_ui(ns('data_overview_insert_output'))),
@@ -62,6 +62,9 @@ data_overview_server <- function(id) {
 
       if(input$radio_sample == 'first'){
         idx <- 1:n_show
+      } else if(input$radio_sample == 'last'){
+        start_idx <- max(1, nrow(df()) - n_show + 1)
+        idx <- start_idx:nrow(df())
       } else if (input$radio_sample == 'sample'){
         idx <- sample.int(nrow(df()), n_show, replace = F)
       }

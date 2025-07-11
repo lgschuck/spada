@@ -18,9 +18,21 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-## 0.1.0 Milestone (sep/25)
+## 0.1.0 Milestone (out/25)
 
 1 - Tests: create tests for the app
+
+## 2025.07.11
+
+Highlights: **Sidebar** now shows a preview of datasets and **Data Overview** module shows last rows
+
+### Improvements
+
+1 - **Data Overview** module: new option to select **Last rows** ([#49](https://github.com/lgschuck/spada/issues/49))
+
+2 - **Sidebar** module: shows a preview of datasets ([#48](https://github.com/lgschuck/spada/issues/48))
+
+3 - **Visual**: change some icons
 
 ## 2025.07.09
 

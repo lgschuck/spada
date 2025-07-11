@@ -160,12 +160,6 @@ spada_server <- function(datasets, conf){
       }
     )
 
-    # df active metadata ---------------------
-    session$userData$df$act_meta <- reactive({
-      req(session$userData$dt$df_info(), session$userData$df$act_name)
-      session$userData$dt$df_info()[[session$userData$df$act_name]]
-    })
-
     # datasets metadata -------------------------------------------------------
     session$userData$dt$df_info <- reactive({
       req(session$userData$df$act, session$userData$df$act_name, session$userData$dt$dt)
@@ -185,6 +179,12 @@ spada_server <- function(datasets, conf){
 
       Map(gt_info, session$userData$dt$df_info(),
           df_name = names(session$userData$dt$df_info()))
+    })
+
+    # df active metadata ---------------------
+    session$userData$df$act_meta <- reactive({
+      req(session$userData$dt$df_info(), session$userData$df$act_name)
+      session$userData$dt$df_info()[[session$userData$df$act_name]]
     })
 
     # navbar ------------------------------------------------------------------
