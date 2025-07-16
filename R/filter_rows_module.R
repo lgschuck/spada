@@ -78,14 +78,12 @@ filter_rows_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-    # Store active dataset
+	  df_names <- reactive(get_act_dt(session) |> names())
+
     df <- reactiveValues()
     observe({
-      df$df_active <- session$userData$df$act
+      df$df_active <- get_act_dt(session)
     })
-
-    # Reactive to get column names
-    df_names <- reactive(session$userData$df$act |> names())
 
     nrow_df_active <- reactive(nrow(df$df_active))
 
@@ -455,7 +453,7 @@ filter_rows_server <- function(id) {
     # update active dataset ---------------------------------------------------
     observe({
       req(df$df_active)
-      session$userData$df$act <- df$df_active
+      update_act_dt(session, df$df_active)
     })
 
   })

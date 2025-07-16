@@ -27,7 +27,13 @@ metadata_server <- function(id) {
       updateSelectInput(
         session,
         inputId = 'dataset_sel',
-        choices = names(session$userData$dt$gt_info())
+        choices = c(
+          session$userData$dt$act_name,
+          setdiff(
+            names(session$userData$dt$df_info()),
+            session$userData$dt$act_name
+          )
+        )
       )
     })
 

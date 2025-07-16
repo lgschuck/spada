@@ -98,13 +98,13 @@ data_highlights_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
     df <- reactive({
-      req(session$userData$df$act)
-      session$userData$df$act
+      req(session$userData$dt$dt)
+      get_act_dt(session)
     })
 
     df_metadata <- reactive({
-      req(session$userData$df$act_meta)
-      session$userData$df$act_meta()
+      req(session$userData$dt$act_meta())
+      session$userData$dt$act_meta()
     })
 
     output$var_num_vars <- renderText(sapply(df(), is.numeric) |> sum())

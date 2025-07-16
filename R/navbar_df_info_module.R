@@ -12,15 +12,15 @@ navbar_df_info_server <- function(id, app_session) {
 
     output$navbar_df_info <- renderUI({
       tagList(
-        h5(session$userData$df$act_name),
+        h5(session$userData$dt$act_name),
         p('Rows/Columns:',
-          paste(session$userData$df$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1), '/',
-                session$userData$df$act_meta() |> pull(cols) |> head(1) |> f_num())
+          paste(session$userData$dt$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1), '/',
+                session$userData$dt$act_meta() |> pull(cols) |> head(1) |> f_num())
         ),
-        p("Columns with NA's:", session$userData$df$act_meta() |>
+        p("Columns with NA's:", session$userData$dt$act_meta() |>
             filter(n_nas > 0) |>
             nrow()),
-        p('Size (MB):', (object.size(session$userData$df$act) / 2^20) |>
+        p('Size (MB):', (object.size(get_act_dt(session)) / 2^20) |>
             as.numeric() |> round(2)),
         actionButton(ns('df_btn_overview'), '', icon('magnifying-glass'), class = 'mini-btn'),
         actionButton(ns('df_btn_change'), '', icon('shuffle'), class = 'mini-btn'),

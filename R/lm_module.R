@@ -48,7 +48,7 @@ lm_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  df <- reactive({ session$userData$df$act })
+	  df <- reactive(get_act_dt(session))
 
     # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
@@ -58,7 +58,7 @@ lm_server <- function(id) {
 	  })
 
     var_analysis <- reactive({
-      session$userData$df$act_meta() |> filter(perc_nas != 1) |> pull(var)
+      session$userData$dt$act_meta() |> filter(perc_nas != 1) |> pull(var)
     })
 
     yvar <- reactive({

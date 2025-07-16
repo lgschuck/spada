@@ -154,11 +154,11 @@ exploratory_server <- function(id, output_report) {
     # df active ---------------------------------------------------------------
     df <- reactiveValues()
     observe({
-      df$df_active <- session$userData$df$act
+      df$df_active <- get_act_dt(session)
     })
 
     var_analysis <- reactive({
-      session$userData$df$act_meta() |> filter(perc_nas != 1) |>  pull(var)
+      session$userData$dt$act_meta() |> filter(perc_nas != 1) |>  pull(var)
     })
 
     output$ui_var_names <- renderUI(

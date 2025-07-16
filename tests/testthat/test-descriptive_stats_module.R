@@ -7,7 +7,10 @@ test_that('Test desc stats - reactives', {
 
   testServer(descriptive_stats_server, {
 
-    session$userData$df <- reactiveValues(act = mtcars)
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(
       sel_var = var1,
@@ -35,7 +38,10 @@ test_that('Test descriptive stats - desc_stats mean 1 var', {
 
   testServer(descriptive_stats_server, {
 
-    session$userData$df <- reactiveValues(act = mtcars)
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(
       sel_var = var1,
@@ -64,7 +70,10 @@ test_that('Test descriptive stats - gt stats', {
 
   testServer(descriptive_stats_server, {
 
-    session$userData$df <- reactiveValues(act = mtcars)
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(
       sel_var = var1,

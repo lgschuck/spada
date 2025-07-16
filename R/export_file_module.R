@@ -76,7 +76,7 @@ export_file_server <- function(id) {
       },
       content = function(file) {
         if(input$radio_format == 'csv'){
-          fwrite(session$userData$df$act, file,
+          fwrite(get_act_dt(session), file,
                  row.names = input$x_rownames,
                  sep = input$radio_separator,
                  dec = input$radio_decimal,
@@ -84,9 +84,9 @@ export_file_server <- function(id) {
                  scipen = as.integer(input$radio_scientific)
           )
         } else if (input$radio_format == 'RDS'){
-          saveRDS(session$userData$df$act, file, compress = input$checkbox_rds_compress)
+          saveRDS(get_act_dt(session), file, compress = input$checkbox_rds_compress)
         } else if (input$radio_format == 'sav') {
-          write_sav(session$userData$df$act, file, compress = input$radio_sav_compress)
+          write_sav(get_act_dt(session), file, compress = input$radio_sav_compress)
         }
       }
     )

@@ -5,7 +5,10 @@ test_that('Test export csv - test name', {
 
   testServer(export_file_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       file_name = 'iris_export',
@@ -27,7 +30,10 @@ test_that('Test export RDS - test name', {
 
   testServer(export_file_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       file_name = 'iris_export',
@@ -45,7 +51,10 @@ test_that('Test export sav - test name', {
 
   testServer(export_file_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       file_name = 'iris_export',

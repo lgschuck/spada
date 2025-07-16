@@ -540,7 +540,7 @@ make_valid_cols <- function(x){
 }
 
 # exit spada with saving session -------------------------------------------
-exit_with_save <- function(session = session){
+exit_with_save <- function(session){
   show_modal_progress_line(value = 0.3, text = 'Saving Output...', color = main_color)
   Sys.sleep(0.5)
 
@@ -551,9 +551,6 @@ exit_with_save <- function(session = session){
 
   Sys.sleep(0.5)
   update_modal_progress(value = 0.5, 'Saving Data...')
-
-  # update dt$dt with active df
-  session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
 
   check_dir(session$userData$conf$data_dir)
   saveRDS(session$userData$dt$dt,
@@ -575,7 +572,7 @@ exit_with_save <- function(session = session){
 }
 
 # exit spada without saving session -------------------------------------------
-exit_without_save <- function(session = session){
+exit_without_save <- function(session){
   show_modal_progress_line(text = 'Closing Spada...', color = main_color)
   update_modal_progress(value = 0.3)
   Sys.sleep(0.3)
@@ -722,4 +719,14 @@ linear_model_df_metrics <- function(model_summary){
       f_p_value
     )
   )
+}
+
+# get active dt ---------------------------------------------------------------
+get_act_dt <- function(session){
+  session$userData$dt$dt[[ session$userData$dt$act_name ]]
+}
+
+# update active dt ---------------------------------------------------------------
+update_act_dt <- function(session, new_dt) {
+  session$userData$dt$dt[[ session$userData$dt$act_name ]] <- new_dt
 }

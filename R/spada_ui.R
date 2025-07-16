@@ -187,7 +187,7 @@ spada_ui <- function(conf){
 
       nav_spacer(),
       # active dataset --------------------------------------------------------
-      nav_item(h4(textOutput('df_active_name')) |>
+      nav_item(h4(textOutput('dt_act_name')) |>
                  popover(navbar_df_info_ui('navbar_df_info'),
                          placement = 'bottom'))
     )

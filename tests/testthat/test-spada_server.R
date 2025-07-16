@@ -33,23 +33,23 @@ test_that('Test inputed datasets - classes', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
     expect_equal(session$userData$dt$dt[[1]] |> class(), c('data.table', 'data.frame'))
     expect_equal(session$userData$dt$dt[[2]] |> class(), c('data.table', 'data.frame'))
-    expect_equal(session$userData$df$act |> class(), c('data.table', 'data.frame'))
   })
 })
 
 # test active df --------------------------------------------------------------
 test_that('Test active df', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
-    expect_equal(session$userData$df$act, iris |> as.data.table())
-    expect_equal(session$userData$df$act_name, 'df_iris')
-    expect_equal(session$userData$df$bkp, NULL)
+    expect_equal(session$userData$dt$act_name, 'df_iris')
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 dfs[['df_iris']] |> as.data.table())
+    expect_equal(session$userData$dt$bkp, NULL)
   })
 })
 
 # test active df metadata -----------------------------------------------------
 test_that('Test active df metadata', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
-    expect_equal(session$userData$df$act_meta(), df_info(iris))
+    expect_equal(session$userData$dt$act_meta(), df_info(iris))
   })
 })
 
@@ -57,10 +57,8 @@ test_that('Test active df metadata', {
 test_that('Test metadata - df_info', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
 
-    session$userData$df$act <- mtcars
-
-    expect_equal(df_info(session$userData$df$act) |> nrow(), 11)
-    expect_equal(df_info(session$userData$df$act), df_info(mtcars))
+    expect_equal(df_info(session$userData$dt$dt[[session$userData$dt$act_name]]) |> nrow(), 5)
+    expect_equal(df_info(session$userData$dt$dt[[session$userData$dt$act_name]]), df_info(iris))
   })
 })
 
@@ -68,9 +66,9 @@ test_that('Test metadata - df_info', {
 test_that('Test metadata - gt class', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
 
-    session$userData$df$act <- mtcars
+    session$userData$df$act_name <- 'df_mtcars'
 
-    expect_true('gt_tbl' %in% class(session$userData$df$act_meta() |>
+    expect_true('gt_tbl' %in% class(session$userData$dt$act_meta() |>
                                       gt_info(df_name = names(dfs)[2])))
 
   })
@@ -81,9 +79,9 @@ test_that('Test metadata - gt metadata', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
 
     mtcars_meta <- mtcars |> df_info() |> gt_info(df_name = 'df_mtcars')
-    session$userData$df$act <- mtcars
+    session$userData$dt$act_name <- 'df_mtcars'
 
-    gt_temp <- session$userData$df$act_meta() |> gt_info(df_name = names(dfs)[2])
+    gt_temp <- session$userData$dt$act_meta() |> gt_info(df_name = names(dfs)[2])
 
     expect_equal(gt_temp$`_data`, mtcars_meta$`_data`)
     expect_equal(gt_temp$`_data` |> nrow(), 11)
@@ -101,8 +99,9 @@ test_that('Test change active df', {
 
     session$setInputs(pD_data_btn_active = 1)
 
-    expect_equal(session$userData$df$act_name, 'df_mtcars')
-    expect_equal(session$userData$df$act, mtcars |> as.data.table())
+    expect_equal(session$userData$dt$act_name, 'df_mtcars')
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars |> as.data.table())
 
   })
 })
@@ -115,7 +114,7 @@ test_that('Test rename active df', {
 
     session$setInputs(pD_data_btn_new_name = 1)
 
-    expect_equal(session$userData$df$act_name, 'new_iris')
+    expect_equal(session$userData$dt$act_name, 'new_iris')
   })
 })
 
@@ -126,7 +125,7 @@ test_that('Test rename active df - invalid name', {
 
     session$setInputs(pD_data_btn_new_name = 1)
 
-    expect_equal(session$userData$df$act_name, 'df_iris')
+    expect_equal(session$userData$dt$act_name, 'df_iris')
   })
 })
 
@@ -163,7 +162,8 @@ test_that('Test delete active df', {
 
     session$setInputs(pD_data_btn_delete_dataset = 1)
 
-    expect_equal(session$userData$df$act_name, 'df_iris')
-    expect_equal(session$userData$df$act, iris |> as.data.table())
+    expect_equal(session$userData$dt$act_name, 'df_iris')
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 iris |> as.data.table())
   })
 })

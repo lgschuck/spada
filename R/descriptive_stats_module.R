@@ -54,7 +54,7 @@ descriptive_stats_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  df <- reactive(session$userData$df$act)
+	  df <- reactive(get_act_dt(session))
 
 	  # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)

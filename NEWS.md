@@ -22,6 +22,20 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+## 2025.07.16
+
+Highlights: **Active Dataset** now only as name (internal use) and **Inputs** with datasets names now have the active in top of the list
+
+### Improvements
+
+1 - **spada_server.R**: now the **Active dataset** is nly a name that search in the `userData$dt$dt` list. This gives improvement in speed for calculating metadata(only when needed), especially with big datasets. A 10 million row dataset takes about 5 seconds to calculate the metadada (metadata_module).([#50](https://github.com/lgschuck/spada/issues/50))
+
+2 - **Tests**: new tests for **Convert Cols, Data Highlights, Navbar DF Info and Sidebar** modules. Changes tests to use the **Active Dataset** in `userData$dt` instead of `userData$df$act`.
+
+3 - **Modules**: change to use the **Active Dataset** in `userData$dt` instead of `userData$df$act`.
+
+4 - **utils.R**: new functions get_act_dt and update_act_dt
+
 ## 2025.07.11
 
 Highlights: **Sidebar** now shows a preview of datasets and **Data Overview** module shows last rows

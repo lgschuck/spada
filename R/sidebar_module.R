@@ -20,7 +20,7 @@ sidebar_ui <- function(id) {
         class = 'accordion-sidebar',
         'Datasets',
         icon = bs_icon('table', size = '1.75em'),
-        selectInput(ns('datasets_names'), '', choices = NULL),
+        selectInput(ns('sel_datasets_names'), '', choices = NULL),
         actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
                      class = 'mini-btn') |>
           popover(htmlOutput(ns('df_preview')))
@@ -37,15 +37,15 @@ sidebar_server <- function(id, app_session) {
   	# active dataset info -----------------------------------------------------
     output$df_info <- renderUI({
       tagList(
-        h5(session$userData$df$act_name),
+        h5(session$userData$dt$act_name),
         p('Rows/Columns:',
-          paste(session$userData$df$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1),
-                '/', session$userData$df$act_meta() |> pull(cols) |> head(1) |> f_num())
+          paste(session$userData$dt$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1),
+                '/', session$userData$dt$act_meta() |> pull(cols) |> head(1) |> f_num())
         ),
-        p("Columns with NA's:", session$userData$df$act_meta() |>
+        p("Columns with NA's:", session$userData$dt$act_meta() |>
             filter(n_nas > 0) |>
             nrow()),
-        p('Size (MB):', (object.size(session$userData$df$act) / 2^20) |>
+        p('Size (MB):', (object.size(get_act_dt(session)) / 2^20) |>
             as.numeric() |> round(2)),
         fluidRow(
           column(1),
@@ -79,27 +79,20 @@ sidebar_server <- function(id, app_session) {
 
     # list of datasets --------------------------------------------------------
     observe({
-      req(session$userData$dt$dt, session$userData$df$act, session$userData$df$act_name)
+      req(session$userData$dt$dt, session$userData$dt$act_name)
       choices <- c(
-        session$userData$df$act_name,
-        names(session$userData$dt$dt)[names(session$userData$dt$dt) != session$userData$df$act_name]
+        session$userData$dt$act_name,
+        setdiff(session$userData$dt_names(), session$userData$dt$act_name)
       )
 
-      updateSelectInput(session, 'datasets_names', choices = choices)
+      updateSelectInput(session, 'sel_datasets_names', choices = choices)
     })
 
     # review dataset -------------------------
     output$df_preview <- renderUI({
-      req(session$userData$dt$dt,
-          session$userData$df$act,
-          session$userData$df$act_name,
-          input$datasets_names)
+      req(session$userData$dt$dt, input$sel_datasets_names)
 
-      if (input$datasets_names == session$userData$df$act_name) {
-        df <- session$userData$df$act[1:5, ]
-      } else {
-        df <- session$userData$dt$dt[[input$datasets_names]][1:5, ]
-      }
+      df <- session$userData$dt$dt[[input$sel_datasets_names]][1:5, ]
 
       df <- lapply(df, \(x) if (is.complex(x))
         as.character(x)
@@ -108,7 +101,7 @@ sidebar_server <- function(id, app_session) {
         as.data.frame()
 
       gt::gt(df) |>
-        tab_header(input$datasets_names) |>
+        tab_header(input$sel_datasets_names) |>
         tab_options(heading.align = 'left') |>
         gt::as_raw_html() |>
         HTML()

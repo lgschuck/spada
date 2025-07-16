@@ -36,13 +36,12 @@ calculate_cols_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-    df <- reactiveValues()
-    observe({
-      df$df_active <- session$userData$df$act
-    })
+	  df_names <- reactive(get_act_dt(session) |> names())
 
-    # Reactive to get column names
-    df_names <- reactive(df$df_active |> names())
+	  df <- reactiveValues()
+	  observe({
+	    df$df_active <- get_act_dt(session)
+	  })
 
     # render variables to sel -------------------------------------------------
     output$ui_var_sel <- renderUI({
@@ -213,7 +212,7 @@ calculate_cols_server <- function(id) {
     # update active dataset ---------------------------------------------------
     observe({
       req(df$df_active)
-      session$userData$df$act <- df$df_active
+      update_act_dt(session, df$df_active)
     })
 
   })

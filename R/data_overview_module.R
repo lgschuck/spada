@@ -5,7 +5,7 @@ data_overview_ui <- function(id) {
   card(
     card_body(
       selectInput(
-        inputId = ns('dataset_sel'),
+        inputId = ns('sel_dataset'),
         label = 'Dataset',
         choices = NULL
       ),
@@ -33,23 +33,22 @@ data_overview_server <- function(id) {
     ns <- session$ns
 
     observe({
-      req(session$userData$dt_names())
+      req(session$userData$dt$df_info())
 
       updateSelectInput(
         session,
-        inputId = 'dataset_sel',
-        choices = session$userData$dt_names()
+        inputId = 'sel_dataset',
+        choices = c(
+          session$userData$dt$act_name,
+          setdiff(session$userData$dt_names(), session$userData$dt$act_name)
+        )
       )
     })
 
     df <- reactive({
-      req(session$userData$dt$dt, input$dataset_sel)
+      req(session$userData$dt$dt, input$sel_dataset)
 
-      if(input$dataset_sel == session$userData$df$act_name){
-        session$userData$df$act
-      } else {
-        session$userData$dt$dt[[input$dataset_sel]]
-      }
+      session$userData$dt$dt[[input$sel_dataset]]
     })
 
     idx <- reactive({
@@ -82,7 +81,7 @@ data_overview_server <- function(id) {
       req(data_filtered())
       data_filtered() |>
         gt() |>
-        tab_header(input$dataset_sel)
+        tab_header(input$sel_dataset)
     })
 
     output$gt <- render_gt({

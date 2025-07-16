@@ -116,7 +116,7 @@ normality_test_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  df <- reactive(session$userData$df$act)
+	  df <- reactive(get_act_dt(session))
 
 	  # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
@@ -135,7 +135,7 @@ normality_test_server <- function(id) {
 
       df_names <- df_active() |> names()
 
-      var_analysis <- session$userData$df$act_meta() |> filter(perc_nas != 1) |> pull(var)
+      var_analysis <- session$userData$dt$act_meta() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
     })

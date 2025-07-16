@@ -5,30 +5,23 @@ test_that("Test gt object", {
   testServer(metadata_server, {
 
     # create elements from outside of module
-    session$userData$dt <- reactiveValues(dt = list('iris' = as.data.table(iris),
-                                                    'mtcars' = as.data.table(mtcars)))
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = as.data.table(mtcars), 'iris' = as.data.table(iris)),
+      act_name = 'mtcars'
+    )
 
-    session$userData$df <- reactiveValues(act = mtcars |> as.data.table())
-    session$userData$df$act_name = 'mtcars'
     session$userData$dt_names <- reactive({
       names(session$userData$dt$dt)
     })
 
     session$userData$dt$df_info <- reactive({
-      req(session$userData$df$act, session$userData$df$act_name, session$userData$dt$dt)
+      req(session$userData$dt)
 
-      datasets <- c(
-        list(session$userData$df$act),
-        session$userData$dt$dt[names(session$userData$dt$dt) != session$userData$df$act_name]
-      )
-
-      names(datasets)[1] <- session$userData$df$act_name
-
-      lapply(datasets, df_info)
+      lapply(session$userData$dt$dt, df_info)
     })
 
     session$userData$dt$gt_info <- reactive({
-      req(session$userData$dt$df_info)
+      req(session$userData$dt$df_info())
 
       Map(gt_info, session$userData$dt$df_info(),
           df_name = names(session$userData$dt$df_info()))

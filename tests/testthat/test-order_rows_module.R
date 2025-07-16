@@ -9,7 +9,10 @@ test_that("Test order rows - na last - one variable ascending", {
 
     vars <- c('Species')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'last')
@@ -19,7 +22,7 @@ test_that("Test order rows - na last - one variable ascending", {
     df_reordered <- df_test[order(df_test[[vars]]), ]
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -28,7 +31,10 @@ test_that("Test order rows - na last - one variable descending", {
 
     vars <- c('Species')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'last')
@@ -41,7 +47,7 @@ test_that("Test order rows - na last - one variable descending", {
     row.names(df_reordered) <- as.character(rownames(df_reordered))
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -50,7 +56,10 @@ test_that("Test order rows - na last - two variables ascending", {
 
     vars <- c('Sepal.Length', 'Sepal.Width')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'last')
@@ -60,7 +69,7 @@ test_that("Test order rows - na last - two variables ascending", {
     df_reordered <- setorderv(df_test, vars, na.last = TRUE)
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -69,7 +78,10 @@ test_that("Test order rows - na last - two variables descending", {
 
     vars <- c('Sepal.Length', 'Sepal.Width')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'last')
@@ -79,7 +91,7 @@ test_that("Test order rows - na last - two variables descending", {
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = TRUE)
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -89,7 +101,10 @@ test_that("Test order rows - na first - one variable ascending", {
 
     vars <- c('Species')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'first')
@@ -99,7 +114,7 @@ test_that("Test order rows - na first - one variable ascending", {
     df_reordered <- setorderv(df_test, vars, na.last = FALSE)
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -108,7 +123,10 @@ test_that("Test order rows - na first - one variable descending", {
 
     vars <- c('Species')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'first')
@@ -118,7 +136,7 @@ test_that("Test order rows - na first - one variable descending", {
     df_reordered <- setorderv(df_test, vars, -1, na.last = FALSE)
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -127,7 +145,10 @@ test_that("Test order rows - na first - two variables ascending", {
 
     vars <- c('Sepal.Length', 'Petal.Width')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'first')
@@ -137,7 +158,7 @@ test_that("Test order rows - na first - two variables ascending", {
     df_reordered <- setorderv(df_test, vars, na.last = FALSE)
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
 
@@ -146,7 +167,10 @@ test_that("Test order rows - na first - two variables descending", {
 
     vars <- c('Sepal.Length', 'Sepal.Width')
 
-    session$userData$df <- reactiveValues(act = df_test)
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
 
     session$setInputs(vars_rows = vars)
     session$setInputs(radio_nas = 'first')
@@ -156,6 +180,6 @@ test_that("Test order rows - na first - two variables descending", {
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = FALSE)
 
     expect_equal(df$df_active, df_reordered)
-    expect_equal(session$userData$df$act, df_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })

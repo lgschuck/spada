@@ -27,8 +27,7 @@ spada_server <- function(datasets, conf){
           session$userData$conf$restore_session,
           session$userData$conf$restore_data_status,
           session$userData$conf$restore_output_status,
-          session$userData$dt$dt,
-          session$userData$df$act
+          session$userData$dt$dt
           )
 
       if(session$userData$conf$restore_session == 'always') {
@@ -56,12 +55,11 @@ spada_server <- function(datasets, conf){
                 previous_data,
                 names(session$userData$dt$dt)
               )
-              session$userData$dt$dt <- append(previous_data, session$userData$dt$dt)
+
+              session$userData$dt$dt <- c(previous_data, session$userData$dt$dt)
             }
 
-            session$userData$df$act <- session$userData$dt$dt[[1]]
-            session$userData$df$act_name <- names(session$userData$dt$dt[1])
-
+            session$userData$dt$act_name <- names(session$userData$dt$dt)[1]
             session$userData$conf$restore_data_status <- 1
           }
         }
@@ -87,6 +85,11 @@ spada_server <- function(datasets, conf){
         session$userData$conf$restore_data_status, '.',
         session$userData$conf$restore_output_status
       )
+
+      print(session$userData$conf$restore_status)
+
+      print(session$userData$dt$dt |> names())
+      print(session$userData$dt$act_name)
 
     }) |> bindEvent(session$userData$conf$restore_session, once = T)
 
@@ -137,54 +140,44 @@ spada_server <- function(datasets, conf){
           df_temp <- lapply(df, make_valid_cols) |> as.data.frame()
           df_temp |> as.data.table()
         }
-      )
+      ),
+      act_name = names(datasets[1]),
+      bkp0 = NULL,
+      bkp = NULL
     )
+    session$userData$dt$bkp0 <- isolate(get_act_dt(session))
 
     session$userData$dt_names <- reactive({
       req(session$userData$dt$dt)
       names(session$userData$dt$dt)
     })
 
-    # # start values
-    session$userData$df <- reactiveValues(
-      act = lapply(datasets[[1]], make_valid_cols) |> as.data.table(),
-      act_name = names(datasets[1]),
-      bkp = NULL
-    )
-
-    output$df_active_name <- renderText(
-      if(nchar(session$userData$df$act_name) <= 20){
-        session$userData$df$act_name
+    output$dt_act_name <- renderText(
+      if(nchar(session$userData$dt$act_name) <= 20){
+        session$userData$dt$act_name
       } else {
-        paste0(substr(session$userData$df$act_name, 1, 17) , '...')
+        paste0(substr(session$userData$dt$act_name, 1, 17) , '...')
       }
     )
 
     # datasets metadata -------------------------------------------------------
     session$userData$dt$df_info <- reactive({
-      req(session$userData$df$act, session$userData$df$act_name, session$userData$dt$dt)
+      req(session$userData$dt)
 
-      datasets <- c(
-        list(session$userData$df$act),
-        session$userData$dt$dt[names(session$userData$dt$dt) != session$userData$df$act_name]
-      )
-
-      names(datasets)[1] <- session$userData$df$act_name
-
-      lapply(datasets, df_info)
+      lapply(session$userData$dt$dt, df_info)
     })
 
     session$userData$dt$gt_info <- reactive({
-      req(session$userData$dt$df_info)
+      req(session$userData$dt$df_info())
 
       Map(gt_info, session$userData$dt$df_info(),
           df_name = names(session$userData$dt$df_info()))
     })
 
     # df active metadata ---------------------
-    session$userData$df$act_meta <- reactive({
-      req(session$userData$dt$df_info(), session$userData$df$act_name)
-      session$userData$dt$df_info()[[session$userData$df$act_name]]
+    session$userData$dt$act_meta <- reactive({
+      req(session$userData$dt$df_info())
+      session$userData$dt$df_info()[[session$userData$dt$act_name]]
     })
 
     # navbar ------------------------------------------------------------------
@@ -205,21 +198,23 @@ spada_server <- function(datasets, conf){
     # define active dataset ---------------------------------------------------
     output$pD_data_ui_sel_df <- renderUI({
       req(session$userData$dt_names())
-       selectInput('pD_data_sel_df', 'Select a dataset', session$userData$dt_names())
+      selectInput(
+        'pD_data_sel_df',
+        'Select a dataset',
+        choices = c(
+          session$userData$dt$act_name,
+          setdiff(session$userData$dt_names(), session$userData$dt$act_name)
+        )
+      )
+
     })
 
     # make active dataset event --------------
     observe({
-      # save active to original data
-      session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
-      # choose new dataset to be active
-      session$userData$df$act <- session$userData$dt$dt[[input$pD_data_sel_df]]
-      session$userData$df$bkp <- NULL
-
-      session$userData$df$act_name <- input$pD_data_sel_df
-
-      msg(paste('Dataset', session$userData$df$act_name, 'is the active one'))
-      gc()
+      session$userData$dt$act_name <- input$pD_data_sel_df
+      session$userData$dt$bkp0 <- copy(get_act_dt(session))
+      session$userData$dt$bkp <- NULL
+      msg(paste('Dataset', session$userData$dt$act_name, 'is the active one'))
       updateTextInput(session, "pD_data_txt_new_name", value = '')
     }) |> bindEvent(input$pD_data_btn_active)
 
@@ -229,12 +224,10 @@ spada_server <- function(datasets, conf){
          input$pD_data_txt_new_name %in% session$userData$dt_names()){
         msg_error('New name is not valid or already in use')
       } else {
-        # save active to original data
-        session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
         names(session$userData$dt$dt)[session$userData$dt_names() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         # update active dataset if necessary
-        if(session$userData$df$act_name == input$pD_data_sel_df){
-          session$userData$df$act_name <- input$pD_data_txt_new_name
+        if(session$userData$dt$act_name == input$pD_data_sel_df){
+          session$userData$dt$act_name <- input$pD_data_txt_new_name
         }
         msg('New name applied')
         updateTextInput(session, "pD_data_txt_new_name", value = '')
@@ -247,9 +240,6 @@ spada_server <- function(datasets, conf){
          (input$pD_data_txt_new_name %in% session$userData$dt_names())){
         msg_error('New name is not valid or already in use')
       } else {
-        # save active to original data
-        session$userData$dt$dt[[session$userData$df$act_name]] <- session$userData$df$act
-
         session$userData$dt$dt[[input$pD_data_txt_new_name]] <- session$userData$dt$dt[[input$pD_data_sel_df]]
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
         gc()
@@ -259,7 +249,7 @@ spada_server <- function(datasets, conf){
 
     # delete dataset event -------------------
     observe({
-      if(session$userData$df$act_name == input$pD_data_sel_df){
+      if(session$userData$dt$act_name == input$pD_data_sel_df){
         msg_error('You can not delete the active dataset')
       } else {
         session$userData$dt$dt[[input$pD_data_sel_df]] <- NULL
@@ -300,32 +290,32 @@ spada_server <- function(datasets, conf){
 
     # reset df active ------------------------
     observe({
-      session$userData$df$act <- copy(session$userData$dt$dt[[session$userData$df$act_name]])
+      update_act_dt(session, copy(session$userData$dt$bkp0))
       msg('Active Dataset Reseted')
     }) |> bindEvent(input$pE_btn_reset)
 
     # create backup --------------------------
     observe({
-      session$userData$df$bkp <- copy(session$userData$df$act)
+      session$userData$dt$bkp <- copy(get_act_dt(session))
       msg('Backup created')
     }) |> bindEvent(input$pE_btn_bkp)
 
     # restore backup -------------------------
     observe({
-      if(is.null(session$userData$df$bkp)){
+      if(is.null(session$userData$dt$bkp)){
         msg('No backup to restore')
       } else {
-        session$userData$df$act <- copy(session$userData$df$bkp)
+        update_act_dt(session, copy(session$userData$dt$bkp))
         msg('Backup restored')
       }
     }) |> bindEvent(input$pE_btn_restore)
 
     # clear backup ---------------------------
     observe({
-      if(is.null(session$userData$df$bkp)){
+      if(is.null(session$userData$dt$bkp)){
         msg('No backup to clear')
       } else {
-        session$userData$df$bkp <- NULL
+        session$userData$dt$bkp <- NULL
         msg('Backup cleared')
       }
     }) |> bindEvent(input$pE_btn_clear_bkp)

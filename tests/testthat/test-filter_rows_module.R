@@ -7,7 +7,10 @@ df_test[150, 1:5] <- NA
 test_that("Test filter rows - empty inputs - should not crash", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(btn_filter = 1)
     expect_equal(df$df_active, as.data.table(df_test))
@@ -19,7 +22,10 @@ test_that("Test filter rows - empty inputs - should not crash", {
 test_that("Test filter rows - one variable - equal operator", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
@@ -37,7 +43,10 @@ test_that("Test filter rows - one variable - equal operator", {
 test_that("Test filter rows - one variable - not equal operator", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
@@ -55,7 +64,10 @@ test_that("Test filter rows - one variable - not equal operator", {
 test_that("Test filter rows - one variable - in operator", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
@@ -73,7 +85,10 @@ test_that("Test filter rows - one variable - in operator", {
 test_that("Test filter rows - one variable - not in operator", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
@@ -91,7 +106,10 @@ test_that("Test filter rows - one variable - not in operator", {
 test_that("Test filter rows - one variable - is na", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
@@ -108,7 +126,10 @@ test_that("Test filter rows - one variable - is na", {
 test_that("Test filter rows - one variable - not na", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
@@ -125,7 +146,10 @@ test_that("Test filter rows - one variable - not na", {
 test_that("Test filter rows - one variable - grater", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Length',
@@ -143,7 +167,10 @@ test_that("Test filter rows - one variable - grater", {
 test_that("Test filter rows - one variable - grater or equal", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Length',
@@ -161,7 +188,10 @@ test_that("Test filter rows - one variable - grater or equal", {
 test_that("Test filter rows - one variable - less", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Width',
@@ -179,7 +209,10 @@ test_that("Test filter rows - one variable - less", {
 test_that("Test filter rows - one variable - less or equal", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(df_test))
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test |> as.data.table()),
+      act_name = 'df_test'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Width',
@@ -197,7 +230,10 @@ test_that("Test filter rows - one variable - less or equal", {
 test_that("Test filter rows - one variable - outlier", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(mtcars))
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars |> as.data.table()),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
@@ -214,7 +250,10 @@ test_that("Test filter rows - one variable - outlier", {
 test_that("Test filter rows - one variable - not outlier", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(mtcars))
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars |> as.data.table()),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
@@ -231,7 +270,10 @@ test_that("Test filter rows - one variable - not outlier", {
 test_that("Test filter rows - one variable - between", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(mtcars))
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars |> as.data.table()),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
@@ -250,7 +292,10 @@ test_that("Test filter rows - one variable - between", {
 test_that("Test filter rows - one variable - not between", {
   testServer(filter_rows_server, {
 
-    session$userData$df <- reactiveValues(act = as.data.table(mtcars))
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars |> as.data.table()),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',

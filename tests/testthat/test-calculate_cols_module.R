@@ -6,7 +6,10 @@ iris_dt <- iris |> as.data.table()
 test_that("Test calculate cols - sum numeric", {
   testServer(calculate_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris_dt)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       vars_sel = 'Sepal.Width',
@@ -17,14 +20,18 @@ test_that("Test calculate cols - sum numeric", {
 
     session$setInputs(btn_apply_fun = 1)
 
-    expect_equal(df$df_active$new_var[1], iris$Sepal.Width |> sum())
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]]$new_var[1],
+                 iris$Sepal.Width |> sum())
   })
 })
 
 test_that("Test calculate cols - mean numeric - groupby", {
   testServer(calculate_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris_dt)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       vars_sel = 'Sepal.Width',
@@ -45,7 +52,10 @@ test_that("Test calculate cols - mean numeric - groupby", {
 test_that("Test calculate cols - factor", {
   testServer(calculate_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris_dt)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       vars_sel = 'Species',
@@ -64,7 +74,10 @@ test_that("Test calculate cols - factor", {
 test_that("Test calculate cols - freehand", {
   testServer(calculate_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris_dt)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       txt_new_name_free = 'new_var',
@@ -81,7 +94,10 @@ test_that("Test calculate cols - freehand", {
 test_that("Test calculate cols - freehand - groupby", {
   testServer(calculate_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris_dt)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       txt_new_name_free = 'new_var',
@@ -101,7 +117,10 @@ test_that("Test calculate cols - freehand - groupby", {
 test_that("Test calculate cols - freehand - fifelse", {
   testServer(calculate_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris_dt)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       txt_new_name_free = 'new_var',

@@ -29,11 +29,11 @@ order_rows_server <- function(id) {
 	  ns <- session$ns
 
     # Reactive to get column names
-    df_names <- reactive(session$userData$df$act |> names())
+    df_names <- reactive(get_act_dt(session) |> names())
 
     df <- reactiveValues()
     observe({
-      df$df_active <- session$userData$df$act
+      df$df_active <- get_act_dt(session)
     })
 
     output$ui_var_rows <- renderUI(
@@ -81,7 +81,7 @@ order_rows_server <- function(id) {
     # update active dataset ---------------------------------------------------
     observe({
       req(df$df_active)
-      session$userData$df$act <- df$df_active
+      update_act_dt(session, df$df_active)
     })
 
   })

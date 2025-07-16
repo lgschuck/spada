@@ -4,7 +4,10 @@
 test_that("Test rename one column", {
   testServer(rename_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(vars_sel = 'Species')
     session$setInputs(txt_new_name = 'Species_new_name')
@@ -19,7 +22,10 @@ test_that("Test rename one column", {
 test_that("Test rename prefix - two columns", {
   testServer(rename_cols_server, {
 
-    session$userData$df <- reactiveValues(act = mtcars[c('hp', 'mpg')])
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars[c('hp', 'mpg')]),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(
       vars_sel_multi = c('hp', 'mpg'),
@@ -38,7 +44,10 @@ test_that("Test rename prefix - two columns", {
 test_that("Test rename suffix - three columns", {
   testServer(rename_cols_server, {
 
-    session$userData$df <- reactiveValues(act = mtcars[c('hp', 'mpg', 'cyl')])
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars[c('hp', 'mpg', 'cyl')]),
+      act_name = 'mtcars'
+    )
 
     session$setInputs(
       vars_sel_multi = c('hp', 'mpg', 'cyl'),
@@ -58,7 +67,10 @@ test_that("Test rename suffix - three columns", {
 test_that("Test rename function - one column", {
   testServer(rename_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       vars_sel_multi = c('Species'),
@@ -76,7 +88,10 @@ test_that("Test rename function - one column", {
 test_that("Test rename replace - four columns", {
   testServer(rename_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       vars_sel_multi = c('Sepal.Length', 'Sepal.Width', 'Petal.Length',
@@ -98,7 +113,10 @@ test_that("Test rename replace - four columns", {
 test_that("Test rename remove - two columns", {
   testServer(rename_cols_server, {
 
-    session$userData$df <- reactiveValues(act = iris)
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris),
+      act_name = 'iris'
+    )
 
     session$setInputs(
       vars_sel_multi = c('Sepal.Length', 'Sepal.Width'),
