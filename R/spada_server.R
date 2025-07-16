@@ -86,11 +86,6 @@ spada_server <- function(datasets, conf){
         session$userData$conf$restore_output_status
       )
 
-      print(session$userData$conf$restore_status)
-
-      print(session$userData$dt$dt |> names())
-      print(session$userData$dt$act_name)
-
     }) |> bindEvent(session$userData$conf$restore_session, once = T)
 
     # show modal with restored status
