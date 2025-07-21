@@ -1,24 +1,10 @@
 # tests/testthat/test-convert_cols_module.R
 
-# test selectInput ------------------------------------------------------------
-test_that("Test convert_cols_server initializes UI properly", {
-  testServer(convert_cols_server, {
-
-    session$userData$dt <- reactiveValues(
-      dt = list('iris' = as.data.table(iris)),
-      act_name = 'iris'
-    )
-
-    expect_true(length(df_names()) > 0)
-    expect_true(is.list(output$ui_var_sel))
-  })
-})
-
 # test textInput - type/class -------------------------------------------------
 test_that("Test currernt type/class ", {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = as.data.table(iris)),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
 
@@ -37,7 +23,7 @@ test_that("Test currernt type/class ", {
 test_that("Test Sample trigger - updates on button click", {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = as.data.table(iris)),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
 
@@ -54,7 +40,7 @@ test_that("Test Sample trigger - updates on button click", {
 test_that("Test Preview dataframe after variable and format selection", {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = as.data.table(iris)),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
 
@@ -77,7 +63,7 @@ test_that("Test Preview dataframe after variable and format selection", {
 test_that("Test Conversion applies when button clicked", {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = as.data.table(iris)),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
 
@@ -92,7 +78,7 @@ test_that("Test Conversion applies when button clicked", {
 
     expect_false(identical(original_class, converted_class))
     expect_equal(converted_class, 'character')
-    expect_equal(df$df_active[['Species']] |> class(), 'character')
+    expect_equal(get_act_dt(session)[['Species']] |> class(), 'character')
     expect_equal(get_act_dt(session) |> class(), c('data.table', 'data.frame'))
 
   })

@@ -13,8 +13,7 @@ test_that("Test rename one column", {
     session$setInputs(txt_new_name = 'Species_new_name')
     session$setInputs(btn_rename = 1)
 
-    expect_equal(names(df$df_active)[5], 'Species_new_name')
-
+    expect_equal(names(get_act_dt(session))[5], 'Species_new_name')
   })
 })
 
@@ -35,8 +34,7 @@ test_that("Test rename prefix - two columns", {
       txt_new_name_multi = 'new')
     session$setInputs(btn_rename_multi = 1)
 
-    expect_equal(names(df$df_active), c('new_hp', 'new_mpg'))
-
+    expect_equal(names(get_act_dt(session)), c('new_hp', 'new_mpg'))
   })
 })
 
@@ -57,9 +55,8 @@ test_that("Test rename suffix - three columns", {
       txt_new_name_multi = 'new_suffix')
     session$setInputs(btn_rename_multi = 1)
 
-    expect_equal(names(df$df_active),
+    expect_equal(names(get_act_dt(session)),
                  c('hp..new_suffix', 'mpg..new_suffix', 'cyl..new_suffix'))
-
   })
 })
 
@@ -79,8 +76,7 @@ test_that("Test rename function - one column", {
     )
     session$setInputs(btn_rename_multi = 1)
 
-    expect_equal(names(df$df_active)[5], 'SPECIES')
-
+    expect_equal(names(get_act_dt(session))[5], 'SPECIES')
   })
 })
 
@@ -102,10 +98,9 @@ test_that("Test rename replace - four columns", {
       )
     session$setInputs(btn_rename_multi = 1)
 
-    expect_equal(names(df$df_active),
+    expect_equal(names(get_act_dt(session)),
                  c('Sepal_Length', 'Sepal_Width', 'Petal_Length', 'Petal_Width',
                    'Species'))
-
   })
 })
 
@@ -125,8 +120,7 @@ test_that("Test rename remove - two columns", {
     )
     session$setInputs(btn_rename_multi = 1)
 
-    expect_equal(names(df$df_active)[1:2], c('SepalLength', 'SepalWidth'))
-
+    expect_equal(names(get_act_dt(session))[1:2], c('SepalLength', 'SepalWidth'))
   })
 })
 

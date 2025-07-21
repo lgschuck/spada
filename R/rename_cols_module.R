@@ -7,7 +7,10 @@ rename_cols_ui <- function(id) {
     card(
       card_header('Rename Column', class = 'mini-header'),
       card_body(
-        uiOutput(ns('ui_var_sel')),
+        # uiOutput(ns('ui_var_sel')),
+
+        selectInput(ns('vars_sel'), 'Variable', NULL),
+
         textInput(ns('txt_new_name'), 'New name'),
       ),
       card_footer(btn_task(ns('btn_rename'), 'Rename Variable', icon('check')))
@@ -15,7 +18,12 @@ rename_cols_ui <- function(id) {
     card(
       card_header('Rename Multiple Columns', class = 'mini-header'),
       card_body(
-        uiOutput(ns('ui_var_sel_multi')),
+        # uiOutput(ns('ui_var_sel_multi')),
+
+        selectizeInput(ns('vars_sel_multi'), 'Variables', NULL,
+                       multiple = T,
+                       options = list(plugins = list('remove_button', 'clear_button'))),
+
         radioButtons(ns('rename_method'), 'Rename Method',
                      choices = c('Add Prefix/Suffix' = 'prefix_suffix',
                                  'Apply Function' = 'function',
@@ -63,29 +71,29 @@ rename_cols_server <- function(id) {
 
     df_names <- reactive(get_act_dt(session) |> names())
 
-    df <- reactiveValues()
-    observe({
-      df$df_active <- get_act_dt(session)
-    })
-
     # rename 1 variable ------------------------------------------------------
-    output$ui_var_sel <- renderUI({
-      selectInput(ns('vars_sel'), 'Variable', c('', df_names()))
-    })
+    observe({
+      req(df_names())
+      updateSelectInput(
+        session,
+        'vars_sel',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
+
 
     observe({
-      req(df$df_active)
       if(!isTruthy(input$vars_sel)){
         msg('Select at least one variable')
       } else {
         if(is_valid_name(input$txt_new_name) &&
            input$txt_new_name %notin% df_names()){
 
-          temp <- copy(df$df_active)
+          temp <- copy(get_act_dt(session))
 
           setnames(temp, input$vars_sel, input$txt_new_name)
 
-          df$df_active <- copy(temp)
+          update_act_dt(session, copy(temp))
 
           rm(temp)
 
@@ -98,19 +106,22 @@ rename_cols_server <- function(id) {
     }) |> bindEvent(input$btn_rename)
 
     # rename multiple veriables -----------------------------------------------
-    output$ui_var_sel_multi <- renderUI({
-      selectizeInput(ns('vars_sel_multi'), 'Variables', c('', df_names()),
-                  multiple = T,
-                  options = list(plugins = list('remove_button', 'clear_button')))
-    })
+    observe({
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'vars_sel_multi',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
+
 
     observe({
-      req(df$df_active)
       if(!isTruthy(input$vars_sel_multi)){
         msg('Select at least one variable')
       } else {
 
-        temp <- copy(df$df_active)
+        temp <- copy(get_act_dt(session))
         selected_names <- input$vars_sel_multi
 
         if (input$rename_method == 'prefix_suffix') {
@@ -160,7 +171,9 @@ rename_cols_server <- function(id) {
             msg_error('Some new names already in use')
           } else {
             setnames(temp, input$vars_sel_multi, new_names)
-            df$df_active <- copy(temp)
+
+            update_act_dt(session, copy(temp))
+
             msg('Rename columns: OK')
             rm(temp)
           }
@@ -170,10 +183,5 @@ rename_cols_server <- function(id) {
       }
     }) |> bindEvent(input$btn_rename_multi)
 
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
   })
 }

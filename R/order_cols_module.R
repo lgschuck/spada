@@ -5,7 +5,13 @@ order_cols_ui <- function(id) {
   card(
     card_header('Order Columns', class = 'mini-header'),
     card_body(
-      uiOutput(ns('ui_var_cols')),
+      selectizeInput(
+        ns('vars_cols'),
+        'Variables to move',
+        NULL,
+        multiple = T,
+        options = list(plugins = list('remove_button', 'clear_button'))
+      ),
       radioButtons(ns('radio_cols'), NULL,
                    c('Before' = 'before', 'After' = 'after'),
                    inline = T),
@@ -26,20 +32,16 @@ order_cols_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-    # Reactive to get column names
     df_names <- reactive(get_act_dt(session) |> names())
 
-    df <- reactiveValues()
     observe({
-      df$df_active <- get_act_dt(session)
-    })
-
-    output$ui_var_cols <- renderUI(
-      selectizeInput(ns('vars_cols'), 'Variables to move', c('', df_names()),
-                     multiple = T,
-                     options = list(plugins = list('remove_button', 'clear_button'))
-                     )
-    )
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'vars_cols',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
     # rest of vars to order
     observe({
@@ -57,7 +59,7 @@ order_cols_server <- function(id) {
         msg('Choose at least one variable')
       } else {
 
-        temp <- copy(df$df_active)
+        temp <- copy(get_act_dt(session))
 
         if(all(df_names() %in% input$vars_cols) || input$vars_rest == ''){
           setcolorder(temp, input$vars_cols)
@@ -67,17 +69,12 @@ order_cols_server <- function(id) {
           setcolorder(temp, input$vars_cols, after = input$vars_rest)
         }
 
-        df$df_active <- copy(temp)
+        update_act_dt(session, copy(temp))
         rm(temp)
 
         msg('Reordering Variables: OK')
       }
     }) |> bindEvent(input$btn_order_cols)
 
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
   })
 }

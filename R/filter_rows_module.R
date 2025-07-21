@@ -24,7 +24,7 @@ filter_rows_ui <- function(id) {
       conditionalPanel(
         condition = "input.filter_type == 'one'",
         ns = ns,
-        uiOutput(ns('ui_one_var_sel')),
+        selectInput(ns('one_var_sel'), 'Variable', NULL),
         selectInput(ns('one_var_operator'), 'Operator', c('', filter_operators)),
         uiOutput(ns('ui_one_var_value'))
       ),
@@ -33,13 +33,13 @@ filter_rows_ui <- function(id) {
       conditionalPanel(
         condition = "input.filter_type == 'two'",
         ns = ns,
-        uiOutput(ns('ui_two_var_sel1')),
+        selectInput(ns('two_var_sel1'), 'Variable 1', NULL),
         selectInput(
           ns('two_var_operator'),
           'Operator',
           c('', equal_operators, compare_operators)
         ),
-        uiOutput(ns('ui_two_var_sel2'))
+        selectInput(ns('two_var_sel2'), 'Variable 2', NULL)
       ),
 
       # panel for sample filter -----------------------------------------------
@@ -55,7 +55,7 @@ filter_rows_ui <- function(id) {
         uiOutput(ns('ui_sample'))
       ),
 
-      # panel for free filter -----------------------------------------------
+      # panel for free filter -------------------------------------------------
       conditionalPanel(
         condition = "input.filter_type == 'free'",
         ns = ns,
@@ -80,42 +80,51 @@ filter_rows_server <- function(id) {
 
 	  df_names <- reactive(get_act_dt(session) |> names())
 
-    df <- reactiveValues()
-    observe({
-      df$df_active <- get_act_dt(session)
-    })
-
-    nrow_df_active <- reactive(nrow(df$df_active))
+    nrow_df_active <- reactive(get_act_dt(session) |> nrow())
 
     # variable inputs ---------------------------------------------------------
-    output$ui_one_var_sel <- renderUI(
-      selectInput(ns('one_var_sel'), 'Variable', c('', df_names()))
-    )
+    observe({
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'one_var_sel',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
-    output$ui_two_var_sel1 <- renderUI(
-      selectInput(ns('two_var_sel1'), 'Variable 1', c('', df_names()))
-    )
+    observe({
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'two_var_sel1',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
-    output$ui_two_var_sel2 <- renderUI(
-      selectInput(ns('two_var_sel2'), 'Variable 2', c('', df_names()))
-    )
+    observe({
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'two_var_sel2',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
     # selected column type ----------------------------------------------------
     col_type_one_var <- reactive({
       req(input$one_var_sel)
-      df$df_active[[input$one_var_sel]] |> obj_type()
+      get_act_dt(session)[[input$one_var_sel]] |> obj_type()
     })
 
     col_type_two_var1 <- reactive({
       req(input$two_var_sel1)
-      df$df_active[[input$two_var_sel1]] |> obj_type()
+      get_act_dt(session)[[input$two_var_sel1]] |> obj_type()
     })
 
     # render UI for sample type -----------------------------------------------
     output$ui_sample <- renderUI({
       req(input$sample_type)
       tagList(
-
         if (input$sample_type == 'rows') {
           numericInput(
             ns('n_rows'), 'Number of Rows',
@@ -124,8 +133,7 @@ filter_rows_server <- function(id) {
           )
         } else if (input$sample_type == 'percent') {
           sliderInput(ns('sample_size'), 'Sample Size (%)', 1, 100, 50)
-        }
-        ,
+        },
         checkboxInput(ns('x_sample_replace'), 'Replace') |>
           ttip('Allow sample with replacement')
       )
@@ -133,7 +141,7 @@ filter_rows_server <- function(id) {
 
     # render UI for value input dynamically -----------------------------------
     observe({
-      req(input$one_var_sel, input$one_var_operator, df$df_active, col_type_one_var())
+      req(input$one_var_sel, input$one_var_operator, col_type_one_var())
       output$ui_one_var_value <- renderUI({
         if (col_type_one_var() == 'date'){
           if(input$one_var_operator %in% c(equal_operators, compare_operators)){
@@ -177,7 +185,7 @@ filter_rows_server <- function(id) {
             selectizeInput(
               ns('one_var_value'),
               'Value',
-              choices = df$df_active[[input$one_var_sel]] |> levels(),
+              choices = get_act_dt(session)[[input$one_var_sel]] |> levels(),
               multiple = T,
               options = list(create = T)
             )
@@ -271,8 +279,8 @@ filter_rows_server <- function(id) {
       if(!isTruthy(input$filter_type)){
         msg('Select the Filter type')
       } else {
-        temp <- copy(df$df_active)
-        # filter events for one variable ----------------------------------------
+        temp <- copy(get_act_dt(session))
+        # filter events for one variable --------------------------------------
         if (input$filter_type == 'one') {
           # test if var and operator were informed
           if (!isTruthy(input$one_var_sel)) {
@@ -282,7 +290,8 @@ filter_rows_server <- function(id) {
             msg_error('Choose an operator')
             return()
           } else if (!isTruthy(input$one_var_value) &
-                     input$one_var_operator %notin% c(na_operators, logical_operators, outlier_operators)) {
+                     input$one_var_operator %notin%
+                     c(na_operators, logical_operators, outlier_operators)) {
             msg_error('Insert a value')
             return()
           } else if (input$one_var_operator %in% between_operators) {
@@ -345,7 +354,7 @@ filter_rows_server <- function(id) {
 
           updateSelectInput(session, 'operator', selected = '')
 
-          # filter events for 2 variables -----------------------------------------
+          # filter events for 2 variables -------------------------------------
         } else if (input$filter_type == 'two') {
           if (!isTruthy(input$two_var_sel1) || !isTruthy(input$two_var_sel2)) {
             msg_error('Choose 2 variables')
@@ -364,7 +373,7 @@ filter_rows_server <- function(id) {
             msg('Filter rows: OK')
           }
 
-          # filter events for sample ----------------------------------------------
+          # filter events for sample ------------------------------------------
         } else if (input$filter_type == 'sample') {
           if (input$sample_type == 'rows') {
             if (!isTruthy(input$n_rows) ||
@@ -388,32 +397,32 @@ filter_rows_server <- function(id) {
             msg('Filter rows: OK')
           }
 
-          # filter events for freehand --------------------------------------------
+          # filter events for freehand ----------------------------------------
         } else if (input$filter_type == 'free') {
 
-          # parse code ----------------------------------------------------------
+          # parse code --------------------------------------------------------
           parsed_code <- try(parse_expr(input$txt_code_input), silent = T)
 
           if(inherits(parsed_code, "try-error")){
             return(msg_error('Error to validate expression. Check code'))
           }
 
-          # get operations and variables ----------------------------------------
+          # get operations and variables --------------------------------------
           code_operations <- all.names(parsed_code, unique = T)
           code_vars <- all.vars(parsed_code)
 
           code_operations <- code_operations[!code_operations %in% code_vars]
 
-          #  check variables and operations -------------------------------------
+          #  check variables and operations -----------------------------------
           if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
             msg_error('Some variables are not present in the dataset')
           } else if (!all(code_operations %in% allowed_operations)) {
             msg_error('Some operations are not allowed')
           } else {
-            # create safe env for evaluation ------------------------------------
+            # create safe env for evaluation ----------------------------------
             e1 <- safe_env(allowed_operations)
 
-            # run code ----------------------------------------------------------
+            # run code --------------------------------------------------------
 
             e1$temp <- copy(temp)
             e1$parsed_code <- parsed_code
@@ -435,11 +444,10 @@ filter_rows_server <- function(id) {
 
               updateTextAreaInput(session, 'txt_code_input', value = '')
             }
-
           }
         }
 
-        df$df_active <- copy(temp)
+        update_act_dt(session, copy(temp))
         rm(temp)
       }
 
@@ -449,12 +457,6 @@ filter_rows_server <- function(id) {
     observe({
       show_allowed_op()
     }) |> bindEvent(input$btn_allowed_operations)
-
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
 
   })
 }

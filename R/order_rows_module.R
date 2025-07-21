@@ -6,7 +6,14 @@ order_rows_ui <- function(id) {
   card(
     card_header('Order Rows', class = 'mini-header'),
     card_body(
-      uiOutput(ns('ui_var_rows')),
+      # uiOutput(ns('ui_var_rows')),
+      selectizeInput(
+        ns('vars_rows'),
+        'Order by',
+        NULL,
+        multiple = T,
+        options = list(plugins = list('remove_button', 'clear_button'))
+      ),
       selectizeInput(ns('vars_descending'),
                   list('Vars in descending order', bs_icon('info-circle')) |>
                     ttip('If not informed, the order will be Ascending', PLACE = 'right'),
@@ -28,19 +35,16 @@ order_rows_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-    # Reactive to get column names
     df_names <- reactive(get_act_dt(session) |> names())
 
-    df <- reactiveValues()
     observe({
-      df$df_active <- get_act_dt(session)
-    })
-
-    output$ui_var_rows <- renderUI(
-      selectizeInput(ns('vars_rows'), 'Order by', c('', df_names()), multiple = T,
-                     options = list(plugins = list('remove_button', 'clear_button'))
-                     )
-    )
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'vars_rows',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
     # vars in descending order
     observe({
@@ -61,7 +65,8 @@ order_rows_server <- function(id) {
 
         rows_position[which(input$vars_rows %in% input$vars_descending)] <- -1
 
-        temp <- copy(df$df_active)
+        temp <- copy(get_act_dt(session))
+
         setorderv(temp, cols = input$vars_rows,
                   order = rows_position,
                   na.last = if(input$radio_nas == 'last'){
@@ -71,18 +76,12 @@ order_rows_server <- function(id) {
                   } else { FALSE }
         )
 
-        df$df_active <- copy(temp)
+        update_act_dt(session, copy(temp))
         rm(temp)
 
         msg('Reordering Rows: OK')
       }
     }) |> bindEvent(input$btn_order_rows)
-
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
 
   })
 }

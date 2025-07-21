@@ -9,7 +9,11 @@ convert_cols_ui <- function(id) {
       card_body(
         layout_column_wrap(
           height = '200px',
-          uiOutput(ns('ui_var_sel')),
+
+
+          # uiOutput(ns('ui_var_sel')),
+          selectInput(ns('vars_sel'), 'Variable', NULL),
+
           textInput(ns('txt_current_format'), 'Current Type / Class')
         ),
         layout_column_wrap(
@@ -50,23 +54,26 @@ convert_cols_server <- function(id) {
 
     df_names <- reactive(get_act_dt(session) |> names())
 
-    df <- reactiveValues()
+    # update select vars input ---------------
     observe({
-      df$df_active <- get_act_dt(session)
-    })
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'vars_sel',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
-    output$ui_var_sel <- renderUI(
-      selectInput(ns('vars_sel'), 'Variable', c('', df_names()))
-    )
-
+    # current format -------------------------
     current_format <- reactive({
       req(input$vars_sel)
-      paste('Type: [', df$df_active[[input$vars_sel]] |> typeof(), '] |',
+      paste('Type: [', get_act_dt(session)[[input$vars_sel]] |> typeof(), '] |',
             'Class: [',
-            paste(df$df_active[[input$vars_sel]] |> class(), collapse = '/'),
+            paste(get_act_dt(session)[[input$vars_sel]] |> class(), collapse = '/'),
             ']')
     })
-    # update current format txt
+
+    # update current format txt --------------
     observe({
       updateTextInput(session, 'txt_current_format',
                       label = 'Current Type / Class',
@@ -74,17 +81,19 @@ convert_cols_server <- function(id) {
       )
     }) |> bindEvent(current_format())
 
-    # sample to preview conversion
+    # sample to preview conversion -----------
     preview_sample_trigger <- reactiveVal(1)
     preview_sample <- reactive({
-      if(nrow(df$df_active) < 8) {
-        rep(TRUE, nrow(df$df_active))
+      nrow_act_dt <- get_act_dt(session) |> nrow()
+
+      if(nrow_act_dt < 8) {
+        rep(TRUE, nrow_act_dt)
       } else {
-        sample(nrow(df$df_active), 8, replace = F)
+        sample(nrow_act_dt, 8, replace = F)
       }
     }) |> bindEvent(preview_sample_trigger())
 
-    # update sample in button click
+    # update sample in button click ----------
     observe({
       preview_sample_trigger(preview_sample_trigger() + 1)
     }) |> bindEvent(input$btn_preview_sample)
@@ -98,7 +107,7 @@ convert_cols_server <- function(id) {
       }
 
       preview_df_temp <- subset(
-        df$df_active[preview_sample(), ], select = input$vars_sel)
+        get_act_dt(session)[preview_sample(), ], select = input$vars_sel)
 
       preview_df_temp[
         , preview := convert(var1,
@@ -108,6 +117,7 @@ convert_cols_server <- function(id) {
         env = list(var1 = input$vars_sel)]
     })
 
+    # render preview gt ----------------------
     output$preview_gt <- render_gt({
       req(input$vars_sel)
       if(input$vars_sel %in% df_names()){
@@ -131,7 +141,8 @@ convert_cols_server <- function(id) {
         msg('Choose a variable and a new format')
       } else {
 
-        temp <- copy(df$df_active)
+        temp <- copy(get_act_dt(session))
+
         temp[, input$vars_sel :=
                        convert(var1,
                                type = input$sel_format,
@@ -139,17 +150,12 @@ convert_cols_server <- function(id) {
                                date_origin = input$sel_date_origin),
                      env = list(var1 = input$vars_sel)]
 
-        df$df_active <- copy(temp)
+        update_act_dt(session, copy(temp))
+
         rm(temp)
         msg('Conversion applied')
       }
     }) |> bindEvent(input$btn_apply)
-
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
 
   })
 }

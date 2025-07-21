@@ -7,10 +7,14 @@ calculate_cols_ui <- function(id) {
     card(
       card_header('Apply Function', class = 'mini-header'),
       card_body(
-        uiOutput(ns('ui_var_sel')),
+        selectInput(ns('vars_sel'), 'Variable', NULL),
+
         selectInput(ns('fun'), 'Choose a function', character(0)),
         textInput(ns('txt_new_name_fun'), 'New variable name'),
-        uiOutput(ns('ui_var_groupby_fun'))
+        selectizeInput(ns('vars_groupby_fun'), 'Group by', NULL,
+                       multiple = T,
+                       options = list(plugins = list('remove_button', 'clear_button')))
+
       ),
       card_footer(btn_task(
         ns('btn_apply_fun'), 'Apply Function', icon('check')
@@ -22,7 +26,12 @@ calculate_cols_ui <- function(id) {
         textInput(ns('txt_new_name_free'), 'New var name', placeholder = 'new_var'),
         textAreaInput(ns('txt_code_input'), 'Input code', width = '800px', height = '200px'),
         column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations')),
-        uiOutput(ns('ui_var_groupby_free'))
+        selectizeInput(ns('vars_groupby_free'),
+                       'Group By',
+                       choices = NULL,
+                       multiple = T,
+                       options = list(plugins = list('remove_button', 'clear_button'))
+        )
       ),
       card_footer(btn_task(
         ns('btn_apply_free'), 'Run Code', icon('gears')
@@ -38,22 +47,25 @@ calculate_cols_server <- function(id) {
 
 	  df_names <- reactive(get_act_dt(session) |> names())
 
-	  df <- reactiveValues()
 	  observe({
-	    df$df_active <- get_act_dt(session)
-	  })
-
-    # render variables to sel -------------------------------------------------
-    output$ui_var_sel <- renderUI({
-      selectInput(ns('vars_sel'), 'Variable', c('', df_names()))
-    })
+	    req(df_names())
+	    updateSelectInput(
+	      session,
+	      'vars_sel',
+	      choices = c('', df_names())
+	    )
+	  }) |> bindEvent(df_names())
 
     # render variables group -------------------------------------------------
-    output$ui_var_groupby_fun <- renderUI({
-      selectizeInput(ns('vars_groupby_fun'), 'Group by', df_names(),
-                     multiple = T,
-                     options = list(plugins = list('remove_button', 'clear_button')))
-    })
+	  observe({
+	    req(df_names())
+	    updateSelectizeInput(
+	      session,
+	      'vars_groupby_fun',
+	      choices = c('', df_names())
+	    )
+	  }) |> bindEvent(df_names())
+
 
     # suggest name for new variable -------------------------------------------
     observe({
@@ -65,11 +77,11 @@ calculate_cols_server <- function(id) {
     # render functions choices ------------------------------------------------
     selected_var_type <- reactive({
       req(input$vars_sel)
-      obj_type(df$df_active[[input$vars_sel]])
+      obj_type(get_act_dt(session)[[input$vars_sel]])
     })
 
     observe({
-      req(input$vars_sel)
+      req(selected_var_type())
 
       updateSelectInput(
         session,
@@ -85,12 +97,10 @@ calculate_cols_server <- function(id) {
           character(0)
         )
       )
-
-    })
+    }) |> bindEvent(selected_var_type())
 
     # apply function events ---------------------------------------------------
     observe({
-      req(df$df_active)
       if(!isTruthy(input$vars_sel)) {
         msg('Select at least one variable')
       } else if(!isTruthy(input$fun)){
@@ -99,7 +109,7 @@ calculate_cols_server <- function(id) {
         if(is_valid_name(input$txt_new_name_fun) &&
             input$txt_new_name_fun %notin% df_names()) {
 
-          temp <- copy(df$df_active)
+          temp <- copy(get_act_dt(session))
 
           temp[, new_var := fun(var1), by = groupby, env = list(
             new_var = input$txt_new_name_fun,
@@ -108,7 +118,7 @@ calculate_cols_server <- function(id) {
             groupby = input$vars_groupby_fun |> as.list()
           )]
 
-          df$df_active <- copy(temp)
+          update_act_dt(session, copy(temp))
           rm(temp)
 
           msg('Apply function: OK')
@@ -124,14 +134,14 @@ calculate_cols_server <- function(id) {
 
     # apply freehand events ---------------------------------------------------
     #  groupby vars -----------------------------------------------------------
-    output$ui_var_groupby_free <- renderUI({
-      selectizeInput(ns('vars_groupby_free'),
-                     'Group By',
-                     choices = df_names(),
-                     multiple = T,
-                     options = list(plugins = list('remove_button', 'clear_button'))
-                     )
-    })
+    observe({
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'vars_groupby_free',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
     # calculate var -----------------------------------------------------------
     observe({
@@ -162,7 +172,7 @@ calculate_cols_server <- function(id) {
           e1 <- safe_env(allowed_operations)
 
           # run code ----------------------------------------------------------
-          e1$temp <- copy(df$df_active)
+          e1$temp <- copy(get_act_dt(session))
 
           # start new variable
           e1$new_var_name <- input$txt_new_name_free
@@ -185,7 +195,8 @@ calculate_cols_server <- function(id) {
             return(msg_error('Error in expression. Check code'))
           } else{
 
-            df$df_active <- copy(e1$temp)
+            update_act_dt(session, copy(e1$temp))
+
             msg('Calculate new var: OK')
             rm(e1)
 
@@ -203,17 +214,10 @@ calculate_cols_server <- function(id) {
 
     }) |> bindEvent(input$btn_apply_free)
 
-
     # show allowed operations -------------------------------------------------
     observe({
       show_allowed_op()
     }) |> bindEvent(input$btn_allowed_operations)
-
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
 
   })
 }

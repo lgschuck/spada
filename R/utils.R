@@ -726,7 +726,25 @@ get_act_dt <- function(session){
   session$userData$dt$dt[[ session$userData$dt$act_name ]]
 }
 
-# update active dt ---------------------------------------------------------------
+# update active dt ------------------------------------------------------------
 update_act_dt <- function(session, new_dt) {
+
+  stopifnot(new_dt |> is.data.frame())
+
+  new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table()
+
   session$userData$dt$dt[[ session$userData$dt$act_name ]] <- new_dt
+}
+
+# append dt -------------------------------------------------------------------
+append_dt <- function(session, new_dt, new_dt_name) {
+
+  stopifnot(new_dt |> is.data.frame())
+  stopifnot(new_dt_name |> is_valid_name() && new_dt_name %notin% names(session$userData$dt$dt))
+
+  new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table()
+  new_list <- list(new_dt)
+  names(new_list) <- new_dt_name
+
+  session$userData$dt$dt <- c(session$userData$dt$dt, new_list)
 }

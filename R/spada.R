@@ -59,7 +59,7 @@
 #' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm pf
 #'             qnorm qqline qqnorm rnorm sd shapiro.test var
 #'
-#' @importFrom tools R_user_dir toTitleCase
+#' @importFrom tools file_ext R_user_dir toTitleCase
 #'
 #' @importFrom utils object.size head packageDescription sessionInfo
 

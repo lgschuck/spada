@@ -65,92 +65,68 @@ import_file_ui <- function(id) {
 import_file_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
-    data <- reactiveValues(
-      data = NULL,
-      data_name = NULL,
-      temp = NULL,
-      ext = NULL,
-      file = NULL
-      )
+    data <- reactiveValues(data = NULL)
 
-    # import file -------------------------------------------------------------
     observe({
-      if(is.null(input$file)){
+      if (is.null(input$file)) {
         msg_error('Insert a file')
-      } else if(!is_valid_name(input$dataset_name) ||
-                input$dataset_name %in% session$userData$dt_names()){
-        msg_error('Name invalid or already in use')
-      } else {
-        data$file <- input$file
-        data$ext <- tools::file_ext(data$file$datapath)
-
-        if (tolower(data$ext) == 'csv' && input$radio_file_ext == 'csv') {
-
-          if (input$csv_lines == 'all') {
-            n <- Inf
-          } else if(!isTruthy(input$csv_n_lines) || input$csv_n_lines < 1){
-            msg_error('Number of lines must be at least 1')
-            return()
-          } else {
-            n <- as.integer(input$csv_n_lines)
-          }
-
-          tryCatch(
-            { data$data <- fread(
-              file = data$file$datapath,
-              sep = input$radio_separator,
-              dec = input$radio_decimal,
-              check.names = T,
-              nrows = n,
-              skip = 0,
-              header = input$x_csv_header)
-
-              data$data_name <- input$dataset_name
-
-              msg('File imported')
-            },
-            warning = \(w) msg_error('Check parameters'),
-            error = \(e) msg_error('Check parameters')
-          )
-
-        } else if (tolower(data$ext) == 'rds' && input$radio_file_ext == 'RDS') {
-
-          data$temp <- readRDS(data$file$datapath)
-
-          if(data$temp |> is.data.frame()){
-            data$data <- data$temp |> as.data.table()
-            data$data_name <- input$dataset_name
-
-            msg('File imported')
-          } else {
-            msg_error('Object must be data.frame')
-          }
-        } else if(tolower(data$ext) == 'sav' && input$radio_file_ext == 'sav'){
-          if (input$sav_lines == 'all') {
-            n <- Inf
-          } else if(!isTruthy(input$sav_n_lines) || input$sav_n_lines < 1){
-            msg_error('Number of lines must be at least 1')
-            return()
-          } else {
-            n <- as.integer(input$sav_n_lines)
-          }
-
-          data_temp <- read_sav(data$file$datapath, n_max = n ,
-                                .name_repair = make.names) |>
-            as.data.table()
-
-          # convert labelled variables (avoid gt package error)
-          data_temp[ , names(.SD) := lapply(.SD, as_factor), .SDcols = is.labelled]
-
-          data$data <- data_temp
-          data$data_name <- input$dataset_name
-
-          msg('File imported')
-
-        } else {
-          msg_error(paste('Insert a', input$radio_file_ext, 'file'))
-        }
+        return()
       }
+
+      if (!is_valid_name(input$dataset_name) ||
+          input$dataset_name %in% session$userData$dt_names()) {
+        msg_error('Name invalid or already in use')
+        return()
+      }
+
+      # import file
+      ext <- file_ext(input$file$datapath) |> tolower()
+
+      if (ext == 'csv' && input$radio_file_ext == 'csv'){
+        n <- if (input$csv_lines == 'all') Inf else as.integer(input$csv_n_lines)
+        if (n < 1) {
+          msg_error('Number of lines must be at least 1')
+          return()
+        }
+        data$data <- tryCatch({
+          fread(input$file$datapath,
+                sep = input$radio_separator,
+                dec = input$radio_decimal,
+                header = input$x_csv_header,
+                nrows = n,
+                check.names = TRUE)
+          },
+          warning = \(w) msg_error('Check parameters'),
+          error = \(e) msg_error('Check parameters')
+        )
+      } else if (ext == 'rds' && input$radio_file_ext == 'RDS'){
+        data$data <- readRDS(input$file$datapath)
+        if (!is.data.frame(data$data)) {
+          msg_error('Object must be data.frame')
+          return()
+        }
+        data$data <- as.data.table(data$data)
+
+      } else if (ext == 'sav' && input$radio_file_ext == 'sav'){
+        n <- if (input$sav_lines == 'all') Inf else as.integer(input$sav_n_lines)
+        if (n < 1) {
+          msg_error('Number of lines must be at least 1')
+          return()
+        }
+        data$data <- read_sav(input$file$datapath, n_max = n,
+                                  .name_repair = make.names) |>
+          as.data.table()
+        data$data[, names(.SD) := lapply(.SD, as_factor), .SDcols = is.labelled]
+
+      } else {
+        msg_error(paste('Insert a', input$radio_file_ext, 'file'))
+        return()
+      }
+
+      # update dt ----------------------------
+      append_dt(session, data$data, input$dataset_name)
+
+      msg('File imported successfully')
 
     }) |> bindEvent(input$btn_import)
 
@@ -158,11 +134,10 @@ import_file_server <- function(id) {
     observe({
       req(input$file)
 
-        data$file <- input$file
-        data$ext <- tools::file_ext(data$file$datapath)
+        ext <- file_ext(input$file$datapath) |> tolower()
 
-        if (tolower(data$ext) == 'csv' && input$radio_file_ext == 'csv') {
-          preview_data <- readLines(data$file$datapath, n = 8)
+        if (ext == 'csv' && input$radio_file_ext == 'csv') {
+          preview_data <- readLines(input$file$datapath, n = 8)
 
           showModal(modalDialog(
             size = 'xl',
@@ -174,16 +149,6 @@ import_file_server <- function(id) {
           msg_error(paste('Insert a', input$radio_file_ext, 'file'))
         }
       }) |> bindEvent(input$btn_preview_raw)
-
-    # update dt ---------------------------------------------------------------
-    observe({
-      req(data$data)
-      req(data$data_name)
-
-      data$data <- lapply(data$data, make_valid_cols) |> as.data.table()
-
-      session$userData$dt$dt[[data$data_name]] <- data$data
-    })
 
   })
 }

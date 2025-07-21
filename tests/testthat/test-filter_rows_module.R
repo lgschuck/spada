@@ -13,7 +13,7 @@ test_that("Test filter rows - empty inputs - should not crash", {
     )
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active, as.data.table(df_test))
+    expect_equal(get_act_dt(session), as.data.table(df_test))
 
   })
 })
@@ -33,7 +33,7 @@ test_that("Test filter rows - one variable - equal operator", {
                       one_var_value = 'setosa')
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species == 'setosa') |>
                    as.data.table())
 
@@ -54,7 +54,7 @@ test_that("Test filter rows - one variable - not equal operator", {
                       one_var_value = 'virginica')
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species != 'virginica') |>
                    as.data.table())
 
@@ -75,7 +75,7 @@ test_that("Test filter rows - one variable - in operator", {
                       one_var_value = c('virginica', 'setosa'))
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species %in% c('virginica', 'setosa')) |>
                    as.data.table())
 
@@ -96,7 +96,7 @@ test_that("Test filter rows - one variable - not in operator", {
                       one_var_value = c('virginica', 'setosa'))
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species %notin% c('virginica', 'setosa')) |>
                    as.data.table())
 
@@ -116,7 +116,7 @@ test_that("Test filter rows - one variable - is na", {
                       one_var_operator = 'is_na')
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = is.na(Species)) |>
                    as.data.table())
 
@@ -136,7 +136,7 @@ test_that("Test filter rows - one variable - not na", {
                       one_var_operator = 'not_na')
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = !is.na(Species)) |>
                    as.data.table())
 
@@ -157,7 +157,7 @@ test_that("Test filter rows - one variable - grater", {
                       one_var_value = 5)
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Length > 5) |>
                    as.data.table())
 
@@ -178,7 +178,7 @@ test_that("Test filter rows - one variable - grater or equal", {
                       one_var_value = 6)
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Length >= 6) |>
                    as.data.table())
 
@@ -199,7 +199,7 @@ test_that("Test filter rows - one variable - less", {
                       one_var_value = 3)
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Width < 3) |>
                    as.data.table())
 
@@ -220,7 +220,7 @@ test_that("Test filter rows - one variable - less or equal", {
                       one_var_value = 3.3)
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Width <= 3.3) |>
                    as.data.table())
 
@@ -240,7 +240,7 @@ test_that("Test filter rows - one variable - outlier", {
                       one_var_operator = 'outlier')
 
     session$setInputs(btn_filter = 1)
-    expect_equal(df$df_active,
+    expect_equal(get_act_dt(session),
                  mtcars[Outlier(mtcars$hp, value = F), ] |>
                    as.data.table())
 
@@ -262,7 +262,7 @@ test_that("Test filter rows - one variable - not outlier", {
     session$setInputs(btn_filter = 1)
 
     mtcars_dt <- mtcars |> as.data.table()
-    expect_equal(df$df_active, mtcars_dt[!Outlier(mtcars$hp, value = F), ])
+    expect_equal(get_act_dt(session), mtcars_dt[!Outlier(mtcars$hp, value = F), ])
 
   })
 })
@@ -284,7 +284,7 @@ test_that("Test filter rows - one variable - between", {
     session$setInputs(btn_filter = 1)
 
     mtcars_dt <- mtcars |> as.data.table()
-    expect_equal(df$df_active, mtcars_dt[hp %between% c(90, 100), ])
+    expect_equal(get_act_dt(session), mtcars_dt[hp %between% c(90, 100), ])
 
   })
 })
@@ -306,7 +306,7 @@ test_that("Test filter rows - one variable - not between", {
     session$setInputs(btn_filter = 1)
 
     mtcars_dt <- mtcars |> as.data.table()
-    expect_equal(df$df_active, mtcars_dt[!(hp %between% c(100, 110)), ])
+    expect_equal(get_act_dt(session), mtcars_dt[!(hp %between% c(100, 110)), ])
 
   })
 })

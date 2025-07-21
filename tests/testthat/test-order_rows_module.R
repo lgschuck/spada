@@ -1,6 +1,6 @@
 # tests/testthat/test-order_rows_module.R
 
-df_test <- iris
+df_test <- iris |> as.data.table()
 df_test[150, 1:5] <- NA
 
 # test order rows - na last ---------------------------------------------------
@@ -21,7 +21,6 @@ test_that("Test order rows - na last - one variable ascending", {
 
     df_reordered <- df_test[order(df_test[[vars]]), ]
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -43,10 +42,6 @@ test_that("Test order rows - na last - one variable descending", {
 
     df_reordered <- df_test[order(df_test[[vars]], decreasing = TRUE), ]
 
-    # setorderv keep rown.names as char
-    row.names(df_reordered) <- as.character(rownames(df_reordered))
-
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -68,7 +63,6 @@ test_that("Test order rows - na last - two variables ascending", {
 
     df_reordered <- setorderv(df_test, vars, na.last = TRUE)
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -90,7 +84,6 @@ test_that("Test order rows - na last - two variables descending", {
 
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = TRUE)
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -113,7 +106,6 @@ test_that("Test order rows - na first - one variable ascending", {
 
     df_reordered <- setorderv(df_test, vars, na.last = FALSE)
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -135,7 +127,6 @@ test_that("Test order rows - na first - one variable descending", {
 
     df_reordered <- setorderv(df_test, vars, -1, na.last = FALSE)
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -157,7 +148,6 @@ test_that("Test order rows - na first - two variables ascending", {
 
     df_reordered <- setorderv(df_test, vars, na.last = FALSE)
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })
@@ -179,7 +169,6 @@ test_that("Test order rows - na first - two variables descending", {
 
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = FALSE)
 
-    expect_equal(df$df_active, df_reordered)
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
   })
 })

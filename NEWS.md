@@ -22,6 +22,30 @@ editor_options:
 
 1 - Tests: create tests for the app
 
+
+## 2025.07.21
+
+Highlights: Fixed **bug to delete imported dataset** and use of updated instead of renderUI and 
+
+### Improvements
+
+1 - No more **df\$df_active** inside modules: eliminated the df\$df_active object
+
+2 - **UpdateSelectInput** in modules: use of update instead of renderUI in **calculate_cols, convert_cols, filter_rows, order_cols, order_rows, rename_cols and select_cols** modules. 
+
+3 - **Tests**: the tests were changed to not use df$df_active inside modules (**calculate_cols, convert_cols, filter_rows, order_cols, order_rows, rename_cols and select_cols**).
+
+4 - **Change data** in active dataset: now all changes are made inside btn events using update_act_dt function (**calculate_cols, convert_cols, filter_rows, order_cols, order_rows, rename_cols and select_cols**).
+
+5 - **Import file** modules: now insert new dataset inside btn event.
+
+6 - **utils.R**: functions get_act_dt and update_act_dt with check of input data.
+
+### Bug Fixes
+
+1 - **Import dataset x Delete Dataset**: fixed, now **import_file_module** insert new dataset inside btn event.
+([#51](https://github.com/lgschuck/spada/issues/51))
+
 ## 2025.07.16
 
 Highlights: **Active Dataset** now only as name (internal use) and **Inputs** with datasets names now have the active in top of the list

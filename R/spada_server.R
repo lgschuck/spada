@@ -201,7 +201,6 @@ spada_server <- function(datasets, conf){
           setdiff(session$userData$dt_names(), session$userData$dt$act_name)
         )
       )
-
     })
 
     # make active dataset event --------------
@@ -236,8 +235,10 @@ spada_server <- function(datasets, conf){
         msg_error('New name is not valid or already in use')
       } else {
         session$userData$dt$dt[[input$pD_data_txt_new_name]] <- session$userData$dt$dt[[input$pD_data_sel_df]]
-        msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
         gc()
+
+        msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
+
         updateTextInput(session, "pD_data_txt_new_name", value = '')
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
@@ -248,8 +249,9 @@ spada_server <- function(datasets, conf){
         msg_error('You can not delete the active dataset')
       } else {
         session$userData$dt$dt[[input$pD_data_sel_df]] <- NULL
-        msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
         gc()
+        msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
+
         updateTextInput(session, "pD_data_txt_new_name", value = '')
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)

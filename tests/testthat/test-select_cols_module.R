@@ -13,8 +13,8 @@ test_that("Test drop one column", {
     session$setInputs(radio_var_sel = 'drop')
     session$setInputs(btn_sel = 1)
 
-    expect_equal(df$df_active, iris |> subset(select = -Species))
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], iris |> subset(select = -Species))
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 iris |> as.data.table() |> subset(select = -Species))
   })
 })
 
@@ -30,8 +30,8 @@ test_that("Test drop two column", {
     session$setInputs(radio_var_sel = 'drop')
     session$setInputs(btn_sel = 1)
 
-    expect_equal(df$df_active, mtcars |> subset(select = -c(hp, mpg)))
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars |> subset(select = -c(hp, mpg)))
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars |> as.data.table() |> subset(select = -c(hp, mpg)))
   })
 })
 
@@ -48,8 +48,8 @@ test_that("Test keep one column", {
     session$setInputs(radio_var_sel = 'keep')
     session$setInputs(btn_sel = 1)
 
-    expect_equal(df$df_active, mtcars |> subset(select = hp))
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars |> subset(select = hp))
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars |> as.data.table() |> subset(select = hp))
   })
 })
 
@@ -65,8 +65,7 @@ test_that("Test keep two column", {
     session$setInputs(radio_var_sel = 'keep')
     session$setInputs(btn_sel = 1)
 
-    expect_equal(df$df_active, iris |> subset(select = c(Species, Petal.Length)))
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
-                 iris |> subset(select = c(Species, Petal.Length)))
+                 iris |> as.data.table() |> subset(select = c(Species, Petal.Length)))
   })
 })

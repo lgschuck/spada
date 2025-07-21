@@ -56,16 +56,17 @@ data_overview_server <- function(id) {
 
       validate(need(input$size_sample > 0, 'Number of rows must be > 0'))
 
+      nrow_df <- nrow(df())
       n_show <- max(1, input$size_sample)
-      n_show <- min(n_show, nrow(df()))
+      n_show <- min(n_show, nrow_df)
 
       if(input$radio_sample == 'first'){
         idx <- 1:n_show
       } else if(input$radio_sample == 'last'){
-        start_idx <- max(1, nrow(df()) - n_show + 1)
-        idx <- start_idx:nrow(df())
+        start_idx <- max(1, nrow_df - n_show + 1)
+        idx <- start_idx:nrow_df
       } else if (input$radio_sample == 'sample'){
-        idx <- sample.int(nrow(df()), n_show, replace = F)
+        idx <- sample.int(nrow_df, n_show, replace = F)
       }
     })
 
@@ -88,6 +89,7 @@ data_overview_server <- function(id) {
       req(data_gt())
 
       data_gt() |>
+        cols_align(align = 'right') |>
         opt_interactive(
           page_size_default = 10,
           use_filters = T,

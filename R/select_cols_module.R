@@ -6,7 +6,14 @@ select_cols_ui <- function(id) {
   card(
     card_header('Select Columns', class = 'mini-header'),
     card_body(
-      uiOutput(ns('ui_var_sel')),
+      selectizeInput(
+        ns('vars_sel'),
+        'Variable',
+        NULL,
+        multiple = T,
+        options = list(plugins = list('remove_button', 'clear_button'))
+      ),
+
       radioButtons(ns('radio_var_sel'), NULL,
                    c('Drop' = 'drop', 'Keep' = 'keep'), inline = T)
     ),
@@ -21,23 +28,21 @@ select_cols_server <- function(id) {
 
     df_names <- reactive(get_act_dt(session) |> names())
 
-    df <- reactiveValues()
     observe({
-      df$df_active <- get_act_dt(session)
-    })
-
-    output$ui_var_sel <- renderUI(
-      selectizeInput(ns('vars_sel'), 'Variable', c('', df_names()), multiple = T,
-                     options = list(plugins = list('remove_button', 'clear_button'))
-                     )
-    )
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'vars_sel',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
 
     observe({
       if(input$vars_sel |> length() == 0){
         msg('Select at least one variable')
       } else {
 
-        temp <- copy(df$df_active)
+        temp <- copy(get_act_dt(session))
 
         if(input$radio_var_sel == 'keep') {
           temp <- subset(temp, select = input$vars_sel)
@@ -54,17 +59,11 @@ select_cols_server <- function(id) {
           }
         }
 
-        df$df_active <- copy(temp)
-        rm(temp)
+        update_act_dt(session, copy(temp))
 
+        rm(temp)
       }
     }) |> bindEvent(input$btn_sel)
-
-    # update active dataset ---------------------------------------------------
-    observe({
-      req(df$df_active)
-      update_act_dt(session, df$df_active)
-    })
 
   })
 }

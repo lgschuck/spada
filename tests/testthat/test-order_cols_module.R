@@ -19,8 +19,8 @@ test_that("Test order one column - before all", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .before = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -42,8 +42,8 @@ test_that("Test order two column - before all", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .before = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -65,8 +65,8 @@ test_that("Test order one column - before especific", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .before = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -88,8 +88,8 @@ test_that("Test order two columns - before especific", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .before = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -112,8 +112,8 @@ test_that("Test order one column - after all", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .after = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -135,8 +135,8 @@ test_that("Test order two columns - after all", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .after = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -158,8 +158,8 @@ test_that("Test order one column - after specific", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .after = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })
 
@@ -181,7 +181,7 @@ test_that("Test order two columns - after specific", {
     mtcars_reordered <- mtcars |>
       dplyr::relocate(tidyselect::all_of(vars), .after = tidyselect::all_of(var1))
 
-    expect_equal(df$df_active, mtcars_reordered)
-    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], mtcars_reordered)
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 mtcars_reordered |> as.data.table())
   })
 })

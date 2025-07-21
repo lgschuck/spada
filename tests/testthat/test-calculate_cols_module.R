@@ -43,7 +43,7 @@ test_that("Test calculate cols - mean numeric - groupby", {
     session$setInputs(btn_apply_fun = 1)
 
     expect_equal(
-      df$df_active,
+      session$userData$dt$dt[[session$userData$dt$act_name]],
       iris_dt[, new_var := mean(Sepal.Width), by = 'Species']
     )
   })
@@ -66,7 +66,8 @@ test_that("Test calculate cols - factor", {
 
     session$setInputs(btn_apply_fun = 1)
 
-    expect_equal(df$df_active, iris_dt[, new_var := is.factor(Species)])
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 iris_dt[, new_var := is.factor(Species)])
   })
 })
 
@@ -87,7 +88,8 @@ test_that("Test calculate cols - freehand", {
 
     session$setInputs(btn_apply_free = 1)
 
-    expect_equal(df$df_active, iris_dt[, new_var := 10 ])
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]],
+                 iris_dt[, new_var := 10 ])
   })
 })
 
@@ -108,7 +110,7 @@ test_that("Test calculate cols - freehand - groupby", {
     session$setInputs(btn_apply_free = 1)
 
     expect_equal(
-      df$df_active,
+      session$userData$dt$dt[[session$userData$dt$act_name]],
       iris_dt[, new_var := mean(Sepal.Length), by = 'Species' ]
     )
   })
@@ -131,7 +133,7 @@ test_that("Test calculate cols - freehand - fifelse", {
     session$setInputs(btn_apply_free = 1)
 
     expect_equal(
-      df$df_active,
+      session$userData$dt$dt[[session$userData$dt$act_name]],
       iris_dt[, new_var := fifelse(Species == 'setosa', 1, 2) ]
     )
   })
