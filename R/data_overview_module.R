@@ -101,13 +101,6 @@ data_overview_server <- function(id) {
         )
     })
 
-    # output ------------------------------------------------------------------
-    output_list <- reactiveValues(elements = NULL)
-
-    observe({
-      output_list$elements <- session$userData$out$elements
-    })
-
     # insert to output module -------------------------------------------------
     mod_insert_output <- insert_output_server(
       'data_overview_insert_output',
@@ -118,14 +111,9 @@ data_overview_server <- function(id) {
     observe({
       req(mod_insert_output$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output$output_element()
 
     }) |> bindEvent(mod_insert_output$output_element())
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
   })
 }

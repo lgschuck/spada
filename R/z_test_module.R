@@ -98,13 +98,6 @@ z_test_server <- function(id) {
 
 	  df <- reactive(get_act_dt(session))
 
-	  # outupt objects ----------------------------------------------------------
-	  output_list <- reactiveValues(elements = NULL)
-
-	  observe({
-	    output_list$elements <- session$userData$out$elements
-	  })
-
     ztest <- reactiveValues(results = NULL)
 
     df_active <- reactive(df()[, lapply(df(), is.numeric) == T, with = F])
@@ -115,7 +108,7 @@ z_test_server <- function(id) {
       var_analysis <- session$userData$dt$act_meta() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
-      })
+    })
 
     var <- reactive({
       req(input$sel_var)
@@ -223,7 +216,7 @@ z_test_server <- function(id) {
     observe({
       req(mod_insert_output$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output$output_element()
 
     }) |> bindEvent(mod_insert_output$output_element())
 
@@ -329,14 +322,9 @@ z_test_server <- function(id) {
     observe({
       req(mod_insert_output_hist$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
 
     }) |> bindEvent(mod_insert_output_hist$output_element())
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
   })
 }

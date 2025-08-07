@@ -56,13 +56,6 @@ descriptive_stats_server <- function(id) {
 
 	  df <- reactive(get_act_dt(session))
 
-	  # outupt objects ----------------------------------------------------------
-	  output_list <- reactiveValues(elements = NULL)
-
-	  observe({
-	    output_list$elements <- session$userData$out$elements
-	  })
-
     var_analysis <- reactive({
       df() |> names()
     })
@@ -225,14 +218,9 @@ descriptive_stats_server <- function(id) {
     observe({
       req(mod_insert_output$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output$output_element()
 
     }) |> bindEvent(mod_insert_output$output_element())
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
   })
 }

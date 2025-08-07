@@ -404,7 +404,7 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
   }
 }
 
-# filter function -------------------------------------------------------------
+# filter rows function --------------------------------------------------------
 filter_rows <- function(df, var, operator, filter_value){
   if(operator == '=='){
     df[var1 == filter_value, , env = list(var1 = var)]

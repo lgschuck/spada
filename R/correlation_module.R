@@ -74,10 +74,6 @@ correlation_server <- function(id) {
     # outupt objects ----------------------------------------------------------
 	  output_list <- reactiveValues(elements = NULL)
 
-	  observe({
-	    output_list$elements <- session$userData$out$elements
-	  })
-
     cor_test <- reactiveValues(results = NULL)
 
     df_active <- reactive(df()[, lapply(df(), is.numeric) == T, with = F])
@@ -88,7 +84,7 @@ correlation_server <- function(id) {
       var_analysis <- session$userData$dt$act_meta() |> filter(perc_nas != 1) |> pull(var)
 
       df_names[df_names %in% var_analysis]
-      })
+    })
 
     output$parameters <- renderUI({
       tagList(
@@ -171,7 +167,7 @@ correlation_server <- function(id) {
     observe({
       req(mod_output_gt$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_gt$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_gt$output_element()
 
     }) |> bindEvent(mod_output_gt$output_element())
 
@@ -233,7 +229,7 @@ correlation_server <- function(id) {
     observe({
       req(mod_output_scatter$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
 
     }) |> bindEvent(mod_output_scatter$output_element())
 
@@ -244,11 +240,6 @@ correlation_server <- function(id) {
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_cor)
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
   })
 }

@@ -144,13 +144,6 @@ exploratory_server <- function(id, output_report) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # outupt objects ----------------------------------------------------------
-    output_list <- reactiveValues(elements = NULL)
-
-    observe({
-      output_list$elements <- session$userData$out$elements
-    })
-
     # df active ---------------------------------------------------------------
     df <- reactiveValues()
     observe({
@@ -620,7 +613,7 @@ exploratory_server <- function(id, output_report) {
     observe({
       req(mod_output_dist_plot$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_dist_plot$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_dist_plot$output_element()
 
     }) |> bindEvent(mod_output_dist_plot$output_element())
 
@@ -633,7 +626,7 @@ exploratory_server <- function(id, output_report) {
     observe({
       req(mod_output_scatter$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
 
     }) |> bindEvent(mod_output_scatter$output_element())
 
@@ -647,7 +640,7 @@ exploratory_server <- function(id, output_report) {
     observe({
       req(mod_output_lm_model_output$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_lm_model_output$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_lm_model_output$output_element()
 
     }) |> bindEvent(mod_output_lm_model_output$output_element())
 
@@ -660,7 +653,7 @@ exploratory_server <- function(id, output_report) {
     observe({
       req(mod_output_lm_resid_plot$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_lm_resid_plot$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_lm_resid_plot$output_element()
 
     }) |> bindEvent(mod_output_lm_resid_plot$output_element())
 
@@ -672,7 +665,7 @@ exploratory_server <- function(id, output_report) {
     observe({
       req(mod_output_stats_table$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_stats_table$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_stats_table$output_element()
 
     }) |> bindEvent(mod_output_stats_table$output_element())
 
@@ -686,14 +679,9 @@ exploratory_server <- function(id, output_report) {
     observe({
       req(mod_output_table_values$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_output_table_values$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_output_table_values$output_element()
 
     }) |> bindEvent(mod_output_table_values$output_element())
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
   })
 }

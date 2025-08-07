@@ -17,7 +17,7 @@ normality_test_ui <- function(id) {
             card_footer(
               div(style = "margin-bottom: -8px !important;"),
               layout_columns(
-                col_widths = c(1, 3, 3),
+                col_widths = c(1, 2, 2),
                 numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
                 btn_task(ns('btn_hist'), 'Show Histogram', icon('chart-simple'),
                          style = 'margin-top: 28px'),
@@ -118,13 +118,6 @@ normality_test_server <- function(id) {
 
 	  df <- reactive(get_act_dt(session))
 
-	  # outupt objects ----------------------------------------------------------
-	  output_list <- reactiveValues(elements = NULL)
-
-	  observe({
-	    output_list$elements <- session$userData$out$elements
-	  })
-
     df_active <- reactive({
       req(df())
       df()[, lapply(df(), is.numeric) == T, with = F]
@@ -202,7 +195,7 @@ normality_test_server <- function(id) {
     observe({
       req(mod_insert_output_hist$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
 
     }) |> bindEvent(mod_insert_output_hist$output_element())
 
@@ -244,7 +237,7 @@ normality_test_server <- function(id) {
     observe({
       req(mod_insert_output_qq$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_qq$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_qq$output_element()
 
     }) |> bindEvent(mod_insert_output_qq$output_element())
 
@@ -353,7 +346,7 @@ normality_test_server <- function(id) {
     observe({
       req(mod_insert_output_ks$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_ks$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_ks$output_element()
 
     }) |> bindEvent(mod_insert_output_ks$output_element())
 
@@ -448,7 +441,7 @@ normality_test_server <- function(id) {
     observe({
       req(mod_insert_output_sw$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_sw$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_sw$output_element()
 
     }) |> bindEvent(mod_insert_output_sw$output_element())
 
@@ -544,7 +537,7 @@ normality_test_server <- function(id) {
     observe({
       req(mod_insert_output_sf$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_sf$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_sf$output_element()
 
     }) |> bindEvent(mod_insert_output_sf$output_element())
 
@@ -555,11 +548,6 @@ normality_test_server <- function(id) {
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_sf)
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
   })
 }

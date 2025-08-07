@@ -50,13 +50,6 @@ lm_server <- function(id) {
 
 	  df <- reactive(get_act_dt(session))
 
-    # outupt objects ----------------------------------------------------------
-	  output_list <- reactiveValues(elements = NULL)
-
-	  observe({
-	    output_list$elements <- session$userData$out$elements
-	  })
-
     var_analysis <- reactive({
       session$userData$dt$act_meta() |> filter(perc_nas != 1) |> pull(var)
     })
@@ -156,14 +149,9 @@ lm_server <- function(id) {
     observe({
       req(mod_insert_output_model$output_element())
 
-      output_list$elements[[gen_element_id()]] <- mod_insert_output_model$output_element()
+      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_model$output_element()
 
     }) |> bindEvent(mod_insert_output_model$output_element())
-
-    # update output -----------------------------------------------------------
-    observe({
-      session$userData$out$elements <- output_list$elements
-    })
 
     # save model object -------------------------------------------------------
     output$conditional_save_model <- renderUI({
