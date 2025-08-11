@@ -371,19 +371,11 @@ exploratory_server <- function(id, output_report) {
 
         if(input$table_type == 'abs_table'){
           tab1 <- var() |> table()
-          y_label <- 'Frequency'
         } else if(input$table_type == 'perc_table'){
           tab1 <- var() |> table() |> prop.table() * 100
-          y_label <- 'Relative Frequency (%)'
         }
 
-        tab1 |>
-          as.data.frame() |>
-          gt() |>
-          cols_label(
-            Var1 = input$sel_vars,
-            Freq = y_label
-          )
+        tab1 |> as.data.frame()
 
       } else if (input$table_var == '2v'){
         req(var())
@@ -397,33 +389,59 @@ exploratory_server <- function(id, output_report) {
 
         if(input$table_type == 'abs_table'){
           tab1 <- table(var(), var2())
-          y_label <- input$sel_vars2
         } else if(input$table_type == 'perc_table'){
           tab1 <- table(var(), var2()) |> prop.table() * 100
-          y_label <- paste(input$sel_vars2, '(%)')
         }
 
         tab1 <- tab1 |> as.data.frame.matrix()
-        var2_names <- names(tab1)
 
-        df <- cbind(var1 = rownames(tab1), tab1)
+        cbind(var1 = rownames(tab1), tab1)
+      }
+    })
 
-        df |> gt() |>
-          cols_label(var1 = "") |>
-          tab_spanner(
-            label = input$sel_vars,
-            columns = var1
-          ) |>
-          tab_spanner(
-            label = y_label,
-            columns = var2_names
+    table_values_gt <- reactive({
+      req(table_values())
+      req(input$table_var, input$sel_vars, input$sel_vars2)
+
+      if(input$table_var == '1v') {
+
+        if(input$table_type == 'abs_table'){
+          y_label <- 'Frequency'
+        } else if(input$table_type == 'perc_table'){
+          y_label <- 'Relative Frequency (%)'
+        }
+
+        table_values() |>
+          gt() |>
+          cols_label(
+            Var1 = input$sel_vars,
+            Freq = y_label
           )
+      } else if (input$table_var == '2v'){
+
+        if(input$table_type == 'abs_table'){
+          y_label <- input$sel_vars2
+        } else if(input$table_type == 'perc_table'){
+          y_label <- paste(input$sel_vars2, '(%)')
+        }
+
+        table_values() |>
+          gt() |>
+            cols_label(var1 = "") |>
+            tab_spanner(
+              label = input$sel_vars,
+              columns = var1
+            ) |>
+            tab_spanner(
+              label = y_label,
+              columns = names(table_values())[2:length(names(table_values()))]
+            )
       }
     })
 
     output$table <- render_gt({
-      req(table_values())
-      table_values() |>
+      req(table_values_gt())
+      table_values_gt() |>
         opt_interactive()
     })
 
@@ -672,7 +690,7 @@ exploratory_server <- function(id, output_report) {
     # insert table of values to output ----------------------------------------
     mod_output_table_values <- insert_output_server(
       'insert_table_values',
-      table_values
+      table_values_gt
     )
 
     # get return from insert output module ------------------------------------

@@ -3,7 +3,7 @@
 #'
 #' If all values are NA returns NA
 #'
-#' @param x Objeto com valores
+#' @param x Object with values
 #' @param n Position to return, default is 1 (first). If zero or less it will be corrected to 1
 #' @param na_rm If TRUE or T will remove NA's. Default value is T.
 #' @examples
