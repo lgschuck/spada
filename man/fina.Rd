@@ -7,7 +7,7 @@
 fina(x, n = 1L, na_rm = TRUE)
 }
 \arguments{
-\item{x}{Objeto com valores}
+\item{x}{Object with values}
 
 \item{n}{Position to return, default is 1 (first). If zero or less it will be corrected to 1}
 

@@ -10,19 +10,19 @@
 \alias{p99}
 \title{Functions to calculate percentiles}
 \usage{
-pn(y, p, na_rm = T, ...)
+pn(y, p, na_rm = TRUE, ...)
 
-p10(y, na_rm = T, ...)
+p10(y, na_rm = TRUE, ...)
 
-p25(y, na_rm = T, ...)
+p25(y, na_rm = TRUE, ...)
 
-p75(y, na_rm = T, ...)
+p75(y, na_rm = TRUE, ...)
 
-p90(y, na_rm = T, ...)
+p90(y, na_rm = TRUE, ...)
 
-p95(y, na_rm = T, ...)
+p95(y, na_rm = TRUE, ...)
 
-p99(y, na_rm = T, ...)
+p99(y, na_rm = TRUE, ...)
 }
 \arguments{
 \item{y}{Object with values}

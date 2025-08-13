@@ -1,5 +1,238 @@
 # tests/testthat/test-utils.R
 
+# test safe env function ------------------------------------------------------
+test_that('test safe env', {
+  e1 <- safe_env()
+  expect_identical(parent.env(e1), emptyenv())
+  expect_identical(e1 |> length(), 0L)
+
+  e1 <- safe_env('sum')
+  expect_identical(parent.env(e1), emptyenv())
+  expect_identical(e1 |> length(), 1L)
+  expect_identical(e1 |> ls(), 'sum')
+  expect_identical(e1$sum, base::sum)
+  expect_identical(e1$sum |> class(), 'function')
+  expect_identical(e1$sum(1:3), 6L)
+})
+
+# test convert function -------------------------------------------------------
+df <- data.frame(
+  num = as.numeric(1:3),
+  int = 1:3L,
+  char = c('1', 'a', '1990-01-01'),
+  date = as.Date(1:3),
+  posix = as.POSIXct(as.Date(1:3)),
+  fact = c('a', '3', '1950/01/01'),
+  doub = as.double(1:3),
+  comp = complex(real = 1:3, imaginary = 2:4)
+)
+
+# test convert function - numeric ---------------
+test_that('convert function - numeric', {
+  # to numeric
+  expect_identical(convert(df$num, 'as.numeric'), c(1, 2, 3))
+
+  # to integer
+  expect_identical(convert(df$num, 'as.integer'), c(1L, 2L, 3L))
+
+  # to char
+  expect_identical(convert(df$num, 'as.character'), c('1', '2', '3'))
+
+  # to date
+  expect_identical(convert(df$num, 'as.Date'),
+               as.Date(c('1970-01-02', '1970-01-03', '1970-01-04')))
+  expect_s3_class(convert(df$num, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$num, 'as.factor'), df$num |> as.factor())
+
+  # to double
+  expect_identical(convert(df$num, 'as.double'), c(1, 2, 3))
+
+  # to complex
+  expect_identical(convert(df$num, 'as.complex'), c(1+0i, 2+0i, 3+0i))
+})
+
+# test convert function - integer ---------------
+test_that('convert function - integer', {
+  # to numeric
+  expect_identical(convert(df$int, 'as.numeric'), c(1, 2, 3))
+
+  # to integer
+  expect_identical(convert(df$int, 'as.integer'), c(1L, 2L, 3L))
+
+  # to char
+  expect_identical(convert(df$int, 'as.character'), c('1', '2', '3'))
+
+  # to date
+  expect_identical(convert(df$int, 'as.Date'),
+               as.Date(c('1970-01-02', '1970-01-03', '1970-01-04')))
+  expect_s3_class(convert(df$int, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$int, 'as.factor'), df$num |> as.factor())
+
+  # to double
+  expect_identical(convert(df$int, 'as.double'), c(1, 2, 3))
+
+  # to complex
+  expect_identical(convert(df$int, 'as.complex'), c(1+0i, 2+0i, 3+0i))
+})
+
+# test convert function - char ---------------
+test_that('convert function - char', {
+  # to numeric
+  expect_identical(convert(df$char, 'as.numeric'), c(1, NA, NA))
+
+  # to integer
+  expect_identical(convert(df$char, 'as.integer'), c(1L, NA, NA))
+
+  # to char
+  expect_identical(convert(df$char, 'as.character'), df$char)
+
+  # to date
+  expect_identical(convert(df$char, 'as.Date'), as.Date(c(NA, NA, '1990-01-01')))
+  expect_s3_class(convert(df$char, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$char, 'as.factor'), df$char |> as.factor())
+
+  # to double
+  expect_identical(convert(df$char, 'as.double'), c(1, NA, NA))
+
+  # to complex
+  expect_identical(convert(df$char, 'as.complex'), c(1+0i, NA, NA))
+})
+
+# test convert function - date ---------------
+test_that('convert function - date', {
+  # to numeric
+  expect_identical(convert(df$date, 'as.numeric'), c(1, 2, 3))
+
+  # to integer
+  expect_identical(convert(df$date, 'as.integer'), c(1L, 2L, 3L))
+
+  # to char
+  expect_identical(convert(df$date, 'as.character'), c('1970-01-02', '1970-01-03', '1970-01-04'))
+
+  # to date
+  expect_identical(convert(df$date, 'as.Date'), as.Date(c(1:3)))
+  expect_s3_class(convert(df$date, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$date, 'as.factor'), df$date |> as.factor())
+
+  # to double
+  expect_identical(convert(df$date, 'as.double'), c(1, 2, 3))
+
+  # to complex
+  expect_identical(convert(df$date, 'as.complex'), c(1+0i, 2+0i, 3+0i))
+})
+
+# test convert function - posixct ---------------
+test_that('convert function - posixct', {
+  # to numeric
+  expect_identical(convert(df$posix, 'as.numeric'), c(86400, 172800, 259200))
+  # to integer
+  expect_identical(convert(df$posix, 'as.integer'), c(86400L, 172800L, 259200L))
+
+  # to char
+  expect_identical(convert(df$posix, 'as.character'),
+               c('1970-01-02', '1970-01-03', '1970-01-04'))
+
+  # to date
+  expect_identical(convert(df$posix, 'as.Date'),
+               as.Date(c('1970-01-02', '1970-01-03', '1970-01-04')))
+  expect_s3_class(convert(df$posix, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$posix, 'as.factor'), df$posix |> as.factor())
+
+  # to double
+  expect_identical(convert(df$posix, 'as.double'), c(86400, 172800, 259200))
+
+  # to complex
+  expect_identical(convert(df$posix, 'as.complex'), c(86400+0i, 172800+0i, 259200+0i))
+})
+
+# test convert function - factor ---------------
+test_that('convert function - factor', {
+  # to numeric
+  expect_identical(convert(df$fact, 'as.numeric'), c(NA, 3, NA))
+
+  # to integer
+  expect_identical(convert(df$fact, 'as.integer'), c(NA, 3L, NA))
+
+  # to char
+  expect_identical(convert(df$fact, 'as.character'), c('a', '3', '1950/01/01'))
+
+  # to date
+  expect_identical(convert(df$fact, 'as.Date'), as.Date(c(NA, NA, NA)))
+  expect_identical(convert(df$fact, 'as.Date', date_format = '%Y/%m/%d'),
+               as.Date(c(NA, NA, '1950-01-01')))
+  expect_s3_class(convert(df$fact, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$fact, 'as.factor'), df$fact |> as.factor())
+
+  # to double
+  expect_identical(convert(df$fact, 'as.double'), c(NA, 3, NA))
+
+  # to complex
+  expect_identical(convert(df$fact, 'as.complex'), c(NA, 3+0i, NA))
+})
+
+# test convert function - double ---------------
+test_that('convert function - double', {
+  # to numeric
+  expect_identical(convert(df$doub, 'as.numeric'), c(1, 2, 3))
+
+  # to integer
+  expect_identical(convert(df$doub, 'as.integer'), c(1L, 2L, 3L))
+
+  # to char
+  expect_identical(convert(df$doub, 'as.character'), c('1', '2', '3'))
+
+  # to date
+  expect_identical(convert(df$doub, 'as.Date'), as.Date(c('1970-01-02', '1970-01-03', '1970-01-04')))
+  expect_s3_class(convert(df$doub, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$doub, 'as.factor'), df$doub |> as.factor())
+
+  # to double
+  expect_identical(convert(df$doub, 'as.double'), c(1, 2, 3))
+
+  # to complex
+  expect_identical(convert(df$doub, 'as.complex'), c(1+0i, 2+0i, 3+0i))
+})
+
+# test convert function - complex ---------------
+test_that('convert function - complex', {
+  # to numeric
+  expect_identical(convert(df$comp, 'as.numeric'), c(1, 2, 3))
+
+  # to integer
+  expect_identical(convert(df$comp, 'as.integer'), c(1L, 2L, 3L))
+
+  # to char
+  expect_identical(convert(df$comp, 'as.character'), c('1+2i', '2+3i', '3+4i'))
+
+  # to date
+  expect_identical(convert(df$comp, 'as.Date'), as.Date(c('1970-01-02', '1970-01-03', '1970-01-04')))
+  expect_s3_class(convert(df$comp, 'as.Date'), 'Date')
+
+  # to factor
+  expect_identical(convert(df$comp, 'as.factor'), df$comp |> as.factor())
+
+  # to double
+  expect_identical(convert(df$comp, 'as.double'), c(1, 2, 3))
+
+  # to complex
+  expect_identical(convert(df$comp, 'as.complex'), c(1+2i, 2+3i, 3+4i))
+})
+
+
 # test filter_rows function ---------------------------------------------------
 test_that('filter_rows function', {
   df <- data.frame(x = c(1, 2, 3, NA, NA)) |> as.data.table()
@@ -31,26 +264,34 @@ test_that('filter_rows 2 vars function - wrong operator', {
   expect_error(filter_rows_2vars(df, 'x', 'y', 'xxx'))
 })
 
-# test is hex color function --------------------------------------------------
-test_that('is_hex_color validates hex codes correctly', {
-  expect_true(is_hex_color('#FFFFFF'))
-  expect_false(is_hex_color('123456'))
-})
-
-# test make names append list function ----------------------------------------
-test_that('make_names_append_list appends suffix to conflicting names', {
-  new_list <- list(a = 1, b = 2)
-  actual_list <- c('a1', 'a', 'b1', 'b')
-  out <- make_names_append_list(new_list, actual_list, suffix = '_test')
-  expect_true(all(names(out) %in% c('a_test', 'b_test')))
-})
-
 # test f_dec function ---------------------------------------------------------
 test_that('f_dec formats numbers', {
   expect_equal(f_dec(1.2345, dig = 0), '1')
   expect_equal(f_dec(1.2345, dig = 2), '1.23')
   expect_equal(f_dec(1.2345, dig = 5), '1.23450')
   expect_equal(f_dec(1.2345, dig = 7), '1.2345000')
+})
+
+# test make var names ---------------------------------------------------------
+test_that('make var names', {
+
+  df <- data.frame(
+    `v 1` = 1:3,
+    `v 1` = 4:6,
+    `v 2` = 7:9
+  )
+
+  expect_error(make_var_names(1:3))
+  expect_identical(make_var_names(df) |> names(), c('v.1', 'v.1.1', 'v.2'))
+})
+
+# test all equal --------------------------------------------------------------
+test_that('all equal', {
+  expect_false(test_all_equal(1:3))
+  expect_true(test_all_equal(c(1, 1, 1)))
+
+  expect_equal(test_all_equal(c(NA, NA, NA)), NA)
+  expect_equal(test_all_equal(c(NA, 1, 2)), NA)
 })
 
 # test obj type function ------------------------------------------------------
@@ -66,6 +307,21 @@ test_that('make_valid_cols handles raw values', {
   expect_type(make_valid_cols(as.raw(1)), 'character')
 })
 
+# test make names append list function ----------------------------------------
+test_that('make_names_append_list appends suffix to conflicting names', {
+  new_list <- list(a = 1, b = 2)
+  actual_list <- c('a1', 'a', 'b1', 'b')
+  out <- make_names_append_list(new_list, actual_list, suffix = '_test')
+  expect_true(all(names(out) %in% c('a_test', 'b_test')))
+})
+
+# test is hex color function --------------------------------------------------
+test_that('is_hex_color validates hex codes correctly', {
+  expect_true(is_hex_color('#FFFFFF'))
+  expect_false(is_hex_color('123456'))
+})
+
+
 # test data format function ---------------------------------------------------
 test_that('test data format function', {
   expect_false(test_data_format(list()))
@@ -74,7 +330,7 @@ test_that('test data format function', {
 })
 
 # test check dir function -----------------------------------------------------
-test_that("check_dir creates directory if it does not exist", {
+test_that('check_dir creates directory if it does not exist', {
   tmp <- file.path(tempdir(), 'new_dir')
   unlink(tmp, recursive = TRUE)
 
@@ -83,3 +339,22 @@ test_that("check_dir creates directory if it does not exist", {
   expect_true(dir.exists(tmp))
   unlink(tmp, recursive = TRUE)
 })
+
+# test linear model df output -------------------------------------------------
+test_that('linear model df output', {
+
+  s1 <- lm(1:10 ~ rnorm(10)) |> summary()
+  expect_error(linear_model_df_output(iris))
+  expect_error(linear_model_df_output(1:3))
+  expect_s3_class(linear_model_df_output(s1), 'data.frame')
+})
+
+# test linear model df metrics ------------------------------------------------
+test_that('linear model df metrics', {
+
+  s1 <- lm(1:10 ~ rnorm(10)) |> summary()
+  expect_error(linear_model_df_metrics(iris))
+  expect_error(linear_model_df_metrics(1:3))
+  expect_s3_class(linear_model_df_metrics(s1), 'data.frame')
+})
+

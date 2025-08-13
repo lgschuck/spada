@@ -6,7 +6,7 @@ editor_options:
 
 # Spada 0.2.0 - Future Version
 
-## 0.2.0 Milestone (dec/25)
+## 0.2.0 Milestone
 
 1 - Functionalities to detect and treat duplicates
 
@@ -18,10 +18,17 @@ editor_options:
 
 # Spada 0.1.0.9000 (development version)
 
-## 0.1.0 Milestone (out/25)
+## 2025.08.13 - Release Candidate
 
-1 - Tests: create tests for the app
+This version will be the **0.1.0 Release Candidate** (the focus now will be to release it on CRAN and create the documentation). Aside potencial minimal improvements, changes will be made in test files and eventual bug fixes.
 
+**Highlights**: Improvements in **convert function** and tests for **all modules and utils.R** (internal functions)
+
+### Improvements
+
+1 - **utils.R**: improvement in functions (**convert, make_var_names, linear_model_df_output and linear_model_df_metrics**)
+
+2 - **Tests**: tests for **all modules and utils.R** functions
 
 ## 2025.07.21
 

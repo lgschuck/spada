@@ -27,7 +27,7 @@ convert_cols_ui <- function(id) {
             selectInput(
               ns('sel_date_formats'),
               list('Choose the entry format', bs_icon('info-circle')) |>
-                tooltip('For non numeric inputs'),
+                tooltip('For character and factor inputs'),
               date_formats),
             dateInput(ns('sel_date_origin'),
                       list('Choose a start date', bs_icon('info-circle')) |>

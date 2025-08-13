@@ -1,41 +1,9 @@
 
-# generate 2 column table in html ---------------------------------------------
-gen_table2 <- function(element1, element2) {
-  div(
-    tags$table(
-      style = 'width: 95%',
-      tags$tr(
-        tags$td(style = 'padding: 10px; width: 50%;', element1),
-        tags$td(style = 'padding: 10px; width: 50%;', element2)
-      )
-    )
-  )
-}
-
-# card to insert in output ----------------------------------------------------
-report_card <- function(title = 'Spada - Output', annotation = NULL,
-                        content = NULL){
-  div(
-    div(
-      style = paste0("border: 2px solid", main_color,
-      "; border-radius: 8px; padding: 16px; box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);"),
-      h2(title, style = paste0("font-size: 1.5rem; margin-bottom: 12px; color:",
-                               main_color ,";")),
-      p(annotation),
-      content
-    ),
-    br(),
-    p(Sys.time())
-  )
-}
-
-# generate element id for outputs ---------------------------------------------
-gen_element_id <- function(){
-  paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
-}
+# =============================================================================
+# ---------------------------- OBJECTS ----------------------------------------
+# =============================================================================
 
 # math functions --------------------------------------------------------------
-
 math_funs <- c(
   c('Mean' = 'mean',
     'Geometric Mean' = 'Gmean',
@@ -87,7 +55,6 @@ math_funs <- c(
 )
 
 # char functions --------------------------------------------------------------
-
 char_funs <- c(
   'To Upper' = 'toupper',
   'To Lower' = 'tolower',
@@ -97,7 +64,6 @@ char_funs <- c(
 )
 
 # date functions --------------------------------------------------------------
-
 date_funs <- c(
   # data.table package
   'Year' = 'year',
@@ -115,7 +81,6 @@ date_funs <- c(
 )
 
 # factor functions ------------------------------------------------------------
-
 factor_funs <- c(
   'Number of Levels' = 'nlevels',
   'As factor' = 'as.factor',
@@ -124,7 +89,6 @@ factor_funs <- c(
 )
 
 # logical functions -----------------------------------------------------------
-
 logical_funs <- c(
   'All True' = 'all',
   'Any True' = 'any',
@@ -134,7 +98,6 @@ logical_funs <- c(
 )
 
 # complex functions -----------------------------------------------------------
-
 complex_funs <- c(
   'Real Part' = 'Re',
   'Imaginary Part' = 'Im',
@@ -142,7 +105,6 @@ complex_funs <- c(
 )
 
 # basic operations ------------------------------------------------------------
-
 basic_operations <- c(
   # base package
   '+', '-', '+', '-', '/', '*', '^',
@@ -173,24 +135,6 @@ basic_operations <- c(
   #spada package
   'fina', 'lana', 'mana', 'mina', 'suna'
 )
-
-# allowed operations ----------------------------------------------------------
-
-allowed_operations <- c(
-  basic_operations,
-  math_funs,
-  char_funs,
-  date_funs,
-  factor_funs,
-  logical_funs
-) |> unique() |> sort()
-
-# allowed operations function -------------------------------------------------
-show_allowed_op <- function(){
-  showModal(modalDialog(title = "Allowed Operations", HTML(
-    paste(allowed_operations, collapse = "<br/>")
-  ), easyClose = TRUE))
-}
 
 # dangerous operations --------------------------------------------------------
 dangerous_operations <- c(
@@ -223,45 +167,15 @@ dangerous_operations <- c(
   'setDF', 'setkey', 'setorder', 'substitute2'
 )
 
-# safe env function -----------------------------------------------------------
-
-safe_env <- function(operations = NULL){
-
-  e <- new.env(parent = emptyenv())
-
-  lapply(operations, function(x) {
-    assign(x, get(x), envir = e)
-  })
-
-  return(e)
-}
-
-# test dataset ----------------------------------------------------------------
-test_dataset <- function(n_row = 1e3, n_col = 11){
-  test_data <- data.frame(
-    integer_var = rep(sample(1:100, n_row, replace = T)),
-    numeric_var = rnorm(n_row),
-    char_var = rep(sample(letters, n_row, replace = T)),
-    char_long_var = rep(paste(letters, collapse = ''), n_row),
-    char_colors_var = rep(sample(colors(), n_row, replace = T)),
-    date_var = Sys.Date() + rep(sample(-49:50, n_row, replace = T)),
-    factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n_row, replace = T))),
-    num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
-    int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
-    logical_var = rep(sample(c(TRUE, FALSE), n_row, replace = T)),
-    complex_var = rep(sample(1:100, n_row, replace = T) |> as.complex())
-  )
-
-  extra_cols <- n_col - ncol(test_data)
-
-  if (extra_cols > 0) {
-    for (i in seq_len(extra_cols)) {
-      test_data[[paste0("extra_col_", i)]] <- rnorm(n_row)
-    }
-  }
-
-  test_data
-}
+# allowed operations ----------------------------------------------------------
+allowed_operations <- c(
+  basic_operations,
+  math_funs,
+  char_funs,
+  date_funs,
+  factor_funs,
+  logical_funs
+) |> unique() |> sort()
 
 # list of filters -------------------------------------------------------------
 equal_operators <- c('== (Equal)' = '==',
@@ -334,6 +248,91 @@ js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.clo
 
 tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 
+# =============================================================================
+# ---------------------------- FUNCTIONS --------------------------------------
+# =============================================================================
+
+# generate 2 column table in html ---------------------------------------------
+gen_table2 <- function(element1, element2) {
+  div(
+    tags$table(
+      style = 'width: 95%',
+      tags$tr(
+        tags$td(style = 'padding: 10px; width: 50%;', element1),
+        tags$td(style = 'padding: 10px; width: 50%;', element2)
+      )
+    )
+  )
+}
+
+# card to insert in output ----------------------------------------------------
+report_card <- function(title = 'Spada - Output', annotation = NULL,
+                        content = NULL){
+  div(
+    div(
+      style = paste0("border: 2px solid", main_color,
+                     "; border-radius: 8px; padding: 16px; box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);"),
+      h2(title, style = paste0("font-size: 1.5rem; margin-bottom: 12px; color:",
+                               main_color ,";")),
+      p(annotation),
+      content
+    ),
+    br(),
+    p(Sys.time())
+  )
+}
+
+# generate element id for outputs ---------------------------------------------
+gen_element_id <- function(){
+  paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
+}
+
+# allowed operations function -------------------------------------------------
+show_allowed_op <- function(){
+  showModal(modalDialog(title = "Allowed Operations", HTML(
+    paste(allowed_operations, collapse = "<br/>")
+  ), easyClose = TRUE))
+}
+
+# safe env function -----------------------------------------------------------
+safe_env <- function(operations = NULL){
+
+  e <- new.env(parent = emptyenv())
+
+  lapply(operations, function(x) {
+    assign(x, get(x), envir = e)
+  })
+
+  return(e)
+}
+
+# test dataset ----------------------------------------------------------------
+test_dataset <- function(n_row = 1e3, n_col = 11){
+  test_data <- data.frame(
+    integer_var = rep(sample(1:100, n_row, replace = T)),
+    numeric_var = rnorm(n_row),
+    char_var = rep(sample(letters, n_row, replace = T)),
+    char_long_var = rep(paste(letters, collapse = ''), n_row),
+    char_colors_var = rep(sample(colors(), n_row, replace = T)),
+    date_var = Sys.Date() + rep(sample(-49:50, n_row, replace = T)),
+    factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n_row, replace = T))),
+    num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
+    int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
+    logical_var = rep(sample(c(TRUE, FALSE), n_row, replace = T)),
+    complex_var = rep(sample(1:100, n_row, replace = T) |> as.complex())
+  )
+
+  extra_cols <- n_col - ncol(test_data)
+
+  if (extra_cols > 0) {
+    for (i in seq_len(extra_cols)) {
+      test_data[[paste0("extra_col_", i)]] <- rnorm(n_row)
+    }
+  }
+
+  test_data
+}
+
 # empty plot function ---------------------------------------------------------
 empty_plot <- function(msg = 'No plot', c = 2){
   plot(1:10, 1:10, type = 'n', xlab = '', ylab = '')
@@ -376,31 +375,38 @@ try_convert <- function(x, fun){
            warning = function(w) rep(NA, x |> length()))
 }
 
-# format conversion -----------------------------------------------------------
+# convert function ------------------------------------------------------------
 convert <- function(x, type, date_format = '%Y-%m-%d',
                     date_origin = '1970-01-01'){
   if(x |> is.raw()) x <- as.numeric(x)
 
   if(type == 'as.numeric'){
-    if(x |> is.character()) rep(NA, length(x)) else as.numeric(x)
+    suppressWarnings(as.numeric(x))
   } else if(type == 'as.integer'){
-    if(x |> is.character()) rep(NA, length(x)) else as.integer(x)
+    suppressWarnings(as.integer(x))
   } else if(type == 'as.character'){
     as.character(x)
   } else if(type == 'as.Date'){
-    if(is.numeric(x)){
+    if(x |> inherits('Date')) {
+      x
+    } else if(is.numeric(x)){
       as.Date(x, origin = date_origin)
-    } else if (is.raw(x) || is.complex(x)){
-      as.Date(x |> as.numeric(), origin = date_origin)
+    } else if(is.raw(x) || is.complex(x)){
+      suppressWarnings(
+        as.Date(x |> as.numeric(), origin = date_origin)
+      )
     } else as.Date(x, format = date_format)
   } else if(type == 'as.factor'){
     as.factor(x)
   } else if(type == 'as.double'){
-    if(x |> is.character()) rep(NA, length(x)) else as.double(x)
-    # } else if(type == 'as.raw'){
-    #   as.raw(x)
+    suppressWarnings(as.double(x))
   } else if(type == 'as.complex'){
-    if(x |> is.character()) rep(NA, length(x)) else as.complex(x)
+    if(is.complex(x)){
+      x
+    } else {
+      x1 <- suppressWarnings(as.numeric(x))
+      as.complex(x1)
+    }
   }
 }
 
@@ -495,8 +501,9 @@ f_dec <- function(x, dig = 0){
 
 # make var names --------------------------------------------------------------
 make_var_names <- function(df){
-    names(df) <- names(df) |> make.names(unique = T)
-    return(df)
+  stopifnot(df |> is.data.frame())
+  names(df) <- names(df) |> make.names(unique = T)
+  return(df)
 }
 
 # test all equal --------------------------------------------------------------
@@ -504,7 +511,7 @@ test_all_equal <- function(x){
   all(x == x[1])
 }
 
-# col type --------------------------------------------------------------------
+# obj type --------------------------------------------------------------------
 obj_type <- function(x){
   if(x |> is.numeric()) 'numeric'
   else if (x |> is_date()) 'date'
@@ -683,8 +690,10 @@ check_dir <- function(dir){
   if(!dir.exists(dir)) dir.create(dir, recursive = T)
 }
 
-# lm model gt output ----------------------------------------------------------
+# linear model df output ------------------------------------------------------
 linear_model_df_output <- function(model_summary){
+  stopifnot(model_summary |> class() == 'summary.lm')
+
   table_summary <- as.data.frame(model_summary$coefficients)
 
   table_summary$Variable <- rownames(table_summary)
@@ -703,8 +712,9 @@ linear_model_df_output <- function(model_summary){
   )]
 }
 
-# lm model gt metrics ---------------------------------------------------------
+# linear model gt metrics -----------------------------------------------------
 linear_model_df_metrics <- function(model_summary){
+  stopifnot(model_summary |> class() == 'summary.lm')
 
   f <- model_summary$fstatistic
   f_p_value <- pf(f['value'], f['numdf'], f['dendf'], lower.tail = FALSE)
