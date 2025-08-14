@@ -1,0 +1,38 @@
+---
+title: "Themes"
+date: "`r format(Sys.Date(), '%d/%m/%Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Themes
+
+**Spada** has 2 themes:
+
+- Spada
+
+- Dark Spada
+
+### Choosing the Theme
+
+Menu Options > Config
+
+![](../man/figures/articles/themes/themes_menu.png)
+
+Open **Theme**
+
+![](../man/figures/articles/themes/themes_config.png)
+
+Choose the desired Theme and **Apply**. The app will be updated to the choosed theme.
+
+![](../man/figures/articles/themes/themes_dark_spada.png)
