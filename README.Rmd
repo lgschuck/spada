@@ -61,13 +61,13 @@ remotes::install_github(
   )
 ```
 
-## Loading the package
+### Loading the package
 
 ```{r}
 library(spada)
 ```
 
-## Usage
+### Usage
 
 ```{r}
 if(interactive()){
@@ -75,7 +75,17 @@ if(interactive()){
 }
 ```
 
+## Docker
+
+Spada is distributed as a **Docker Image**.
+
+For instructions in how to download and use Spada go to [Articles > Docker]( https://lgschuck.github.io/spada/articles/docker.html)
+
+You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to search for diferent versions.
+
 ## Screenshots
+
+![](man/figures/spada_loading.png)
 
 ### Data
 
@@ -83,20 +93,26 @@ if(interactive()){
 
 ![](man/figures/spada_home2.png)
 
-![](man/figures/spada_home3.png)
+#### Data > Metadata
+
+![](man/figures/spada_data_metadata.png)
+
+#### Data > Overview
+
+![](man/figures/spada_data_overview.png)
 
 ### Edit
 
-![](man/figures/spada_edit_filter.png)
-
-![](man/figures/spada_edit_convert.png)
-
-![](man/figures/spada_edit_order.png)
+![](man/figures/spada_edit.png)
 
 ### Analysis
 
 ![](man/figures/spada_analysis_exploratory.png)
 
+### Output
+
+![](man/figures/spada_output.png)
+
 ### Options
 
-![](man/figures/spada_options_config.png)
+![](man/figures/spada_options.png)

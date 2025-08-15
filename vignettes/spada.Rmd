@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 The basic object in Spada is a dataset. A dataset is an object of the data.frame class. Internally, for speed and programmability purposes, Spada uses the data.table class from the [**data.table**](https://rdatatable.gitlab.io/data.table/) package.
 
-So, Spada demands at least one dataset. If none is provided in the funcion call then Iris and Mtcars, from datasets package, are used as sample data.
+Spada demands at least one dataset. If none is provided in the funcion call then Iris and Mtcars, from datasets package, are used as sample data.
 
 ```{r, eval = FALSE}
 library(spada)
@@ -98,8 +98,16 @@ This is the default selected item.
 
 ### Edit
 
+![](../man/figures/articles/spada/spada_edit.png)
+
 ### Analysis
+
+![](../man/figures/articles/spada/spada_analysis_exploratory.png)
 
 ### Output
 
+![](../man/figures/articles/spada/spada_output.png)
+
 ### Options
+
+![](../man/figures/articles/spada/spada_options.png)
