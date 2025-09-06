@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Docker • spada</title>
+<title>Data • spada</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Docker">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -65,68 +65,84 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Docker</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Data</h1>
             
             <h4 data-toc-skip class="date">06/09/2025</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lgschuck/spada/blob/HEAD/vignettes/docker.Rmd" class="external-link"><code>vignettes/docker.Rmd</code></a></small>
-      <div class="d-none name"><code>docker.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/lgschuck/spada/blob/HEAD/vignettes/data.Rmd" class="external-link"><code>vignettes/data.Rmd</code></a></small>
+      <div class="d-none name"><code>data.Rmd</code></div>
     </div>
 
     
     
-<div class="section level3">
-<h3 id="docker">Docker<a class="anchor" aria-label="anchor" href="#docker"></a>
-</h3>
-<p>The best way to run Spada is through Docker. As Spada uses specific
-versions of packages and R itself, the Container ensures that you will
-have everything you need to run Spada properly.</p>
-<div class="section level4">
-<h4 id="search-image">Search Image<a class="anchor" aria-label="anchor" href="#search-image"></a>
-</h4>
-<p>In the <strong>Docker Desktop</strong> click in <strong>Docker
-Hub</strong>.</p>
-<p><img src="../reference/figures/articles/docker/docker_hub.png"></p>
-<p>Search for spada.</p>
-<p><img src="../reference/figures/articles/docker/docker_search.png"></p>
-</div>
-<div class="section level4">
-<h4 id="pull-image">Pull Image<a class="anchor" aria-label="anchor" href="#pull-image"></a>
-</h4>
-<p>Find the <strong>tag</strong> you want to download and click
-<strong>Pull image</strong>. This will download the image from Docker
-Hub.</p>
-<p><img src="../reference/figures/articles/docker/docker_image.png"></p>
-<p>After the download is completed the image will appear in
-<strong>Images</strong>.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_2.png"></p>
-<p>Click in the desired image.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_3.png"></p>
-</div>
-</div>
 <div class="section level2">
-<h2 id="run">Run<a class="anchor" aria-label="anchor" href="#run"></a>
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p>Click in Run</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_1.png"></p>
-<p>Open Optional settings.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_2.png"></p>
-<p>Insert a Name for the Container and set the <strong>Host Port to
-3838</strong>.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_3.png"></p>
-<p>Now the Container will be running.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_4.png"></p>
-<p>To open it, click in <strong>3838:3838</strong> below the Container
-name or go in a browser and use the <strong>localhost:3838</strong>
-address.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_5.png"></p>
-<p>Your web browser will open in localhost:3838.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_6.png"></p>
-<div class="section level4">
-<h4 id="spada">Spada<a class="anchor" aria-label="anchor" href="#spada"></a>
-</h4>
-<p><img src="../reference/figures/articles/docker/docker_spada_loading.png"></p>
-<p><img src="../reference/figures/articles/docker/docker_spada_home_page.png"></p>
+<p><strong>Spada</strong> is capable of manage several datasets. The
+Active Dataset is shown in the sidebar and the navbar.But you can change
+the active dataset, import new datasets and export datasets.</p>
+<div class="section level3">
+<h3 id="highligths">Highligths<a class="anchor" aria-label="anchor" href="#highligths"></a>
+</h3>
+<p><img src="../reference/figures/articles/data/highlights.png"></p>
+<p>This tab shows some descriptive data about the Acctive Dataset.</p>
+</div>
+<div class="section level3">
+<h3 id="metadata">Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
+</h3>
+<p><img src="../reference/figures/articles/data/metadata.png"></p>
+<p>In Metadata one can see tyhe type and class of the variables, as well
+as some informatios about the data: min and max values, unique, valid,
+zeros and missing data.</p>
+<p>It is possible to choose the datasets among the imported ones to show
+ta metadata. This does no change the Active Dataset.</p>
+</div>
+<div class="section level3">
+<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h3>
+<p><img src="../reference/figures/articles/data/overview.png"></p>
+<p>The Overview allows the user to see some sample of Data. It is
+possible to choose the number of rows to show, as well as the position
+of the data (if first, last or a random sample of rows).</p>
+</div>
+<div class="section level3">
+<h3 id="data-1">Data<a class="anchor" aria-label="anchor" href="#data-1"></a>
+</h3>
+<p><img src="../reference/figures/articles/data/data.png"></p>
+<p>In this tab one can change do:</p>
+<ul>
+<li>Rename a dataset</li>
+<li>Change the Active Dataset</li>
+<li>Copy a dataset</li>
+<li>Delete a dataset</li>
+</ul>
+<p>As Spada requires at least one active dataset, it is no tpossible to
+delete the Active one.</p>
+</div>
+<div class="section level3">
+<h3 id="import">Import<a class="anchor" aria-label="anchor" href="#import"></a>
+</h3>
+<p><img src="../reference/figures/articles/data/import.png"></p>
+<p>Here it is possible to import datasets from outside of the Spada
+package.</p>
+<p>The formats available are:</p>
+<ul>
+<li>csv: imported via data.table package</li>
+<li>RDS: R native format</li>
+<li>sav: SPSS format imported via haven package</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="export">Export<a class="anchor" aria-label="anchor" href="#export"></a>
+</h3>
+<p><img src="../reference/figures/articles/data/export.png"></p>
+<p>It is also possible to save the atsets to a file.</p>
+<p>The formats available are:</p>
+<ul>
+<li>csv: exported via data.table package</li>
+<li>RDS: R native format</li>
+<li>sav: SPSS format exported via haven package</li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

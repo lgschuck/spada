@@ -2,7 +2,9 @@ pandoc: '3.2'
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  config: config.html
+  data: data.html
   docker: docker.html
   spada: spada.html
   themes: themes.html
-last_built: 2025-08-15T12:39Z
+last_built: 2025-09-06T16:30Z

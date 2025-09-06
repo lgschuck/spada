@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Docker • spada</title>
+<title>Config • spada</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Docker">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Config">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -65,69 +65,68 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Docker</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Config</h1>
             
             <h4 data-toc-skip class="date">06/09/2025</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lgschuck/spada/blob/HEAD/vignettes/docker.Rmd" class="external-link"><code>vignettes/docker.Rmd</code></a></small>
-      <div class="d-none name"><code>docker.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/lgschuck/spada/blob/HEAD/vignettes/config.Rmd" class="external-link"><code>vignettes/config.Rmd</code></a></small>
+      <div class="d-none name"><code>config.Rmd</code></div>
     </div>
 
     
     
-<div class="section level3">
-<h3 id="docker">Docker<a class="anchor" aria-label="anchor" href="#docker"></a>
-</h3>
-<p>The best way to run Spada is through Docker. As Spada uses specific
-versions of packages and R itself, the Container ensures that you will
-have everything you need to run Spada properly.</p>
-<div class="section level4">
-<h4 id="search-image">Search Image<a class="anchor" aria-label="anchor" href="#search-image"></a>
-</h4>
-<p>In the <strong>Docker Desktop</strong> click in <strong>Docker
-Hub</strong>.</p>
-<p><img src="../reference/figures/articles/docker/docker_hub.png"></p>
-<p>Search for spada.</p>
-<p><img src="../reference/figures/articles/docker/docker_search.png"></p>
-</div>
-<div class="section level4">
-<h4 id="pull-image">Pull Image<a class="anchor" aria-label="anchor" href="#pull-image"></a>
-</h4>
-<p>Find the <strong>tag</strong> you want to download and click
-<strong>Pull image</strong>. This will download the image from Docker
-Hub.</p>
-<p><img src="../reference/figures/articles/docker/docker_image.png"></p>
-<p>After the download is completed the image will appear in
-<strong>Images</strong>.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_2.png"></p>
-<p>Click in the desired image.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_3.png"></p>
-</div>
-</div>
 <div class="section level2">
-<h2 id="run">Run<a class="anchor" aria-label="anchor" href="#run"></a>
+<h2 id="config">Config<a class="anchor" aria-label="anchor" href="#config"></a>
 </h2>
-<p>Click in Run</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_1.png"></p>
-<p>Open Optional settings.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_2.png"></p>
-<p>Insert a Name for the Container and set the <strong>Host Port to
-3838</strong>.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_3.png"></p>
-<p>Now the Container will be running.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_4.png"></p>
-<p>To open it, click in <strong>3838:3838</strong> below the Container
-name or go in a browser and use the <strong>localhost:3838</strong>
-address.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_5.png"></p>
-<p>Your web browser will open in localhost:3838.</p>
-<p><img src="../reference/figures/articles/docker/docker_image_run_6.png"></p>
-<div class="section level4">
-<h4 id="spada">Spada<a class="anchor" aria-label="anchor" href="#spada"></a>
-</h4>
-<p><img src="../reference/figures/articles/docker/docker_spada_loading.png"></p>
-<p><img src="../reference/figures/articles/docker/docker_spada_home_page.png"></p>
-</div>
+<p>Menu Options &gt; Config</p>
+<p><img src="../reference/figures/articles/config/spada_config.png"></p>
+<p>In <strong>Spada</strong> yout can choose some configurations that
+will persist trough RDS files saved in the R_user_dir folder. One file
+for Session Data and another file for Config.</p>
+<p>The options available are:</p>
+<ul>
+<li>
+<p><strong>Plot</strong> colors</p>
+<ul>
+<li>Line: color of the line</li>
+<li>Fill: fill color of plots</li>
+</ul>
+</li>
+<li>
+<p><a href="https://lgschuck.github.io/spada/articles/themes.html" class="external-link"><strong>Themes</strong></a></p>
+<ul>
+<li>Spada: default theme</li>
+<li>Dark Spada: based on Boosttrap Darkly</li>
+</ul>
+</li>
+<li>
+<p><strong>Size</strong> of inputed files</p>
+<ul>
+<li>choose the size of files to be imported (default 1 GB)</li>
+</ul>
+</li>
+<li>
+<p><strong>Session</strong></p>
+<ul>
+<li>
+<p>Restore data at startup:</p>
+<ul>
+<li><p>Always</p></li>
+<li><p>Never (default)</p></li>
+</ul>
+</li>
+<li>
+<p>Save when exit:</p>
+<ul>
+<li><p>Always</p></li>
+<li><p>Ask (default)</p></li>
+<li><p>Never</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="../reference/figures/articles/config/config_save_session.png"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

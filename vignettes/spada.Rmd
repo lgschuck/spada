@@ -108,6 +108,6 @@ This is the default selected item.
 
 ![](../man/figures/articles/spada/spada_output.png)
 
-### Options
+### Config
 
-![](../man/figures/articles/spada/spada_options.png)
+![](../man/figures/articles/spada/spada_config.png)
