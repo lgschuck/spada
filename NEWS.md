@@ -16,6 +16,13 @@ editor_options:
 
 4 - Models: logistic regression
 
+
+# Spada 0.1.0
+
+## 2025.09.22
+
+Release of 0.1.0 version.
+
 # Spada 0.1.0.9000 (development version)
 
 ## 2025.08.13 - Release Candidate
