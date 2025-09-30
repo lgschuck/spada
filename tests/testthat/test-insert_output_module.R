@@ -6,7 +6,7 @@ test_that("Test insert outuput", {
 
     # Add to output
     session$setInputs(btn_add_output = 1)
-    expect_true(is.reactive(output_element))
+    expect_true(is.reactive(output_card))
 
     # Values inserted in modal
     session$setInputs(output_title = 'Title')
@@ -14,9 +14,9 @@ test_that("Test insert outuput", {
 
     session$setInputs(btn_confirm_add_output = 1)
 
-    expect_type(output_element(), 'list')
-    expect_equal(output_element() |> class(), 'shiny.tag')
-    expect_equal(output_element() |> length(), 3)
-    expect_equal(output_element(), report_card('Title', 'Annotation', 'Content'))
+    expect_type(output_card(), 'list')
+    expect_equal(output_card() |> class(), 'shiny.tag')
+    expect_equal(output_card() |> length(), 3)
+    expect_equal(output_card(), report_card('Title', 'Annotation', 'Content', output_id()))
   })
 })

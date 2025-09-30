@@ -1,15 +1,23 @@
 # tests/testthat/test-output_module.R
 
 out_el <- list(
-  report_card(
-    title = 'Test element 1',
-    annotation = 'Annotation test 1',
-    content = tags$p('Element 1')
+  'id_1' = list(
+    'id' = 'id_1',
+    'title' = 'Title 1',
+    'card' = report_card(
+        title = 'Test element 1',
+        annotation = 'Annotation test 1',
+        content = tags$p('Element 1')
+    )
   ),
-  report_card(
-    title = 'Test element 2',
-    annotation = 'Annotation test 2',
-    content = tags$p('Element 2')
+  'id_2' = list(
+    'id' = 'id_2',
+    'title' = 'Title 2',
+    'card' = report_card(
+      title = 'Test element 2',
+      annotation = 'Annotation test 2',
+      content = tags$p('Element 2')
+    )
   )
 )
 
@@ -20,11 +28,23 @@ test_that('Reset elements in output', {
     session$userData$out <- reactiveValues(elements = out_el)
 
     expect_length(session$userData$out$elements, 2)
-    expect_true(inherits(session$userData$out$elements[[1]], 'shiny.tag'))
-    expect_true(inherits(session$userData$out$elements[[2]], 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[1]], 'list'))
+    expect_true(inherits(session$userData$out$elements[[2]], 'list'))
+
+    # test id
+    expect_true(inherits(session$userData$out$elements[[1]][[1]], 'character'))
+    expect_true(inherits(session$userData$out$elements[[1]][[2]], 'character'))
+
+    # test title
+    expect_true(inherits(session$userData$out$elements[[2]][[1]], 'character'))
+    expect_true(inherits(session$userData$out$elements[[2]][[2]], 'character'))
+
+    # test card
+    expect_true(inherits(session$userData$out$elements[[1]][[3]], 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[2]][[3]], 'shiny.tag'))
+
   })
 })
-
 
 # test btn reset --------------------------------------------------------------
 test_that('Reset button clears output', {
@@ -35,8 +55,8 @@ test_that('Reset button clears output', {
     session$setInputs(btn_reset = 1)
     session$setInputs(btn_confirm_reset = 1)
 
-    expect_length(session$userData$out$elements, 1)
-    expect_true(inherits(session$userData$out$elements[[1]], 'shiny.tag'))
+    expect_length(session$userData$out$elements, 0)
+    expect_true(inherits(session$userData$out$elements, 'list'))
   })
 })
 
@@ -58,8 +78,20 @@ test_that('Save output stores RDS file', {
     saved_content <- readRDS(saved_file)
     expect_true(is.list(saved_content))
     expect_length(saved_content, 2)
-    expect_true(inherits(saved_content[[1]], 'shiny.tag'))
-    expect_true(inherits(saved_content[[2]], 'shiny.tag'))
+    expect_true(inherits(saved_content[[1]], 'list'))
+    expect_true(inherits(saved_content[[2]], 'list'))
+
+    # test id
+    expect_true(inherits(saved_content[[1]][[1]], 'character'))
+    expect_true(inherits(saved_content[[1]][[2]], 'character'))
+
+    # test title
+    expect_true(inherits(saved_content[[2]][[1]], 'character'))
+    expect_true(inherits(saved_content[[2]][[2]], 'character'))
+
+    # test card
+    expect_true(inherits(saved_content[[1]][[3]], 'shiny.tag'))
+    expect_true(inherits(saved_content[[2]][[3]], 'shiny.tag'))
   })
 })
 
@@ -78,8 +110,20 @@ test_that('Import output loads RDS file correctly', {
 
     expect_length(session$userData$out$elements, 2)
     expect_equal(session$userData$out$elements, out_el)
-    expect_true(inherits(session$userData$out$elements[[1]], 'shiny.tag'))
-    expect_true(inherits(session$userData$out$elements[[2]], 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[1]], 'list'))
+    expect_true(inherits(session$userData$out$elements[[2]], 'list'))
+
+    # test id
+    expect_true(inherits(session$userData$out$elements[[1]][[1]], 'character'))
+    expect_true(inherits(session$userData$out$elements[[1]][[2]], 'character'))
+
+    # test title
+    expect_true(inherits(session$userData$out$elements[[2]][[1]], 'character'))
+    expect_true(inherits(session$userData$out$elements[[2]][[2]], 'character'))
+
+    # test card
+    expect_true(inherits(session$userData$out$elements[[1]][[3]], 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[2]][[3]], 'shiny.tag'))
   })
 })
 

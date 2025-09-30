@@ -267,7 +267,7 @@ gen_table2 <- function(element1, element2) {
 
 # card to insert in output ----------------------------------------------------
 report_card <- function(title = 'Spada - Output', annotation = NULL,
-                        content = NULL){
+                        content = NULL, id = NULL){
   div(
     div(
       style = paste0("border: 2px solid", main_color,
@@ -278,13 +278,21 @@ report_card <- function(title = 'Spada - Output', annotation = NULL,
       content
     ),
     br(),
-    p(Sys.time())
+    p(id)
   )
 }
 
 # generate element id for outputs ---------------------------------------------
-gen_element_id <- function(){
-  paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
+# gen_element_id <- function(){
+#   paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
+# }
+
+gen_element_id <- function(id = 'id', time_only = FALSE){
+  if(time_only){
+    gsub('.', '', format(Sys.time(), '%Y%m%d%H%M%OS8'), fixed = T)
+  } else {
+    paste0(id, '_', gsub('.', '', format(Sys.time(), '%Y%m%d%H%M%OS8'), fixed = T))
+  }
 }
 
 # allowed operations function -------------------------------------------------
@@ -674,7 +682,11 @@ is_hex_color <- function(x) {
 test_output_format <- function(output){
   is.list(output) &&
    length(output) > 0 &&
-   all(lapply(output, class) == 'shiny.tag')
+   (
+     all(sapply(output, \(x){ x$id |> class() == 'character'})) ||
+       all(sapply(output, \(x){ x$title |> class() == 'character'})) ||
+       all(sapply(output, \(x){ x$card |> class() == 'shiny.tag'}))
+   )
 }
 
 # test data format-------------------------------------------------------------

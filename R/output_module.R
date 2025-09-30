@@ -3,34 +3,66 @@
 output_ui <- function(id) {
   ns <- NS(id)
 
-  card(
-    card_body(fillable = F,
-      uiOutput(ns('panel'))
-    ),
-    card_footer(
-      layout_columns(
-        col_widths = c(2, 2),
-        actionButton(ns('btn_reset'), 'Reset', icon('rotate-right'), class = 'btn-task'),
-        downloadButton(ns('btn_save_html'), 'Save HTML', class = 'btn-task',
-                       icon = icon('download')),
-        actionButton(ns('btn_save_output_session'), 'Save Output', icon('download'),
-                     class = 'btn-task', ),
-        actionButton(ns('btn_import_output_session'), 'Import Output', icon('upload'),
-                     class = 'btn-task')
+  navset_card_pill(
+    nav_panel('Output',
+      card(
+        card_body(fillable = F,
+          uiOutput(ns('panel'))
+        ),
+        card_footer(
+          layout_columns(
+            col_widths = c(2, 2),
+            actionButton(ns('btn_reset'), 'Reset', icon('rotate-right'), class = 'btn-task'),
+            downloadButton(ns('btn_save_html'), 'Save HTML', class = 'btn-task',
+                           icon = icon('download')),
+            actionButton(ns('btn_save_output_session'), 'Save Output', icon('download'),
+                         class = 'btn-task', ),
+            actionButton(ns('btn_import_output_session'), 'Import Output', icon('upload'),
+                         class = 'btn-task')
+          )
+        )
       )
+    ),
+    nav_panel('Output Meta',
+      gt_output(ns('elements_meta'))
     )
   )
-
 }
 
 # server ----------------------------------------------------------------------
 output_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    ns <- NS(id)
+    ns <- session$ns
+
+    output_header <- reactiveVal({
+      id <- gen_element_id()
+      list(
+        'id' = id,
+        'title' = 'Spada Output',
+        'card' = report_card(id = id)
+      )
+    })
 
     # render panel ------------------------------------------------------------
+    printable_output <- reactive({
+      list(
+        output_header()$card,
+        lapply(session$userData$out$elements, function(x) x$card)
+      )
+    })
+
     output$panel <- renderUI({
-      session$userData$out$elements
+      # session$userData$out$elements
+      printable_output()
+    })
+
+    # render output metadata --------------------------------------------------
+    output$elements_meta <- render_gt({
+      data.frame(
+        position = seq_along(session$userData$out$elements),
+        id = sapply(session$userData$out$elements, function(x) x$id),
+        title = sapply(session$userData$out$elements, function(x) x$title)
+        ) |> gt()
     })
 
     # reset output ------------------------------------------------------------
@@ -49,7 +81,7 @@ output_server <- function(id) {
     }) |> bindEvent(input$btn_reset)
 
     observe({
-      session$userData$out$elements <- list(report_card())
+      session$userData$out$elements <- list()
       removeModal()
     }) |> bindEvent(input$btn_confirm_reset)
 
@@ -63,9 +95,7 @@ output_server <- function(id) {
         paste0('output_', format(Sys.time(), format = '%Y%m%d%H%M%S'), '.html')
       },
       content = function(file) {
-
-        save_html(do.call('tagList', session$userData$out$elements), file)
-
+        save_html(do.call('tagList', printable_output()), file)
       }
     )
 

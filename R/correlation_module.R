@@ -166,8 +166,9 @@ correlation_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_gt$output_element())
+      req(mod_output_gt$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_gt$output_element()
+      session$userData$out$elements[[mod_output_gt$output_element()$id]] <- mod_output_gt$output_element()
 
     }) |> bindEvent(mod_output_gt$output_element())
 
@@ -228,8 +229,9 @@ correlation_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_scatter$output_element())
+      req(mod_output_scatter$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
+      session$userData$out$elements[[mod_output_scatter$output_element()$id]] <- mod_output_scatter$output_element()
 
     }) |> bindEvent(mod_output_scatter$output_element())
 

@@ -336,7 +336,7 @@ spada_server <- function(datasets, conf){
     lm_server('pA_lm')
 
     # output events -----------------------------------------------------------
-    session$userData$out <- reactiveValues(elements = list(report_card()))
+    session$userData$out <- reactiveValues(elements = list())
 
     output_server('pO_output')
 

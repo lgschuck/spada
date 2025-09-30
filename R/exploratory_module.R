@@ -630,8 +630,9 @@ exploratory_server <- function(id, output_report) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_dist_plot$output_element())
+      req(mod_output_dist_plot$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_dist_plot$output_element()
+      session$userData$out$elements[[mod_output_dist_plot$output_element()$id]] <- mod_output_dist_plot$output_element()
 
     }) |> bindEvent(mod_output_dist_plot$output_element())
 
@@ -643,8 +644,9 @@ exploratory_server <- function(id, output_report) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_scatter$output_element())
+      req(mod_output_scatter$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_scatter$output_element()
+      session$userData$out$elements[[mod_output_scatter$output_element()$id]] <- mod_output_scatter$output_element()
 
     }) |> bindEvent(mod_output_scatter$output_element())
 
@@ -657,8 +659,9 @@ exploratory_server <- function(id, output_report) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_lm_model_output$output_element())
+      req(mod_output_lm_model_output$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_lm_model_output$output_element()
+      session$userData$out$elements[[mod_output_lm_model_output$output_element()$id]] <- mod_output_lm_model_output$output_element()
 
     }) |> bindEvent(mod_output_lm_model_output$output_element())
 
@@ -670,8 +673,9 @@ exploratory_server <- function(id, output_report) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_lm_resid_plot$output_element())
+      req(mod_output_lm_resid_plot$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_lm_resid_plot$output_element()
+      session$userData$out$elements[[mod_output_lm_resid_plot$output_element()$id]] <- mod_output_lm_resid_plot$output_element()
 
     }) |> bindEvent(mod_output_lm_resid_plot$output_element())
 
@@ -682,8 +686,9 @@ exploratory_server <- function(id, output_report) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_stats_table$output_element())
+      req(mod_output_stats_table$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_stats_table$output_element()
+      session$userData$out$elements[[mod_output_stats_table$output_element()$id]] <- mod_output_stats_table$output_element()
 
     }) |> bindEvent(mod_output_stats_table$output_element())
 
@@ -696,8 +701,9 @@ exploratory_server <- function(id, output_report) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_output_table_values$output_element())
+      req(mod_output_table_values$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_output_table_values$output_element()
+      session$userData$out$elements[[mod_output_table_values$output_element()$id]] <- mod_output_table_values$output_element()
 
     }) |> bindEvent(mod_output_table_values$output_element())
 

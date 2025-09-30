@@ -194,8 +194,9 @@ normality_test_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_insert_output_hist$output_element())
+      req(mod_insert_output_hist$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_hist$output_element()
+      session$userData$out$elements[[mod_insert_output_hist$output_element()$id]] <- mod_insert_output_hist$output_element()
 
     }) |> bindEvent(mod_insert_output_hist$output_element())
 
@@ -236,8 +237,9 @@ normality_test_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_insert_output_qq$output_element())
+      req(mod_insert_output_qq$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_qq$output_element()
+      session$userData$out$elements[[mod_insert_output_qq$output_element()$id]] <- mod_insert_output_qq$output_element()
 
     }) |> bindEvent(mod_insert_output_qq$output_element())
 
@@ -345,8 +347,9 @@ normality_test_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_insert_output_ks$output_element())
+      req(mod_insert_output_ks$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_ks$output_element()
+      session$userData$out$elements[[mod_insert_output_ks$output_element()$id]] <- mod_insert_output_ks$output_element()
 
     }) |> bindEvent(mod_insert_output_ks$output_element())
 
@@ -440,9 +443,9 @@ normality_test_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_insert_output_sw$output_element())
+      req(mod_insert_output_sw$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_sw$output_element()
-
+      session$userData$out$elements[[mod_insert_output_sw$output_element()$id]] <- mod_insert_output_sw$output_element()
     }) |> bindEvent(mod_insert_output_sw$output_element())
 
     # help file of shapiro.test
@@ -536,8 +539,9 @@ normality_test_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_insert_output_sf$output_element())
+      req(mod_insert_output_sf$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output_sf$output_element()
+      session$userData$out$elements[[mod_insert_output_sf$output_element()$id]] <- mod_insert_output_sf$output_element()
 
     }) |> bindEvent(mod_insert_output_sf$output_element())
 

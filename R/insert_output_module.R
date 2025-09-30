@@ -12,7 +12,9 @@ insert_output_server <- function(id, input_element) {
 
     ns <- session$ns
 
-    output_element <- reactiveVal(NULL)
+    output_card <- reactiveVal(NULL)
+    output_id <- reactiveVal(NULL)
+    output_title <- reactiveVal(NULL)
 
     is_large_data_frame <- reactive({
       if('gt_tbl' %in% (input_element() |> class()) &&
@@ -37,15 +39,14 @@ insert_output_server <- function(id, input_element) {
                 'Inserting an extensive data.frame in the Output may cause performance degradation'
               )
             },
-          textInput(ns('output_title'), 'Title'),
-          textAreaInput(
-            ns('output_annot'),
-            'Annotation',
-            width = '90%',
-            rows = 10,
-            resize = 'both'
-          )
-
+            textInput(ns('output_title'), 'Title', value = 'Title'),
+            textAreaInput(
+              ns('output_annot'),
+              'Annotation',
+              width = '90%',
+              rows = 10,
+              resize = 'both'
+            )
           ),
           footer = tagList(
             actionButton(ns('btn_cancel_add_output'), 'Cancel',
@@ -65,15 +66,34 @@ insert_output_server <- function(id, input_element) {
 
     # confirm add output ---------------------
     observe({
-      removeModal()
+      if(!isTruthy(input$output_title) || trimws(input$output_title) == ''){
+        msg('Insert a Title', DURATION = 1)
+      } else {
+        removeModal()
 
-      output_element(report_card(input$output_title, input$output_annot, input_element()))
+        output_id(gen_element_id())
 
-      msg('Added to output', DURATION = 1)
+        output_title(input$output_title)
+
+        output_card(report_card(input$output_title, input$output_annot, input_element(),
+                                id = output_id()))
+
+        msg('Added to output', DURATION = 1)
+      }
 
     }) |> bindEvent(input$btn_confirm_add_output)
 
     # return
-    return(list(output_element = reactive(output_element())))
+    return(
+      list(
+        output_element = reactive({
+          list(
+              'id' = output_id(),
+              'title' = output_title(),
+              'card' = output_card()
+          )
+        })
+      )
+    )
   })
 }

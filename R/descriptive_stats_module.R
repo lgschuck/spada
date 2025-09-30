@@ -217,8 +217,9 @@ descriptive_stats_server <- function(id) {
     # get return from insert output module ------------------------------------
     observe({
       req(mod_insert_output$output_element())
+      req(mod_insert_output$output_element()$id)
 
-      session$userData$out$elements[[gen_element_id()]] <- mod_insert_output$output_element()
+      session$userData$out$elements[[mod_insert_output$output_element()$id]] <- mod_insert_output$output_element()
 
     }) |> bindEvent(mod_insert_output$output_element())
 

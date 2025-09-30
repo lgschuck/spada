@@ -148,14 +148,7 @@ spada_ui <- function(conf){
         icon = icon('tablet-screen-button'),
         card(
           full_screen = T,
-          card_body(
-            class = 'big-card',
-            navset_card_pill(
-              nav_panel('Output',
-                        output_ui('pO_output')
-              )
-            )
-          )
+          card_body(class = 'big-card', output_ui('pO_output'))
         )
       ),
 
