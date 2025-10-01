@@ -27,9 +27,9 @@ test_that('Test desc stats - reactives', {
     expect_true(df_stats |> is.reactive())
     expect_equal(df_stats(), mtcars[var1])
 
-    expect_true(desc_stats |> is.reactive())
-    expect_true(desc_stats() |> is.list())
-    expect_true((desc_stats() |> length()) == 1)
+    expect_true(calculated_stats |> is.reactive())
+    expect_true(calculated_stats() |> is.list())
+    expect_true((calculated_stats() |> length()) == 1)
   })
 })
 
@@ -54,13 +54,13 @@ test_that('Test descriptive stats - desc_stats mean 1 var', {
 
     expect_equal(df(), mtcars)
     expect_equal(df_stats(), mtcars[var1])
-    expect_true(desc_stats |> is.reactive())
-    expect_true(desc_stats() |> is.list())
-    expect_true((desc_stats() |> length()) == 1)
+    expect_true(calculated_stats |> is.reactive())
+    expect_true(calculated_stats() |> is.list())
+    expect_true((calculated_stats() |> length()) == 1)
 
     mean_hp <- mean(mtcars[, var1]) |> f_num(dig = 9)
     names(mean_hp) = var1
-    expect_equal(desc_stats(), list('Mean' = mean_hp))
+    expect_equal(calculated_stats(), list('Mean' = mean_hp))
 
   })
 })

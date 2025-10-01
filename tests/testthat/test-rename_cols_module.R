@@ -8,7 +8,7 @@ test_that("Test rename one column", {
       dt = list('iris' = iris),
       act_name = 'iris'
     )
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Species')
     session$setInputs(txt_new_name = 'Species_new_name')
     session$setInputs(btn_rename = 1)
@@ -25,7 +25,7 @@ test_that("Test rename prefix - two columns", {
       dt = list('mtcars' = mtcars[c('hp', 'mpg')]),
       act_name = 'mtcars'
     )
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       vars_sel_multi = c('hp', 'mpg'),
       rename_method = 'prefix_suffix',
@@ -46,7 +46,7 @@ test_that("Test rename suffix - three columns", {
       dt = list('mtcars' = mtcars[c('hp', 'mpg', 'cyl')]),
       act_name = 'mtcars'
     )
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       vars_sel_multi = c('hp', 'mpg', 'cyl'),
       rename_method = 'prefix_suffix',
@@ -68,7 +68,7 @@ test_that("Test rename function - one column", {
       dt = list('iris' = iris),
       act_name = 'iris'
     )
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       vars_sel_multi = c('Species'),
       rename_method = 'function',
@@ -88,7 +88,7 @@ test_that("Test rename replace - four columns", {
       dt = list('iris' = iris),
       act_name = 'iris'
     )
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       vars_sel_multi = c('Sepal.Length', 'Sepal.Width', 'Petal.Length',
                          'Petal.Width'),
@@ -112,7 +112,7 @@ test_that("Test rename remove - two columns", {
       dt = list('iris' = iris),
       act_name = 'iris'
     )
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       vars_sel_multi = c('Sepal.Length', 'Sepal.Width'),
       rename_method = 'remove',

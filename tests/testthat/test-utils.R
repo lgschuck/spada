@@ -358,3 +358,64 @@ test_that('linear model df metrics', {
   expect_s3_class(linear_model_df_metrics(s1), 'data.frame')
 })
 
+# test desc stats -------------------------------------------------------------
+test_that('descriptive stats function', {
+
+  df <- data.frame(
+    a = c(1, 2, 3, NA, 5),
+    b = c(10, 20, 30, 40, NA),
+    c = factor(c('x', 'x', 'y', 'y', 'z'))
+  )
+
+  res <- desc_stats(df, fmt_digits = 2)
+
+  expect_type(res, 'list')
+  expect_true(all(c('Mean', 'Gmean', 'Hmean', 'Median', 'Mode',
+                    'Min', 'Max', 'IQR', 'Range', 'Variance', 'Standard Deviation',
+                    'Skewness', 'Kurtosis') %in% names(res)))
+
+  # Mean
+  expect_equal(res$Mean['a'][[1]], mean(df$a, na.rm = TRUE) |> f_num(dig = 2))
+
+  # Gmean
+  expect_equal(res$Gmean['a'][[1]], Gmean(df$a, na.rm = TRUE) |> f_num(dig = 2))
+
+  # Hmean
+  expect_equal(res$Hmean['a'][[1]], Hmean(df$a, na.rm = TRUE) |> f_num(dig = 2))
+
+  # Median
+  expect_equal(as.numeric(res$Median['a']), median(df$a, na.rm = TRUE))
+
+  # Mode (coluna fator deve retornar um valor não vazio)
+  expect_equal(res$Mode['c'][[1]], 'x | y')
+
+  # Min e Max
+  expect_equal(res$Min['a'][[1]], min(df$a, na.rm = TRUE) |> f_num(dig = 2))
+  expect_equal(res$Max['b'][[1]], max(df$b, na.rm = TRUE) |> f_num(dig = 2))
+
+  # IQR
+  expect_equal(res[['IQR']]['b'][[1]],
+               df$b |> IQR(na.rm = T) |> f_num(dig = 2))
+
+  # Range
+  expect_equal(res[['Range']]['b'][[1]],
+               paste('[', df$b |> range() |> f_num(dig = 2) , ']', collapse = '--->'))
+
+  # Variance
+  expect_equal(res[['Variance']]['b'][[1]],
+               df$b |> var(na.rm = T) |> f_num(dig = 2))
+
+  # SD
+  expect_equal(res[['Standard Deviation']]['b'][[1]],
+               df$b |> sd(na.rm = T) |> f_num(dig = 2))
+
+  # Skewness
+  expect_equal(res[['Skewness']]['b'][[1]],
+               df$b |> Skew(na.rm = T) |> f_num(dig = 2))
+
+  # Kurtosis
+  expect_equal(res[['Kurtosis']]['b'][[1]],
+               df$b |> Kurt(na.rm = T) |> f_num(dig = 2))
+
+})
+

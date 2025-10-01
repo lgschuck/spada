@@ -76,111 +76,22 @@ descriptive_stats_server <- function(id) {
     })
 
     # calculate stats ---------------------------------------------------------
-    desc_stats <- reactive({
+    calculated_stats <- reactive({
       req(input$sel_var)
-      desc_stats <- list()
 
-      fmt_digits <- min(max(0, input$table_digits), 9)
-
-      # central tendency
-      if('mean' %in% input$xg_central_tendency){
-        desc_stats$Mean <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) mean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('gmean' %in% input$xg_central_tendency){
-        desc_stats$Gmean <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) Gmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('hmean' %in% input$xg_central_tendency){
-        desc_stats$Hmean <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) Hmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('median' %in% input$xg_central_tendency){
-        desc_stats$Median <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) median(x, na.rm = T) |> f_num(dig = fmt_digits)  else NA })
-      }
-
-      if('mode' %in% input$xg_central_tendency){
-        desc_stats$Mode <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric() ||
-                   x |> is.character() ||
-                   x |> is.factor()){
-            x_mode <- Mode(x, na.rm = T) |> f_num(dig = fmt_digits)
-            if(is.na(x_mode) |> all()) NA else paste(x_mode, collapse = ' | ')
-          } else { NA }
-        })
-      }
-
-      # dispersion
-      if('min' %in% input$xg_dispersion){
-        desc_stats$Min <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) mina(x) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('max' %in% input$xg_dispersion){
-        desc_stats$Max <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) mana(x) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('IQR' %in% input$xg_dispersion){
-        desc_stats$IQR <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) IQR(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('range' %in% input$xg_dispersion){
-        desc_stats$Range <- sapply(
-          df_stats(),
-          \(x) {
-            if(x |> is.numeric()){
-              paste('[', range(x) |> f_num(dig = fmt_digits) , ']', collapse = '--->')
-            } else { NA }
-            }
-          )
-      }
-
-      if('var' %in% input$xg_dispersion){
-        desc_stats$Variance <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) var(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('sd' %in% input$xg_dispersion){
-        desc_stats[['Standard Deviation']] <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) sd(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('skew' %in% input$xg_shape){
-        desc_stats[['Skewness']] <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) Skew(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      if('kurt' %in% input$xg_shape){
-        desc_stats[['Kurtosis']] <- sapply(
-          df_stats(),
-          \(x) {if(x |> is.numeric()) Kurt(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
-      }
-
-      desc_stats
+      desc_stats(df = df_stats(),
+                 fmt_digits = min(max(0, input$table_digits), 9),
+                 central_tendency = input$xg_central_tendency,
+                 dispersion = input$xg_dispersion,
+                 shape = input$xg_shape
+                 )
     })
 
     # gt table ----------------------------------------------------------------
     gt_stats <- reactive({
       data.frame(
-        Measures = names(desc_stats()),
-        do.call(rbind, desc_stats())
+        Measures = names(calculated_stats()),
+        do.call(rbind, calculated_stats())
       ) |>
         gt() |>
         cols_align(align = 'right') |>

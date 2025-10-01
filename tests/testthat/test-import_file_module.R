@@ -7,10 +7,9 @@ test_that('Test import RDS', {
     tmp <- tempfile(fileext = ".RDS")
     saveRDS(iris, tmp)
 
-    # set inicial data
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'RDS',
@@ -30,10 +29,9 @@ test_that('Test import Sav - all lines', {
     tmp <- tempfile(fileext = ".sav")
     haven::write_sav(iris, tmp)
 
-    # set inicial data
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'sav',
@@ -58,10 +56,9 @@ test_that('Test import Sav - 10 lines', {
     tmp <- tempfile(fileext = ".sav")
     haven::write_sav(iris, tmp)
 
-    # set inicial data
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'sav',
@@ -88,10 +85,9 @@ test_that('Test import all lines - csv standard', {
     tmp <- tempfile(fileext = ".csv")
     write.table(iris, tmp, sep = ',', dec = '.', row.names = F)
 
-    # set inicial data
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'csv',
@@ -123,10 +119,9 @@ test_that('Test import all lines - csv 2 standard', {
     tmp <- tempfile(fileext = ".csv")
     write.table(iris, tmp, sep = ';', dec = ',', row.names = F)
 
-    # set inicial data
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-
+    session$userData$dt$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'csv',

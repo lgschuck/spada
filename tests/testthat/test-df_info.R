@@ -51,8 +51,8 @@ test_that('df_info calculates zero counts and percentages correctly', {
 
   info <- df_info(df)
 
-  expect_equal(info$n_zero, c(2, 1, 2))
-  expect_equal(info$perc_zero, c(2/3, 1/3, 2/3))
+  expect_equal(info$n_zero, c(2, 1, 0))
+  expect_equal(info$perc_zero, c(2/3, 1/3, 0))
 })
 
 test_that('df_info calculates NA counts and percentages correctly', {

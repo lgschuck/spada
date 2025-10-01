@@ -449,6 +449,8 @@ filter_rows_server <- function(id) {
 
         update_act_dt(session, copy(temp))
         rm(temp)
+
+        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
 
     }) |> bindEvent(input$btn_filter)

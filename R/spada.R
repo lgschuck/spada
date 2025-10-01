@@ -46,6 +46,8 @@
 #'
 #' @importFrom htmltools plotTag save_html
 #'
+#' @importFrom memoise memoise
+#'
 #' @importFrom rlang parse_expr
 #'
 #' @importFrom sass as_sass

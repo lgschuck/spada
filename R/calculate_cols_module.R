@@ -121,6 +121,8 @@ calculate_cols_server <- function(id) {
           update_act_dt(session, copy(temp))
           rm(temp)
 
+          session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
+
           msg('Apply function: OK')
 
           updateTextInput(session, 'txt_new_name_fun', value = '')
@@ -196,6 +198,7 @@ calculate_cols_server <- function(id) {
           } else{
 
             update_act_dt(session, copy(e1$temp))
+            session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
 
             msg('Calculate new var: OK')
             rm(e1)

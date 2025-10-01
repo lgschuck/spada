@@ -11,7 +11,19 @@ sidebar_ui <- function(id) {
         class = 'accordion-sidebar',
         'Active Dataset',
         icon = bs_icon('check2-square', size = '1.75em'),
-        uiOutput(ns('df_info'))
+        uiOutput(ns('df_info')),
+        fluidRow(
+          column(1),
+          column(2, actionButton(ns('df_btn_overview'), '',
+                                 icon('magnifying-glass'), class = 'mini-btn') |>
+                   tooltip('Overview', placement = 'bottom')),
+          column(2, actionButton(ns('df_btn_change'), '', icon('shuffle'),
+                                 class = 'mini-btn') |>
+                   tooltip('Change dataset', placement = 'bottom')),
+          column(2, actionButton(ns('df_btn_explore'), '', icon('chart-simple'),
+                                 class = 'mini-btn') |>
+                   tooltip('Exploratory Analysis', placement = 'bottom')),
+        )
       )
     ),
     accordion(
@@ -38,27 +50,9 @@ sidebar_server <- function(id, app_session) {
     output$df_info <- renderUI({
       tagList(
         h5(session$userData$dt$act_name),
-        p('Rows/Columns:',
-          paste(session$userData$dt$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1),
-                '/', session$userData$dt$act_meta() |> pull(cols) |> head(1) |> f_num())
-        ),
-        p("Columns with NA's:", session$userData$dt$act_meta() |>
-            filter(n_nas > 0) |>
-            nrow()),
-        p('Size (MB):', (object.size(get_act_dt(session)) / 2^20) |>
-            as.numeric() |> round(2)),
-        fluidRow(
-          column(1),
-          column(2, actionButton(ns('df_btn_overview'), '',
-                                 icon('magnifying-glass'), class = 'mini-btn') |>
-                   tooltip('Overview', placement = 'bottom')),
-          column(2, actionButton(ns('df_btn_change'), '', icon('shuffle'),
-                                 class = 'mini-btn') |>
-                   tooltip('Change dataset', placement = 'bottom')),
-          column(2, actionButton(ns('df_btn_explore'), '', icon('chart-simple'),
-                                 class = 'mini-btn') |>
-                   tooltip('Exploratory Analysis', placement = 'bottom')),
-        )
+        p('Rows/Columns:', session$userData$dt$act_row_col()),
+        p("Columns with NA's:", session$userData$dt$act_col_nas()),
+        p('Size (MB):', session$userData$dt$act_size())
       )
     })
 

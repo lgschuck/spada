@@ -126,6 +126,8 @@ import_file_server <- function(id) {
       # update dt ----------------------------
       append_dt(session, data$data, input$dataset_name)
 
+      session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
+
       msg('File imported successfully')
 
     }) |> bindEvent(input$btn_import)

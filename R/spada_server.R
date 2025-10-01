@@ -156,11 +156,14 @@ spada_server <- function(datasets, conf){
     )
 
     # datasets metadata -------------------------------------------------------
+    session$userData$dt$data_changed <- reactiveVal(0)
+    df_info_cached <- memoise(df_info)
+
     session$userData$dt$df_info <- reactive({
       req(session$userData$dt)
 
-      lapply(session$userData$dt$dt, df_info)
-    })
+      lapply(session$userData$dt$dt, df_info_cached)
+    }) |> bindEvent(session$userData$dt$data_changed())
 
     session$userData$dt$gt_info <- reactive({
       req(session$userData$dt$df_info())
@@ -173,6 +176,26 @@ spada_server <- function(datasets, conf){
     session$userData$dt$act_meta <- reactive({
       req(session$userData$dt$df_info())
       session$userData$dt$df_info()[[session$userData$dt$act_name]]
+    })
+
+    # info to use in sidebar and navbar modules --------
+    session$userData$dt$act_row_col <- reactive({
+      req(session$userData$dt$df_info())
+      paste(session$userData$dt$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1),
+            '/', session$userData$dt$act_meta() |> pull(cols) |> head(1) |> f_num())
+    })
+
+    session$userData$dt$act_col_nas <- reactive({
+      req(session$userData$dt$df_info())
+      session$userData$dt$act_meta() |>
+        filter(n_nas > 0) |>
+        nrow()
+    })
+
+    session$userData$dt$act_size <- reactive({
+      req(session$userData$dt$df_info())
+      (object.size(get_act_dt(session)) / 2^20) |>
+        as.numeric() |> round(2)
     })
 
     # navbar ------------------------------------------------------------------
@@ -225,6 +248,8 @@ spada_server <- function(datasets, conf){
         }
         msg('New name applied')
         updateTextInput(session, "pD_data_txt_new_name", value = '')
+
+        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pD_data_btn_new_name)
 
@@ -240,6 +265,7 @@ spada_server <- function(datasets, conf){
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
 
         updateTextInput(session, "pD_data_txt_new_name", value = '')
+        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
@@ -253,6 +279,7 @@ spada_server <- function(datasets, conf){
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
 
         updateTextInput(session, "pD_data_txt_new_name", value = '')
+        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
@@ -289,6 +316,8 @@ spada_server <- function(datasets, conf){
     observe({
       update_act_dt(session, copy(session$userData$dt$bkp0))
       msg('Active Dataset Reseted')
+
+      session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
     }) |> bindEvent(input$pE_btn_reset)
 
     # create backup --------------------------
@@ -304,6 +333,7 @@ spada_server <- function(datasets, conf){
       } else {
         update_act_dt(session, copy(session$userData$dt$bkp))
         msg('Backup restored')
+        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pE_btn_restore)
 

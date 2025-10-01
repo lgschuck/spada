@@ -327,7 +327,8 @@ test_dataset <- function(n_row = 1e3, n_col = 11){
     num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
     int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
     logical_var = rep(sample(c(TRUE, FALSE), n_row, replace = T)),
-    complex_var = rep(sample(1:100, n_row, replace = T) |> as.complex())
+    complex_var = rep(sample(1:100, n_row, replace = T) |> as.complex()),
+    all_na = rep(NA, n_row)
   )
 
   extra_cols <- n_col - ncol(test_data)
@@ -770,3 +771,116 @@ append_dt <- function(session, new_dt, new_dt_name) {
 
   session$userData$dt$dt <- c(session$userData$dt$dt, new_list)
 }
+
+# descriptive stats -----------------------------------------------------------
+desc_stats <- function(df = NULL,
+                       fmt_digits = 9,
+                       central_tendency = c('mean', 'gmean', 'hmean', 'median', 'mode'),
+                       dispersion = c('min', 'max', 'IQR', 'range', 'var', 'sd'),
+                       shape = c('skew', 'kurt')) {
+
+  desc_stats <- list()
+
+  # central tendency
+  if('mean' %in% central_tendency){
+    desc_stats$Mean <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) mean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('gmean' %in% central_tendency){
+    desc_stats$Gmean <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) suppressWarnings(Gmean(x, na.rm = T)) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('hmean' %in% central_tendency){
+    desc_stats$Hmean <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) Hmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('median' %in% central_tendency){
+    desc_stats$Median <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) median(x, na.rm = T) |> f_num(dig = fmt_digits)  else NA })
+  }
+
+  if('mode' %in% central_tendency){
+    desc_stats$Mode <- sapply(
+      df,
+      \(x) {if(x |> is.numeric() ||
+               x |> is.character() ||
+               x |> is.factor()){
+        x_mode <- Mode(x, na.rm = T) |> f_num(dig = fmt_digits)
+        if(is.na(x_mode) |> all()) NA else paste(x_mode, collapse = ' | ')
+      } else { NA }
+      })
+  }
+
+  # dispersion
+  if('min' %in% dispersion){
+    desc_stats$Min <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) mina(x) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('max' %in% dispersion){
+    desc_stats$Max <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) mana(x) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('IQR' %in% dispersion){
+    desc_stats$IQR <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) IQR(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('range' %in% dispersion){
+    desc_stats$Range <- sapply(
+      df,
+      \(x) {
+        if(x |> is.numeric()){
+          paste('[', range(x) |> f_num(dig = fmt_digits) , ']', collapse = '--->')
+        } else { NA }
+      }
+    )
+  }
+
+  if('var' %in% dispersion){
+    desc_stats$Variance <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) var(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('sd' %in% dispersion){
+    desc_stats[['Standard Deviation']] <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) sd(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('skew' %in% shape){
+    desc_stats[['Skewness']] <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) Skew(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  if('kurt' %in% shape){
+    desc_stats[['Kurtosis']] <- sapply(
+      df,
+      \(x) {if(x |> is.numeric()) Kurt(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+  }
+
+  desc_stats
+}
+
+
+
+
+
+
+
+
+
+
