@@ -875,12 +875,145 @@ desc_stats <- function(df = NULL,
   desc_stats
 }
 
+# plots -----------------------------------------------------------------------
+spada_plot <- function(
+    type = 'hist',
+    data = NULL,
+    xvar = NULL,
+    yvar = NULL,
+    zvar = NULL,
+    xlab = '',
+    ylab = '',
+    fill_color = '#0099F8',
+    line_color = '#000000',
+    title_color = '#02517d',
+    title = NULL,
+    bins = 25,
+    vertical_line = NULL,
+    point_shape = '.',
+    line_type = 1,
+    mean_value = NULL,
+    sd_value = NULL
+  ){
 
+  if(type == 'hist'){
 
+    ggplot(data, aes(x = .data[[xvar]])) +
+      geom_histogram(
+        bins = bins,
+        fill = fill_color,
+        color = '#000000'
+      ) +
+      geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
+      labs(x = xlab, y = ylab, title = title) +
+      theme_classic() +
+      theme(axis.text.x = element_text(size = 14),
+            axis.text.y = element_text(size = 14),
+            axis.title.y = element_text(size = 16),
+            plot.title = element_text(color = title_color, size = 16, face = 'bold')
+      )
+  } else if (type == 'hist_density'){
 
+    ggplot(data = data, aes(x = .data[[xvar]])) +
+      geom_histogram(aes(y = after_stat(density)),
+                     bins = bins,
+                     fill = fill_color,
+                     color = 'black') +
+      stat_function(fun = dnorm,
+                    args = list(mean = mean_value,
+                                sd = sd_value),
+                    color = line_color,
+                    linewidth = 1) +
+      labs(x = xlab, y = ylab, title = title) +
+      theme_classic() +
+      theme(axis.text.x = element_text(size = 14),
+            axis.text.y = element_text(size = 14),
+            axis.title.x = element_text(size = 16),
+            axis.title.y = element_text(size = 16),
+            plot.title = element_text(color = title_color, size = 16, face = 'bold')
+      )
 
+  } else if (type == 'boxplot'){
 
+    ggplot(data = data, aes(x = .data[[xvar]])) +
+      stat_boxplot(geom = 'errorbar', width = 0.3) +
+      geom_boxplot(fill = fill_color) +
+      ylim(-1.2, 1.2) +
+      geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
+      labs(x = '', y = '') +
+      theme_classic() +
+      theme(
+        axis.ticks.y = element_blank(),
+        axis.text.y  = element_blank(),
+        axis.line.y  = element_blank(),
+        panel.border = element_rect(color = '#000000', fill = NA),
+        axis.text.x = element_text(size = 14)
+      )
+  } else if(type == 'dots'){
 
+    ggplot(data = data, aes(x = .data[[xvar]], y = .data[[yvar]])) +
+      geom_point(shape = point_shape, color = fill_color) +
+      geom_hline(yintercept = vertical_line, color = line_color, linetype = line_type) +
+      labs(x = xlab, y = ylab) +
+      theme_classic() +
+      theme(axis.text.x = element_text(size = 14),
+            axis.text.y = element_text(size = 14),
+            axis.title.x = element_text(size = 16),
+            axis.title.y = element_text(size = 16)
+      )
+  } else if (type == 'barplot'){
 
+    ggplot(data = data, aes(x = factor(.data[[xvar]]))) +
+      geom_bar(fill = fill_color) +
+      labs(x = xlab, y = ylab) +
+      theme_classic() +
+      theme(axis.text.x = element_text(size = 14),
+            axis.text.y = element_text(size = 14),
+            axis.title.y = element_text(size = 16)
+      )
 
+  } else if (type == 'boxplot_group'){
 
+    ggplot(data = data, aes(x = .data[[xvar]], y = .data[[yvar]], fill = .data[[xvar]])) +
+      stat_boxplot(geom = 'errorbar', width = 0.3) +
+      geom_boxplot(orientation = 'x') +
+      geom_hline(yintercept = vertical_line,
+                 color = plot_line_color) +
+      coord_flip() +
+      labs(x = xlab, y = ylab) +
+      theme_classic() +
+      theme(
+        legend.position = 'none',
+        axis.ticks.y = element_blank(),
+        axis.line.y  = element_blank(),
+        panel.border = element_rect(color = 'black', fill = NA),
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14)
+      )
+  } else if (type == 'scatter'){
+
+    ggplot(data = data, aes(x = .data[[xvar]], y = .data[[yvar]])) +
+      geom_point(color = fill_color, shape = point_shape) +
+      labs(title = title,
+           x = xlab, y = ylab) +
+      theme_classic() +
+      theme(axis.text.x = element_text(size = 14),
+            axis.text.y = element_text(size = 14),
+            axis.title.x = element_text(size = 16),
+            axis.title.y = element_text(size = 16),
+            plot.title = element_text(color = title_color, size = 16, face = 'bold')
+      )
+  } else if (type == 'qq_plot'){
+    ggplot(data = data, aes(sample = .data[[xvar]])) +
+      stat_qq(color = fill_color) +
+      stat_qq_line(color = line_color) +
+      labs(title = title, x = xlab, y = ylab) +
+      theme_classic() +
+      theme(axis.text.x = element_text(size = 14),
+            axis.text.y = element_text(size = 14),
+            axis.title.x = element_text(size = 16),
+            axis.title.y = element_text(size = 16),
+            plot.title = element_text(color = title_color, size = 16, face = 'bold')
+      )
+  }
+}

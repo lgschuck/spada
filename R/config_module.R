@@ -17,6 +17,7 @@ config_ui <- function(id) {
               col_widths = c(3, 3, 3),
               uiOutput(ns('ui_fill_color')),
               uiOutput(ns('ui_line_color')),
+              uiOutput(ns('ui_title_color')),
               btn_task(ns('btn_reset_colors'), 'Reset', icon('rotate'),
                        style = 'margin-top: 27px !important;')
             ),
@@ -119,15 +120,27 @@ config_server <- function(id) {
 	    )
 	  })
 
+	  output$ui_title_color <- renderUI({
+	    req(session$userData$conf$plot_title_color)
+	    colorPickr(
+	      inputId = ns('sel_title'),
+	      label = 'Title color',
+	      selected = session$userData$conf$plot_title_color,
+	      update = 'save'
+	    )
+	  })
+
 	  # palette ---------------------------------
 	  palette <- reactive({
-	    list('fill' = input$sel_fill, 'line' = input$sel_line)
+	    list('fill' = input$sel_fill, 'line' = input$sel_line,
+	         'title' = input$sel_title)
 	  })
 
 	  observe({
 	    req(input$sel_fill, input$sel_line)
 	    session$userData$conf$plot_fill_color <- palette()[['fill']]
 	    session$userData$conf$plot_line_color <- palette()[['line']]
+	    session$userData$conf$plot_title_color <- palette()[['title']]
 	  })
 
 	  # reset colors ---------------------------
@@ -138,6 +151,9 @@ config_server <- function(id) {
 	    updateColorPickr(session = session,
 	                     inputId = 'sel_line',
 	                     value = plot_line_color)
+	    updateColorPickr(session = session,
+	                     inputId = 'sel_title',
+	                     value = plot_title_color)
 	  }) |> bindEvent(input$btn_reset_colors)
 
 	  # sample plot to show picked colors ------
@@ -149,7 +165,9 @@ config_server <- function(id) {
 	      col = palette()[['fill']],
 	      xlab = '',
 	      ylab = '',
-	      main = ''
+	      main = 'Title',
+	      col.main = palette()[['title']],
+	      cex.main = 3
 	    )
 	    abline(h = 100, col = palette()[['line']], lwd = 3)
 

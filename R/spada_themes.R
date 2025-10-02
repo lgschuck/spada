@@ -9,8 +9,10 @@ bg_color <- '#f9f9f9'
 secondary <- '#0072B2'
 sucess <- '#009E73'
 danger <- '#b60020'
-plot_fill_color <- '#5CACEE'
+plot_fill_color <- '#0099F8'
 plot_line_color <- '#EE7942'
+plot_title_color <- '#02517d'
+
 
 startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------

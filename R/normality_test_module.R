@@ -18,7 +18,7 @@ normality_test_ui <- function(id) {
               div(style = "margin-bottom: -8px !important;"),
               layout_columns(
                 col_widths = c(1, 2, 2),
-                numericInput(ns('bins'), 'Number of Bins', 30, 5, step = 5),
+                numericInput(ns('bins'), 'Bins', 25, 5, step = 5),
                 btn_task(ns('btn_hist'), 'Show Histogram', icon('chart-simple'),
                          style = 'margin-top: 28px'),
                 div(insert_output_ui(ns('norm_insert_output_hist')),
@@ -163,24 +163,18 @@ normality_test_server <- function(id) {
       req(input$sel_var)
       req(var())
 
-      ggplot(data.frame(x = var()), aes(x = x)) +
-        geom_histogram(aes(y = after_stat(density)),
-                       bins = input$bins,
-                       fill = session$userData$conf$plot_fill_color,
-                       color = "black") +
-        stat_function(fun = dnorm,
-                      args = list(mean = mean(var(), na.rm = TRUE),
-                                  sd = sd(var(), na.rm = TRUE)),
-                      color = session$userData$conf$plot_line_color,
-                      linewidth = 1) +
-        labs(x = "Values",
-             y = "Density") +
-        theme_classic() +
-        theme(axis.text.x = element_text(size = 14),
-              axis.text.y = element_text(size = 14),
-              axis.title.x = element_text(size = 16),
-              axis.title.y = element_text(size = 16)
-        )
+      spada_plot(type = 'hist_density',
+                 data = data.frame(x = var()),
+                 xvar = 'x',
+                 xlab = 'Values',
+                 ylab = 'Density',
+                 title = paste('Histogram -', input$sel_var),
+                 bins = input$bins,
+                 fill_color = session$userData$conf$plot_fill_color,
+                 line_color = session$userData$conf$plot_line_color,
+                 mean_value = mean(var(), na.rm = TRUE),
+                 sd_value = sd(var(), na.rm = TRUE)
+      )
     }) |> bindEvent(input$btn_hist)
 
     # insert histogram to output ----------------------------------------------
@@ -209,18 +203,15 @@ normality_test_server <- function(id) {
       req(input$sel_var)
       req(var())
 
-      ggplot(data.frame(x = var()), aes(sample = x)) +
-        stat_qq(color = session$userData$conf$plot_fill_color) +
-        stat_qq_line(color = session$userData$conf$plot_line_color) +
-        labs(title = paste('Normal QQ Plot:', input$sel_var),
-             x = 'Theoretical Quantiles',
-             y = 'Sample Quantiles') +
-        theme_classic() +
-        theme(axis.text.x = element_text(size = 14),
-              axis.text.y = element_text(size = 14),
-              axis.title.x = element_text(size = 16),
-              axis.title.y = element_text(size = 16)
-        )
+      spada_plot(type = 'qq_plot',
+                 data = data.frame(x = var()),
+                 xvar = 'x',
+                 xlab = 'Theoretical Quantiles',
+                 ylab = 'Sample Quantiles',
+                 title = paste('Normal QQ Plot:', input$sel_var),
+                 fill_color = session$userData$conf$plot_fill_color,
+                 line_color = session$userData$conf$plot_line_color
+      )
     }) |> bindEvent(input$btn_qq)
 
     # insert to output --------------------------------------------------------

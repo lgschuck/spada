@@ -117,7 +117,8 @@ spada <- function(...) {
     'restore_output_status' = 0,
     'restore_status' = NULL,
     'plot_fill_color' = plot_fill_color,
-    'plot_line_color' = plot_line_color
+    'plot_line_color' = plot_line_color,
+    'plot_title_color' = plot_title_color
   )
 
   if(file.exists(paste0(r_user_conf_dir, '/conf.RDS'))) {

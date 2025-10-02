@@ -18,7 +18,8 @@ spada_server <- function(datasets, conf){
       restore_output_status = conf$restore_output_status,
       restore_status = conf$restore_status,
       plot_fill_color = conf$plot_fill_color,
-      plot_line_color = conf$plot_line_color
+      plot_line_color = conf$plot_line_color,
+      plot_title_color = conf$plot_title_color
     )
 
     # restore saved session data -----------------------------------------------

@@ -419,3 +419,13 @@ test_that('descriptive stats function', {
 
 })
 
+# test spada plot -------------------------------------------------------------
+test_that('spada plot function', {
+  p <- spada_plot(
+    type = 'hist',
+    data = data.frame(x = rnorm(100), y = rnorm(100)),
+    xvar = 'x'
+  )
+
+  expect_s3_class(p, "ggplot")
+})

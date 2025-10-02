@@ -40,7 +40,7 @@ exploratory_ui <- function(id) {
                 column(2, numericInput(ns('var_percentile'), 'Percentile', 50, 0, 100, 5)),
                 column(1, conditionalPanel(
                   condition = "input.radio_dist_plot == 'hist'", ns = ns,
-                  numericInput(ns('bins'), 'Bins', 10, 5, step = 10))
+                  numericInput(ns('bins'), 'Bins', 25, 5, step = 5))
                 ),
                 column(3, div(insert_output_ui(ns('insert_dist_plot'))),
                     style = 'margin-top: 28px')
@@ -206,14 +206,12 @@ exploratory_server <- function(id, output_report) {
       if (input$radio_dist_plot == 'barplot'){
         validate(need(!is.numeric(var()), 'Var can not be numeric'))
 
-        ggplot(data.frame(x = var()), aes(x = factor(x))) +
-          geom_bar(fill = session$userData$conf$plot_fill_color) +
-          labs(x = '', y = 'Count') +
-          theme_classic() +
-          theme(axis.text.x = element_text(size = 14),
-                axis.text.y = element_text(size = 14),
-                axis.title.y = element_text(size = 16)
-          )
+        spada_plot(type = 'barplot',
+                   data = data.frame(x = var()),
+                   xvar = 'x',
+                   ylab = 'Count',
+                   fill_color = session$userData$conf$plot_fill_color
+        )
 
       } else {
         validate(need(is.numeric(var()), 'Var must be numeric'))
@@ -225,27 +223,19 @@ exploratory_server <- function(id, output_report) {
             need(!is.complex(var2()), 'Variable 2 can not be complex')
           )
 
-          ggplot(data.frame(x = {
-            if (var2() |> is.numeric())
-              as.factor(var2())
-            else
-              var2()
-          }, y = var()), aes(x = x, y = y, fill = x)) +
-            stat_boxplot(geom = 'errorbar', width = 0.3) +
-            geom_boxplot(orientation = 'x') +
-            geom_hline(yintercept = var_percentile(),
-                       color = session$userData$conf$plot_line_color) +
-            coord_flip() +
-            labs(x = '', y = '') +
-            theme_classic() +
-            theme(
-              legend.position = 'none',
-              axis.ticks.y = element_blank(),
-              axis.line.y  = element_blank(),
-              panel.border = element_rect(color = 'black', fill = NA),
-              axis.text.x = element_text(size = 14),
-              axis.text.y = element_text(size = 14)
-            )
+          spada_plot(type = 'boxplot_group',
+                     data = data.frame(x = {
+                       if (var2() |> is.numeric())
+                         as.factor(var2())
+                       else
+                         var2()
+                     }, y = var()),
+                     xvar = 'x',
+                     yvar = 'y',
+                     fill_color = session$userData$conf$plot_fill_color,
+                     line_color = session$userData$conf$plot_line_color,
+                     vertical_line = var_percentile()
+          )
 
         } else {
           validate(
@@ -256,50 +246,41 @@ exploratory_server <- function(id, output_report) {
           if(input$radio_dist_plot == 'hist'){
             validate(need(input$bins > 0, 'Bins must be 1 or higher'))
 
-            ggplot(data.frame(x = var()), aes(x = x)) +
-              geom_histogram(
-                bins = input$bins,
-                fill = session$userData$conf$plot_fill_color,
-                color = '#000000'
-              ) +
-              geom_vline(xintercept = var_percentile(), color = session$userData$conf$plot_line_color) +
-              labs(x = '', y = 'Count', title = '') +
-              theme_classic() +
-              theme(axis.text.x = element_text(size = 14),
-                    axis.text.y = element_text(size = 14),
-                    axis.title.y = element_text(size = 16)
-              )
+            spada_plot(type = 'hist',
+                       data = data.frame(x = var()),
+                       xvar = 'x',
+                       ylab = 'Count',
+                       fill_color = session$userData$conf$plot_fill_color,
+                       line_color = session$userData$conf$plot_line_color,
+                       title_color = session$userData$conf$plot_title_color,
+                       title = paste('Histogram -', input$sel_vars),
+                       bins = input$bins,
+                       vertical_line = var_percentile()
+            )
 
           } else if (input$radio_dist_plot == 'boxplot'){
-            ggplot(data = data.frame(x = var()), aes(x = x)) +
-              stat_boxplot(geom = 'errorbar', width = 0.3) +
-              geom_boxplot(fill = session$userData$conf$plot_fill_color) +
-              ylim(-1.2, 1.2) +
-              geom_vline(xintercept = var_percentile(), color = session$userData$conf$plot_line_color) +
-              labs(x = '', y = '') +
-              theme_classic() +
-              theme(
-                axis.ticks.y = element_blank(),
-                axis.text.y  = element_blank(),
-                axis.line.y  = element_blank(),
-                panel.border = element_rect(color = '#000000', fill = NA),
-                axis.text.x = element_text(size = 14)
-              )
+
+            spada_plot(type = 'boxplot',
+                       data = data.frame(x = var()),
+                       xvar = 'x',
+                       fill_color = session$userData$conf$plot_fill_color,
+                       line_color = session$userData$conf$plot_line_color,
+                       vertical_line = var_percentile()
+            )
 
           } else if (input$radio_dist_plot == 'dots'){
-            point_shape <- if(length(var()) > 1e4) '.' else 20
 
-            ggplot(data = data.frame(x = seq_along(var()),
-                                     y = var()), aes(x = x, y = y)) +
-              geom_point(shape = point_shape, color = session$userData$conf$plot_fill_color) +
-              geom_hline(yintercept = var_percentile(), color = session$userData$conf$plot_line_color) +
-              labs(x = 'Index', y = 'Values') +
-              theme_classic() +
-              theme(axis.text.x = element_text(size = 14),
-                    axis.text.y = element_text(size = 14),
-                    axis.title.x = element_text(size = 16),
-                    axis.title.y = element_text(size = 16)
-              )
+            spada_plot(type = 'dots',
+                       data = data.frame(x = seq_along(var()), y = var()),
+                       xvar = 'x',
+                       yvar = 'y',
+                       xlab = 'Index',
+                       ylab = 'Values',
+                       fill_color = session$userData$conf$plot_fill_color,
+                       line_color = session$userData$conf$plot_line_color,
+                       vertical_line = var_percentile(),
+                       point_shape = if(length(var()) > 1e4) '.' else 20
+            )
           }
         }
       }
@@ -311,46 +292,42 @@ exploratory_server <- function(id, output_report) {
     }, res = 96)
     # render scatter plot -----------------------------------------------------
     scatter_plot <- reactive({
-      point_shape <- if(length(var()) > 1e4) "." else 20
 
-      if (input$scatter_lm &&
-          linear_model$y_name == input$sel_vars &&
-          linear_model$x_name == input$sel_vars2) {
+      model_plot <- (input$scatter_lm &&
+                       linear_model$y_name == input$sel_vars &&
+                       linear_model$x_name == input$sel_vars2)
 
-        ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
-          geom_point(color = session$userData$conf$plot_fill_color, shape = point_shape) +
-          geom_line(
-            data = data.frame(x = linear_model$x, y = linear_model$y),
-            aes(x = x, y = y),
-            color = session$userData$conf$plot_line_color,
-            linewidth = 1
-          ) +
-          labs(
-            title = paste(
-              'Adjusted R Squared:',
-              summary(linear_model$model)$r.squared |> round(4)
-            ),
-            x = input$sel_vars2,
-            y = input$sel_vars
-          ) +
-          theme_classic() +
-          theme(axis.text.x = element_text(size = 14),
-                axis.text.y = element_text(size = 14),
-                axis.title.x = element_text(size = 16),
-                axis.title.y = element_text(size = 16)
-          )
-      } else {
-        ggplot(data.frame(x = var2(), y = var()), aes(x = x, y = y)) +
-          geom_point(color = session$userData$conf$plot_fill_color, shape = point_shape) +
-          labs(title = paste('Pearson Correlation:', stats_correlation() |> round(4)),
-               x = input$sel_vars2, y = input$sel_vars) +
-          theme_classic() +
-          theme(axis.text.x = element_text(size = 14),
-                axis.text.y = element_text(size = 14),
-                axis.title.x = element_text(size = 16),
-                axis.title.y = element_text(size = 16)
-          )
-      }
+      s_plot <- spada_plot(type = 'scatter',
+                 data = data.frame(x = var2(), y = var()),
+                 xvar = 'x',
+                 yvar = 'y',
+                 xlab = input$sel_vars2,
+                 ylab = input$sel_vars,
+                 title = if(model_plot){
+                   paste(
+                    'Adjusted R Squared:',
+                    summary(linear_model$model)$r.squared |> round(4)
+                    )
+                 } else {
+                   paste('Pearson Correlation:', stats_correlation() |> round(4))
+                 },
+                 fill_color = session$userData$conf$plot_fill_color,
+                 title_color = session$userData$conf$plot_title_color,
+                 point_shape = if(length(var()) > 1e4) '.' else 20
+        )
+        # insert model line
+        if(model_plot){
+          s_plot <- s_plot +
+            geom_line(
+              data = data.frame(x = linear_model$x, y = linear_model$y),
+              aes(x = x, y = y),
+              color = session$userData$conf$plot_line_color,
+              linewidth = 1
+            )
+        }
+
+      s_plot
+
     })|> bindEvent(input$btn_scatter)
 
     output$scatter_plot <- renderPlot({
@@ -470,7 +447,7 @@ exploratory_server <- function(id, output_report) {
           var_x <- var2()
         } else {
           sample_size <- min(var_size,
-                                  floor(var_size * min(1, max(0, input$sample_size/100))))
+                             floor(var_size * min(1, max(0, input$sample_size/100))))
           lm_sample <- sample.int(var_size, sample_size, replace = F) |>
             sort()
           var_y <- var()[lm_sample]
@@ -538,50 +515,40 @@ exploratory_server <- function(id, output_report) {
       req(linear_model$model$residuals)
 
       if(input$radio_lm_resid == 'hist'){
-        ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
-          geom_histogram(bins = 10,
-                         fill = session$userData$conf$plot_fill_color,
-                         color = '#000000') +
-          labs(x = '', y = 'Count', title = '') +
-          theme_classic() +
-          theme(axis.text.x = element_text(size = 14),
-                axis.text.y = element_text(size = 14),
-                axis.title.y = element_text(size = 16)
-          )
+
+        spada_plot(type = 'hist',
+                   data = data.frame(x = linear_model$model$residuals),
+                   xvar = 'x',
+                   ylab = 'Count',
+                   fill_color = session$userData$conf$plot_fill_color,
+                   line_color = session$userData$conf$plot_line_color,
+                   title_color = session$userData$conf$plot_title_color
+        )
 
       } else if (input$radio_lm_resid == 'boxplot'){
-        ggplot(data = data.frame(x = linear_model$model$residuals), aes(x = x)) +
-          stat_boxplot(geom = 'errorbar', width = 0.3) +
-          geom_boxplot(fill = session$userData$conf$plot_fill_color) +
-          ylim(-1.2, 1.2) +
-          labs(x = '', y = '') +
-          theme_classic() +
-          theme(
-            axis.ticks.y = element_blank(),
-            axis.text.y  = element_blank(),
-            axis.line.y  = element_blank(),
-            panel.border = element_rect(color = '#000000', fill = NA),
-            axis.text.x = element_text(size = 14)
-          )
+
+        spada_plot(type = 'boxplot',
+                   data = data.frame(x = linear_model$model$residuals),
+                   xvar = 'x',
+                   fill_color = session$userData$conf$plot_fill_color,
+                   line_color = session$userData$conf$plot_line_color
+        )
 
       } else if (input$radio_lm_resid == 'dots'){
-        point_shape <- if(length(linear_model$model$residuals) > 1e4) '.' else 20
 
-        ggplot(data = data.frame(x = seq_along(linear_model$model$residuals),
-                                 y = linear_model$model$residuals),
-               aes(x = x, y = y)) +
-          geom_point(shape = point_shape,
-                     color = session$userData$conf$plot_fill_color) +
-          geom_hline(yintercept = 0,
-                     color = session$userData$conf$plot_line_color,
-                     linetype = 2) +
-          labs(x = 'Index', y = 'Values') +
-          theme_classic() +
-          theme(axis.text.x = element_text(size = 14),
-                axis.text.y = element_text(size = 14),
-                axis.title.x = element_text(size = 16),
-                axis.title.y = element_text(size = 16)
-          )
+        spada_plot(type = 'dots',
+                   data = data.frame(x = seq_along(linear_model$model$residuals),
+                                     y = linear_model$model$residuals),
+                   xvar = 'x',
+                   yvar = 'y',
+                   xlab = 'Index',
+                   ylab = 'Values',
+                   fill_color = session$userData$conf$plot_fill_color,
+                   line_color = session$userData$conf$plot_line_color,
+                   vertical_line = 0,
+                   point_shape = if(length(linear_model$model$residuals) > 1e4) '.' else 20,
+                   line_type = 2
+        )
       }
     }) |> bindEvent(update_lm_resid_plot())
 

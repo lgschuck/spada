@@ -202,17 +202,16 @@ correlation_server <- function(id) {
       req(input$sel_var1)
       req(input$sel_var2)
 
-      ggplot(df_active(), aes(x = .data[[input$sel_var1]],
-                              y = .data[[input$sel_var2]])) +
-        geom_point(color = session$userData$conf$plot_fill_color,
-                   pch = if(nrow(df_active()) > 1e4) '.' else 20) +
-        labs(x = input$sel_var1, y = input$sel_var2) +
-        theme_classic() +
-        theme(axis.text.x = element_text(size = 14),
-              axis.text.y = element_text(size = 14),
-              axis.title.x = element_text(size = 16),
-              axis.title.y = element_text(size = 16)
-        )
+      spada_plot(
+        type = 'scatter',
+        data = df_active(),
+        xvar = input$sel_var1,
+        yvar = input$sel_var2,
+        xlab = input$sel_var1,
+        ylab = input$sel_var2,
+        fill_color = session$userData$conf$plot_fill_color,
+        point_shape = if(nrow(df_active()) > 1e4) '.' else 20
+      )
 
     }) |> bindEvent(input$btn_scatter)
 
