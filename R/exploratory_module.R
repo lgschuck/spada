@@ -207,7 +207,7 @@ exploratory_server <- function(id, output_report) {
         validate(need(!is.numeric(var()), 'Var can not be numeric'))
 
         spada_plot(type = 'barplot',
-                   data = data.frame(x = var()),
+                   df = data.frame(x = var()),
                    xvar = 'x',
                    ylab = 'Count',
                    fill_color = session$userData$conf$plot_fill_color
@@ -224,7 +224,7 @@ exploratory_server <- function(id, output_report) {
           )
 
           spada_plot(type = 'boxplot_group',
-                     data = data.frame(x = {
+                     df = data.frame(x = {
                        if (var2() |> is.numeric())
                          as.factor(var2())
                        else
@@ -247,7 +247,7 @@ exploratory_server <- function(id, output_report) {
             validate(need(input$bins > 0, 'Bins must be 1 or higher'))
 
             spada_plot(type = 'hist',
-                       data = data.frame(x = var()),
+                       df = data.frame(x = var()),
                        xvar = 'x',
                        ylab = 'Count',
                        fill_color = session$userData$conf$plot_fill_color,
@@ -261,7 +261,7 @@ exploratory_server <- function(id, output_report) {
           } else if (input$radio_dist_plot == 'boxplot'){
 
             spada_plot(type = 'boxplot',
-                       data = data.frame(x = var()),
+                       df = data.frame(x = var()),
                        xvar = 'x',
                        fill_color = session$userData$conf$plot_fill_color,
                        line_color = session$userData$conf$plot_line_color,
@@ -271,7 +271,7 @@ exploratory_server <- function(id, output_report) {
           } else if (input$radio_dist_plot == 'dots'){
 
             spada_plot(type = 'dots',
-                       data = data.frame(x = seq_along(var()), y = var()),
+                       df = data.frame(x = seq_along(var()), y = var()),
                        xvar = 'x',
                        yvar = 'y',
                        xlab = 'Index',
@@ -298,7 +298,7 @@ exploratory_server <- function(id, output_report) {
                        linear_model$x_name == input$sel_vars2)
 
       s_plot <- spada_plot(type = 'scatter',
-                 data = data.frame(x = var2(), y = var()),
+                 df = data.frame(x = var2(), y = var()),
                  xvar = 'x',
                  yvar = 'y',
                  xlab = input$sel_vars2,
@@ -517,7 +517,7 @@ exploratory_server <- function(id, output_report) {
       if(input$radio_lm_resid == 'hist'){
 
         spada_plot(type = 'hist',
-                   data = data.frame(x = linear_model$model$residuals),
+                   df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
                    ylab = 'Count',
                    fill_color = session$userData$conf$plot_fill_color,
@@ -528,7 +528,7 @@ exploratory_server <- function(id, output_report) {
       } else if (input$radio_lm_resid == 'boxplot'){
 
         spada_plot(type = 'boxplot',
-                   data = data.frame(x = linear_model$model$residuals),
+                   df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
                    fill_color = session$userData$conf$plot_fill_color,
                    line_color = session$userData$conf$plot_line_color
@@ -537,8 +537,8 @@ exploratory_server <- function(id, output_report) {
       } else if (input$radio_lm_resid == 'dots'){
 
         spada_plot(type = 'dots',
-                   data = data.frame(x = seq_along(linear_model$model$residuals),
-                                     y = linear_model$model$residuals),
+                   df = data.frame(x = seq_along(linear_model$model$residuals),
+                                   y = linear_model$model$residuals),
                    xvar = 'x',
                    yvar = 'y',
                    xlab = 'Index',

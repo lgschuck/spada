@@ -293,7 +293,7 @@ z_test_server <- function(id) {
       req(input$sel_var)
 
       spada_plot(type = 'hist_density',
-                 data = data.frame(x = var()),
+                 df = data.frame(x = var()),
                  xvar = 'x',
                  xlab = 'Values',
                  ylab = 'Density',

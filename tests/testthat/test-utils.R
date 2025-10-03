@@ -423,7 +423,7 @@ test_that('descriptive stats function', {
 test_that('spada plot function', {
   p <- spada_plot(
     type = 'hist',
-    data = data.frame(x = rnorm(100), y = rnorm(100)),
+    df = data.frame(x = rnorm(100), y = rnorm(100)),
     xvar = 'x'
   )
 

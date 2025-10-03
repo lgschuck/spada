@@ -976,7 +976,7 @@ desc_stats <- function(df = NULL,
 # plots -----------------------------------------------------------------------
 spada_plot <- function(
     type = 'hist',
-    data = NULL,
+    df = NULL,
     xvar = NULL,
     yvar = NULL,
     zvar = NULL,
@@ -991,12 +991,19 @@ spada_plot <- function(
     point_shape = '.',
     line_type = 1,
     mean_value = NULL,
-    sd_value = NULL
+    sd_value = NULL,
+    sample_limit = 1e5
   ){
+
+  if(nrow(df) > sample_limit){
+    df <- df[sample.int(nrow(df), sample_limit), , drop = FALSE]
+  }
+
+  stopifnot(is.data.frame(df))
 
   if(type == 'hist'){
 
-    ggplot(data, aes(x = .data[[xvar]])) +
+    ggplot(data = df, aes(x = .data[[xvar]])) +
       geom_histogram(
         bins = bins,
         fill = fill_color,
@@ -1012,7 +1019,7 @@ spada_plot <- function(
       )
   } else if (type == 'hist_density'){
 
-    ggplot(data = data, aes(x = .data[[xvar]])) +
+    ggplot(data = df, aes(x = .data[[xvar]])) +
       geom_histogram(aes(y = after_stat(density)),
                      bins = bins,
                      fill = fill_color,
@@ -1033,7 +1040,7 @@ spada_plot <- function(
 
   } else if (type == 'boxplot'){
 
-    ggplot(data = data, aes(x = .data[[xvar]])) +
+    ggplot(data = df, aes(x = .data[[xvar]])) +
       stat_boxplot(geom = 'errorbar', width = 0.3) +
       geom_boxplot(fill = fill_color) +
       ylim(-1.2, 1.2) +
@@ -1049,7 +1056,7 @@ spada_plot <- function(
       )
   } else if(type == 'dots'){
 
-    ggplot(data = data, aes(x = .data[[xvar]], y = .data[[yvar]])) +
+    ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
       geom_point(shape = point_shape, color = fill_color) +
       geom_hline(yintercept = vertical_line, color = line_color, linetype = line_type) +
       labs(x = xlab, y = ylab) +
@@ -1061,7 +1068,7 @@ spada_plot <- function(
       )
   } else if (type == 'barplot'){
 
-    ggplot(data = data, aes(x = factor(.data[[xvar]]))) +
+    ggplot(data = df, aes(x = factor(.data[[xvar]]))) +
       geom_bar(fill = fill_color) +
       labs(x = xlab, y = ylab) +
       theme_classic() +
@@ -1072,7 +1079,7 @@ spada_plot <- function(
 
   } else if (type == 'boxplot_group'){
 
-    ggplot(data = data, aes(x = .data[[xvar]], y = .data[[yvar]], fill = .data[[xvar]])) +
+    ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]], fill = .data[[xvar]])) +
       stat_boxplot(geom = 'errorbar', width = 0.3) +
       geom_boxplot(orientation = 'x') +
       geom_hline(yintercept = vertical_line,
@@ -1090,7 +1097,7 @@ spada_plot <- function(
       )
   } else if (type == 'scatter'){
 
-    ggplot(data = data, aes(x = .data[[xvar]], y = .data[[yvar]])) +
+    ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
       geom_point(color = fill_color, shape = point_shape) +
       labs(title = title,
            x = xlab, y = ylab) +
@@ -1102,7 +1109,7 @@ spada_plot <- function(
             plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
   } else if (type == 'qq_plot'){
-    ggplot(data = data, aes(sample = .data[[xvar]])) +
+    ggplot(data = df, aes(sample = .data[[xvar]])) +
       stat_qq(color = fill_color) +
       stat_qq_line(color = line_color) +
       labs(title = title, x = xlab, y = ylab) +

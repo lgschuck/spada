@@ -204,7 +204,7 @@ correlation_server <- function(id) {
 
       spada_plot(
         type = 'scatter',
-        data = df_active(),
+        df = df_active(),
         xvar = input$sel_var1,
         yvar = input$sel_var2,
         xlab = input$sel_var1,

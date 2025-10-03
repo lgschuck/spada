@@ -164,7 +164,7 @@ normality_test_server <- function(id) {
       req(var())
 
       spada_plot(type = 'hist_density',
-                 data = data.frame(x = var()),
+                 df = data.frame(x = var()),
                  xvar = 'x',
                  xlab = 'Values',
                  ylab = 'Density',
@@ -204,7 +204,7 @@ normality_test_server <- function(id) {
       req(var())
 
       spada_plot(type = 'qq_plot',
-                 data = data.frame(x = var()),
+                 df = data.frame(x = var()),
                  xvar = 'x',
                  xlab = 'Theoretical Quantiles',
                  ylab = 'Sample Quantiles',
