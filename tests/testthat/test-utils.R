@@ -429,3 +429,104 @@ test_that('spada plot function', {
 
   expect_s3_class(p, "ggplot")
 })
+
+# test output format ----------------------------------------------------------
+test_that('test empty list as output', {
+  expect_true(test_output_format(list()))
+})
+
+test_that('test valid output', {
+  valid_output <- list(
+    'id1' = list(
+      id = '123',
+      title = 'Title 1',
+      card = shiny::tags$div('content 1')
+    ),
+    'id2' = list(
+      id = '456',
+      title = 'itle 2',
+      card = shiny::tags$p('content 2')
+    )
+  )
+
+  expect_true(test_output_format(valid_output))
+})
+
+test_that('test other class than list', {
+  expect_false(test_output_format('texto'))
+  expect_false(test_output_format(123))
+})
+
+test_that('test inside elements - not lists', {
+  not_list <- list(a = 'test')
+  expect_false(test_output_format(not_list))
+})
+
+test_that('test missing element in inside list', {
+  missing_element <- list(
+    'id1' = list(
+      id = '123',
+      title = 'ok'
+    )
+  )
+  expect_false(test_output_format(missing_element))
+})
+
+test_that('test class of inside elements', {
+  invalid_output <- list(
+    'id1' = list(
+      id = 123,  # should be char
+      title = 'ok',
+      card = shiny::tags$div('content')
+    )
+  )
+  expect_false(test_output_format(invalid_output))
+})
+
+# test load conf --------------------------------------------------------------
+test_that('no previous conf file', {
+  tmpdir <- tempdir()
+  conf_path <- file.path(tmpdir, 'conf.RDS')
+
+  if (file.exists(conf_path)) file.remove(conf_path)
+  expect_false(file.exists(conf_path))
+
+  start_conf <- c(
+    'empty_datasets' = 1,
+    'conf_dir' = normalizePath(R_user_dir('spada', 'config'), winslash = '/', mustWork = F),
+    'data_dir' = normalizePath(R_user_dir('spada', 'data'), winslash = '/', mustWork = F),
+    default_conf
+  )
+
+  res <- load_conf(start_conf, tmpdir, themes_names)
+
+  # expect retunr of the start conf since there is no previous file
+  expect_equal(res, start_conf)
+  expect_true(file.exists(conf_path))
+})
+
+test_that('invalid previous conf file', {
+  tmpdir <- tempdir()
+  conf_path <- file.path(tmpdir, 'conf.RDS')
+
+  valid_conf <- c(
+    'empty_datasets' = 1,
+    'conf_dir' = normalizePath(R_user_dir('spada', 'config'), winslash = '/', mustWork = F),
+    'data_dir' = normalizePath(R_user_dir('spada', 'data'), winslash = '/', mustWork = F),
+    default_conf
+  )
+
+  invalid_conf <- valid_conf
+  invalid_conf$theme <- 'new_theme'
+  # save invalid for test
+  saveRDS(invalid_conf, conf_path)
+
+  res <- load_conf(valid_conf, tmpdir, themes_names)
+
+  # expect return of the valid conf since the saved is invalid
+  expect_equal(res, valid_conf)
+})
+
+
+
+

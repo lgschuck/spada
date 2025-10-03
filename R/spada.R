@@ -105,59 +105,14 @@ spada <- function(...) {
     dir.create(r_user_data_dir, recursive = T)
   }
 
-  start_conf <- list(
+  start_conf <- c(
     'empty_datasets' = empty_datasets,
     'conf_dir' = r_user_conf_dir,
     'data_dir' = r_user_data_dir,
-    'theme' = 'spada_theme',
-    'file_size' = 1000,
-    'restore_session' = 'never',
-    'save_session' = 'ask',
-    'restore_data_status' = 0,
-    'restore_output_status' = 0,
-    'restore_status' = NULL,
-    'plot_fill_color' = plot_fill_color,
-    'plot_line_color' = plot_line_color,
-    'plot_title_color' = plot_title_color
+    default_conf
   )
 
-  if(file.exists(paste0(r_user_conf_dir, '/conf.RDS'))) {
-    conf_saved <- readRDS(paste0(r_user_conf_dir, '/conf.RDS'))
-
-    if(is.list(conf_saved) &&
-       all(c('theme',
-             'file_size',
-             'restore_session',
-             'save_session',
-             'plot_fill_color',
-             'plot_line_color') %in% names(conf_saved)
-    )){
-      if(isTRUE(conf_saved$theme %in% themes_names)) start_conf$theme <- conf_saved$theme
-      if(is.numeric(conf_saved$file_size) && conf_saved$file_size > 0){
-        start_conf$file_size <- conf_saved$file_size
-      }
-      if(isTRUE(conf_saved$restore_session %in% c('always', 'ask', 'never'))){
-        start_conf$restore_session <- conf_saved$restore_session
-      }
-
-      if(isTRUE(conf_saved$save_session %in% c('always', 'ask', 'never'))){
-        start_conf$save_session <- conf_saved$save_session
-      }
-
-      if(isTRUE(is_hex_color(conf_saved$plot_fill_color))){
-        start_conf$plot_fill_color <- conf_saved$plot_fill_color
-      }
-
-      if(isTRUE(is_hex_color(conf_saved$plot_line_color))){
-        start_conf$plot_line_color <- conf_saved$plot_line_color
-      }
-    }
-
-  } else {
-    saveRDS(start_conf,
-            paste0(r_user_conf_dir, '/conf.RDS'),
-            compress = F)
-  }
+  start_conf <- load_conf(start_conf, r_user_conf_dir, themes_names)
 
   ### Run App -----------------------------------------------------------------
   shinyApp(spada_ui(start_conf), spada_server(datasets, start_conf),

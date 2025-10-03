@@ -3,6 +3,20 @@
 # ---------------------------- OBJECTS ----------------------------------------
 # =============================================================================
 
+# default conf ----------------------------------------------------------------
+default_conf <- list(
+  'theme' = 'spada_theme',
+  'file_size' = 1000,
+  'restore_session' = 'never',
+  'save_session' = 'ask',
+  'restore_data_status' = 0,
+  'restore_output_status' = 0,
+  'restore_status' = NULL,
+  'plot_fill_color' = plot_fill_color,
+  'plot_line_color' = plot_line_color,
+  'plot_title_color' = plot_title_color
+)
+
 # math functions --------------------------------------------------------------
 math_funs <- c(
   c('Mean' = 'mean',
@@ -252,6 +266,78 @@ tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 # ---------------------------- FUNCTIONS --------------------------------------
 # =============================================================================
 
+# load conf -------------------------------------------------------------------
+
+load_conf <- function(start_conf,
+                      r_user_conf_dir,
+                      themes_names) {
+
+  conf_path <- file.path(r_user_conf_dir, 'conf.RDS')
+
+  if (file.exists(conf_path)) {
+    conf_saved <- readRDS(conf_path)
+
+    required_fields <- c(
+      'theme',
+      'file_size',
+      'restore_session',
+      'save_session',
+      'plot_fill_color',
+      'plot_line_color',
+      'plot_title_color'
+    )
+
+    # if all TRUE copy saved conf
+    if (
+      # test required items
+      is.list(conf_saved) &&
+        all(required_fields %in% names(conf_saved)) &&
+
+      # test theme
+      length(conf_saved$theme) == 1 &&
+        isTRUE(conf_saved$theme %in% themes_names) &&
+
+      # file size
+      length(conf_saved$file_size) == 1 &&
+        is.numeric(conf_saved$file_size) && conf_saved$file_size > 0 &&
+
+      # restore session
+      length(conf_saved$restore_session) == 1 &&
+        isTRUE(conf_saved$restore_session %in% c('always', 'ask', 'never')) &&
+
+      # save session
+      length(conf_saved$save_session) == 1 &&
+        isTRUE(conf_saved$save_session %in% c('always', 'ask', 'never')) &&
+
+      # fill color
+      length(conf_saved$plot_fill_color) == 1 &&
+        isTRUE(is_hex_color(conf_saved$plot_fill_color)) &&
+
+      # line color
+      length(conf_saved$plot_line_color) == 1 &&
+        isTRUE(is_hex_color(conf_saved$plot_line_color)) &&
+
+      # title color
+      length(conf_saved$plot_title_color) == 1 &&
+        isTRUE(is_hex_color(conf_saved$plot_title_color))
+      ){
+      start_conf$theme <- conf_saved$theme
+    }
+    # copy
+      start_conf$file_size <- conf_saved$file_size
+      start_conf$restore_session <- conf_saved$restore_session
+      start_conf$save_session <- conf_saved$save_session
+      start_conf$plot_fill_color <- conf_saved$plot_fill_color
+      start_conf$plot_line_color <- conf_saved$plot_line_color
+      start_conf$plot_title_color <- conf_saved$plot_title_color
+
+    } else {
+      saveRDS(start_conf, conf_path, compress = FALSE)
+    }
+
+  return(start_conf)
+}
+
 # generate 2 column table in html ---------------------------------------------
 gen_table2 <- function(element1, element2) {
   div(
@@ -283,10 +369,6 @@ report_card <- function(title = 'Spada - Output', annotation = NULL,
 }
 
 # generate element id for outputs ---------------------------------------------
-# gen_element_id <- function(){
-#   paste0('element_', format(Sys.time(), '%Y%m%d%H%M%OS8'))
-# }
-
 gen_element_id <- function(id = 'id', time_only = FALSE){
   if(time_only){
     gsub('.', '', format(Sys.time(), '%Y%m%d%H%M%OS8'), fixed = T)
@@ -681,13 +763,29 @@ is_hex_color <- function(x) {
 
 # test output format-----------------------------------------------------------
 test_output_format <- function(output){
-  is.list(output) &&
-   length(output) > 0 &&
-   (
-     all(sapply(output, \(x){ x$id |> class() == 'character'})) ||
-       all(sapply(output, \(x){ x$title |> class() == 'character'})) ||
-       all(sapply(output, \(x){ x$card |> class() == 'shiny.tag'}))
-   )
+
+  # if list of len 0  is OK
+  (is.list(output) && length(output) == 0) ||
+
+  # if len > 0 must pass
+  (is.list(output) && length(output) > 0 &&
+
+     # all inside elements must be lists
+     all(sapply(output, class) == 'list') &&
+
+     # all names of inside lists must match
+     all(
+       sapply(output, \(x) {
+         all(names(x) %in% c('id', 'title', 'card'))
+       })
+     ) &&
+    # test class of each element in the inside lists
+      (
+        all(sapply(output, \(x){ x$id |> class() == 'character'})) &&
+          all(sapply(output, \(x){ x$title |> class() == 'character'})) &&
+          all(sapply(output, \(x){ x$card |> class() == 'shiny.tag'}))
+      )
+  )
 }
 
 # test data format-------------------------------------------------------------

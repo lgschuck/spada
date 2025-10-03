@@ -3,7 +3,7 @@ title: "Docker"
 date: "`r format(Sys.Date(), '%d/%m/%Y')`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Intro}
+  %\VignetteIndexEntry{Docker}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
