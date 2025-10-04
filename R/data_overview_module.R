@@ -33,7 +33,7 @@ data_overview_server <- function(id) {
     ns <- session$ns
 
     observe({
-      req(session$userData$dt$df_info())
+      req(session$userData$dt_names())
 
       updateSelectInput(
         session,

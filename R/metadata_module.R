@@ -30,7 +30,7 @@ metadata_server <- function(id) {
         choices = c(
           session$userData$dt$act_name,
           setdiff(
-            names(session$userData$dt$df_info()),
+            names(session$userData$dt$meta),
             session$userData$dt$act_name
           )
         )

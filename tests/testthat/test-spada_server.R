@@ -1,6 +1,7 @@
 # tests/testthat/test-spada_server.R
 
-dfs <- list('df_iris' = iris, 'df_mtcars' = mtcars)
+dfs <- list('df_iris' = iris |> as.data.table(),
+            'df_mtcars' = mtcars |> as.data.table())
 
 temp_dir <- tempdir()
 

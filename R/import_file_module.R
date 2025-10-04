@@ -126,7 +126,15 @@ import_file_server <- function(id) {
       # update dt ----------------------------
       append_dt(session, data$data, input$dataset_name)
 
-      session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
+      # update metadata ----------------------
+      new_meta <- list()
+
+      new_meta[[input$dataset_name]] <- data$data |> df_info()
+
+      session$userData$dt$meta <- c(
+        session$userData$dt$meta,
+        new_meta
+      )
 
       msg('File imported successfully')
 

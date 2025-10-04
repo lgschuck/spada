@@ -51,6 +51,8 @@ spada_server <- function(datasets, conf){
             # if empty entry only keep loaded data
             if(session$userData$conf$empty_datasets == 1){
               session$userData$dt$dt <- previous_data
+              # update meta
+              session$userData$dt$meta <- lapply(previous_data, df_info)
             } else {
               previous_data <- make_names_append_list(
                 previous_data,
@@ -58,6 +60,14 @@ spada_server <- function(datasets, conf){
               )
 
               session$userData$dt$dt <- c(previous_data, session$userData$dt$dt)
+
+              # append meta
+              new_meta <- lapply(previous_data, df_info)
+
+              session$userData$dt$meta <- c(
+                new_meta,
+                session$userData$dt$meta
+              )
             }
 
             session$userData$dt$act_name <- names(session$userData$dt$dt)[1]
@@ -130,17 +140,13 @@ spada_server <- function(datasets, conf){
 
     # data --------------------------------------------------------------------
     session$userData$dt <- reactiveValues(
-      dt = lapply(
-        datasets,
-        \(df) {
-          df_temp <- lapply(df, make_valid_cols) |> as.data.frame()
-          df_temp |> as.data.table()
-        }
-      ),
+      dt = datasets,
       act_name = names(datasets[1]),
       bkp0 = NULL,
-      bkp = NULL
+      bkp = NULL,
+      meta = lapply(datasets, df_info)
     )
+
     session$userData$dt$bkp0 <- isolate(get_act_dt(session))
 
     session$userData$dt_names <- reactive({
@@ -158,43 +164,46 @@ spada_server <- function(datasets, conf){
 
     # datasets metadata -------------------------------------------------------
     session$userData$dt$data_changed <- reactiveVal(0)
-    df_info_cached <- memoise(df_info)
 
-    session$userData$dt$df_info <- reactive({
-      req(session$userData$dt)
+    observe({
+      req(session$userData$dt$dt)
 
-      lapply(session$userData$dt$dt, df_info_cached)
+      session$userData$dt$meta[[session$userData$dt$act_name]] <- get_act_dt(session) |> df_info()
+
     }) |> bindEvent(session$userData$dt$data_changed())
 
     session$userData$dt$gt_info <- reactive({
-      req(session$userData$dt$df_info())
+      req(session$userData$dt$meta)
 
-      Map(gt_info, session$userData$dt$df_info(),
-          df_name = names(session$userData$dt$df_info()))
+      Map(gt_info, session$userData$dt$meta,
+          df_name = names(session$userData$dt$meta))
     })
 
     # df active metadata ---------------------
     session$userData$dt$act_meta <- reactive({
-      req(session$userData$dt$df_info())
-      session$userData$dt$df_info()[[session$userData$dt$act_name]]
+      req(session$userData$dt$meta)
+
+      session$userData$dt$meta[[session$userData$dt$act_name]]
     })
 
     # info to use in sidebar and navbar modules --------
     session$userData$dt$act_row_col <- reactive({
-      req(session$userData$dt$df_info())
+      req(session$userData$dt$act_meta())
+
       paste(session$userData$dt$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1),
             '/', session$userData$dt$act_meta() |> pull(cols) |> head(1) |> f_num())
     })
 
     session$userData$dt$act_col_nas <- reactive({
-      req(session$userData$dt$df_info())
+      req(session$userData$dt$act_meta())
+
       session$userData$dt$act_meta() |>
         filter(n_nas > 0) |>
         nrow()
     })
 
     session$userData$dt$act_size <- reactive({
-      req(session$userData$dt$df_info())
+      req(session$userData$dt$act_meta())
       (object.size(get_act_dt(session)) / 2^20) |>
         as.numeric() |> round(2)
     })
@@ -246,11 +255,12 @@ spada_server <- function(datasets, conf){
         # update active dataset if necessary
         if(session$userData$dt$act_name == input$pD_data_sel_df){
           session$userData$dt$act_name <- input$pD_data_txt_new_name
+          # update metadata names
+          names(session$userData$dt$meta)[names(session$userData$dt$meta) == input$pD_data_sel_df] <- input$pD_data_txt_new_name
         }
+
         msg('New name applied')
         updateTextInput(session, "pD_data_txt_new_name", value = '')
-
-        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pD_data_btn_new_name)
 
@@ -261,12 +271,13 @@ spada_server <- function(datasets, conf){
         msg_error('New name is not valid or already in use')
       } else {
         session$userData$dt$dt[[input$pD_data_txt_new_name]] <- session$userData$dt$dt[[input$pD_data_sel_df]]
+        # update metadata
+        session$userData$dt$meta[[input$pD_data_txt_new_name]] <- session$userData$dt$meta[[input$pD_data_sel_df]]
         gc()
 
         msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
 
         updateTextInput(session, "pD_data_txt_new_name", value = '')
-        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pD_data_btn_copy_dataset)
 
@@ -276,11 +287,13 @@ spada_server <- function(datasets, conf){
         msg_error('You can not delete the active dataset')
       } else {
         session$userData$dt$dt[[input$pD_data_sel_df]] <- NULL
+
+        # delete metadata
+        session$userData$dt$meta[[input$pD_data_sel_df]] <- NULL
         gc()
         msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
 
         updateTextInput(session, "pD_data_txt_new_name", value = '')
-        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
 

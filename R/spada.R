@@ -46,8 +46,6 @@
 #'
 #' @importFrom htmltools plotTag save_html
 #'
-#' @importFrom memoise memoise
-#'
 #' @importFrom rlang parse_expr
 #'
 #' @importFrom sass as_sass
@@ -92,6 +90,15 @@ spada <- function(...) {
 
   # make sure all datasets variables are valid names
   datasets <- lapply(datasets, make_var_names)
+
+  # make valid vols --------------------------
+  datasets <- lapply(
+    datasets,
+    \(df) {
+      df_temp <- lapply(df, make_valid_cols) |> as.data.frame()
+      df_temp |> as.data.table()
+    }
+  )
 
   # read conf values ----------------------------------------------------------
   r_user_conf_dir <- normalizePath(R_user_dir('spada', 'config'), winslash = '/', mustWork = F)
