@@ -307,6 +307,38 @@ test_that('make_valid_cols handles raw values', {
   expect_type(make_valid_cols(as.raw(1)), 'character')
 })
 
+# test data frame -------------------------------------------------------------
+test_that('is_spada_df returns TRUE for pure data.frames', {
+  df <- data.frame(a = 1:3, b = letters[1:3])
+  expect_true(is_spada_df(df))
+})
+
+test_that('is_spada_df returns FALSE for non-data.frame objects', {
+  expect_false(is_spada_df(1:5))
+  expect_false(is_spada_df(list(a = 1:3, b = 4:6)))
+})
+
+test_that('is_spada_df returns TRUE for data.frames with factors and dates', {
+  df <- data.frame(
+    a = factor(c('x', 'y', 'z')),
+    b = as.Date('2020-01-01') + 0:2
+  )
+  expect_true(is_spada_df(df))
+})
+
+test_that('is_spada_df returns FALSE for nested data.table', {
+
+  dt <- data.table::data.table(
+    group = c('A', 'B'),
+    data = list(
+      data.table::data.table(x = 1:2),
+      data.table::data.table(x = 3:4)
+    )
+  )
+
+  expect_false(is_spada_df(dt))
+})
+
 # test make names append list function ----------------------------------------
 test_that('make_names_append_list appends suffix to conflicting names', {
   new_list <- list(a = 1, b = 2)

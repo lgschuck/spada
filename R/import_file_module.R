@@ -101,7 +101,7 @@ import_file_server <- function(id) {
         )
       } else if (ext == 'rds' && input$radio_file_ext == 'RDS'){
         data$data <- readRDS(input$file$datapath)
-        if (!is.data.frame(data$data)) {
+        if (!is_spada_df(data$data)) {
           msg_error('Object must be data.frame')
           return()
         }
@@ -124,6 +124,7 @@ import_file_server <- function(id) {
       }
 
       # update dt ----------------------------
+      data$data <- data$data |> make_var_names()
       append_dt(session, data$data, input$dataset_name)
 
       # update metadata ----------------------

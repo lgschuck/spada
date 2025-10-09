@@ -630,14 +630,19 @@ stati_card <- function(VALUE, SUBTITLE, ICON = NULL, LEFT = T,
 
 # make valid cols -------------------------------------------------------------
 make_valid_cols <- function(x){
-  if(is.raw(x)){
+  if(is.raw(x) || is.complex(x)){
     as.character(x)
   } else {
     x
   }
 }
 
-# exit spada with saving session -------------------------------------------
+# is data frame ---------------------------------------------------------------
+is_spada_df <- function(df){
+  is.data.frame(df) && all(sapply(df, is.atomic))
+}
+
+# exit spada with saving session ----------------------------------------------
 exit_with_save <- function(session){
   show_modal_progress_line(value = 0.3, text = 'Saving Output...', color = main_color)
   Sys.sleep(0.5)
