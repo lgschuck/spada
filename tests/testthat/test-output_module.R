@@ -61,7 +61,7 @@ test_that('Reset button clears output', {
 })
 
 # test save output ------------------------------------------------------------
-test_that('Save output stores RDS file', {
+test_that('Save output stores qs2 file', {
   testServer(output_server, {
 
     tmpdir <- tempdir()
@@ -72,10 +72,10 @@ test_that('Save output stores RDS file', {
     session$setInputs(btn_save_output_session = 1)
     session$setInputs(btn_confirm_save_output = 1)
 
-    saved_file <- file.path(tmpdir, 'output.RDS')
+    saved_file <- file.path(tmpdir, 'output.qs2')
     expect_true(file.exists(saved_file))
 
-    saved_content <- readRDS(saved_file)
+    saved_content <- qs_read(saved_file)
     expect_true(is.list(saved_content))
     expect_length(saved_content, 2)
     expect_true(inherits(saved_content[[1]], 'list'))
@@ -96,11 +96,11 @@ test_that('Save output stores RDS file', {
 })
 
 # test import output ----------------------------------------------------------
-test_that('Import output loads RDS file correctly', {
+test_that('Import output loads qs2 file correctly', {
   testServer(output_server, {
 
     tmpdir <- tempdir()
-    saveRDS(out_el, file.path(tmpdir, 'output.RDS'))
+    qs_save(out_el, file.path(tmpdir, 'output.qs2'))
 
     session$userData$conf <- reactiveValues(data_dir = tmpdir)
     session$userData$out <- reactiveValues(elements = list())

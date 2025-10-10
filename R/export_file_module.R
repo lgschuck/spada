@@ -7,7 +7,7 @@ export_file_ui <- function(id) {
         fluidRow(
           column(3, textInput(ns('file_name'), 'File name', value = 'dataset')),
           column(3, radioButtons(ns('radio_format'), 'File format',
-                                 c('csv', 'RDS', 'sav'), inline = T))
+                                 c('csv', 'qs2', 'RDS', 'sav'), inline = T))
         ),
         conditionalPanel(
           condition = "input.radio_format == 'csv'", ns = ns,
@@ -68,6 +68,8 @@ export_file_server <- function(id) {
         paste0(input$file_name,
               if(input$radio_format == 'csv'){
                 '.csv'
+              } else if (input$radio_format %in% c('qs2')){
+                '.qs2'
               } else if (input$radio_format %in% c('RDS', 'RDS Compressed')){
                 '.RDS'
               } else if (input$radio_format %in% c('sav')){
@@ -83,6 +85,8 @@ export_file_server <- function(id) {
                  na = input$txt_na,
                  scipen = as.integer(input$radio_scientific)
           )
+        } else if (input$radio_format == 'qs2'){
+          qs_save(get_act_dt(session), file)
         } else if (input$radio_format == 'RDS'){
           saveRDS(get_act_dt(session), file, compress = input$checkbox_rds_compress)
         } else if (input$radio_format == 'sav') {

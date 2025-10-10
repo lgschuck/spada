@@ -518,7 +518,7 @@ test_that('test class of inside elements', {
 # test load conf --------------------------------------------------------------
 test_that('no previous conf file', {
   tmpdir <- tempdir()
-  conf_path <- file.path(tmpdir, 'conf.RDS')
+  conf_path <- file.path(tmpdir, 'conf.qs2')
 
   if (file.exists(conf_path)) file.remove(conf_path)
   expect_false(file.exists(conf_path))
@@ -532,14 +532,14 @@ test_that('no previous conf file', {
 
   res <- load_conf(start_conf, tmpdir, themes_names)
 
-  # expect retunr of the start conf since there is no previous file
+  # expect return of the start conf since there is no previous file
   expect_equal(res, start_conf)
   expect_true(file.exists(conf_path))
 })
 
 test_that('invalid previous conf file', {
   tmpdir <- tempdir()
-  conf_path <- file.path(tmpdir, 'conf.RDS')
+  conf_path <- file.path(tmpdir, 'conf.qs2')
 
   valid_conf <- c(
     'empty_datasets' = 1,
@@ -551,7 +551,7 @@ test_that('invalid previous conf file', {
   invalid_conf <- valid_conf
   invalid_conf$theme <- 'new_theme'
   # save invalid for test
-  saveRDS(invalid_conf, conf_path)
+  qs_save(invalid_conf, conf_path)
 
   res <- load_conf(valid_conf, tmpdir, themes_names)
 

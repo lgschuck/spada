@@ -1,7 +1,7 @@
 
 # ui --------------------------------------------------------------------------
 import_file_ui <- function(id) {
-  file_extensions <- c('csv', 'RDS', 'sav')
+  file_extensions <- c('csv', 'qs2', 'RDS', 'sav')
   ns <- NS(id)
     card(
       card_body(
@@ -99,6 +99,14 @@ import_file_server <- function(id) {
           warning = \(w) msg_error('Check parameters'),
           error = \(e) msg_error('Check parameters')
         )
+      } else if (ext == 'qs2' && input$radio_file_ext == 'qs2'){
+        data$data <- qs_read(input$file$datapath)
+        if (!is_spada_df(data$data)) {
+          msg_error('Object must be data.frame')
+          return()
+        }
+        data$data <- as.data.table(data$data)
+
       } else if (ext == 'rds' && input$radio_file_ext == 'RDS'){
         data$data <- readRDS(input$file$datapath)
         if (!is_spada_df(data$data)) {

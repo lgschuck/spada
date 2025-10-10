@@ -123,8 +123,8 @@ output_server <- function(id) {
       removeModal()
 
       check_dir(session$userData$conf$data_dir)
-      saveRDS(session$userData$out$elements,
-              paste0(session$userData$conf$data_dir, '/output.RDS'))
+      qs_save(session$userData$out$elements,
+              paste0(session$userData$conf$data_dir, '/output.qs2'))
 
       msg(paste('Output saved in', session$userData$conf$data_dir), 2.5)
     }) |> bindEvent(input$btn_confirm_save_output)
@@ -152,11 +152,11 @@ output_server <- function(id) {
     observe({
       removeModal()
 
-      if(!file.exists(paste0(session$userData$conf$data_dir, '/output.RDS'))){
+      if(!file.exists(paste0(session$userData$conf$data_dir, '/output.qs2'))){
         msg_error('Output file not found')
       } else {
         check_dir(session$userData$conf$data_dir)
-        temp_output <- readRDS(paste0(session$userData$conf$data_dir, '/output.RDS'))
+        temp_output <- qs_read(paste0(session$userData$conf$data_dir, '/output.qs2'))
 
         if(test_output_format(temp_output)){
           session$userData$out$elements <- temp_output

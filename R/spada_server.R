@@ -34,13 +34,12 @@ spada_server <- function(datasets, conf){
 
       if(session$userData$conf$restore_session == 'always') {
 
-        if(!file.exists(paste0(session$userData$conf$data_dir, '/data.RDS'))){
+        if(!file.exists(paste0(session$userData$conf$data_dir, '/data.qs2'))){
           session$userData$conf$restore_data_status <- 2
 
         } else {
 
-          previous_data <- readRDS(
-            paste0(session$userData$conf$data_dir, '/data.RDS'))
+          previous_data <- qs_read(paste0(session$userData$conf$data_dir, '/data.qs2'))
 
           # check data format
           if(!test_data_format(previous_data)){
@@ -77,11 +76,11 @@ spada_server <- function(datasets, conf){
         }
 
         # import output
-        if(!file.exists(paste0(session$userData$conf$data_dir, '/output.RDS'))){
+        if(!file.exists(paste0(session$userData$conf$data_dir, '/output.qs2'))){
           session$userData$conf$restore_output_status <- 2
 
         } else {
-          previous_output <- readRDS(paste0(session$userData$conf$data_dir, '/output.RDS'))
+          previous_output <- qs_read(paste0(session$userData$conf$data_dir, '/output.qs2'))
 
           # check output format
           if(!test_output_format(previous_output)){

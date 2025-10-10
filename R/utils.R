@@ -273,10 +273,10 @@ load_conf <- function(start_conf,
                       r_user_conf_dir,
                       themes_names) {
 
-  conf_path <- file.path(r_user_conf_dir, 'conf.RDS')
+  conf_path <- file.path(r_user_conf_dir, 'conf.qs2')
 
   if (file.exists(conf_path)) {
-    conf_saved <- readRDS(conf_path)
+    conf_saved <- qs_read(conf_path)
 
     required_fields <- c(
       'theme',
@@ -338,7 +338,7 @@ load_conf <- function(start_conf,
       start_conf$plot_limit <- conf_saved$plot_limit
     }
   }
-  saveRDS(start_conf, conf_path, compress = FALSE)
+  qs_save(start_conf, conf_path)
 
   return(start_conf)
 }
@@ -653,17 +653,15 @@ exit_with_save <- function(session){
   Sys.sleep(0.5)
 
   check_dir(session$userData$conf$data_dir)
-  saveRDS(session$userData$out$elements,
-          paste0(session$userData$conf$data_dir, '/output.RDS'),
-          compress = F)
+  qs_save(session$userData$out$elements,
+          paste0(session$userData$conf$data_dir, '/output.qs2'))
 
   Sys.sleep(0.5)
   update_modal_progress(value = 0.5, 'Saving Data...')
 
   check_dir(session$userData$conf$data_dir)
-  saveRDS(session$userData$dt$dt,
-          paste0(session$userData$conf$data_dir, '/data.RDS'),
-          compress = F)
+  qs_save(session$userData$dt$dt,
+          paste0(session$userData$conf$data_dir, '/data.qs2'))
   update_modal_progress(value = .7, 'Saving Data...')
   Sys.sleep(1.5)
   update_modal_progress(value = 1, 'Closing Spada...')
@@ -671,9 +669,8 @@ exit_with_save <- function(session){
   Sys.sleep(1)
 
   check_dir(session$userData$conf$conf_dir)
-  saveRDS(reactiveValuesToList(session$userData$conf),
-          paste0(session$userData$conf$conf_dir, '/conf.RDS'),
-          compress = F)
+  qs_save(reactiveValuesToList(session$userData$conf),
+          paste0(session$userData$conf$conf_dir, '/conf.qs2'))
 
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   stopApp()
@@ -686,9 +683,8 @@ exit_without_save <- function(session){
   Sys.sleep(0.3)
 
   check_dir(session$userData$conf$conf_dir)
-  saveRDS(reactiveValuesToList(session$userData$conf),
-          paste0(session$userData$conf$conf_dir, '/conf.RDS'),
-          compress = F)
+  qs_save(reactiveValuesToList(session$userData$conf),
+          paste0(session$userData$conf$conf_dir, '/conf.qs2'))
 
   update_modal_progress(value = 0.6)
   Sys.sleep(0.3)

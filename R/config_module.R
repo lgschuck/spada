@@ -89,7 +89,7 @@ config_ui <- function(id) {
             )),
             fluidRow(accordion(
               accordion_panel(
-                'Plot limit',
+                'Plot Limit (N rows)',
                 layout_columns(
                   col_widths = c(7, 5),
                   numericInput(
