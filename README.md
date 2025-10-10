@@ -52,7 +52,7 @@ remotes::install_github(
   "lgschuck/spada",
   dependencies = TRUE,
   repos = 'https://packagemanager.posit.co/cran/2024-12-10',
-  ref = "2025.01.13-1"
+  ref = "0.1.0"
   )
 ```
 

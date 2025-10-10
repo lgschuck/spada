@@ -283,7 +283,7 @@ exploratory_server <- function(id, output_report) {
                        fill_color = session$userData$conf$plot_fill_color,
                        line_color = session$userData$conf$plot_line_color,
                        vertical_line = var_percentile(),
-                       point_shape = if(length(var()) > 1e4) '.' else 20,
+                       point_shape = if(session$userData$conf$plot_limit > 1e4 && length(var()) > 1e4) '.' else 20,
                        sample_limit = session$userData$conf$plot_limit
             )
           }
@@ -318,7 +318,7 @@ exploratory_server <- function(id, output_report) {
                  },
                  fill_color = session$userData$conf$plot_fill_color,
                  title_color = session$userData$conf$plot_title_color,
-                 point_shape = if(length(var()) > 1e4) '.' else 20,
+                 point_shape = if(session$userData$conf$plot_limit > 1e4 && length(var()) > 1e4) '.' else 20,
                  sample_limit = session$userData$conf$plot_limit
         )
         # insert model line
@@ -554,7 +554,8 @@ exploratory_server <- function(id, output_report) {
                    fill_color = session$userData$conf$plot_fill_color,
                    line_color = session$userData$conf$plot_line_color,
                    vertical_line = 0,
-                   point_shape = if(length(linear_model$model$residuals) > 1e4) '.' else 20,
+                   point_shape = if(session$userData$conf$plot_limit > 1e4 &&
+                                    length(linear_model$model$residuals) > 1e4) '.' else 20,
                    sample_limit = session$userData$conf$plot_limit,
                    line_type = 2
         )

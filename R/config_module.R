@@ -105,6 +105,14 @@ config_ui <- function(id) {
               ),
               open = F
             )),
+            fluidRow(accordion(
+              accordion_panel(
+                'Current Conf',
+                verbatimTextOutput(ns('current_conf')),
+                icon = bs_icon('check-square')
+              ),
+              open = F
+            )),
           )
         )
       )
@@ -287,6 +295,9 @@ config_server <- function(id) {
         msg('New limit applied')
       }
     }) |> bindEvent(input$btn_plot_limit)
+
+    # current conf ------------------------
+    output$current_conf <- renderPrint({ session$userData$conf |> reactiveValuesToList() })
 
   })
 }

@@ -210,7 +210,7 @@ correlation_server <- function(id) {
         xlab = input$sel_var1,
         ylab = input$sel_var2,
         fill_color = session$userData$conf$plot_fill_color,
-        point_shape = if(nrow(df_active()) > 1e4) '.' else 20,
+        point_shape = if(session$userData$conf$plot_limit > 1e4 && nrow(df_active()) > 1e4) '.' else 20,
         sample_limit = session$userData$conf$plot_limit
       )
 

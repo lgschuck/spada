@@ -16,6 +16,36 @@ editor_options:
 
 4 - Models: logistic regression
 
+# Spada 0.1.1
+
+## 2025.10.10
+
+Release of 0.1.1 version.
+
+**Highlights**: Improvements in **metadata calculation** and new **qs2** format (for session data and as option in **Import and Export** modules)
+
+### Improvements
+
+1 - **utils.R**: improved/new functions (**desc_stats, df_info, is_spada_df, load_conf, spada_plot, test_output_format**) and **make_valid_cols** now converts complex to char
+
+2 - **qs2**: now the session data is saved in qs2 format for better performance/compression
+
+3 - **Import and export** modules: new option for qs2 format 
+
+4 - **Output**: the output structure was rewritten (better management and future options for edit/delete) and new tab **Output meta** showing the elements in a gt table
+
+5 - **Metadata**: now the metadata is calculated only when the data change, big improvement in speed ([#55](https://github.com/lgschuck/spada/issues/55))
+
+6 - **Sidebar and Navbar** modules: now the render only the metadata (removed button) for better visual user experience
+
+7 - **Config** module: new title color and plot limit (for plot samples) options ([#56](https://github.com/lgschuck/spada/issues/56)) and show current conf ([#54](https://github.com/lgschuck/spada/issues/54))
+
+8 - **Visuals**: new default for fill color "#0099F8"
+
+### Bug Fixes
+
+1 - **Imported data.frame with invalid names**: **import file** module uses make-var_names in the inputed data 
+([#53](https://github.com/lgschuck/spada/issues/53))
 
 # Spada 0.1.0
 

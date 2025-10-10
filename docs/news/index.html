@@ -50,6 +50,29 @@
 </div>
 </div>
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="spada-011">Spada 0.1.1<a class="anchor" aria-label="anchor" href="#spada-011"></a></h2>
+<div class="section level3">
+<h3 id="id_20251010-0-1-1">2025.10.10<a class="anchor" aria-label="anchor" href="#id_20251010-0-1-1"></a></h3>
+<p>Release of 0.1.1 version.</p>
+<p><strong>Highlights</strong>: Improvements in <strong>metadata calculation</strong> and new <strong>qs2</strong> format (for session data and as option in <strong>Import and Export</strong> modules)</p>
+<div class="section level4">
+<h4 id="improvements-0-1-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-1"></a></h4>
+<p>1 - <strong>utils.R</strong>: improved/new functions (<strong>desc_stats, df_info, is_spada_df, load_conf, spada_plot, test_output_format</strong>) and <strong>make_valid_cols</strong> now converts complex to char</p>
+<p>2 - <strong>qs2</strong>: now the session data is saved in qs2 format for better performance/compression</p>
+<p>3 - <strong>Import and export</strong> modules: new option for qs2 format</p>
+<p>4 - <strong>Output</strong>: the output structure was rewritten (better management and future options for edit/delete) and new tab <strong>Output meta</strong> showing the elements in a gt table</p>
+<p>5 - <strong>Metadata</strong>: now the metadata is calculated only when the data change, big improvement in speed (<a href="https://github.com/lgschuck/spada/issues/55" class="external-link">#55</a>)</p>
+<p>6 - <strong>Sidebar and Navbar</strong> modules: now the render only the metadata (removed button) for better visual user experience</p>
+<p>7 - <strong>Config</strong> module: new title color and plot limit (for plot samples) options (<a href="https://github.com/lgschuck/spada/issues/56" class="external-link">#56</a>) and show current conf (<a href="https://github.com/lgschuck/spada/issues/54" class="external-link">#54</a>)</p>
+<p>8 - <strong>Visuals</strong>: new default for fill color “#0099F8”</p>
+</div>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1"></a></h4>
+<p>1 - <strong>Imported data.frame with invalid names</strong>: <strong>import file</strong> module uses make-var_names in the inputed data (<a href="https://github.com/lgschuck/spada/issues/53" class="external-link">#53</a>)</p>
+</div>
+</div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="spada-010">Spada 0.1.0<a class="anchor" aria-label="anchor" href="#spada-010"></a></h2>
 <div class="section level3">
 <h3 id="id_20250922-0-1-0">2025.09.22<a class="anchor" aria-label="anchor" href="#id_20250922-0-1-0"></a></h3>
