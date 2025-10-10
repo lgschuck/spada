@@ -46,6 +46,8 @@
 #'
 #' @importFrom htmltools plotTag save_html
 #'
+#' @importFrom qs2 qs_read qs_save
+#'
 #' @importFrom rlang parse_expr
 #'
 #' @importFrom sass as_sass

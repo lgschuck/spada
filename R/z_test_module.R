@@ -301,6 +301,7 @@ z_test_server <- function(id) {
                  bins = input$bins,
                  fill_color = session$userData$conf$plot_fill_color,
                  line_color = session$userData$conf$plot_line_color,
+                 sample_limit = session$userData$conf$plot_limit,
                  mean_value = mean(var(), na.rm = TRUE),
                  sd_value = sd(var(), na.rm = TRUE)
       )

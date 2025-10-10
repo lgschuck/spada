@@ -210,7 +210,8 @@ exploratory_server <- function(id, output_report) {
                    df = data.frame(x = var()),
                    xvar = 'x',
                    ylab = 'Count',
-                   fill_color = session$userData$conf$plot_fill_color
+                   fill_color = session$userData$conf$plot_fill_color,
+                   sample_limit = session$userData$conf$plot_limit
         )
 
       } else {
@@ -234,7 +235,8 @@ exploratory_server <- function(id, output_report) {
                      yvar = 'y',
                      fill_color = session$userData$conf$plot_fill_color,
                      line_color = session$userData$conf$plot_line_color,
-                     vertical_line = var_percentile()
+                     vertical_line = var_percentile(),
+                     sample_limit = session$userData$conf$plot_limit
           )
 
         } else {
@@ -255,7 +257,8 @@ exploratory_server <- function(id, output_report) {
                        title_color = session$userData$conf$plot_title_color,
                        title = paste('Histogram -', input$sel_vars),
                        bins = input$bins,
-                       vertical_line = var_percentile()
+                       vertical_line = var_percentile(),
+                       sample_limit = session$userData$conf$plot_limit
             )
 
           } else if (input$radio_dist_plot == 'boxplot'){
@@ -265,7 +268,8 @@ exploratory_server <- function(id, output_report) {
                        xvar = 'x',
                        fill_color = session$userData$conf$plot_fill_color,
                        line_color = session$userData$conf$plot_line_color,
-                       vertical_line = var_percentile()
+                       vertical_line = var_percentile(),
+                       sample_limit = session$userData$conf$plot_limit
             )
 
           } else if (input$radio_dist_plot == 'dots'){
@@ -279,7 +283,8 @@ exploratory_server <- function(id, output_report) {
                        fill_color = session$userData$conf$plot_fill_color,
                        line_color = session$userData$conf$plot_line_color,
                        vertical_line = var_percentile(),
-                       point_shape = if(length(var()) > 1e4) '.' else 20
+                       point_shape = if(length(var()) > 1e4) '.' else 20,
+                       sample_limit = session$userData$conf$plot_limit
             )
           }
         }
@@ -313,7 +318,8 @@ exploratory_server <- function(id, output_report) {
                  },
                  fill_color = session$userData$conf$plot_fill_color,
                  title_color = session$userData$conf$plot_title_color,
-                 point_shape = if(length(var()) > 1e4) '.' else 20
+                 point_shape = if(length(var()) > 1e4) '.' else 20,
+                 sample_limit = session$userData$conf$plot_limit
         )
         # insert model line
         if(model_plot){
@@ -522,7 +528,8 @@ exploratory_server <- function(id, output_report) {
                    ylab = 'Count',
                    fill_color = session$userData$conf$plot_fill_color,
                    line_color = session$userData$conf$plot_line_color,
-                   title_color = session$userData$conf$plot_title_color
+                   title_color = session$userData$conf$plot_title_color,
+                   sample_limit = session$userData$conf$plot_limit
         )
 
       } else if (input$radio_lm_resid == 'boxplot'){
@@ -531,7 +538,8 @@ exploratory_server <- function(id, output_report) {
                    df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
                    fill_color = session$userData$conf$plot_fill_color,
-                   line_color = session$userData$conf$plot_line_color
+                   line_color = session$userData$conf$plot_line_color,
+                   sample_limit = session$userData$conf$plot_limit
         )
 
       } else if (input$radio_lm_resid == 'dots'){
@@ -547,6 +555,7 @@ exploratory_server <- function(id, output_report) {
                    line_color = session$userData$conf$plot_line_color,
                    vertical_line = 0,
                    point_shape = if(length(linear_model$model$residuals) > 1e4) '.' else 20,
+                   sample_limit = session$userData$conf$plot_limit,
                    line_type = 2
         )
       }

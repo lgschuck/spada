@@ -53,7 +53,8 @@ test_that('Z Test module - test plots', {
 
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
-      plot_line_color = '#44aa44'
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
     )
 
     session$setInputs(
@@ -89,7 +90,8 @@ test_that('Normality Test module - ks test results', {
 
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
-      plot_line_color = '#44aa44'
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
     )
 
     session$setInputs(
@@ -135,7 +137,8 @@ test_that('Normality Test module - shapiro wilk test results', {
 
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
-      plot_line_color = '#44aa44'
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
     )
 
     session$setInputs(
@@ -179,7 +182,8 @@ test_that('Normality Test module - shapiro francia test results', {
 
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
-      plot_line_color = '#44aa44'
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
     )
 
     session$setInputs(

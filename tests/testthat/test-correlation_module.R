@@ -28,7 +28,6 @@ test_that('test correlation - pearson method', {
       exact = F
     )
 
-    # Simula inputs necessários
     session$setInputs(
       sel_var1 = 'Petal.Length',
       sel_var2 = 'Sepal.Length',
@@ -82,7 +81,6 @@ test_that('test correlation - kendall method', {
       exact = F
     )
 
-    # Simula inputs necessários
     session$setInputs(
       sel_var1 = 'Petal.Length',
       sel_var2 = 'Sepal.Length',
@@ -135,7 +133,6 @@ test_that('test correlation - spearman method', {
       exact = F
     )
 
-    # Simula inputs necessários
     session$setInputs(
       sel_var1 = 'Petal.Length',
       sel_var2 = 'Sepal.Length',
@@ -179,7 +176,12 @@ test_that('test correlation - scatter plot', {
       session$userData$dt$df_info()[[session$userData$dt$act_name]]
     })
 
-    # Simula inputs necessários
+    session$userData$conf <- reactiveValues(
+      plot_fill_color = '#229999',
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
+    )
+
     session$setInputs(
       sel_var1 = 'Petal.Length',
       sel_var2 = 'Sepal.Length',

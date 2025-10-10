@@ -14,7 +14,8 @@ default_conf <- list(
   'restore_status' = NULL,
   'plot_fill_color' = plot_fill_color,
   'plot_line_color' = plot_line_color,
-  'plot_title_color' = plot_title_color
+  'plot_title_color' = plot_title_color,
+  'plot_limit' = 1e5
 )
 
 # math functions --------------------------------------------------------------
@@ -284,7 +285,8 @@ load_conf <- function(start_conf,
       'save_session',
       'plot_fill_color',
       'plot_line_color',
-      'plot_title_color'
+      'plot_title_color',
+      'plot_limit'
     )
 
     # if all TRUE copy saved conf
@@ -319,21 +321,24 @@ load_conf <- function(start_conf,
 
       # title color
       length(conf_saved$plot_title_color) == 1 &&
-        isTRUE(is_hex_color(conf_saved$plot_title_color))
+        isTRUE(is_hex_color(conf_saved$plot_title_color)) &&
+
+      # plot limit
+      length(conf_saved$plot_limit) == 1 &&
+        is.numeric(conf_saved$plot_limit)
       ){
+      # copy if test is passed
       start_conf$theme <- conf_saved$theme
-    }
-    # copy
       start_conf$file_size <- conf_saved$file_size
       start_conf$restore_session <- conf_saved$restore_session
       start_conf$save_session <- conf_saved$save_session
       start_conf$plot_fill_color <- conf_saved$plot_fill_color
       start_conf$plot_line_color <- conf_saved$plot_line_color
       start_conf$plot_title_color <- conf_saved$plot_title_color
-
-    } else {
-      saveRDS(start_conf, conf_path, compress = FALSE)
+      start_conf$plot_limit <- conf_saved$plot_limit
     }
+  }
+  saveRDS(start_conf, conf_path, compress = FALSE)
 
   return(start_conf)
 }

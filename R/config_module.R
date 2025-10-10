@@ -87,6 +87,24 @@ config_ui <- function(id) {
               ),
               open = F
             )),
+            fluidRow(accordion(
+              accordion_panel(
+                'Plot limit',
+                layout_columns(
+                  col_widths = c(7, 5),
+                  numericInput(
+                    ns('input_plot_limit'),
+                    NULL,
+                    value = 100000,
+                    min = 0,
+                    step = 50000
+                  ),
+                  actionButton(ns('btn_plot_limit'), 'Apply', icon('check'), class = 'btn-task')
+                ),
+                icon = bs_icon('graph-up')
+              ),
+              open = F
+            )),
           )
         )
       )
@@ -259,6 +277,16 @@ config_server <- function(id) {
 
       msg('New settings applied')
     }) |> bindEvent(input$btn_save_session_conf)
+
+    # input plot limit ------------------------
+    observe({
+      if(!isTruthy(input$input_plot_limit) || input$input_plot_limit < 1) {
+        msg('Value must be > 1')
+      } else {
+        session$userData$conf$plot_limit <- input$input_plot_limit
+        msg('New limit applied')
+      }
+    }) |> bindEvent(input$btn_plot_limit)
 
   })
 }

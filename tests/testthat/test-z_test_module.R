@@ -91,7 +91,8 @@ test_that('Z Test module - histogram', {
 
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
-      plot_line_color = '#44aa44'
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
     )
 
     session$userData$dt$df_info <- reactive({
