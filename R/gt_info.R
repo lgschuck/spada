@@ -22,7 +22,7 @@ gt_info <- function(df, df_name){
     class == 'integer', '1',
     class == 'character', 'a',
     class == 'numeric', 'calculator',
-    class %in% c('Date', 'POSIXt', 'POSIXct', 'POSIXlt',
+    class %in% c('Date', 'IDate/Date', 'POSIXt', 'POSIXct', 'POSIXlt',
                  'POSIXct/POSIXt', 'POSIXlt/POSIXt'), 'calendar',
     class == 'factor', 'sitemap',
     class == 'raw', 'sd-card',

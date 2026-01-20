@@ -6,21 +6,25 @@ order_rows_ui <- function(id) {
   card(
     card_header('Order Rows', class = 'mini-header'),
     card_body(
-      # uiOutput(ns('ui_var_rows')),
       selectizeInput(
         ns('vars_rows'),
         'Order by',
         NULL,
         multiple = T,
-        options = list(plugins = list('remove_button', 'clear_button'))
+        options = list(plugins = list('remove_button', 'clear_button')),
+        width = '80%'
       ),
-      selectizeInput(ns('vars_descending'),
-                  list('Vars in descending order', bs_icon('info-circle')) |>
-                    ttip('If not informed, the order will be Ascending', PLACE = 'right'),
-                    '', multiple = T,
-                  options = list(plugins = list("remove_button", "clear_button"))
-                  ),
-      radioButtons(ns('radio_nas'), "NA's placement",
+      selectizeInput(
+        ns('vars_descending'),
+        list('Vars in descending order', bs_icon('info-circle')) |>
+          ttip('If not informed, the order will be Ascending', PLACE = 'right'),
+        '',
+        multiple = T,
+        options = list(plugins = list("remove_button", "clear_button")),
+        width = '80%'
+      ),
+      radioButtons(ns('radio_nas'),
+                   "NA's placement",
                    c('Last' = 'last', 'First' = 'first'),
                    inline = T),
     ),

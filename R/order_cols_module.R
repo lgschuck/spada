@@ -10,16 +10,23 @@ order_cols_ui <- function(id) {
         'Variables to move',
         NULL,
         multiple = T,
-        options = list(plugins = list('remove_button', 'clear_button'))
+        options = list(plugins = list('remove_button', 'clear_button')),
+        width = '80%'
       ),
-      radioButtons(ns('radio_cols'), NULL,
+      radioButtons(ns('radio_cols'),
+                   NULL,
                    c('Before' = 'before', 'After' = 'after'),
                    inline = T),
-      selectInput(ns('vars_rest'),
-                  list('Other Variables', bs_icon('info-circle')) |>
-                    ttip('If not informed, the Other Variables will be placed at the end',
-                         PLACE = 'right'),
-                  '')
+      selectInput(
+        ns('vars_rest'),
+        list('Other Variables', bs_icon('info-circle')) |>
+          ttip(
+            'If not informed, the Other Variables will be placed at the end',
+            PLACE = 'right'
+          ),
+        '',
+        width = '80%'
+      )
     ),
     card_footer(
       btn_task(ns('btn_order_cols'), 'Order Columns', icon('arrow-right-arrow-left')),

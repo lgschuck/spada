@@ -310,3 +310,49 @@ test_that("Test filter rows - one variable - not between", {
 
   })
 })
+
+# test filter rows - from other dataset ---------------------------------------
+test_that("Test filter rows - from other dataset - in", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table(),
+                'df_test' = iris |> as.data.table() |> subset(Species == 'setosa')),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'dataset',
+                      dt_1_var_sel = 'Species',
+                      dt_var_operator = 'in',
+                      dt_dt_sel = 'df_test',
+                      dt_2_var_sel = 'Species')
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(get_act_dt(session), iris |> as.data.table() |> subset(Species == 'setosa'))
+
+  })
+})
+
+test_that("Test filter rows - from other dataset - not in", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table(),
+                'df_test' = iris |> as.data.table() |> subset(Species == 'setosa')),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'dataset',
+                      dt_1_var_sel = 'Species',
+                      dt_var_operator = 'not_in',
+                      dt_dt_sel = 'df_test',
+                      dt_2_var_sel = 'Species')
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(get_act_dt(session), iris |> as.data.table() |> subset(Species != 'setosa'))
+
+  })
+})
+

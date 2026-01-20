@@ -11,7 +11,8 @@ select_cols_ui <- function(id) {
         'Variable',
         NULL,
         multiple = T,
-        options = list(plugins = list('remove_button', 'clear_button'))
+        options = list(plugins = list('remove_button', 'clear_button')),
+        width = '80%'
       ),
 
       radioButtons(ns('radio_var_sel'), NULL,

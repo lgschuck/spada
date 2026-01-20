@@ -13,7 +13,8 @@ filter_rows_ui <- function(id) {
           'One Variable' = 'one',
           'Two Variables' = 'two',
           'Sample' = 'sample',
-          'Freehand' = 'free'
+          'Freehand' = 'free',
+          'From Dataset' = 'dataset'
         ),
         selected = character(0),
         size = 'sm',
@@ -67,7 +68,21 @@ filter_rows_ui <- function(id) {
           resize = 'both'
         ),
         column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations'))
-      )
+      ),
+
+      # panel for other dataset -----------------------------------------------
+      conditionalPanel(
+        condition = "input.filter_type == 'dataset'",
+        ns = ns,
+        selectInput(ns('dt_1_var_sel'), 'Variable (active dataset)', NULL),
+        selectInput(
+          ns('dt_var_operator'),
+          'Operator',
+          c('', in_operators)
+        ),
+        selectInput(ns('dt_dt_sel'), 'Dataset (other non active)', NULL),
+        selectInput(ns('dt_2_var_sel'), 'Variable (from other dataset)', NULL)
+      ),
     ),
     card_footer(btn_task(ns('btn_filter'), 'Apply filters', icon('check')))
   )
@@ -79,6 +94,11 @@ filter_rows_server <- function(id) {
 	  ns <- session$ns
 
 	  df_names <- reactive(get_act_dt(session) |> names())
+
+	  dts <- reactive({
+	    req(session$userData$dt$act_name)
+	    setdiff(session$userData$dt$dt |> names(), session$userData$dt$act_name)
+	  })
 
     nrow_df_active <- reactive(get_act_dt(session) |> nrow())
 
@@ -109,6 +129,37 @@ filter_rows_server <- function(id) {
         choices = c('', df_names())
       )
     }) |> bindEvent(df_names())
+
+    # dataset filter var 1 ----------
+    observe({
+      req(df_names())
+      updateSelectizeInput(
+        session,
+        'dt_1_var_sel',
+        choices = c('', df_names())
+      )
+    }) |> bindEvent(df_names())
+
+    # dataset filter dt names ----------
+    observe({
+      req(dts())
+      updateSelectizeInput(
+        session,
+        'dt_dt_sel',
+        choices = c('', dts())
+      )
+    }) |> bindEvent(dts())
+
+    # dataset filter var 2 ----------
+    observe({
+      req(input$dt_dt_sel)
+      updateSelectizeInput(
+        session,
+        'dt_2_var_sel',
+        choices = c('', session$userData$dt$dt[[ input$dt_dt_sel ]] |> names())
+      )
+    }) |> bindEvent(input$dt_dt_sel)
+
 
     # selected column type ----------------------------------------------------
     col_type_one_var <- reactive({
@@ -445,6 +496,30 @@ filter_rows_server <- function(id) {
               updateTextAreaInput(session, 'txt_code_input', value = '')
             }
           }
+
+          # filter dataset -------------------------------------
+        } else if (input$filter_type == 'dataset') {
+          if (!isTruthy(input$dt_1_var_sel) || !isTruthy(input$dt_2_var_sel)) {
+          msg_error('Choose 2 variables')
+          return()
+          } else if (!isTruthy(input$dt_dt_sel)) {
+            msg_error('Choose a dataset')
+            return()
+          } else if (!isTruthy(input$dt_var_operator)) {
+            msg_error('Choose an operator')
+            return()
+          }
+
+          # apply filter -----
+          temp <- filter_rows(
+            temp,
+            input$dt_1_var_sel,
+            input$dt_var_operator,
+            session$userData$dt$dt[[ input$dt_dt_sel ]][[ input$dt_2_var_sel ]] |>
+              unique()
+          )
+
+          msg('Filter rows: OK')
         }
 
         update_act_dt(session, copy(temp))
