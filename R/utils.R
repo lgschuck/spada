@@ -263,6 +263,92 @@ js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.clo
 
 tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 
+
+# startup page ----------------------------------------------------------------
+
+startup_page <- tags$style(
+  HTML(
+    "
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    .waiter-overlay {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background: linear-gradient(
+        55deg,
+        #FFFFFF,
+        #1A7DBA,
+        #146394,
+        #0A5A88,
+        #02517D,
+        #0F172A,
+        #0B1220
+      );
+
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .title {
+      font-size: 144px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 32px;
+      opacity: 0.9;
+    }
+
+    .subtitle2 {
+      margin-top: 5px;
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .spinner {
+      margin: 30px auto 0;
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255,255,255,0.2);
+      border-top: 5px solid white;
+      border-radius: 50%;
+      animation: spin 1.1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  "
+  )
+)
+
+
 # =============================================================================
 # ---------------------------- FUNCTIONS --------------------------------------
 # =============================================================================

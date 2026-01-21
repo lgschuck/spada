@@ -89,15 +89,15 @@ config_ui <- function(id) {
             )),
             fluidRow(accordion(
               accordion_panel(
-                'Plot Limit (N rows)',
+                'Plot Limit (thousands of rows)',
                 layout_columns(
                   col_widths = c(7, 5),
                   numericInput(
                     ns('input_plot_limit'),
                     NULL,
-                    value = 100000,
+                    value = 100,
                     min = 0,
-                    step = 50000
+                    step = 50
                   ),
                   actionButton(ns('btn_plot_limit'), 'Apply', icon('check'), class = 'btn-task')
                 ),
@@ -288,10 +288,10 @@ config_server <- function(id) {
 
     # input plot limit ------------------------
     observe({
-      if(!isTruthy(input$input_plot_limit) || input$input_plot_limit < 1) {
-        msg('Value must be > 1')
+      if(!isTruthy(input$input_plot_limit) || input$input_plot_limit <= 0) {
+        msg('Value must be > 0')
       } else {
-        session$userData$conf$plot_limit <- input$input_plot_limit
+        session$userData$conf$plot_limit <- input$input_plot_limit * 1e3
         msg('New limit applied')
       }
     }) |> bindEvent(input$btn_plot_limit)

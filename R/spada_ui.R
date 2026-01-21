@@ -11,15 +11,20 @@ spada_ui <- function(conf){
 
     useBusyIndicators(),
 
-    busy_start_up(
-      loader = spin_epic('orbit', color = startup_text_color),
-      text = tagList(
-        div(class = 'startup-screen', h1('Spada'), h3('R > Shiny > You'))
-      ),
-      mode = 'auto',
-      timeout = 1200,
-      color = startup_text_color,
-      background = main_color
+    use_waiter(),
+
+    # css style for startup_page -----
+    startup_page,
+
+    waiter_show_on_load(
+      html = tagList(
+        div(
+          class = "container",
+          div("Spada", class = "title"),
+          div("a Shiny Package for Data Analysis", class = "subtitle2"),
+          div(class = "spinner")
+        )
+      )
     ),
 
     # close the app

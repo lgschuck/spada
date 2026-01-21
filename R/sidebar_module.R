@@ -4,7 +4,7 @@ sidebar_ui <- function(id) {
   ns <- NS(id)
 
   sidebar(
-    open = F,
+    open = T,
     accordion(
       open = T,
       accordion_panel(

@@ -3,6 +3,10 @@
 spada_server <- function(datasets, conf){
   function(input, output, session) {
 
+    session$onFlushed(function() {
+      waiter_hide()
+    })
+
     options(shiny.maxRequestSize = conf$file_size * 1024 ^ 2)
 
     # conf values -------------------------------------------------------------
