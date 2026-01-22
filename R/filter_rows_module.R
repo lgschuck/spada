@@ -416,6 +416,7 @@ filter_rows_server <- function(id) {
           } else if (temp[[input$two_var_sel1]] |> obj_type() !=
                      temp[[input$two_var_sel2]] |> obj_type()) {
             msg('Variables must be of the same type')
+            return()
           } else {
             temp <- filter_rows_2vars(temp,
                                       input$two_var_sel1,
@@ -430,6 +431,7 @@ filter_rows_server <- function(id) {
             if (!isTruthy(input$n_rows) ||
                 !between(input$n_rows, 1, nrow_df_active())) {
               msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
+              return()
             } else {
               temp <- temp[sample(1:nrow_df_active(),
                                   input$n_rows,
@@ -465,10 +467,12 @@ filter_rows_server <- function(id) {
           code_operations <- code_operations[!code_operations %in% code_vars]
 
           #  check variables and operations -----------------------------------
-          if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
-            msg_error('Some variables are not present in the dataset')
-          } else if (!all(code_operations %in% allowed_operations)) {
+          if (!all(code_operations %in% allowed_operations)) {
             msg_error('Some operations are not allowed')
+            return()
+          } else if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
+            msg_error('Some variables are not present in the dataset')
+            return()
           } else {
             # create safe env for evaluation ----------------------------------
             e1 <- safe_env(allowed_operations)

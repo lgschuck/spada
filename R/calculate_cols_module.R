@@ -165,10 +165,10 @@ calculate_cols_server <- function(id) {
         code_operations <- code_operations[!code_operations %in% code_vars]
 
         #  check variables and operations -------------------------------------
-        if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
-          msg_error('Some variables are not present in the dataset')
-        } else if (!all(code_operations %in% allowed_operations)) {
+        if (!all(code_operations %in% allowed_operations)) {
           msg_error('Some operations are not allowed')
+        } else if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
+          msg_error('Some variables are not present in the dataset')
         } else {
           # create safe env foe evaluation ------------------------------------
           e1 <- safe_env(allowed_operations)

@@ -7,8 +7,6 @@ rename_cols_ui <- function(id) {
     card(
       card_header('Rename Column', class = 'mini-header'),
       card_body(
-        # uiOutput(ns('ui_var_sel')),
-
         selectInput(ns('vars_sel'), 'Variable', NULL),
 
         textInput(ns('txt_new_name'), 'New name'),
@@ -18,11 +16,10 @@ rename_cols_ui <- function(id) {
     card(
       card_header('Rename Multiple Columns', class = 'mini-header'),
       card_body(
-        # uiOutput(ns('ui_var_sel_multi')),
-
         selectizeInput(ns('vars_sel_multi'), 'Variables', NULL,
                        multiple = T,
-                       options = list(plugins = list('remove_button', 'clear_button'))),
+                       options = list(plugins = list('remove_button', 'clear_button')),
+                       width = '80%'),
 
         radioButtons(ns('rename_method'), 'Rename Method',
                      choices = c('Add Prefix/Suffix' = 'prefix_suffix',

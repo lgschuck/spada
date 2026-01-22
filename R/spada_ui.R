@@ -19,10 +19,10 @@ spada_ui <- function(conf){
     waiter_show_on_load(
       html = tagList(
         div(
-          class = "container",
-          div("Spada", class = "title"),
-          div("a Shiny Package for Data Analysis", class = "subtitle2"),
-          div(class = "spinner")
+          class = 'startup-container',
+          div('Spada', class = 'startup-title'),
+          div('a Shiny Package for Data Analysis', class = 'startup-subtitle2'),
+          div(class = 'startup-spinner')
         )
       )
     ),

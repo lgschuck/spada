@@ -43,25 +43,6 @@ theme_basic_rules <- as_sass(
          startup_bg = main_color
     ),
     "
-      .startup-screen {
-        background-color: $startup_bg;
-        width: 500000px;
-        height: 250px;
-        /*border-radius: 15px 50px 15px 50px;
-        border-style: dotted;
-        border-color: white;*/
-      }
-
-      .startup-screen h1 {
-        font-family: Times;
-        font-size: 150px;
-      }
-
-      .startup-screen h3 {
-        font-family: Times;
-        font-size: 30px;
-      }
-
       .navbar {
         background: $navbar_bg !important;
         height: 45px !important;
@@ -141,6 +122,16 @@ theme_basic_rules <- as_sass(
         font-size: 14px !important;
         padding-top: 6px !important;
         padding-bottom: 6px !important;
+      }
+
+      .popover.preview-dt-popup {
+        max-width: 120vw;
+        width: 600px;
+      }
+
+      .popover.preview-dt-popup .popover-body {
+        max-height: 100vh;
+        overflow: auto;
       }
  ")
 )

@@ -311,6 +311,123 @@ test_that("Test filter rows - one variable - not between", {
   })
 })
 
+# test filter rows - two variables --------------------------------------------
+test_that("Test filter rows - two variables - bigger", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'two',
+                      two_var_sel1 = 'Sepal.Width',
+                      two_var_operator = '>',
+                      two_var_sel2 = 'Petal.Length')
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(
+      get_act_dt(session),
+      iris |> as.data.table() |> subset(Sepal.Width > Petal.Length)
+    )
+
+  })
+})
+
+
+
+# test filter rows - sample ---------------------------------------------------
+test_that("Test filter rows - sample - nrows", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'sample',
+                      sample_type = 'rows',
+                      n_rows = '15',
+                      x_sample_replace = T)
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(
+      get_act_dt(session) |> nrow(),
+      as.data.table(iris)[sample(1:nrow(iris), 15, replace = T), ] |> nrow()
+    )
+
+  })
+})
+
+test_that("Test filter rows - sample - percent", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'sample',
+                      sample_type = 'percent',
+                      sample_size = 10,
+                      x_sample_replace = T)
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(
+      get_act_dt(session) |> nrow(),
+      as.data.table(iris)[sample(1:nrow(iris), 10/100 * nrow(iris), replace = T), ] |> nrow()
+    )
+
+  })
+})
+
+# test filter rows - free -----------------------------------------------------
+test_that("Test filter rows - free - allowed code", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'free',
+                      txt_code_input = 'Sepal.Width <= Petal.Length'
+                      )
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(
+      get_act_dt(session),
+      iris |> as.data.table() |> subset(Sepal.Width <= Petal.Length)
+    )
+
+  })
+})
+
+test_that("Test filter rows - free - not allowed code - data stay unchanged", {
+  testServer(filter_rows_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$data_changed <- reactiveVal(0)
+    session$setInputs(filter_type = 'free',
+                      txt_code_input = 'do.call(sum, list(1, 2))'
+    )
+
+    session$setInputs(btn_filter = 1)
+    expect_equal(
+      get_act_dt(session),
+      iris |> as.data.table()
+    )
+  })
+})
+
 # test filter rows - from other dataset ---------------------------------------
 test_that("Test filter rows - from other dataset - in", {
   testServer(filter_rows_server, {

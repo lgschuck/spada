@@ -269,12 +269,6 @@ tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 startup_page <- tags$style(
   HTML(
     "
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-    }
-
     .waiter-overlay {
       font-family: 'Segoe UI', Arial, sans-serif;
       color: white;
@@ -303,30 +297,30 @@ startup_page <- tags$style(
       100% { background-position: 0% 50%; }
     }
 
-    .container {
+    .waiter-overlay .startup-container {
       text-align: center;
       animation: fadeIn 1.2s ease;
     }
 
-    .title {
+    .waiter-overlay .startup-title {
       font-size: 144px;
       font-weight: 600;
       letter-spacing: 1px;
     }
 
-    .subtitle {
+    .waiter-overlay .startup-subtitle {
       margin-top: 10px;
       font-size: 32px;
       opacity: 0.9;
     }
 
-    .subtitle2 {
+    .waiter-overlay .startup-subtitle2 {
       margin-top: 5px;
       font-size: 18px;
       opacity: 0.9;
     }
 
-    .spinner {
+    .waiter-overlay .startup-spinner {
       margin: 30px auto 0;
       width: 60px;
       height: 60px;
@@ -347,7 +341,6 @@ startup_page <- tags$style(
   "
   )
 )
-
 
 # =============================================================================
 # ---------------------------- FUNCTIONS --------------------------------------

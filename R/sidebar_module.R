@@ -27,7 +27,7 @@ sidebar_ui <- function(id) {
       )
     ),
     accordion(
-      open = F,
+      open = T,
       accordion_panel(
         class = 'accordion-sidebar',
         'Datasets',
@@ -35,7 +35,8 @@ sidebar_ui <- function(id) {
         selectInput(ns('sel_datasets_names'), '', choices = NULL),
         actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
                      class = 'mini-btn') |>
-          popover(htmlOutput(ns('df_preview')))
+          popover(htmlOutput(ns('df_preview')),
+                  options = list(customClass = 'preview-dt-popup'))
       )
     )
   )
@@ -82,7 +83,7 @@ sidebar_server <- function(id, app_session) {
       updateSelectInput(session, 'sel_datasets_names', choices = choices)
     })
 
-    # review dataset -------------------------
+    # preview dataset -------------------------
     output$df_preview <- renderUI({
       req(session$userData$dt$dt, input$sel_datasets_names)
 
