@@ -31,7 +31,7 @@ sidebar_ui <- function(id) {
       accordion_panel(
         class = 'accordion-sidebar',
         'Datasets',
-        icon = bs_icon('table', size = '1.75em'),
+        icon = bs_icon('stack', size = '1.75em'),
         selectInput(ns('sel_datasets_names'), '', choices = NULL),
         actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
                      class = 'mini-btn') |>

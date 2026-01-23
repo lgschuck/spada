@@ -55,9 +55,6 @@
 #' @importFrom shinyWidgets colorPickr dropdownButton show_toast radioGroupButtons
 #'             statiCard updateColorPickr updateRadioGroupButtons
 #'
-#' @importFrom shinybusy remove_modal_progress show_modal_progress_line
-#'             update_modal_progress
-#'
 #' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm pf
 #'             qnorm qqline qqnorm rnorm sd shapiro.test var
 #'
@@ -65,7 +62,7 @@
 #'
 #' @importFrom utils object.size head packageDescription sessionInfo
 #'
-#' @importFrom waiter use_waiter waiter_hide waiter_show_on_load
+#' @importFrom waiter use_waiter waiter_hide waiter_show waiter_show_on_load
 
 spada <- function(...) {
   datasets <- list(...)

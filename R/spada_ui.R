@@ -11,23 +11,14 @@ spada_ui <- function(conf){
 
     useBusyIndicators(),
 
+    # css style for waiter screen ---------------------------------------------
     use_waiter(),
 
-    # css style for startup_page -----
-    startup_page,
+    waiter_screen,
 
-    waiter_show_on_load(
-      html = tagList(
-        div(
-          class = 'startup-container',
-          div('Spada', class = 'startup-title'),
-          div('a Shiny Package for Data Analysis', class = 'startup-subtitle2'),
-          div(class = 'startup-spinner')
-        )
-      )
-    ),
+    show_startup_screen(),
 
-    # close the app
+    # close the app ---------
     tag_js_exit,
 
     page_navbar(

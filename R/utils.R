@@ -263,10 +263,8 @@ js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.clo
 
 tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 
-
-# startup page ----------------------------------------------------------------
-
-startup_page <- tags$style(
+# waiter screen ----------------------------------------------------------------
+waiter_screen <- tags$style(
   HTML(
     "
     .waiter-overlay {
@@ -297,30 +295,30 @@ startup_page <- tags$style(
       100% { background-position: 0% 50%; }
     }
 
-    .waiter-overlay .startup-container {
+    .waiter-overlay .screen-container {
       text-align: center;
       animation: fadeIn 1.2s ease;
     }
 
-    .waiter-overlay .startup-title {
+    .waiter-overlay .screen-title {
       font-size: 144px;
       font-weight: 600;
       letter-spacing: 1px;
     }
 
-    .waiter-overlay .startup-subtitle {
+    .waiter-overlay .screen-subtitle {
       margin-top: 10px;
       font-size: 32px;
       opacity: 0.9;
     }
 
-    .waiter-overlay .startup-subtitle2 {
+    .waiter-overlay .screen-subtitle2 {
       margin-top: 5px;
       font-size: 18px;
       opacity: 0.9;
     }
 
-    .waiter-overlay .startup-spinner {
+    .waiter-overlay .screen-spinner {
       margin: 30px auto 0;
       width: 60px;
       height: 60px;
@@ -726,49 +724,76 @@ is_spada_df <- function(df){
   is.data.frame(df) && all(sapply(df, is.atomic))
 }
 
+# exit screen function --------------------------------------------------------
+show_startup_screen <- function() {
+  waiter_show_on_load(
+    html = tagList(div(
+      class = 'screen-container',
+      div('Spada', class = 'screen-title'),
+      div('a Shiny Package for Data Analysis', class = 'screen-subtitle2'),
+      div(class = 'screen-spinner')
+      )
+    )
+  )
+}
+
+# exit screen function --------------------------------------------------------
+show_exit_screen <- function(save = TRUE) {
+  waiter_show(
+    html = {
+      if(isTRUE(save)){
+        div(
+          class = "screen-container",
+          div("Saving your work", class = "screen-subtitle"),
+          div("Please do not close this window", class = "screen-subtitle2"),
+          div(class = 'screen-spinner')
+        )
+      } else {
+        html = div(
+          class = "screen-container",
+          div("Closing Spada...", class = "screen-subtitle"),
+          div(class = 'screen-spinner')
+        )
+      }
+    }
+  )
+}
+
 # exit spada with saving session ----------------------------------------------
 exit_with_save <- function(session){
-  show_modal_progress_line(value = 0.3, text = 'Saving Output...', color = main_color)
-  Sys.sleep(0.5)
+
+  show_exit_screen()
+
+  t0 <- Sys.time()
 
   check_dir(session$userData$conf$data_dir)
   qs_save(session$userData$out$elements,
           paste0(session$userData$conf$data_dir, '/output.qs2'))
 
-  Sys.sleep(0.5)
-  update_modal_progress(value = 0.5, 'Saving Data...')
-
   check_dir(session$userData$conf$data_dir)
   qs_save(session$userData$dt$dt,
           paste0(session$userData$conf$data_dir, '/data.qs2'))
-  update_modal_progress(value = .7, 'Saving Data...')
-  Sys.sleep(1.5)
-  update_modal_progress(value = 1, 'Closing Spada...')
-
-  Sys.sleep(1)
 
   check_dir(session$userData$conf$conf_dir)
   qs_save(reactiveValuesToList(session$userData$conf),
           paste0(session$userData$conf$conf_dir, '/conf.qs2'))
 
+  t_diff <- Sys.time() - t0
+  if(t_diff < 5) Sys.sleep(5 - t_diff)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   stopApp()
 }
 
 # exit spada without saving session -------------------------------------------
 exit_without_save <- function(session){
-  show_modal_progress_line(text = 'Closing Spada...', color = main_color)
-  update_modal_progress(value = 0.3)
-  Sys.sleep(0.3)
+
+  show_exit_screen(F)
 
   check_dir(session$userData$conf$conf_dir)
   qs_save(reactiveValuesToList(session$userData$conf),
           paste0(session$userData$conf$conf_dir, '/conf.qs2'))
 
-  update_modal_progress(value = 0.6)
-  Sys.sleep(0.3)
-  update_modal_progress(value = 1)
-  Sys.sleep(1)
+  Sys.sleep(3)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   stopApp()
 }
@@ -1206,4 +1231,18 @@ spada_plot <- function(
             plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
   }
+}
+
+# status row for restore session ----------------------------------------------
+status_row <- function(icon_name, color, text) {
+  div(
+    style = paste0(
+      'display:flex; align-items:center; gap:12px;
+       padding:12px 16px;
+       border-radius:2px;
+       background-color:', color, '15;'
+    ),
+    icon(icon_name, style = paste0('font-size:20px; color:', color)),
+    tags$span(text, style = 'font-size:20px; font-weight:400;')
+  )
 }

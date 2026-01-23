@@ -160,7 +160,7 @@ spada_theme <- bs_theme(
       }
 
       .card {
-        border-radius: 0rem;
+        border-radius: 0.1rem;
         margin: -8px;
       }
 
