@@ -1246,3 +1246,43 @@ status_row <- function(icon_name, color, text) {
     tags$span(text, style = 'font-size:20px; font-weight:400;')
   )
 }
+
+# display restore status ------------------------------------------------------
+
+display_restore_status <- function(session_restore_status){
+  list_check_restore <- div(
+    style = 'display:flex; flex-direction:column; gap:12px;',
+
+    switch(
+      substr(session_restore_status, 1, 1),
+      '1' = status_row('check', '#2e7d32', 'Data restored successfully'),
+      '2' = status_row('times', '#c62828', 'Data not found'),
+      '3' = status_row('circle-question', '#ed6c02', 'Data in invalid format')
+    ),
+
+    switch(
+      substr(session_restore_status, 3, 3),
+      '1' = status_row('check', '#2e7d32', 'Output restored successfully'),
+      '2' = status_row('times', '#c62828', 'Output not found'),
+      '3' = status_row('circle-question', '#ed6c02', 'Output in invalid format')
+    )
+  )
+
+  # show modal
+  showModal(modalDialog(
+    title = div(
+      h1(bs_icon('database-up', size = '55px', style = 'margin-right: 8px; color:#02517d'),
+        'Session Restore Status'
+      )
+    ),
+    div(style = 'padding:12px; border-radius:0px;', list_check_restore),
+    size = 'l',
+    easyClose = F,
+    footer = div(
+      style = 'text-align:right;',
+      actionButton('btn_dismiss_restore_sesison', 'OK', class = 'btn-task')
+    )
+  ))
+
+}
+

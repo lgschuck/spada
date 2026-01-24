@@ -109,51 +109,14 @@ spada_server <- function(datasets, conf){
 
       if(any(session$userData$conf$restore_session %in% c('always', 'ask'))){
 
-        list_check_restore <- div(
-          style = 'display:flex; flex-direction:column; gap:12px;',
-
-          switch(
-            substr(session$userData$conf$restore_status, 1, 1),
-            '1' = status_row('check', '#2e7d32', 'Data restored successfully'),
-            '2' = status_row('times', '#c62828', 'Data not found'),
-            '3' = status_row('circle-question', '#ed6c02', 'Data in invalid format')
-          ),
-
-          switch(
-            substr(session$userData$conf$restore_status, 3, 3),
-            '1' = status_row('check', '#2e7d32', 'Output restored successfully'),
-            '2' = status_row('times', '#c62828', 'Output not found'),
-            '3' = status_row('circle-question', '#ed6c02', 'Output in invalid format')
-          )
-        )
-
-        showModal(modalDialog(
-          title = div(
-            icon('clock-rotate-left', style = 'margin-right:8px; color:#1565c0'),
-            'Session Restore Status'
-          ),
-          div(style = '
-                background:#f9fafb;
-                padding:24px;
-                border-radius:0px;
-              ',
-              list_check_restore
-          ),
-
-          size = 'l',
-          easyClose = FALSE,
-
-          footer = div(
-            style = 'text-align:right;',
-            actionButton('btn_dismiss_restore_sesison', 'OK', class = 'btn-task')
-          )
-        ))
+        display_restore_status(session$userData$conf$restore_status)
 
       }
     }) |> bindEvent(session$userData$conf$restore_status, once = T)
 
     observe({
       removeModal()
+
     }) |> bindEvent(input$btn_dismiss_restore_sesison)
 
     # data --------------------------------------------------------------------

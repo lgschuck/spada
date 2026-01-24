@@ -92,7 +92,7 @@ spada <- function(...) {
   # make sure all datasets variables are valid names
   datasets <- lapply(datasets, make_var_names)
 
-  # make valid vols --------------------------
+  # make valid cols --------------------------
   datasets <- lapply(
     datasets,
     \(df) {

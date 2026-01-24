@@ -89,11 +89,7 @@ sidebar_server <- function(id, app_session) {
 
       df <- session$userData$dt$dt[[input$sel_datasets_names]][1:5, ]
 
-      df <- lapply(df, \(x) if (is.complex(x))
-        as.character(x)
-        else
-          x) |>
-        as.data.frame()
+      df <- lapply(df, make_valid_cols) |> as.data.frame()
 
       gt::gt(df) |>
         tab_header(input$sel_datasets_names) |>

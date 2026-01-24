@@ -71,7 +71,7 @@ theme_basic_rules <- as_sass(
 
       .btn-task:active {
         background-color: darken($bg_color, 10%) !important;
-        transform: scale(0.99); /* efeito de afundar */
+        transform: scale(0.99);
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
@@ -98,6 +98,7 @@ theme_basic_rules <- as_sass(
         color: $secondary !important;
         background-color: $bg_color !important;
         border-color: $secondary !important;
+        border-radius: 0rem
       }
 
       .card, .well {
@@ -127,11 +128,22 @@ theme_basic_rules <- as_sass(
       .popover.preview-dt-popup {
         max-width: 120vw;
         width: 600px;
+        border-radius: 0 !important;
+      }
+
+      .popover.preview-dt-popup-mini {
+        max-width: 120vw;
+        width: 300px;
+        border-radius: 0 !important;
       }
 
       .popover.preview-dt-popup .popover-body {
         max-height: 100vh;
         overflow: auto;
+      }
+
+      .modal-content {
+        border-radius: 0 !important;
       }
  ")
 )
@@ -149,7 +161,9 @@ spada_theme <- bs_theme(
   font_size_base = '1rem',
   'nav-pills-border-radius' = '0rem',
   'nav-pills-link-active-color' = main_color,
-  'nav-pills-link-active-bg' = sidebar_color
+  'nav-pills-link-active-bg' = sidebar_color,
+  'border-radius-sm' = 0,
+  'border-radius' = 0
 ) |> bs_add_rules(theme_basic_rules) |>
   bs_add_rules(
     list(
@@ -177,12 +191,14 @@ spada_theme <- bs_theme(
         border-color: $secondary !important;
         padding-top: 6px !important;
         padding-bottom: 6px !important;
+        border-radius: 0rem
       }
 
       .btn-task-cancel {
         color: #dc3545 !important;
         background-color: white !important;
         border-color: #dc3545 !important;
+        border-radius: 0rem
       }
 
       .btn-task-cancel:hover {
@@ -213,7 +229,12 @@ spada_theme <- bs_theme(
   )
 
 # darkly spada theme ----------------------------------------------------------
-spada_dark_theme <- bs_theme(version = 5, bootswatch = 'darkly') |>
+spada_dark_theme <- bs_theme(
+  version = 5,
+  bootswatch = 'darkly',
+  'border-radius-sm' = 0,
+  'border-radius' = 0
+  ) |>
   bs_add_rules(theme_basic_rules) |>
   bs_add_rules(
     list(
@@ -233,6 +254,7 @@ spada_dark_theme <- bs_theme(version = 5, bootswatch = 'darkly') |>
         color: $secondary;
         background-color: $bg_color;
         border-color: $secondary;
+        border-radius: 0rem
       }
 
       .nav-pills .nav-link:hover {
