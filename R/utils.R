@@ -264,11 +264,14 @@ js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.clo
 tag_js_exit <- tags$head(tags$script(HTML(js_exit)))
 
 # waiter screen ----------------------------------------------------------------
+waiter_right_foot <- div('Built with R and Shiny', class = 'screen-footer-right')
+waiter_spinner <- div(class = 'screen-spinner')
+
 waiter_screen <- tags$style(
   HTML(
     "
     .waiter-overlay {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Segoe UI', Ubuntu, system-ui;
       color: white;
       display: flex;
       justify-content: center;
@@ -326,6 +329,16 @@ waiter_screen <- tags$style(
       border-top: 5px solid white;
       border-radius: 50%;
       animation: spin 1.1s linear infinite;
+    }
+
+    .screen-footer-right {
+      font-family: 'Segoe UI', Ubuntu, system-ui;
+      color: white;
+      position: fixed;
+      bottom: 12px;
+      right: 16px;
+      font-size: 14px;
+      /*z-index: 9999;*/
     }
 
     @keyframes spin {
@@ -724,15 +737,16 @@ is_spada_df <- function(df){
   is.data.frame(df) && all(sapply(df, is.atomic))
 }
 
-# exit screen function --------------------------------------------------------
+# show startup function -------------------------------------------------------
 show_startup_screen <- function() {
-  waiter_show_on_load(
+  waiterShowOnLoad(
     html = tagList(div(
       class = 'screen-container',
       div('Spada', class = 'screen-title'),
       div('a Shiny Package for Data Analysis', class = 'screen-subtitle2'),
-      div(class = 'screen-spinner')
-      )
+      waiter_spinner
+      ),
+      waiter_right_foot
     )
   )
 }
@@ -742,17 +756,23 @@ show_exit_screen <- function(save = TRUE) {
   waiter_show(
     html = {
       if(isTRUE(save)){
-        div(
-          class = "screen-container",
-          div("Saving your work", class = "screen-subtitle"),
-          div("Please do not close this window", class = "screen-subtitle2"),
-          div(class = 'screen-spinner')
+        tagList(
+          div(
+            class = "screen-container",
+            div("Spada is saving your work", class = "screen-subtitle"),
+            div("Please do not close this window", class = "screen-subtitle2"),
+            waiter_spinner
+          ),
+          waiter_right_foot
         )
       } else {
-        html = div(
-          class = "screen-container",
-          div("Closing Spada...", class = "screen-subtitle"),
-          div(class = 'screen-spinner')
+        html = tagList(
+          div(
+            class = "screen-container",
+            div("Closing Spada", class = "screen-subtitle"),
+            waiter_spinner
+          ),
+          waiter_right_foot
         )
       }
     }

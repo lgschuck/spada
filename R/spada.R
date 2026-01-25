@@ -50,7 +50,7 @@
 #'
 #' @importFrom rlang parse_expr
 #'
-#' @importFrom sass as_sass
+#' @importFrom sass as_sass font_collection
 #'
 #' @importFrom shinyWidgets colorPickr dropdownButton show_toast radioGroupButtons
 #'             statiCard updateColorPickr updateRadioGroupButtons

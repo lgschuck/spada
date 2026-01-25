@@ -164,7 +164,7 @@ spada_ui <- function(conf){
         nav_panel(
           value = 'exit',
           title = 'Exit',
-          icon = icon('person-walking-arrow-right')
+          icon = icon('arrow-right-from-bracket')
         )),
 
       nav_item(
@@ -175,6 +175,7 @@ spada_ui <- function(conf){
         )),
 
       nav_spacer(),
+
       # active dataset --------------------------------------------------------
       nav_item(h4(textOutput('dt_act_name')) |>
                  popover(navbar_df_info_ui('navbar_df_info'),

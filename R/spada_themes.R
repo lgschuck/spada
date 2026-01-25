@@ -43,6 +43,10 @@ theme_basic_rules <- as_sass(
          startup_bg = main_color
     ),
     "
+      .navbar-brand {
+        font-family: 'Open Sans', Ubuntu, 'system-ui';
+      }
+
       .navbar {
         background: $navbar_bg !important;
         height: 45px !important;
@@ -57,8 +61,6 @@ theme_basic_rules <- as_sass(
       }
 
       .nav-link { font-size: 18px; }
-
-      body { font-size: 0.9rem; }
 
       .big-card{
         background-color: $main_color;
@@ -98,7 +100,8 @@ theme_basic_rules <- as_sass(
         color: $secondary !important;
         background-color: $bg_color !important;
         border-color: $secondary !important;
-        border-radius: 0rem
+        border-radius: 0rem;
+        font-weight: 500;
       }
 
       .card, .well {
@@ -163,7 +166,10 @@ spada_theme <- bs_theme(
   'nav-pills-link-active-color' = main_color,
   'nav-pills-link-active-bg' = sidebar_color,
   'border-radius-sm' = 0,
-  'border-radius' = 0
+  'border-radius' = 0,
+  'navbar-brand-font-size' = '1.25rem',
+  'btn-font-weight' = 500,
+  base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
 ) |> bs_add_rules(theme_basic_rules) |>
   bs_add_rules(
     list(
@@ -233,7 +239,10 @@ spada_dark_theme <- bs_theme(
   version = 5,
   bootswatch = 'darkly',
   'border-radius-sm' = 0,
-  'border-radius' = 0
+  'border-radius' = 0,
+  'navbar-brand-font-size' = '1.25rem',
+  'btn-font-weight' = 500,
+  base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
   ) |>
   bs_add_rules(theme_basic_rules) |>
   bs_add_rules(
