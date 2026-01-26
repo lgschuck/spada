@@ -7,7 +7,6 @@ summarise_ui <- function(id) {
     card(
       card_header('Summarise', class = 'mini-header'),
       card_body(
-        selectInput(ns('dt_sel'), 'Dataset', NULL),
         selectizeInput(
           ns('vars_sel'), 'Variables', NULL,
           multiple = T,
@@ -15,7 +14,12 @@ summarise_ui <- function(id) {
           width = '80%'
         ),
         selectInput(ns('fun_sel'), 'Function', summarise_functions),
-        textInput(ns('txt_new_dt_name'), 'New Dataset Name', placeholder = 'new_dataset'),
+        radioButtons(ns('radio_overwrite'), NULL,
+                     c('Overwrite' = 'overwrite', 'New' = 'new'), inline = T),
+        conditionalPanel(
+          condition = "input.radio_overwrite == 'new'", ns = ns,
+          textInput(ns('txt_new_dt_name'), 'New Dataset Name', placeholder = 'new_dataset')
+        )
       ),
       card_footer(btn_task(ns('btn_summarise'), 'Summarise', icon('check')))
     ),
@@ -28,23 +32,7 @@ summarise_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  dt_names <- reactive(session$userData$dt$dt |> names())
-
-	  vars_names <- reactive({
-      req(dt_names())
-	    req(input$dt_sel)
-      session$userData$dt$dt[[input$dt_sel]] |> names()
-    })
-
-    # datasets ------------------------------
-    observe({
-      req(dt_names())
-      updateSelectizeInput(
-        session,
-        'dt_sel',
-        choices = c(dt_names())
-      )
-    }) |> bindEvent(dt_names())
+	  vars_names <- reactive(get_act_dt(session) |> names())
 
     # variables ------------------------------
     observe({
@@ -56,34 +44,35 @@ summarise_server <- function(id) {
       )
     }) |> bindEvent(vars_names())
 
-
+	  # summarise event ---------
     observe({
-      if(!isTruthy(input$dt_sel)){
+      if(!isTruthy(input$vars_sel)){
         msg('Select at least one variable')
-      } else if(!isTruthy(input$vars_sel)){
-        msg('Select at least one variable')
+      } else if (input$radio_overwrite == 'new' &&
+          (!is_valid_name(input$txt_new_dt_name) ||
+             input$txt_new_dt_name %in% session$userData$dt_names()))
+      {
+        msg_error('New name is not valid or already in use')
       } else {
+        temp <- copy(get_act_dt(session))
 
-        if(is_valid_name(input$txt_new_dt_name) &&
-           input$txt_new_dt_name %notin% dt_names()){
+        temp <- summarise_dt(temp, input$fun_sel, input$vars_sel)
 
-          temp <- copy(session$userData$dt$dt[[input$dt_sel]])
+        # overwrite -------
+        if(input$radio_overwrite == 'overwrite'){
 
-          temp <- summarise_dt(temp, input$fun_sel, input$vars_sel)
+          update_act_dt(session, temp)
+
+        } else if(input$radio_overwrite == 'new'){
 
           append_dt(session, temp, input$txt_new_dt_name)
-
-          # update metadata ----------------------
           append_meta(session, temp |> df_info(), input$txt_new_dt_name)
 
-          rm(temp)
-
-          msg('Summarise: OK')
-        } else {
-          msg_error('New name is not valid or already in use')
         }
-
+        rm(temp)
+        msg('Summarise: OK')
       }
+
     }) |> bindEvent(input$btn_summarise)
 
   })

@@ -3,16 +3,17 @@
 dt <- iris |> as.data.table()
 
 # test summarise - distinct ---------------------------------------------------
-test_that('Test summarise distinct', {
+test_that('Test summarise - new dt - distinct function', {
   testServer(summarise_server, {
 
     session$userData$dt_names <- reactive('iris')
     session$userData$dt$dt[['iris']] <- dt
+    session$userData$dt$act_name <- 'iris'
 
     session$setInputs(
-      dt_sel = 'iris',
       vars_sel = 'Petal.Length',
       fun_sel = 'distinct',
+      radio_overwrite = 'new',
       txt_new_dt_name = 'new_dt'
     )
 

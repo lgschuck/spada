@@ -168,25 +168,20 @@ spada_server <- function(datasets, conf){
     })
 
     # info to use in sidebar and navbar modules --------
-    session$userData$dt$act_row_col <- reactive({
+    session$userData$dt$act_mini_meta <- reactive({
       req(session$userData$dt$act_meta())
 
-      paste(session$userData$dt$act_meta() |> pull(rows) |> head(1) |> f_num(dig = 1),
-            '/', session$userData$dt$act_meta() |> pull(cols) |> head(1) |> f_num())
-    })
-
-    session$userData$dt$act_col_nas <- reactive({
-      req(session$userData$dt$act_meta())
-
-      session$userData$dt$act_meta() |>
-        filter(n_nas > 0) |>
-        nrow()
-    })
-
-    session$userData$dt$act_size <- reactive({
-      req(session$userData$dt$act_meta())
-      (object.size(get_act_dt(session)) / 2^20) |>
-        as.numeric() |> round(2)
+      list(
+        'row_col' = paste(session$userData$dt$act_meta() |>
+                                pull(rows) |> head(1) |> f_num(dig = 1),
+                              '/',
+                              session$userData$dt$act_meta() |>
+                                pull(cols) |> head(1) |> f_num()),
+        'col_nas' = session$userData$dt$act_meta() |>
+          filter(n_nas > 0) |> nrow(),
+        'size' = (object.size(get_act_dt(session)) / 2^20) |>
+          as.numeric() |> round(2)
+      )
     })
 
     # navbar ------------------------------------------------------------------
@@ -278,10 +273,10 @@ spada_server <- function(datasets, conf){
       }
     }) |> bindEvent(input$pD_data_btn_delete_dataset)
 
-    # export file -------------------------------------------------------------
+    # export file ----------------------------
     export_file_server('pD_export')
 
-    # import file -------------------------------------------------------------
+    # import file ----------------------------
     import_file_server('pD_import')
 
     # edit page events --------------------------------------------------------
@@ -310,57 +305,25 @@ spada_server <- function(datasets, conf){
     # summarise events -----------------------
     summarise_server('pE_summarise')
 
-    # reset df active ------------------------
-    observe({
-      update_act_dt(session, copy(session$userData$dt$bkp0))
-      msg('Active Dataset Reseted')
-
-      session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
-    }) |> bindEvent(input$pE_btn_reset)
-
-    # create backup --------------------------
-    observe({
-      session$userData$dt$bkp <- copy(get_act_dt(session))
-      msg('Backup created')
-    }) |> bindEvent(input$pE_btn_bkp)
-
-    # restore backup -------------------------
-    observe({
-      if(is.null(session$userData$dt$bkp)){
-        msg('No backup to restore')
-      } else {
-        update_act_dt(session, copy(session$userData$dt$bkp))
-        msg('Backup restored')
-        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
-      }
-    }) |> bindEvent(input$pE_btn_restore)
-
-    # clear backup ---------------------------
-    observe({
-      if(is.null(session$userData$dt$bkp)){
-        msg('No backup to clear')
-      } else {
-        session$userData$dt$bkp <- NULL
-        msg('Backup cleared')
-      }
-    }) |> bindEvent(input$pE_btn_clear_bkp)
+    # edit backup events ---------------------
+    data_bkp_server('pE_bkp')
 
     # analysis page events ----------------------------------------------------
     exploratory_server('pA_exploratory')
 
-    # descriptive stats -------------------------------------------------------
+    # descriptive stats ----------------------
     descriptive_stats_server('pA_desc_stats')
 
-    # correlation -------------------------------------------------------------
+    # correlation ----------------------------
     correlation_server('pA_correlation')
 
-    # normality test ----------------------------------------------------------
+    # normality test -------------------------
     normality_test_server('pA_normality_test')
 
-    # z test ------------------------------------------------------------------
+    # z test ---------------------------------
     z_test_server('pA_z_test')
 
-    # linear model ------------------------------------------------------------
+    # linear model ---------------------------
     lm_server('pA_lm')
 
     # output events -----------------------------------------------------------

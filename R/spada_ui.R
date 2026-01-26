@@ -72,47 +72,37 @@ spada_ui <- function(conf){
         'Edit',
         icon = icon('screwdriver-wrench'),
 
-        card(full_screen = T,
-             card_body(
-               class = 'big-card',
-               layout_columns(
-                 navset_card_pill(
-                   nav_panel(
-                     'Calculate',
-                     calculate_cols_ui('pE_calculate_cols')
-                   ),
-                   nav_panel('Convert', convert_cols_ui('pE_convert_cols')),
-                   nav_panel(
-                     'Filter',
-                     layout_column_wrap(
-                       filter_rows_ui('pE_filter_rows'),
-                       select_cols_ui('pE_filter_sel_cols'),
-                     )
-                   ),
-                   nav_panel(
-                     'Order',
-                     layout_column_wrap(
-                       order_rows_ui('pE_order_rows'),
-                       order_cols_ui('pE_order_cols')
-                     )
-                   ),
-                   nav_panel('Rename', rename_cols_ui('pE_rename_cols')),
-                   nav_panel('Summarise', summarise_ui('pE_summarise')),
-                 )
+        card(
+          full_screen = T,
+           card_body(
+             class = 'big-card',
+             layout_columns(
+               navset_card_pill(
+                 nav_panel(
+                   'Calculate',
+                   calculate_cols_ui('pE_calculate_cols')
+                 ),
+                 nav_panel('Convert', convert_cols_ui('pE_convert_cols')),
+                 nav_panel(
+                   'Filter',
+                   layout_column_wrap(
+                     filter_rows_ui('pE_filter_rows'),
+                     select_cols_ui('pE_filter_sel_cols'),
+                   )
+                 ),
+                 nav_panel(
+                   'Order',
+                   layout_column_wrap(
+                     order_rows_ui('pE_order_rows'),
+                     order_cols_ui('pE_order_cols')
+                   )
+                 ),
+                 nav_panel('Rename', rename_cols_ui('pE_rename_cols')),
+                 nav_panel('Summarise', summarise_ui('pE_summarise')),
                )
-             ),
-             card_footer(
-               layout_column_wrap(
-                 btn_task('pE_btn_reset', 'Reset Dataset', icon('arrow-rotate-right')) |>
-                   ttip('Restore to previous state (before been set as the Active dataset)'),
-                 btn_task('pE_btn_bkp', 'Create Backup', icon('cloud-arrow-up')) |>
-                   ttip('Create a copy of the Active dataset'),
-                 btn_task('pE_btn_restore', 'Restore Backup', icon('cloud-arrow-down')) |>
-                   ttip('Restore a previously created backup'),
-                 btn_task('pE_btn_clear_bkp', 'Clear Backup', icon('trash-can')) |>
-                   ttip('Erase the backup'),
-               ),
-               class = 'big-card-footer')
+             )
+           ),
+           card_footer(data_bkp_ui('pE_bkp'), class = 'big-card-footer')
         )
       ),
 

@@ -18,9 +18,9 @@ navbar_df_info_server <- function(id, app_session) {
     output$navbar_df_info <- renderUI({
       tagList(
         h5(session$userData$dt$act_name),
-        p('Rows/Columns:', session$userData$dt$act_row_col()),
-        p("Columns with NA's:", session$userData$dt$act_col_nas()),
-        p('Size (MB):', session$userData$dt$act_size())
+        p('Rows/Columns:', session$userData$dt$act_mini_meta()[['row_col']]),
+        p("Columns with NA's:", session$userData$dt$act_mini_meta()[['col_nas']]),
+        p('Size (MB):', session$userData$dt$act_mini_meta()[['size']])
       )
     })
 
