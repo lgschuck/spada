@@ -258,6 +258,12 @@ date_formats <- c(
   'YYMMDD' = '%y%m%d'
 )
 
+# list of summarise functions -------------------------------------------------
+summarise_functions <- c(
+  'Distinct' = 'distinct',
+  'Count' = 'count'
+)
+
 # close browser tab -----------------------------------------------------------
 js_exit <- "Shiny.addCustomMessageHandler('closeWindow', function(m) {window.close();});"
 
@@ -597,46 +603,52 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
 }
 
 # filter rows function --------------------------------------------------------
-filter_rows <- function(df, var, operator, filter_value){
+filter_rows <- function(dt, var, operator, filter_value){
+
+  stopifnot(is.data.table(dt))
+
   if(operator == '=='){
-    df[var1 == filter_value, , env = list(var1 = var)]
+    dt[var1 == filter_value, , env = list(var1 = var)]
   } else if(operator == '!='){
-    df[var1 != filter_value, , env = list(var1 = var)]
+    dt[var1 != filter_value, , env = list(var1 = var)]
   } else if(operator == '>'){
-    df[var1 > filter_value, , env = list(var1 = var) ]
+    dt[var1 > filter_value, , env = list(var1 = var) ]
   } else if(operator == '>='){
-    df[var1 >= filter_value, , env = list(var1 = var) ]
+    dt[var1 >= filter_value, , env = list(var1 = var) ]
   } else if(operator == '<'){
-    df[var1 < filter_value, , env = list(var1 = var) ]
+    dt[var1 < filter_value, , env = list(var1 = var) ]
   } else if(operator == '<='){
-    df[var1 <= filter_value, , env = list(var1 = var) ]
+    dt[var1 <= filter_value, , env = list(var1 = var) ]
   } else if(operator == 'is_na'){
-    df[is.na(var1), , env = list(var1 = var) ]
+    dt[is.na(var1), , env = list(var1 = var) ]
   } else if(operator == 'not_na'){
-    df[!is.na(var1), , env = list(var1 = var) ]
+    dt[!is.na(var1), , env = list(var1 = var) ]
   } else if(operator == 'in'){
-    df[var1 %in% filter_value,  , env = list(var1 = var)]
+    dt[var1 %in% filter_value,  , env = list(var1 = var)]
   } else if(operator == 'not_in'){
-    df[!var1 %in% filter_value, , env = list(var1 = var) ]
+    dt[!var1 %in% filter_value, , env = list(var1 = var) ]
   } else if(operator == 'between'){
-    df[var1 %between% filter_value, , env = list(var1 = var) ]
+    dt[var1 %between% filter_value, , env = list(var1 = var) ]
   } else if(operator == 'not_between'){
-    df[!(var1 %between% filter_value), , env = list(var1 = var) ]
+    dt[!(var1 %between% filter_value), , env = list(var1 = var) ]
   } else if(operator == 'outlier'){
-    df[Outlier(var1, value = F, na.rm = T), , env = list(var1 = var)]
+    dt[Outlier(var1, value = F, na.rm = T), , env = list(var1 = var)]
   } else if(operator == 'not_outlier'){
-    df[!Outlier(var1, value = F, na.rm = T), , env = list(var1 = var)]
+    dt[!Outlier(var1, value = F, na.rm = T), , env = list(var1 = var)]
   } else if(operator == 'is_true'){
-    df[var1 == TRUE,  , env = list(var1 = var)]
+    dt[var1 == TRUE,  , env = list(var1 = var)]
   } else if(operator == 'is_false'){
-    df[var1 == FALSE,  , env = list(var1 = var)]
+    dt[var1 == FALSE,  , env = list(var1 = var)]
   }
 }
 
 # filter rows 2 vars ----------------------------------------------------------
-filter_rows_2vars <- function(df, var1, var2, operator){
-  v1 <- df[[var1]]
-  v2 <- df[[var2]]
+filter_rows_2vars <- function(dt, var1, var2, operator){
+
+  stopifnot(is.data.table(dt))
+
+  v1 <- dt[[var1]]
+  v2 <- dt[[var2]]
 
   # Convert to char if factor
   if (is.factor(v1) && is.factor(v2)) {
@@ -645,17 +657,17 @@ filter_rows_2vars <- function(df, var1, var2, operator){
   }
 
   if(operator == '=='){
-    df[v1 == v2, ]
+    dt[v1 == v2, ]
   } else if(operator == '!='){
-    df[v1 != v2, ]
+    dt[v1 != v2, ]
   } else if(operator == '>'){
-    df[v1 > v2, ]
+    dt[v1 > v2, ]
   } else if(operator == '>='){
-    df[v1 >= v2, ]
+    dt[v1 >= v2, ]
   } else if(operator == '<'){
-    df[v1 < v2, ]
+    dt[v1 < v2, ]
   } else if(operator == '<='){
-    df[v1 <= v2, ]
+    dt[v1 <= v2, ]
   } else {
     stop('Invalid Operator')
   }
@@ -991,13 +1003,27 @@ update_act_dt <- function(session, new_dt) {
 append_dt <- function(session, new_dt, new_dt_name) {
 
   stopifnot(new_dt |> is.data.frame())
-  stopifnot(new_dt_name |> is_valid_name() && new_dt_name %notin% names(session$userData$dt$dt))
+  stopifnot(new_dt_name |> is_valid_name() &&
+              new_dt_name %notin% names(session$userData$dt$dt))
 
   new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table()
   new_list <- list(new_dt)
   names(new_list) <- new_dt_name
 
   session$userData$dt$dt <- c(session$userData$dt$dt, new_list)
+}
+
+# append meta data ------------------------------------------------------------
+append_meta <- function(session, new_meta, new_dt_name){
+  stopifnot(new_meta |> is.data.frame())
+
+  meta_list <- list(new_meta)
+  names(meta_list) <- new_dt_name
+
+  session$userData$dt$meta <- c(
+    session$userData$dt$meta,
+    meta_list
+  )
 }
 
 # descriptive stats -----------------------------------------------------------
@@ -1306,3 +1332,14 @@ display_restore_status <- function(session_restore_status){
 
 }
 
+# summarise dataset -----------------------------------------------------------
+summarise_dt <- function(dt, fun, vars){
+
+  stopifnot(is.data.table(dt))
+
+  if(fun == 'distinct'){
+    dt[, .SD, .SDcols = vars] |> unique()
+  } else if(fun == 'count'){
+    dt[, .N, by = vars]
+  }
+}

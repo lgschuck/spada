@@ -12,7 +12,7 @@ spada_ui <- function(conf){
     useBusyIndicators(),
 
     # css style for waiter screen ---------------------------------------------
-    use_waiter(),
+    useWaiter(),
 
     waiter_screen,
 
@@ -97,6 +97,7 @@ spada_ui <- function(conf){
                      )
                    ),
                    nav_panel('Rename', rename_cols_ui('pE_rename_cols')),
+                   nav_panel('Summarise', summarise_ui('pE_summarise')),
                  )
                )
              ),

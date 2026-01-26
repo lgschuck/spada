@@ -559,6 +559,24 @@ test_that('invalid previous conf file', {
   expect_equal(res, valid_conf)
 })
 
+# test summarise_dt function --------------------------------------------------
+dt <- iris |> as.data.table()
 
+test_that('summarise dt funciton - distinct', {
 
+  dt_s0 <- dt[, .SD, .SDcols = 'Species'] |> unique()
+  dt_s <- summarise_dt(dt, 'distinct', 'Species')
+
+  expect_equal(dt_s0, dt_s)
+  expect_s3_class(dt_s, c('data.table', 'data.frame'))
+})
+
+test_that('summarise dt funciton - count', {
+
+  dt_s0 <- dt[, .N, by = 'Species']
+  dt_s <- summarise_dt(dt, 'count', 'Species')
+
+  expect_equal(dt_s0, dt_s)
+  expect_s3_class(dt_s, c('data.table', 'data.frame'))
+})
 

@@ -19,9 +19,10 @@
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
-#'             fcase fifelse fread fwrite hour mday minute month quarter second
-#'             setcolorder setDT setnames setorderv shift wday week yday year
-
+#'             is.data.table fcase fifelse fread fwrite hour mday minute month
+#'             quarter second setcolorder setDT setnames setorderv shift wday
+#'             week yday year
+#'
 #' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest
 #'
@@ -62,7 +63,7 @@
 #'
 #' @importFrom utils object.size head packageDescription sessionInfo
 #'
-#' @importFrom waiter use_waiter waiter_hide waiter_show waiter_show_on_load
+#' @importFrom waiter useWaiter waiter_hide waiter_show waiterShowOnLoad
 
 spada <- function(...) {
   datasets <- list(...)

@@ -286,14 +286,17 @@ spada_server <- function(datasets, conf){
 
     # edit page events --------------------------------------------------------
 
+    # calculate cols events ------------------
+    calculate_cols_server('pE_calculate_cols')
+
+    # convert events -------------------------
+    convert_cols_server('pE_convert_cols')
+
     # filter events --------------------------
     filter_rows_server('pE_filter_rows')
 
     # select cols ----------------------------
     select_cols_server('pE_filter_sel_cols')
-
-    # convert events -------------------------
-    convert_cols_server('pE_convert_cols')
 
     # order rows events ----------------------
     order_rows_server('pE_order_rows')
@@ -304,8 +307,8 @@ spada_server <- function(datasets, conf){
     # rename cols events ---------------------
     rename_cols_server('pE_rename_cols')
 
-    # calculate cols events ------------------
-    calculate_cols_server('pE_calculate_cols')
+    # summarise events -----------------------
+    summarise_server('pE_summarise')
 
     # reset df active ------------------------
     observe({

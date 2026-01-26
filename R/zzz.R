@@ -30,6 +30,7 @@ utils::globalVariables(
     'dt_names_react',
     'Sig Levels',
     'Pr(>|t|)',
-    'i'
+    'i',
+    '.N'
     )
   )
