@@ -80,7 +80,7 @@ order_rows_server <- function(id) {
                   } else { FALSE }
         )
 
-        update_act_dt(session, copy(temp))
+        update_act_dt(session, copy(temp), FALSE)
         rm(temp)
 
         msg('Reordering Rows: OK')

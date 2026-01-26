@@ -153,7 +153,6 @@ convert_cols_server <- function(id) {
         update_act_dt(session, copy(temp))
         rm(temp)
 
-        session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
         msg('Conversion applied')
       }
     }) |> bindEvent(input$btn_apply)
