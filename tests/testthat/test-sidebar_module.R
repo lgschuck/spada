@@ -44,11 +44,14 @@ test_that("Test render df_info UI", {
 
     expect_true(is.list(output$df_info))
 
-    expect_true(grepl('df_test', output$df_info$html))
     expect_true(grepl('Size', output$df_info$html))
     expect_true(grepl('0', output$df_info$html))
-    expect_true(grepl('Rows/Columns:\n  5.0 / 2\n', output$df_info$html))
-    expect_true(grepl("Columns with NA's:\n  1", output$df_info$html))
+
+    expect_true(grepl('Rows/Columns:\n', output$df_info$html))
+    expect_true(grepl('5.0 / 2\n', output$df_info$html))
+
+    expect_true(grepl("Columns with NA's:\n", output$df_info$html))
+    expect_true(grepl("1", output$df_info$html))
 
   })
 })

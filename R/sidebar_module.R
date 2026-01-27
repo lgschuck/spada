@@ -11,6 +11,7 @@ sidebar_ui <- function(id) {
         class = 'accordion-sidebar',
         'Active Dataset',
         icon = bs_icon('check2-square', size = '1.75em'),
+        selectInput(ns('sel_act_dt'), NULL, choices = NULL, selected = NULL),
         uiOutput(ns('df_info')),
         fluidRow(
           column(1),
@@ -49,14 +50,45 @@ sidebar_server <- function(id, app_session) {
 
   	# active dataset info -----------------------------------------------------
     output$df_info <- renderUI({
+      req(session$userData$dt$act_mini_meta())
+
+      mini_meta <- session$userData$dt$act_mini_meta()
       tagList(
-        h5(session$userData$dt$act_name),
-        p('Rows/Columns:', session$userData$dt$act_mini_meta()[['row_col']]),
-        p("Columns with NA's:", session$userData$dt$act_mini_meta()[['col_nas']]),
-        p('Size (MB):', session$userData$dt$act_mini_meta()[['size']])
+        div(
+          style = 'font-size: 0.9rem;',
+          p('Rows/Columns:', mini_meta[['row_col']]),
+          p("Columns with NA's:", mini_meta[['col_nas']]),
+          p('Size (MB):', mini_meta[['size']])
+        )
       )
     })
 
+    # update active dataset list --------
+    observe({
+      req(session$userData$dt$dt, session$userData$dt$act_name)
+
+      updateSelectInput(
+        session,
+        'sel_act_dt',
+        choices = c(
+          session$userData$dt$act_name,
+          setdiff(session$userData$dt_names(), session$userData$dt$act_name)
+        ),
+        selected = session$userData$dt$act_name
+      )
+
+    })
+
+    # update active dataset --------
+    observe({
+      req(input$sel_act_dt)
+      session$userData$dt$act_name <- input$sel_act_dt
+      session$userData$dt$bkp0 <- copy(get_act_dt(session))
+      session$userData$dt$bkp <- NULL
+
+    }) |> bindEvent(input$sel_act_dt, ignoreInit = T)
+
+    # mini buttons --------
     observe({
       nav_select('navbar', selected = 'Data', session = app_session)
       nav_select('navset_card_pill_data', selected = 'Overview', session = app_session)

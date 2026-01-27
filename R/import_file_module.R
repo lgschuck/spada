@@ -132,7 +132,10 @@ import_file_server <- function(id) {
       }
 
       # update dt ----------------------------
+      data$data <- lapply(data$data, make_valid_cols) |> as.data.table()
+
       data$data <- data$data |> make_var_names()
+
       append_dt(session, data$data, input$dataset_name)
 
       # update metadata ----------------------

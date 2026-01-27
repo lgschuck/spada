@@ -66,7 +66,7 @@ test_that('Test data bkp - clear bkp', {
 test_that('Test data bkp - restore bkp', {
   testServer(data_bkp_server, {
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$userData$dt_names <- reactive('iris')
     session$userData$dt$dt[['iris']] <- dfs[['df_iris']]
     session$userData$dt$act_name <- 'iris'
@@ -88,7 +88,7 @@ test_that('Test data bkp - restore bkp', {
 test_that('Test data bkp - reset bkp', {
   testServer(data_bkp_server, {
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$userData$dt_names <- reactive('iris')
     session$userData$dt$dt[['iris']] <- dfs[['df_iris']]
     session$userData$dt$act_name <- 'iris'

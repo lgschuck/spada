@@ -11,7 +11,7 @@ test_that("Test calculate cols - sum numeric", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
       vars_sel = 'Sepal.Width',
@@ -35,7 +35,7 @@ test_that("Test calculate cols - mean numeric - groupby", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
       vars_sel = 'Sepal.Width',
@@ -61,7 +61,7 @@ test_that("Test calculate cols - factor", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
       vars_sel = 'Species',
@@ -86,7 +86,7 @@ test_that("Test calculate cols - freehand", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
       txt_new_name_free = 'new_var',
@@ -109,7 +109,7 @@ test_that("Test calculate cols - freehand - groupby", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
       txt_new_name_free = 'new_var',
@@ -134,7 +134,7 @@ test_that("Test calculate cols - freehand - fifelse", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
       txt_new_name_free = 'new_var',

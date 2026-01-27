@@ -8,7 +8,7 @@ test_that("Test drop one column", {
       dt = list('iris' = iris),
       act_name = 'iris'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Species')
     session$setInputs(radio_var_sel = 'drop')
     session$setInputs(btn_sel = 1)
@@ -25,7 +25,7 @@ test_that("Test drop two column", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = c('hp', 'mpg'))
     session$setInputs(radio_var_sel = 'drop')
     session$setInputs(btn_sel = 1)
@@ -43,7 +43,7 @@ test_that("Test keep one column", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'hp')
     session$setInputs(radio_var_sel = 'keep')
     session$setInputs(btn_sel = 1)
@@ -60,7 +60,7 @@ test_that("Test keep two column", {
       dt = list('iris' = iris),
       act_name = 'iris'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = c('Species', 'Petal.Length'))
     session$setInputs(radio_var_sel = 'keep')
     session$setInputs(btn_sel = 1)

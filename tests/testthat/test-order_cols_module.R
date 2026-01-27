@@ -10,7 +10,7 @@ test_that("Test order one column - before all", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'before')
@@ -33,7 +33,7 @@ test_that("Test order two column - before all", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'before')
@@ -56,7 +56,7 @@ test_that("Test order one column - before especific", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'before')
@@ -79,7 +79,7 @@ test_that("Test order two columns - before especific", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'before')
@@ -103,7 +103,7 @@ test_that("Test order one column - after all", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'after')
@@ -126,7 +126,7 @@ test_that("Test order two columns - after all", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'after')
@@ -149,7 +149,7 @@ test_that("Test order one column - after specific", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'after')
@@ -172,7 +172,7 @@ test_that("Test order two columns - after specific", {
       dt = list('mtcars' = mtcars),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_cols = vars)
     session$setInputs(vars_rest = var1)
     session$setInputs(radio_cols = 'after')

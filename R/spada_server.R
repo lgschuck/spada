@@ -128,6 +128,8 @@ spada_server <- function(datasets, conf){
       meta = lapply(datasets, df_info)
     )
 
+    session$userData$data_changed <- reactiveVal(0)
+
     session$userData$dt$bkp0 <- isolate(get_act_dt(session))
 
     session$userData$dt_names <- reactive({
@@ -144,14 +146,12 @@ spada_server <- function(datasets, conf){
     )
 
     # datasets metadata -------------------------------------------------------
-    session$userData$dt$data_changed <- reactiveVal(0)
-
     observe({
       req(session$userData$dt$dt)
 
       session$userData$dt$meta[[session$userData$dt$act_name]] <- get_act_dt(session) |> df_info()
 
-    }) |> bindEvent(session$userData$dt$data_changed())
+    }) |> bindEvent(session$userData$data_changed())
 
     session$userData$dt$gt_info <- reactive({
       req(session$userData$dt$meta)
@@ -199,79 +199,8 @@ spada_server <- function(datasets, conf){
     # values for boxes -----------------------
     data_highlights_server('pD_highlights')
 
-    # define active dataset ---------------------------------------------------
-    output$pD_data_ui_sel_df <- renderUI({
-      req(session$userData$dt_names())
-      selectInput(
-        'pD_data_sel_df',
-        'Select a dataset',
-        choices = c(
-          session$userData$dt$act_name,
-          setdiff(session$userData$dt_names(), session$userData$dt$act_name)
-        )
-      )
-    })
-
-    # make active dataset event --------------
-    observe({
-      session$userData$dt$act_name <- input$pD_data_sel_df
-      session$userData$dt$bkp0 <- copy(get_act_dt(session))
-      session$userData$dt$bkp <- NULL
-      msg(paste('Dataset', session$userData$dt$act_name, 'is the active one'))
-      updateTextInput(session, "pD_data_txt_new_name", value = '')
-    }) |> bindEvent(input$pD_data_btn_active)
-
-    # rename dataset event -------------------
-    observe({
-      if(!is_valid_name(input$pD_data_txt_new_name) |
-         input$pD_data_txt_new_name %in% session$userData$dt_names()){
-        msg_error('New name is not valid or already in use')
-      } else {
-        names(session$userData$dt$dt)[session$userData$dt_names() == input$pD_data_sel_df] <- input$pD_data_txt_new_name
-        # update active dataset if necessary
-        if(session$userData$dt$act_name == input$pD_data_sel_df){
-          session$userData$dt$act_name <- input$pD_data_txt_new_name
-          # update metadata names
-          names(session$userData$dt$meta)[names(session$userData$dt$meta) == input$pD_data_sel_df] <- input$pD_data_txt_new_name
-        }
-
-        msg('New name applied')
-        updateTextInput(session, "pD_data_txt_new_name", value = '')
-      }
-    }) |> bindEvent(input$pD_data_btn_new_name)
-
-    # copy dataset event ---------------------
-    observe({
-      if(!is_valid_name(input$pD_data_txt_new_name) ||
-         (input$pD_data_txt_new_name %in% session$userData$dt_names())){
-        msg_error('New name is not valid or already in use')
-      } else {
-        session$userData$dt$dt[[input$pD_data_txt_new_name]] <- session$userData$dt$dt[[input$pD_data_sel_df]]
-        # update metadata
-        session$userData$dt$meta[[input$pD_data_txt_new_name]] <- session$userData$dt$meta[[input$pD_data_sel_df]]
-        gc()
-
-        msg(paste('Dataset', input$pD_data_txt_new_name, 'created'))
-
-        updateTextInput(session, "pD_data_txt_new_name", value = '')
-      }
-    }) |> bindEvent(input$pD_data_btn_copy_dataset)
-
-    # delete dataset event -------------------
-    observe({
-      if(session$userData$dt$act_name == input$pD_data_sel_df){
-        msg_error('You can not delete the active dataset')
-      } else {
-        session$userData$dt$dt[[input$pD_data_sel_df]] <- NULL
-
-        # delete metadata
-        session$userData$dt$meta[[input$pD_data_sel_df]] <- NULL
-        gc()
-        msg(paste('Dataset', input$pD_data_sel_df, 'deleted'))
-
-        updateTextInput(session, "pD_data_txt_new_name", value = '')
-      }
-    }) |> bindEvent(input$pD_data_btn_delete_dataset)
+    # manage datasets ------------------------
+    data_server('pD_data')
 
     # export file ----------------------------
     export_file_server('pD_export')

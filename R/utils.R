@@ -999,7 +999,7 @@ update_act_dt <- function(session, new_dt, data_changed = TRUE) {
   session$userData$dt$dt[[ session$userData$dt$act_name ]] <- new_dt
 
   if(data_changed) {
-    session$userData$dt$data_changed(session$userData$dt$data_changed() + 1)
+    session$userData$data_changed(session$userData$data_changed() + 1)
   }
 }
 

@@ -8,7 +8,7 @@ test_that("Test currernt type/class ", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Sepal.Length')
 
     expect_equal(
@@ -28,7 +28,7 @@ test_that("Test Sample trigger - updates on button click", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     trigger_before <- preview_sample_trigger()
 
     session$setInputs(btn_preview_sample = 1)
@@ -45,7 +45,7 @@ test_that("Test Preview dataframe after variable and format selection", {
       dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Species')
     session$setInputs(sel_format = 'as.character')
 
@@ -68,7 +68,7 @@ test_that("Test Conversion applies when button clicked", {
       dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Species')
     session$setInputs(sel_format = 'as.character')
 

@@ -43,7 +43,6 @@ test_that("Test render df_info UI", {
 
     expect_true(is.list(output$navbar_df_info))
 
-    expect_true(grepl('iris', output$navbar_df_info$html))
     expect_true(grepl('Size', output$navbar_df_info$html))
     expect_true(grepl('0', output$navbar_df_info$html))
     expect_true(grepl('Rows/Columns:\n  150.0 / 5\n', output$navbar_df_info$html))

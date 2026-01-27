@@ -11,7 +11,7 @@ test_that("Test filter rows - empty inputs - should not crash", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(btn_filter = 1)
     expect_equal(get_act_dt(session), as.data.table(df_test))
 
@@ -26,7 +26,7 @@ test_that("Test filter rows - one variable - equal operator", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
                       one_var_operator = '==',
@@ -47,7 +47,7 @@ test_that("Test filter rows - one variable - not equal operator", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
                       one_var_operator = '!=',
@@ -68,7 +68,7 @@ test_that("Test filter rows - one variable - in operator", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
                       one_var_operator = 'in',
@@ -89,7 +89,7 @@ test_that("Test filter rows - one variable - not in operator", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
                       one_var_operator = 'not_in',
@@ -110,7 +110,7 @@ test_that("Test filter rows - one variable - is na", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
                       one_var_operator = 'is_na')
@@ -130,7 +130,7 @@ test_that("Test filter rows - one variable - not na", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Species',
                       one_var_operator = 'not_na')
@@ -150,7 +150,7 @@ test_that("Test filter rows - one variable - grater", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Length',
                       one_var_operator = '>',
@@ -171,7 +171,7 @@ test_that("Test filter rows - one variable - grater or equal", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Length',
                       one_var_operator = '>=',
@@ -192,7 +192,7 @@ test_that("Test filter rows - one variable - less", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Width',
                       one_var_operator = '<',
@@ -213,7 +213,7 @@ test_that("Test filter rows - one variable - less or equal", {
       dt = list('df_test' = df_test |> as.data.table()),
       act_name = 'df_test'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'Sepal.Width',
                       one_var_operator = '<=',
@@ -234,7 +234,7 @@ test_that("Test filter rows - one variable - outlier", {
       dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
                       one_var_operator = 'outlier')
@@ -254,7 +254,7 @@ test_that("Test filter rows - one variable - not outlier", {
       dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
                       one_var_operator = 'not_outlier')
@@ -274,7 +274,7 @@ test_that("Test filter rows - one variable - between", {
       dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
                       one_var_operator = 'between',
@@ -296,7 +296,7 @@ test_that("Test filter rows - one variable - not between", {
       dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'one',
                       one_var_sel = 'hp',
                       one_var_operator = 'not_between',
@@ -320,7 +320,7 @@ test_that("Test filter rows - two variables - bigger", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'two',
                       two_var_sel1 = 'Sepal.Width',
                       two_var_operator = '>',
@@ -346,7 +346,7 @@ test_that("Test filter rows - sample - nrows", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'sample',
                       sample_type = 'rows',
                       n_rows = '15',
@@ -369,7 +369,7 @@ test_that("Test filter rows - sample - percent", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'sample',
                       sample_type = 'percent',
                       sample_size = 10,
@@ -393,7 +393,7 @@ test_that("Test filter rows - free - allowed code", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'free',
                       txt_code_input = 'Sepal.Width <= Petal.Length'
                       )
@@ -415,7 +415,7 @@ test_that("Test filter rows - free - not allowed code - data stay unchanged", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'free',
                       txt_code_input = 'do.call(sum, list(1, 2))'
     )
@@ -438,7 +438,7 @@ test_that("Test filter rows - from other dataset - in", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'dataset',
                       dt_1_var_sel = 'Species',
                       dt_var_operator = 'in',
@@ -460,7 +460,7 @@ test_that("Test filter rows - from other dataset - not in", {
       act_name = 'iris'
     )
 
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(filter_type = 'dataset',
                       dt_1_var_sel = 'Species',
                       dt_var_operator = 'not_in',

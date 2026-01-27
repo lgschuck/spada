@@ -16,11 +16,13 @@ navbar_df_info_server <- function(id, app_session) {
 	  ns <- session$ns
 
     output$navbar_df_info <- renderUI({
+      req(session$userData$dt$act_mini_meta())
+
+      mini_meta <- session$userData$dt$act_mini_meta()
       tagList(
-        h5(session$userData$dt$act_name),
-        p('Rows/Columns:', session$userData$dt$act_mini_meta()[['row_col']]),
-        p("Columns with NA's:", session$userData$dt$act_mini_meta()[['col_nas']]),
-        p('Size (MB):', session$userData$dt$act_mini_meta()[['size']])
+        p('Rows/Columns:', mini_meta[['row_col']]),
+        p("Columns with NA's:", mini_meta[['col_nas']]),
+        p('Size (MB):', mini_meta[['size']])
       )
     })
 

@@ -26,7 +26,7 @@ spada_ui <- function(conf){
       theme = get(conf$theme),
       title = 'Spada',
 
-      bg = main_color,
+      bg = navbar_bg,
       underline = F,
 
       # page sidebar ----------------------------------------------------------
@@ -37,33 +37,20 @@ spada_ui <- function(conf){
         'Data',
         icon = bs_icon('info-square-fill'),
 
-        card(full_screen = T,
-             card_body(
-               class = 'big-card',
-               navset_card_pill(
-                 id = 'navset_card_pill_data',
-                 nav_panel('Highlights', data_highlights_ui('pD_highlights')),
-                 nav_panel('Metadata', metadata_ui('pD_metadata')),
-                 nav_panel('Overview', data_overview_ui('pD_overview')),
-                 nav_panel(
-                   'Data',
-                   card(
-                     card_body(
-                       uiOutput('pD_data_ui_sel_df'),
-                       textInput('pD_data_txt_new_name', 'New name'),
-                       layout_column_wrap(
-                         btn_task('pD_data_btn_new_name', 'Rename dataset', icon('file-signature')),
-                         btn_task('pD_data_btn_active', 'Make dataset Active', icon('check')),
-                         btn_task('pD_data_btn_copy_dataset', 'Copy dataset', icon('copy')),
-                         btn_task('pD_data_btn_delete_dataset', 'Delete dataset', icon('trash-can')),
-                       )
-                     )
-                   )
-                 ),
-                 nav_panel('Import', import_file_ui('pD_import')),
-                 nav_panel('Export', export_file_ui('pD_export'))
-               )
-             )
+        card(
+          full_screen = T,
+          card_body(
+            class = 'big-card',
+            navset_card_pill(
+              id = 'navset_card_pill_data',
+              nav_panel('Highlights', data_highlights_ui('pD_highlights')),
+              nav_panel('Metadata', metadata_ui('pD_metadata')),
+              nav_panel('Overview', data_overview_ui('pD_overview')),
+              nav_panel('Data', data_ui('pD_data')),
+              nav_panel('Import', import_file_ui('pD_import')),
+              nav_panel('Export', export_file_ui('pD_export'))
+            )
+          )
         )
       ),
 

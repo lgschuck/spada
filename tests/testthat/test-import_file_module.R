@@ -9,7 +9,7 @@ test_that('Test import RDS', {
 
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'RDS',
@@ -31,7 +31,7 @@ test_that('Test import Sav - all lines', {
 
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'sav',
@@ -58,7 +58,7 @@ test_that('Test import Sav - 10 lines', {
 
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'sav',
@@ -87,7 +87,7 @@ test_that('Test import all lines - csv standard', {
 
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'csv',
@@ -121,7 +121,7 @@ test_that('Test import all lines - csv 2 standard', {
 
     session$userData$dt_names <- reactive('mtcars')
     session$userData$dt$dt[['mtcars']] <- mtcars
-    session$userData$dt$data_changed <- reactiveVal(0)
+    session$userData$data_changed <- reactiveVal(0)
     session$setInputs(
       dataset_name = 'df_test',
       radio_file_ext = 'csv',

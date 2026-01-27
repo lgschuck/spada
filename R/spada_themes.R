@@ -4,6 +4,7 @@ themes_names <- c('spada_theme', 'spada_dark_theme')
 
 # app colors ------------------------------------------------------------------
 main_color <- '#02517d'
+navbar_bg <- '#0A5A88'
 sidebar_color <- '#e3e3e4'
 bg_color <- '#f9f9f9'
 secondary <- '#0072B2'
@@ -38,9 +39,7 @@ theme_basic_rules <- as_sass(
          grad4 = '#4b97b6',
          grad5 = '#5fa3c2',
          grad6 = '#4e96b6',
-         navbar_bg = '#007bb5',
-         stati_card_text = '#ffffff',
-         startup_bg = main_color
+         stati_card_text = '#ffffff'
     ),
     "
       .navbar-brand {
@@ -48,7 +47,6 @@ theme_basic_rules <- as_sass(
       }
 
       .navbar {
-        background: $navbar_bg !important;
         height: 45px !important;
         padding-top: 4px !important;
         padding-bottom: 4px !important;

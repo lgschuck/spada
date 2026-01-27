@@ -97,8 +97,7 @@ spada <- function(...) {
   datasets <- lapply(
     datasets,
     \(df) {
-      df_temp <- lapply(df, make_valid_cols) |> as.data.frame()
-      df_temp |> as.data.table()
+      lapply(df, make_valid_cols) |> as.data.table()
     }
   )
 
