@@ -76,7 +76,8 @@ order_cols_server <- function(id) {
           setcolorder(temp, input$vars_cols, after = input$vars_rest)
         }
 
-        update_act_dt(session, copy(temp))
+        update_act_dt(session, copy(temp), updated_cols = temp |> names(),
+                      only_reorder = TRUE)
         rm(temp)
 
         msg('Reordering Variables: OK')

@@ -118,7 +118,7 @@ calculate_cols_server <- function(id) {
             groupby = input$vars_groupby_fun |> as.list()
           )]
 
-          update_act_dt(session, copy(temp))
+          update_act_dt(session, copy(temp), updated_cols = input$txt_new_name_fun)
           rm(temp)
 
           msg('Apply function: OK')
@@ -195,7 +195,7 @@ calculate_cols_server <- function(id) {
             return(msg_error('Error in expression. Check code'))
           } else{
 
-            update_act_dt(session, copy(e1$temp))
+            update_act_dt(session, copy(e1$temp), updated_cols = input$txt_new_name_free)
 
             msg('Calculate new var: OK')
             rm(e1)

@@ -50,17 +50,33 @@ sidebar_server <- function(id, app_session) {
 
   	# active dataset info -----------------------------------------------------
     output$df_info <- renderUI({
-      req(session$userData$dt$act_mini_meta())
-
-      mini_meta <- session$userData$dt$act_mini_meta()
-      tagList(
-        div(
-          style = 'font-size: 0.9rem;',
-          p('Rows/Columns:', mini_meta[['row_col']]),
-          p("Columns with NA's:", mini_meta[['col_nas']]),
-          p('Size (MB):', mini_meta[['size']])
+      div(
+        style = 'font-size: 0.9rem;',
+        p(
+          'Rows/Columns: ',
+          textOutput(ns('row_col'), inline = TRUE)
+        ),
+        p(
+          "Columns with NA's: ",
+          textOutput(ns('col_nas'), inline = TRUE)
+        ),
+        p(
+          'Size (MB): ',
+          textOutput(ns('size_mb'), inline = TRUE)
         )
       )
+    })
+
+    output$row_col <- renderText({
+      session$userData$dt$act_mini_meta()[['row_col']]
+    })
+
+    output$col_nas <- renderText({
+      session$userData$dt$act_mini_meta()[['col_nas']]
+    })
+
+    output$size_mb <- renderText({
+      session$userData$dt$act_mini_meta()[['size']]
     })
 
     # update active dataset list --------

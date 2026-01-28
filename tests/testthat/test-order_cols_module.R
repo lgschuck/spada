@@ -7,7 +7,7 @@ test_that("Test order one column - before all", {
     vars <- c('wt')
     var1 <- names(mtcars)[1]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -30,7 +30,7 @@ test_that("Test order two column - before all", {
     vars <- c('wt', 'hp')
     var1 <- names(mtcars)[1]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -53,7 +53,7 @@ test_that("Test order one column - before especific", {
     vars <- c('wt')
     var1 <- names(mtcars)[4]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -76,7 +76,7 @@ test_that("Test order two columns - before especific", {
     vars <- c('wt','mpg')
     var1 <- names(mtcars)[4]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -100,7 +100,7 @@ test_that("Test order one column - after all", {
     vars <- c('wt')
     var1 <- names(mtcars)[length(mtcars)]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -123,7 +123,7 @@ test_that("Test order two columns - after all", {
     vars <- c('wt', 'drat')
     var1 <- names(mtcars)[length(mtcars)]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -146,7 +146,7 @@ test_that("Test order one column - after specific", {
     vars <- c('am')
     var1 <- names(mtcars)[8]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -169,7 +169,7 @@ test_that("Test order two columns - after specific", {
     vars <- c('am', 'carb')
     var1 <- names(mtcars)[2]
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)

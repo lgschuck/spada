@@ -5,7 +5,7 @@ test_that("Test drop one column", {
   testServer(select_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = iris),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -22,7 +22,7 @@ test_that("Test drop two column", {
   testServer(select_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -40,7 +40,7 @@ test_that("Test keep one column", {
   testServer(select_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = mtcars |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -57,7 +57,7 @@ test_that("Test keep two column", {
   testServer(select_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = iris),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
     session$userData$data_changed <- reactiveVal(0)

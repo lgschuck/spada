@@ -150,7 +150,7 @@ convert_cols_server <- function(id) {
                                date_origin = input$sel_date_origin),
                      env = list(var1 = input$vars_sel)]
 
-        update_act_dt(session, copy(temp))
+        update_act_dt(session, copy(temp), updated_cols = input$vars_sel)
         rm(temp)
 
         msg('Conversion applied')

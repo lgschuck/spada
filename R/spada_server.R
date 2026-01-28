@@ -125,7 +125,10 @@ spada_server <- function(datasets, conf){
       act_name = names(datasets[1]),
       bkp0 = NULL,
       bkp = NULL,
-      meta = lapply(datasets, df_info)
+      meta = lapply(datasets, df_info),
+      updated_cols = NULL,
+      data_changed_rename = FALSE,
+      data_changed_reorder = FALSE
     )
 
     session$userData$data_changed <- reactiveVal(0)
@@ -149,7 +152,41 @@ spada_server <- function(datasets, conf){
     observe({
       req(session$userData$dt$dt)
 
-      session$userData$dt$meta[[session$userData$dt$act_name]] <- get_act_dt(session) |> df_info()
+      if(is.null(session$userData$dt$updated_cols)) {
+        # update meta
+        session$userData$dt$meta[[session$userData$dt$act_name]] <- get_act_dt(session) |>
+          df_info()
+      } else {
+
+        if(session$userData$dt$data_changed_rename){
+          session$userData$dt$meta[[session$userData$dt$act_name]]$var <- get_act_dt(session) |> names()
+        } else if (session$userData$dt$data_changed_reorder){
+          order_df <- data.frame(var = get_act_dt(session) |> names(),
+                                 index = 1:length(get_act_dt(session) |> names()))
+
+          meta_reordered <- merge(session$userData$dt$meta[[session$userData$dt$act_name]],
+                                  order_df, by = 'var', all.x = TRUE)
+
+          setorderv(meta_reordered, c('index'))
+
+          meta_reordered$index <- NULL
+          session$userData$dt$meta[[session$userData$dt$act_name]] <- meta_reordered
+
+        } else {
+
+          session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
+            dt = get_act_dt(session)[, .SD, .SDcols = session$userData$dt$updated_cols],
+            previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
+            col_names = get_act_dt(session) |> names(),
+            updated_cols = session$userData$dt$updated_cols,
+            ncols = get_act_dt(session) |> ncol()
+          )
+        }
+
+        session$userData$dt$updated_cols <- NULL
+        session$userData$dt$data_changed_rename <- FALSE
+        session$userData$dt$data_changed_reorder <- FALSE
+      }
 
     }) |> bindEvent(session$userData$data_changed())
 

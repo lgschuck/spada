@@ -990,15 +990,21 @@ get_act_dt <- function(session){
 }
 
 # update active dt ------------------------------------------------------------
-update_act_dt <- function(session, new_dt, data_changed = TRUE) {
+update_act_dt <- function(session, new_dt, data_changed = TRUE,
+                          updated_cols = NULL, only_rename = FALSE,
+                          only_reorder = FALSE) {
 
-  stopifnot(new_dt |> is.data.frame())
+  stopifnot(new_dt |> is.data.table())
 
   new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table()
 
   session$userData$dt$dt[[ session$userData$dt$act_name ]] <- new_dt
 
   if(data_changed) {
+
+    session$userData$dt$updated_cols <- updated_cols
+    session$userData$dt$data_changed_rename <- only_rename
+    session$userData$dt$data_changed_reorder <- only_reorder
     session$userData$data_changed(session$userData$data_changed() + 1)
   }
 }
@@ -1028,6 +1034,30 @@ append_meta <- function(session, new_meta, new_dt_name){
     session$userData$dt$meta,
     meta_list
   )
+}
+
+# update meta data ------------------------------------------------------------
+update_meta <- function(dt, previous_meta, col_names, updated_cols, ncols){
+  stopifnot(dt |> is.data.table())
+  stopifnot(previous_meta |> is.data.frame())
+
+  new_meta <- dt |> df_info()
+
+  # delete updated vars from previous meta
+  previous_meta <- subset(previous_meta, var %notin% updated_cols)
+
+  new_meta <- rbind(previous_meta, new_meta)
+
+  order_df <- data.frame(var = col_names, index = 1:length(col_names))
+
+  new_meta <- merge(new_meta, order_df, by = 'var', all.x = TRUE)
+
+  setorderv(new_meta, c('index'))
+
+  new_meta$index <- NULL
+  new_meta$cols <- ncols
+
+  return(new_meta)
 }
 
 # descriptive stats -----------------------------------------------------------

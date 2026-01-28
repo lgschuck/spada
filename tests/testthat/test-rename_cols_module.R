@@ -5,8 +5,11 @@ test_that("Test rename one column", {
   testServer(rename_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = iris),
-      act_name = 'iris'
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris',
+      updated_cols = NULL,
+      data_changed_rename = FALSE,
+      data_changed_reorder = FALSE
     )
     session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Species')
@@ -22,7 +25,7 @@ test_that("Test rename prefix - two columns", {
   testServer(rename_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars[c('hp', 'mpg')]),
+      dt = list('mtcars' = mtcars[c('hp', 'mpg')] |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -43,7 +46,7 @@ test_that("Test rename suffix - three columns", {
   testServer(rename_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars[c('hp', 'mpg', 'cyl')]),
+      dt = list('mtcars' = mtcars[c('hp', 'mpg', 'cyl')] |> as.data.table()),
       act_name = 'mtcars'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -65,7 +68,7 @@ test_that("Test rename function - one column", {
   testServer(rename_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = iris),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -85,7 +88,7 @@ test_that("Test rename replace - four columns", {
   testServer(rename_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = iris),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -109,7 +112,7 @@ test_that("Test rename remove - two columns", {
   testServer(rename_cols_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('iris' = iris),
+      dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
     session$userData$data_changed <- reactiveVal(0)
@@ -123,4 +126,3 @@ test_that("Test rename remove - two columns", {
     expect_equal(names(get_act_dt(session))[1:2], c('SepalLength', 'SepalWidth'))
   })
 })
-
