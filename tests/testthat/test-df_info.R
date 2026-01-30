@@ -86,7 +86,7 @@ test_that('df_info works with an empty data frame', {
 
   info <- df_info(df)
 
-  df0 <- data.frame(
+  df0 <- data.table(
     var = 'v1',
     type = NA,
     class = NA,

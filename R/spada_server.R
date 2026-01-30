@@ -153,15 +153,19 @@ spada_server <- function(datasets, conf){
       req(session$userData$dt$dt)
 
       if(is.null(session$userData$dt$updated_cols)) {
-        # update meta
+
+        # recalculate meta for all cols
         session$userData$dt$meta[[session$userData$dt$act_name]] <- get_act_dt(session) |>
           df_info()
       } else {
 
+        # update name of vars
         if(session$userData$dt$data_changed_rename){
           session$userData$dt$meta[[session$userData$dt$act_name]]$var <- get_act_dt(session) |> names()
+
+          # update order of vars in meta df
         } else if (session$userData$dt$data_changed_reorder){
-          order_df <- data.frame(var = get_act_dt(session) |> names(),
+          order_df <- data.table(var = get_act_dt(session) |> names(),
                                  index = 1:length(get_act_dt(session) |> names()))
 
           meta_reordered <- merge(session$userData$dt$meta[[session$userData$dt$act_name]],
@@ -170,10 +174,12 @@ spada_server <- function(datasets, conf){
           setorderv(meta_reordered, c('index'))
 
           meta_reordered$index <- NULL
+
           session$userData$dt$meta[[session$userData$dt$act_name]] <- meta_reordered
 
         } else {
 
+          # update meta of changed variables
           session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
             dt = get_act_dt(session)[, .SD, .SDcols = session$userData$dt$updated_cols],
             previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
@@ -269,6 +275,8 @@ spada_server <- function(datasets, conf){
     rename_cols_server('pE_rename_cols')
 
     # summarise events -----------------------
+    groupby_server('pE_groupby')
+
     summarise_server('pE_summarise')
 
     # edit backup events ---------------------
@@ -298,7 +306,7 @@ spada_server <- function(datasets, conf){
     output_server('pO_output')
 
     # config events -----------------------------------------------------------
-    mod_pC <- config_server('pC')
+    config_server('pC')
 
     # about events ------------------------------------------------------------
     about_spada_server('about_spada')

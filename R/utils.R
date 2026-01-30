@@ -20,53 +20,71 @@ default_conf <- list(
 
 # math functions --------------------------------------------------------------
 math_funs <- c(
-  c('Mean' = 'mean',
-    'Geometric Mean' = 'Gmean',
-    'Harmonic Mean' = 'Hmean',
-    # 'Mode' = 'Mode',
-    'Standard Deviation' = 'sd',
-    'Variance' = 'var',
-    'Min' = 'min',
-    'Mina' = 'mina',
-    'Max' = 'max',
-    'Mana' = 'mana',
-    'First' = 'fina',
-    'Last' = 'lana',
-    'Lag' = 'shift',
-    # 'Range' = 'range',
-    'IQR' = 'IQR',
-    'Skewness' = 'Skew',
-    'Kurtosis' = 'Kurt',
-    'Sum' = 'sum',
-    'Suna' = 'suna',
-    'Cum Sum' = 'cumsum',
-    'Prod' = 'prod',
-    'Cum Prod' = 'cumprod',
-    'Square Root' = 'sqrt',
-    'Exponential' = 'exp',
-    'Log' = 'log',
-    'Log2' = 'log2',
-    'Log10' = 'log10',
-    'Ceiling' = 'ceiling',
-    'Floor' = 'floor',
-    'Trunc' = 'trunc',
-    'Signif' = 'signif',
-    'Round' = 'round',
-    'Abs' = 'abs',
-    'Sine' = 'sin',
-    'Cosine' = 'cos',
-    'Tangent' = 'tan',
-    'Order' = 'order',
-    'As Numeric' = 'as.numeric',
-    'Is Numeric' = 'is.numeric',
-    'As Double' = 'as.double',
-    'Is Double' = 'is.double',
-    'As Integer' = 'as.integer',
-    'Is Integer' = 'is.integer',
-    'Is Integer' = 'is.integer',
-    'As Numeric' = 'as.numeric',
-    'Is Numeric' = 'is.numeric'
-    )
+  'Mean' = 'mean',
+  'Geometric Mean' = 'Gmean',
+  'Harmonic Mean' = 'Hmean',
+  # 'Mode' = 'Mode',
+  'Standard Deviation' = 'sd',
+  'Variance' = 'var',
+  'Min' = 'min',
+  'Mina' = 'mina',
+  'Max' = 'max',
+  'Mana' = 'mana',
+  'First' = 'fina',
+  'Last' = 'lana',
+  'Lag' = 'shift',
+  # 'Range' = 'range',
+  'IQR' = 'IQR',
+  'Skewness' = 'Skew',
+  'Kurtosis' = 'Kurt',
+  'Sum' = 'sum',
+  'Suna' = 'suna',
+  'Cum Sum' = 'cumsum',
+  'Prod' = 'prod',
+  'Cum Prod' = 'cumprod',
+  'Square Root' = 'sqrt',
+  'Exponential' = 'exp',
+  'Log' = 'log',
+  'Log2' = 'log2',
+  'Log10' = 'log10',
+  'Ceiling' = 'ceiling',
+  'Floor' = 'floor',
+  'Trunc' = 'trunc',
+  'Signif' = 'signif',
+  'Round' = 'round',
+  'Abs' = 'abs',
+  'Sine' = 'sin',
+  'Cosine' = 'cos',
+  'Tangent' = 'tan',
+  'Order' = 'order',
+  'As Numeric' = 'as.numeric',
+  'Is Numeric' = 'is.numeric',
+  'As Double' = 'as.double',
+  'Is Double' = 'is.double',
+  'As Integer' = 'as.integer',
+  'Is Integer' = 'is.integer',
+  'Is Integer' = 'is.integer',
+  'As Numeric' = 'as.numeric',
+  'Is Numeric' = 'is.numeric'
+  )
+
+groupby_math_funs <- c(
+  'Mean' = 'mean',
+  'Geometric Mean' = 'Gmean',
+  'Harmonic Mean' = 'Hmean',
+  'Standard Deviation' = 'sd',
+  'Variance' = 'var',
+  'Min' = 'min',
+  'Mina' = 'mina',
+  'Max' = 'max',
+  'Mana' = 'mana',
+  'First' = 'fina',
+  'Last' = 'lana',
+  'Skewness' = 'Skew',
+  'Kurtosis' = 'Kurt',
+  'Sum' = 'sum',
+  'Suna' = 'suna',
+  'Prod' = 'prod'
 )
 
 # char functions --------------------------------------------------------------
@@ -76,6 +94,11 @@ char_funs <- c(
   'N Char' = 'nchar',
   'As Char' = 'as.character',
   'Is Char' = 'is.character'
+)
+
+groupby_char_funs <- c(
+  'First' = 'fina',
+  'Last' = 'lana'
 )
 
 # date functions --------------------------------------------------------------
@@ -95,6 +118,15 @@ date_funs <- c(
   'Is Date' = 'is_date'
 )
 
+groupby_date_funs <- c(
+  'Min' = 'min',
+  'Mina' = 'mina',
+  'Max' = 'max',
+  'Mana' = 'mana',
+  'First' = 'fina',
+  'Last' = 'lana'
+)
+
 # factor functions ------------------------------------------------------------
 factor_funs <- c(
   'Number of Levels' = 'nlevels',
@@ -110,6 +142,17 @@ logical_funs <- c(
   'Is Logical' = 'is.logical',
   'Number of True' = 'sum',
   'Proportion of True' = 'mean'
+)
+
+groupby_logical_funs <- c(
+  'Min' = 'min',
+  'Mina' = 'mina',
+  'Max' = 'max',
+  'Mana' = 'mana',
+  'First' = 'fina',
+  'Last' = 'lana',
+  'Sum' = 'sum',
+  'Suna' = 'suna'
 )
 
 # complex functions -----------------------------------------------------------
@@ -343,8 +386,7 @@ waiter_screen <- tags$style(
       position: fixed;
       bottom: 12px;
       right: 16px;
-      font-size: 14px;
-      /*z-index: 9999;*/
+      font-size: 16px;
     }
 
     @keyframes spin {
@@ -1039,7 +1081,7 @@ append_meta <- function(session, new_meta, new_dt_name){
 # update meta data ------------------------------------------------------------
 update_meta <- function(dt, previous_meta, col_names, updated_cols, ncols){
   stopifnot(dt |> is.data.table())
-  stopifnot(previous_meta |> is.data.frame())
+  stopifnot(previous_meta |> is.data.table())
 
   new_meta <- dt |> df_info()
 
@@ -1048,7 +1090,7 @@ update_meta <- function(dt, previous_meta, col_names, updated_cols, ncols){
 
   new_meta <- rbind(previous_meta, new_meta)
 
-  order_df <- data.frame(var = col_names, index = 1:length(col_names))
+  order_df <- data.table(var = col_names, index = 1:length(col_names))
 
   new_meta <- merge(new_meta, order_df, by = 'var', all.x = TRUE)
 
@@ -1352,7 +1394,7 @@ display_restore_status <- function(session_restore_status){
   showModal(modalDialog(
     title = div(
       h1(bs_icon('database-up', size = '55px', style = 'margin-right: 8px; color:#02517d'),
-        'Session Restore Status'
+        'Session Status'
       )
     ),
     div(style = 'padding:12px; border-radius:0px;', list_check_restore),
@@ -1376,4 +1418,18 @@ summarise_dt <- function(dt, fun, vars){
   } else if(fun == 'count'){
     dt[, .N, by = vars]
   }
+}
+
+# build calls -----------------------------------------------------------------
+build_calls <- function(new, funs, vars){
+
+  vars_as_symbols <- lapply(vars, as.name)
+
+  calls <- Map(
+    \(v, f) call(f, v),
+    vars_as_symbols,
+    funs
+  )
+
+  as.call(c(as.name('.'), setNames(calls, new)))
 }

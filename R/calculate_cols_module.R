@@ -105,6 +105,9 @@ calculate_cols_server <- function(id) {
         msg('Select at least one variable')
       } else if(!isTruthy(input$fun)){
         msg('Select a function')
+      } else if(input$fun %in% dangerous_operations ||
+                input$fun %notin% allowed_operations){
+        msg('Function is not allowed')
       } else {
         if(is_valid_name(input$txt_new_name_fun) &&
             input$txt_new_name_fun %notin% df_names()) {

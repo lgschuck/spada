@@ -26,6 +26,7 @@ navbar_df_info_server <- function(id, app_session) {
       )
     })
 
+    # buttons --------
     observe({
       nav_select('navbar', selected = 'Data', session = app_session)
       nav_select('navset_card_pill_data', selected = 'Overview', session = app_session)

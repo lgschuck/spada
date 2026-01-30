@@ -31,6 +31,7 @@ utils::globalVariables(
     'Sig Levels',
     'Pr(>|t|)',
     'i',
-    '.N'
+    '.N',
+    'j'
     )
   )

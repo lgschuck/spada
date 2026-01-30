@@ -5,7 +5,12 @@ data_ui <- function(id) {
 
   card(
     card_body(
-      uiOutput(ns('ui_sel_dt')),
+      # uiOutput(ns('ui_sel_dt')),
+      selectInput(
+        ns('sel_dt'),
+        'Select a dataset',
+        choices = NULL
+      ),
       textInput(ns('txt_new_name'), 'New name'),
       layout_column_wrap(
         btn_task(ns('btn_new_name'), 'Rename dataset', icon('file-signature')),
@@ -22,16 +27,20 @@ data_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  # define active dataset ---------------------------------------------------
-	  output$ui_sel_dt <- renderUI({
-	    req(session$userData$dt_names())
-	    selectInput(
-	      ns('sel_dt'),
-	      'Select a dataset',
-	      choices = c(
-	        session$userData$dt$act_name,
-	        setdiff(session$userData$dt_names(), session$userData$dt$act_name)
-	      )
+	  # update datasets input ---------------------------------------------------
+	  observe({
+	    req(session$userData$dt_names(), session$userData$dt$act_name)
+
+	    choices <- c(
+	      session$userData$dt$act_name,
+	      setdiff(session$userData$dt_names(), session$userData$dt$act_name)
+	    )
+
+	    updateSelectInput(
+	      session,
+	      'sel_dt',
+	      choices  = choices,
+	      selected = session$userData$dt$act_name
 	    )
 	  })
 

@@ -135,9 +135,8 @@ sidebar_server <- function(id, app_session) {
     output$df_preview <- renderUI({
       req(session$userData$dt$dt, input$sel_datasets_names)
 
-      df <- session$userData$dt$dt[[input$sel_datasets_names]][1:5, ]
-
-      df <- lapply(df, make_valid_cols) |> as.data.frame()
+      n <- min(5, session$userData$dt$dt[[input$sel_datasets_names]] |> nrow())
+      df <- session$userData$dt$dt[[input$sel_datasets_names]][1:n, ]
 
       gt::gt(df) |>
         tab_header(input$sel_datasets_names) |>
@@ -145,6 +144,5 @@ sidebar_server <- function(id, app_session) {
         gt::as_raw_html() |>
         HTML()
     })
-
   })
 }

@@ -19,9 +19,9 @@
 #'             navset_card_pill page_navbar popover sidebar tooltip value_box
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
-#'             is.data.table fcase fifelse fread fwrite hour mday minute month
-#'             quarter second setcolorder setDT setnames setorderv shift wday
-#'             week yday year
+#'             data.table fcase fifelse fread fwrite hour is.data.table mday
+#'             minute month quarter second setcolorder setDT setnames setorderv
+#'             shift wday week yday year
 #'
 #' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest
@@ -57,7 +57,7 @@
 #'             statiCard updateColorPickr updateRadioGroupButtons
 #'
 #' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm pf
-#'             qnorm qqline qqnorm rnorm sd shapiro.test var
+#'             qnorm qqline qqnorm rnorm sd setNames shapiro.test var
 #'
 #' @importFrom tools file_ext R_user_dir toTitleCase
 #'

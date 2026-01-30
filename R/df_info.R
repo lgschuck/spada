@@ -13,7 +13,7 @@ df_info <- function(df) {
   stopifnot(is.data.frame(df))
 
   if (ncol(df) == 0) {
-    return(data.frame(
+    return(data.table(
       var = 'v1',
       type = NA,
       class = NA,
@@ -66,5 +66,5 @@ df_info <- function(df) {
     )
   })
 
-  do.call(rbind.data.frame, res)
+  do.call(rbind.data.frame, res) |> as.data.table()
 }

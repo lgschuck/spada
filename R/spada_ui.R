@@ -85,7 +85,13 @@ spada_ui <- function(conf){
                    )
                  ),
                  nav_panel('Rename', rename_cols_ui('pE_rename_cols')),
-                 nav_panel('Summarise', summarise_ui('pE_summarise')),
+                 nav_panel(
+                   'Summarise',
+                   layout_column_wrap(
+                     groupby_ui('pE_groupby'),
+                     summarise_ui('pE_summarise')
+                   )
+                 )
                )
              )
            ),

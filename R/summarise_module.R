@@ -3,27 +3,24 @@
 summarise_ui <- function(id) {
   ns <- NS(id)
 
-  layout_column_wrap(
-    card(
-      card_header('Summarise', class = 'mini-header'),
-      card_body(
-        selectizeInput(
-          ns('vars_sel'), 'Variables', NULL,
-          multiple = T,
-          options = list(plugins = list('remove_button', 'clear_button')),
-          width = '80%'
-        ),
-        selectInput(ns('fun_sel'), 'Function', summarise_functions),
-        radioButtons(ns('radio_overwrite'), NULL,
-                     c('Overwrite' = 'overwrite', 'New' = 'new'), inline = T),
-        conditionalPanel(
-          condition = "input.radio_overwrite == 'new'", ns = ns,
-          textInput(ns('txt_new_dt_name'), 'New Dataset Name', placeholder = 'new_dataset')
-        )
+  card(
+    card_header('Summarise', class = 'mini-header'),
+    card_body(
+      selectizeInput(
+        ns('vars_sel'), 'Variables', NULL,
+        multiple = T,
+        options = list(plugins = list('remove_button', 'clear_button')),
+        width = '80%'
       ),
-      card_footer(btn_task(ns('btn_summarise'), 'Summarise', icon('check')))
+      selectInput(ns('fun_sel'), 'Function', summarise_functions),
+      radioButtons(ns('radio_overwrite'), NULL,
+                   c('New' = 'new', 'Overwrite' = 'overwrite'), inline = T),
+      conditionalPanel(
+        condition = "input.radio_overwrite == 'new'", ns = ns,
+        textInput(ns('txt_new_dt_name'), 'New Dataset Name', placeholder = 'new_dataset')
+      )
     ),
-    card()
+    card_footer(btn_task(ns('btn_summarise'), 'Summarise', icon('check')))
   )
 }
 
@@ -47,7 +44,7 @@ summarise_server <- function(id) {
 	  # summarise event ---------
     observe({
       if(!isTruthy(input$vars_sel)){
-        msg('Select at least one variable')
+        msg('Insert at least one variable')
       } else if (input$radio_overwrite == 'new' &&
           (!is_valid_name(input$txt_new_dt_name) ||
              input$txt_new_dt_name %in% session$userData$dt_names()))

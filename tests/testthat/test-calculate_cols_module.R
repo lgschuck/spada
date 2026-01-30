@@ -3,7 +3,7 @@
 iris_dt <- iris |> as.data.table()
 
 # test calculate cols - apply function ----------------------------------------
-test_that("Test calculate cols - sum numeric", {
+test_that('Test calculate cols - sum numeric', {
   testServer(calculate_cols_server, {
 
     session$userData$dt <- reactiveValues(
@@ -27,7 +27,7 @@ test_that("Test calculate cols - sum numeric", {
   })
 })
 
-test_that("Test calculate cols - mean numeric - groupby", {
+test_that('Test calculate cols - mean numeric - groupby', {
   testServer(calculate_cols_server, {
 
     session$userData$dt <- reactiveValues(
@@ -53,7 +53,7 @@ test_that("Test calculate cols - mean numeric - groupby", {
   })
 })
 
-test_that("Test calculate cols - factor", {
+test_that('Test calculate cols - factor', {
   testServer(calculate_cols_server, {
 
     session$userData$dt <- reactiveValues(
@@ -78,7 +78,7 @@ test_that("Test calculate cols - factor", {
 })
 
 # test calculate cols - freehand ----------------------------------------------
-test_that("Test calculate cols - freehand", {
+test_that('Test calculate cols - freehand', {
   testServer(calculate_cols_server, {
 
     session$userData$dt <- reactiveValues(
@@ -101,7 +101,7 @@ test_that("Test calculate cols - freehand", {
   })
 })
 
-test_that("Test calculate cols - freehand - groupby", {
+test_that('Test calculate cols - freehand - groupby', {
   testServer(calculate_cols_server, {
 
     session$userData$dt <- reactiveValues(
@@ -126,7 +126,7 @@ test_that("Test calculate cols - freehand - groupby", {
   })
 })
 
-test_that("Test calculate cols - freehand - fifelse", {
+test_that('Test calculate cols - freehand - fifelse', {
   testServer(calculate_cols_server, {
 
     session$userData$dt <- reactiveValues(
@@ -148,5 +148,79 @@ test_that("Test calculate cols - freehand - fifelse", {
       session$userData$dt$dt[[session$userData$dt$act_name]],
       iris_dt[, new_var := fifelse(Species == 'setosa', 1, 2) ]
     )
+  })
+})
+
+# test calculate cols - not allowed function ----------------------------------
+test_that('Test calculate cols - not allowed function', {
+  testServer(calculate_cols_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
+
+    session$userData$data_changed <- reactiveVal(0)
+
+    session$setInputs(
+      vars_sel = 'Sepal.Width',
+      fun = 'not_allowed',
+      txt_new_name_fun = 'new_var',
+      vars_groupby_fun = NULL
+    )
+
+    session$setInputs(btn_apply_fun = 1)
+
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]]$Sepal.Width,
+                 iris$Sepal.Width)
+  })
+})
+
+# test calculate cols - apply fun - not allowed -------------------------------
+test_that('Test calculate cols - apply fun - not allowed function', {
+  testServer(calculate_cols_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
+
+    session$userData$data_changed <- reactiveVal(0)
+
+    session$setInputs(
+      vars_sel = 'Sepal.Width',
+      fun = 'not_allowed',
+      txt_new_name_fun = 'new_var',
+      vars_groupby_fun = NULL
+    )
+
+    session$setInputs(btn_apply_fun = 1)
+
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]]$Sepal.Width,
+                 iris$Sepal.Width)
+  })
+})
+
+test_that('Test calculate cols - apply fun - dangerous function', {
+  testServer(calculate_cols_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
+
+    session$userData$data_changed <- reactiveVal(0)
+
+    session$setInputs(
+      vars_sel = 'Sepal.Width',
+      fun = 'assign',
+      txt_new_name_fun = 'new_var',
+      vars_groupby_fun = NULL
+    )
+
+    session$setInputs(btn_apply_fun = 1)
+
+    expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]]$Sepal.Width,
+                 iris$Sepal.Width)
   })
 })
