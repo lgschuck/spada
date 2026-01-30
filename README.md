@@ -26,6 +26,11 @@ This package is inspired in many other tools like:
 
 </div>
 
+## Documentation
+
+You can access Spada Book on this website: [Spada
+Book](https://lgschuck.github.io/spada_book/).
+
 ## Installation
 
 You can install the development version of spada from

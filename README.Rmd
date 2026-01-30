@@ -35,6 +35,10 @@ This package is inspired in many other tools like:
 <strong>Warning:</strong> Spada is in active development.
 :::
 
+## Documentation
+
+You can access Spada Book on this website: [Spada Book](https://lgschuck.github.io/spada_book/).
+
 ## Installation
 
 You can install the development version of spada from [GitHub](https://github.com/) using the command below. This way you will get the same packages used in the Spada development.
