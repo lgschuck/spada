@@ -16,6 +16,62 @@ editor_options:
 
 4 - Models: logistic regression
 
+# Spada 0.1.2 (in development)
+
+## Highlights
+
+New **|Group by and Summarise** modules, **new startup and exit screens** (waiter package) and better **Metadata recalculation**
+
+### Improvements
+
+1 - **Filter Rows module**: internal improvements, improved tests and now it's possible to filter values from another dataset variable ([#59](https://github.com/lgschuck/spada/issues/59))
+
+2 - **New startup screen**: new startup and close screens (waiter is now a dependencie, shinybusy removed)
+
+3 - **SelectizeInputs**: new width 80% for better use of screen
+
+4 - **Main sidebar**: now opens by default as its accordions (active dataset and datasets) and better size for Preview datasets popover
+
+5 - **Config nrows for plots**: now the value from the input is multiplied by 1e3
+
+6 - **Metadata calculation**: avoids some recalculation for better performance and visual feel
+
+7 - **IDate in metadata table**: now IDate class receives the calenda icon ([#58](https://github.com/lgschuck/spada/issues/58))
+
+8 - **Data backup**: backup events from Edit page now in data_bkp module
+
+9 - **Metadata tests**: better metadata tests in spada_server
+
+10 - **Data module**: manage dataset events (copy, delete, etc) now in data module
+
+11 - **Calculate module**: check for allowed operations ins function apply
+
+12 - **Sidebar module**: new input to change active dataset more dynamically (also included a test in testthat) and changed from renderUI to textOutput for better visuals
+
+### New Features
+
+1 - **New Summarise module**: distinct and count functions by choosed variable (overwrite or create new dataset)
+
+2 - **New Group by module**: now it's possible to group by data in a new (or overwriting the active) dataset
+
+### Bug Fixes
+
+1 - **Import File module**: now apply make_valid_cols when import file avoiding invalid names in variables
+
+2 - **Sidebar preview dataset**: now shows 5 or the NROW for smaller than 5 rows datasets
+
+### Visuals
+
+1 - **New restore session modal**
+
+2 - **Change some icons**
+
+3 - **Sharp corners** for buttons, inputs and popovers
+
+4 - **Set font-family**: Open Sans
+
+5 - **Navbar color**: lighter blue color #0A5A88
+
 # Spada 0.1.1
 
 ## 2025.10.10

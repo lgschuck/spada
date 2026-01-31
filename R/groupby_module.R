@@ -50,7 +50,7 @@ groupby_server <- function(id) {
 
 	  # variables ---------------------------------------------------------------
 	  observe({
-	    req(df_names())
+	    req(df_names(), input$vars_groupby, session$userData$dt$act_meta())
 	    updateSelectInput(
 	      session,
 	      'vars_sel',
@@ -108,8 +108,10 @@ groupby_server <- function(id) {
       if(!is_valid_name(input$txt_new_name) ||
          input$txt_new_name %in% group$newvars){
         msg('New name is not valid or already inserted')
+        return()
       } else if(!(input$fun %in% allowed_operations)) {
         msg_error('Function are not allowed')
+        return()
       } else {
         group$newvars <- append(group$newvars, input$txt_new_name)
         group$funs <- append(group$funs, input$fun)
@@ -170,7 +172,7 @@ groupby_server <- function(id) {
 
       showModal(modalDialog(
         title = div(
-          h1(bs_icon('database-up', size = '55px', style = 'margin-right: 8px; color:#02517d'),
+          h1(bs_icon('layer-group', size = '55px', style = 'margin-right: 8px; color:#02517d'),
              'New Variables'
           )
         ),
@@ -197,15 +199,19 @@ groupby_server <- function(id) {
     observe({
       if(!isTruthy(group$newvars) || !isTruthy(group$vars)) {
         msg('Select at least one variable')
+        return()
       } else if(!isTruthy(group$funs)){
         msg('Select a function')
+        return()
       } else if(!(any(group$funs %in% allowed_operations))) {
         msg_error('Function are not allowed')
+        return()
       }  else if (input$radio_overwrite == 'new' &&
                   (!is_valid_name(input$txt_new_dt_name) ||
                    input$txt_new_dt_name %in% session$userData$dt_names()))
       {
         msg_error('New name is not valid or already in use')
+        return()
       } else {
         j_calls <- build_calls(group$newvars, group$funs, group$vars)
 

@@ -45,11 +45,13 @@ summarise_server <- function(id) {
     observe({
       if(!isTruthy(input$vars_sel)){
         msg('Insert at least one variable')
+        return()
       } else if (input$radio_overwrite == 'new' &&
           (!is_valid_name(input$txt_new_dt_name) ||
              input$txt_new_dt_name %in% session$userData$dt_names()))
       {
         msg_error('New name is not valid or already in use')
+        return()
       } else {
         temp <- copy(get_act_dt(session))
 

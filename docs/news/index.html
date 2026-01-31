@@ -43,6 +43,46 @@
 </div>
 </div>
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.2" id="spada-012-in-development">Spada 0.1.2 (in development)<a class="anchor" aria-label="anchor" href="#spada-012-in-development"></a></h2>
+<div class="section level3">
+<h3 id="highlights-0-1-2">Highlights<a class="anchor" aria-label="anchor" href="#highlights-0-1-2"></a></h3>
+<p>New <strong>|Group by and Summarise</strong> modules, <strong>new startup and exit screens</strong> (waiter package) and better <strong>Metadata recalculation</strong></p>
+<div class="section level4">
+<h4 id="improvements-0-1-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-2"></a></h4>
+<p>1 - <strong>Filter Rows module</strong>: internal improvements, improved tests and now it’s possible to filter values from another dataset variable (<a href="https://github.com/lgschuck/spada/issues/59" class="external-link">#59</a>)</p>
+<p>2 - <strong>New startup screen</strong>: new startup and close screens (waiter is now a dependencie, shinybusy removed)</p>
+<p>3 - <strong>SelectizeInputs</strong>: new width 80% for better use of screen</p>
+<p>4 - <strong>Main sidebar</strong>: now opens by default as its accordions (active dataset and datasets) and better size for Preview datasets popover</p>
+<p>5 - <strong>Config nrows for plots</strong>: now the value from the input is multiplied by 1e3</p>
+<p>6 - <strong>Metadata calculation</strong>: avoids some recalculation for better performance and visual feel</p>
+<p>7 - <strong>IDate in metadata table</strong>: now IDate class receives the calenda icon (<a href="https://github.com/lgschuck/spada/issues/58" class="external-link">#58</a>)</p>
+<p>8 - <strong>Data backup</strong>: backup events from Edit page now in data_bkp module</p>
+<p>9 - <strong>Metadata tests</strong>: better metadata tests in spada_server</p>
+<p>10 - <strong>Data module</strong>: manage dataset events (copy, delete, etc) now in data module</p>
+<p>11 - <strong>Calculate module</strong>: check for allowed operations ins function apply</p>
+<p>12 - <strong>Sidebar module</strong>: new input to change active dataset more dynamically (also included a test in testthat) and changed from renderUI to textOutput for better visuals</p>
+</div>
+<div class="section level4">
+<h4 id="new-features-0-1-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-2"></a></h4>
+<p>1 - <strong>New Summarise module</strong>: distinct and count functions by choosed variable (overwrite or create new dataset)</p>
+<p>2 - <strong>New Group by module</strong>: now it’s possible to group by data in a new (or overwriting the active) dataset</p>
+</div>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-2"></a></h4>
+<p>1 - <strong>Import File module</strong>: now apply make_valid_cols when import file avoiding invalid names in variables</p>
+<p>2 - <strong>Sidebar preview dataset</strong>: now shows 5 or the NROW for smaller than 5 rows datasets</p>
+</div>
+<div class="section level4">
+<h4 id="visuals-0-1-2">Visuals<a class="anchor" aria-label="anchor" href="#visuals-0-1-2"></a></h4>
+<p>1 - <strong>New restore session modal</strong></p>
+<p>2 - <strong>Change some icons</strong></p>
+<p>3 - <strong>Sharp corners</strong> for buttons, inputs and popovers</p>
+<p>4 - <strong>Set font-family</strong>: Open Sans</p>
+<p>5 - <strong>Navbar color</strong>: lighter blue color <a href="https://github.com/lgschuck/spada/issues/0" class="external-link">#0</a>A5A88</p>
+</div>
+</div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="spada-011">Spada 0.1.1<a class="anchor" aria-label="anchor" href="#spada-011"></a></h2>
 <div class="section level3">
 <h3 id="id_20251010-0-1-1">2025.10.10<a class="anchor" aria-label="anchor" href="#id_20251010-0-1-1"></a></h3>
