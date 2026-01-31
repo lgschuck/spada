@@ -95,7 +95,12 @@ output_server <- function(id) {
         paste0('output_', format(Sys.time(), format = '%Y%m%d%H%M%S'), '.html')
       },
       content = function(file) {
-        save_html(do.call('tagList', printable_output()), file)
+
+        doc <- tags$html(
+          output_export_css, tags$body(printable_output())
+        )
+
+        save_html(doc, file)
       }
     )
 

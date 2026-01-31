@@ -1,0 +1,110 @@
+# spada (***S***hiny ***Pa***ckage for ***D***ata ***A***nalysis)
+
+The goal of **spada** is to provide visual tools for Data Analysis in a
+Shiny App.
+
+This package is inspired in many other tools like:
+
+- IBM SPSS Statistics (<https://www.ibm.com/products/spss-statistics>)
+
+- R Commander package
+  (<https://cran.r-project.org/web/packages/Rcmdr/index.html>)
+
+- Jamovi (<https://www.jamovi.org/>)
+
+- ydata profiling (<https://docs.profiling.ydata.ai/latest/>)
+
+**Warning:** Spada is in active development.
+
+## Documentation
+
+You can access Spada Book on this website: [Spada
+Book](https://lgschuck.github.io/spada_book/).
+
+## Installation
+
+You can install the development version of spada from
+[GitHub](https://github.com/) using the command below. This way you will
+get the same packages used in the Spada development.
+
+``` r
+install.packages("remotes")
+remotes::install_github(
+  "lgschuck/spada",
+  dependencies = TRUE,
+  repos = 'https://packagemanager.posit.co/cran/2024-12-10'
+  )
+```
+
+For a specific release visit
+[Releases](https://github.com/lgschuck/spada/releases) and change the
+ref parameter bellow for the tag name:
+
+![](reference/figures/install_release.png)
+
+``` r
+remotes::install_github(
+  "lgschuck/spada",
+  dependencies = TRUE,
+  repos = 'https://packagemanager.posit.co/cran/2024-12-10',
+  ref = "0.1.0"
+  )
+```
+
+### Loading the package
+
+``` r
+library(spada)
+```
+
+### Usage
+
+``` r
+if(interactive()){
+  spada()
+}
+```
+
+## Docker
+
+Spada is distributed as a **Docker Image**.
+
+For instructions in how to download and use Spada go to [Articles \>
+Docker](https://lgschuck.github.io/spada/articles/docker.html)
+
+You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to
+search for diferent versions.
+
+## Screenshots
+
+![](reference/figures/spada_loading.png)
+
+### Data
+
+![](reference/figures/spada_home.png)
+
+![](reference/figures/spada_home2.png)
+
+#### Data \> Metadata
+
+![](reference/figures/spada_data_metadata.png)
+
+#### Data \> Overview
+
+![](reference/figures/spada_data_overview.png)
+
+### Edit
+
+![](reference/figures/spada_edit.png)
+
+### Analysis
+
+![](reference/figures/spada_analysis_exploratory.png)
+
+### Output
+
+![](reference/figures/spada_output.png)
+
+### Options
+
+![](reference/figures/spada_options.png)

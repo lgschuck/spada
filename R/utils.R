@@ -401,6 +401,23 @@ waiter_screen <- tags$style(
   )
 )
 
+# output_export_css ------------------------------------------------------------------
+output_export_css <- tags$head(tags$style(HTML(
+  paste(
+    "
+      body {
+        font-family: 'Segoe UI', Ubuntu sans-serif;
+      }
+
+      h2 {
+        font-size: 1.5rem !important;
+        margin-bottom: 12px ! important;
+        color:'", main_color, "' !important;
+        font-weight: 400 !important;
+      }
+    "
+  )
+)))
 # =============================================================================
 # ---------------------------- FUNCTIONS --------------------------------------
 # =============================================================================

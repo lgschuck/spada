@@ -42,9 +42,9 @@ theme_basic_rules <- as_sass(
          stati_card_text = '#ffffff'
     ),
     "
-      .navbar-brand {
+      /*.navbar-brand {
         font-family: 'Open Sans', Ubuntu, 'system-ui';
-      }
+      }*/
 
       .navbar {
         height: 45px !important;
@@ -67,6 +67,7 @@ theme_basic_rules <- as_sass(
       .mini-header {
         color: white;
         background: linear-gradient(to right, $grad1, $grad2, $grad3, $grad4, $grad5, $grad6);
+        /*font-weight: 400 !important;*/
       }
 
       .btn-task:active {
@@ -99,7 +100,7 @@ theme_basic_rules <- as_sass(
         background-color: $bg_color !important;
         border-color: $secondary !important;
         border-radius: 0rem;
-        font-weight: 500;
+        font-weight: 400;
       }
 
       .card, .well {
@@ -165,9 +166,14 @@ spada_theme <- bs_theme(
   'nav-pills-link-active-bg' = sidebar_color,
   'border-radius-sm' = 0,
   'border-radius' = 0,
-  'navbar-brand-font-size' = '1.25rem',
-  'btn-font-weight' = 500,
-  base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
+  'navbar-brand-font-size' = '1.5rem',
+  'navbar-brand-padding-y' = '0.250rem',
+  'btn-font-weight' = 400,
+  'dropdown-bg' = '#f9f9f9',
+  'dropdown-color' = main_color,
+  'dropdown-link-color' = '#000000',
+  'dropdown-link-hover-bg' = '#e3e3e4',
+  base_font = font_collection('Segoe UI', 'Ubuntu', 'system-ui')
 ) |> bs_add_rules(theme_basic_rules) |>
   bs_add_rules(
     list(
@@ -238,8 +244,8 @@ spada_dark_theme <- bs_theme(
   bootswatch = 'darkly',
   'border-radius-sm' = 0,
   'border-radius' = 0,
-  'navbar-brand-font-size' = '1.25rem',
-  'btn-font-weight' = 500,
+  'navbar-brand-font-size' = '1.5rem',
+  'btn-font-weight' = 400,
   base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
   ) |>
   bs_add_rules(theme_basic_rules) |>

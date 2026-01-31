@@ -13,10 +13,11 @@
 #'
 #' @importFrom bsicons bs_icon
 #'
-#' @importFrom bslib accordion accordion_panel bs_add_rules bs_theme card card_body
-#'             card_footer card_header layout_column_wrap layout_columns
-#'             layout_sidebar nav_item nav_menu nav_panel nav_select nav_spacer
-#'             navset_card_pill page_navbar popover sidebar tooltip value_box
+#' @importFrom bslib accordion accordion_panel bs_add_rules bs_theme card
+#'             card_body card_footer card_header layout_column_wrap
+#'             layout_columns layout_sidebar navbar_options nav_item nav_menu
+#'             nav_panel nav_select nav_spacer navset_card_pill page_navbar
+#'             popover sidebar tooltip value_box
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
 #'             data.table fcase fifelse fread fwrite hour is.data.table mday

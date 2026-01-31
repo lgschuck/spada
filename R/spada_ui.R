@@ -25,9 +25,13 @@ spada_ui <- function(conf){
       id = 'navbar',
       theme = get(conf$theme),
       title = 'Spada',
+      navbar_options = navbar_options(
+        bg = navbar_bg,
+        underline = F
+      ),
 
-      bg = navbar_bg,
-      underline = F,
+      # bg = navbar_bg,
+      # underline = F,
 
       # page sidebar ----------------------------------------------------------
       sidebar = sidebar_ui('sidebar'),
@@ -138,9 +142,17 @@ spada_ui <- function(conf){
         config_ui('pC'),
         nav_item(
           tags$a(
-            icon('book'),
-            'Documentation',
+            icon('code'),
+            'Reference',
             href = 'https://lgschuck.github.io/spada/',
+            target = '_blank'
+          )
+        ),
+        nav_item(
+          tags$a(
+            icon('book'),
+            'Spada Book',
+            href = 'https://lgschuck.github.io/spada_book/',
             target = '_blank'
           )
         ),

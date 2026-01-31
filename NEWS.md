@@ -20,7 +20,7 @@ editor_options:
 
 ## Highlights
 
-New **|Group by and Summarise** modules, **new startup and exit screens** (waiter package) and better **Metadata recalculation**
+Update **dependencies (2026-01-30)**, new **Group by and Summarise** modules, **new startup and exit screens** (waiter package) and better **Metadata recalculation**
 
 ### Improvements
 
@@ -48,6 +48,8 @@ New **|Group by and Summarise** modules, **new startup and exit screens** (waite
 
 12 - **Sidebar module**: new input to change active dataset more dynamically (also included a test in testthat) and changed from renderUI to textOutput for better visuals
 
+13 - **Output save**: now saves with a CSS style
+
 ### New Features
 
 1 - **New Summarise module**: distinct and count functions by choosed variable (overwrite or create new dataset)
@@ -68,9 +70,11 @@ New **|Group by and Summarise** modules, **new startup and exit screens** (waite
 
 3 - **Sharp corners** for buttons, inputs and popovers
 
-4 - **Set font-family**: Open Sans
+4 - **Set font-family**: Segoe UI
 
-5 - **Navbar color**: lighter blue color #0A5A88
+5 - **Navbar color**: lighter blue color '#0A5A88'
+
+6 - **Small CSS changes**
 
 # Spada 0.1.1
 
