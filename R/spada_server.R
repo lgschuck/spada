@@ -27,97 +27,8 @@ spada_server <- function(datasets, conf){
       plot_limit = conf$plot_limit
     )
 
-    # restore saved session data -----------------------------------------------
-    observe({
-      req(session$userData$conf$data_dir,
-          session$userData$conf$restore_session,
-          session$userData$conf$restore_data_status,
-          session$userData$conf$restore_output_status,
-          session$userData$dt$dt
-          )
-
-      if(session$userData$conf$restore_session == 'always') {
-
-        if(!file.exists(paste0(session$userData$conf$data_dir, '/data.qs2'))){
-          session$userData$conf$restore_data_status <- 2
-
-        } else {
-
-          previous_data <- qs_read(paste0(session$userData$conf$data_dir, '/data.qs2'))
-
-          # check data format
-          if(!test_data_format(previous_data)){
-            session$userData$conf$restore_data_status <- 3
-          } else {
-
-            previous_data <- lapply(previous_data, as.data.table)
-
-            # if empty entry only keep loaded data
-            if(session$userData$conf$empty_datasets == 1){
-              session$userData$dt$dt <- previous_data
-              # update meta
-              session$userData$dt$meta <- lapply(previous_data, df_info)
-            } else {
-              previous_data <- make_names_append_list(
-                previous_data,
-                names(session$userData$dt$dt)
-              )
-
-              session$userData$dt$dt <- c(previous_data, session$userData$dt$dt)
-
-              # append meta
-              new_meta <- lapply(previous_data, df_info)
-
-              session$userData$dt$meta <- c(
-                new_meta,
-                session$userData$dt$meta
-              )
-            }
-
-            session$userData$dt$act_name <- names(session$userData$dt$dt)[1]
-            session$userData$conf$restore_data_status <- 1
-          }
-        }
-
-        # import output
-        if(!file.exists(paste0(session$userData$conf$data_dir, '/output.qs2'))){
-          session$userData$conf$restore_output_status <- 2
-
-        } else {
-          previous_output <- qs_read(paste0(session$userData$conf$data_dir, '/output.qs2'))
-
-          # check output format
-          if(!test_output_format(previous_output)){
-            session$userData$conf$restore_output_status <- 3
-          } else {
-            session$userData$out$elements <- previous_output
-            session$userData$conf$restore_output_status <- 1
-          }
-        }
-      }
-
-      session$userData$conf$restore_status <- paste0(
-        session$userData$conf$restore_data_status, '.',
-        session$userData$conf$restore_output_status
-      )
-
-    }) |> bindEvent(session$userData$conf$restore_session, once = T)
-
-    # show modal with restored status
-    observe({
-      req(session$userData$conf$restore_status)
-
-      if(any(session$userData$conf$restore_session %in% c('always', 'ask'))){
-
-        display_restore_status(session$userData$conf$restore_status)
-
-      }
-    }) |> bindEvent(session$userData$conf$restore_status, once = T)
-
-    observe({
-      removeModal()
-
-    }) |> bindEvent(input$btn_dismiss_restore_sesison)
+    # restore session module --------------------------------------------------
+    restore_session_server('restore_session')
 
     # data --------------------------------------------------------------------
     session$userData$dt <- reactiveValues(
@@ -127,8 +38,7 @@ spada_server <- function(datasets, conf){
       bkp = NULL,
       meta = lapply(datasets, df_info),
       updated_cols = NULL,
-      data_changed_rename = FALSE,
-      data_changed_reorder = FALSE
+      data_changed_type = 'new_data'
     )
 
     session$userData$data_changed <- reactiveVal(0)
@@ -152,7 +62,8 @@ spada_server <- function(datasets, conf){
     observe({
       req(session$userData$dt$dt)
 
-      if(is.null(session$userData$dt$updated_cols)) {
+      if(is.null(session$userData$dt$updated_cols) &
+         session$userData$dt$data_changed_type == 'new_data'){
 
         # recalculate meta for all cols
         session$userData$dt$meta[[session$userData$dt$act_name]] <- get_act_dt(session) |>
@@ -160,22 +71,31 @@ spada_server <- function(datasets, conf){
       } else {
 
         # update name of vars
-        if(session$userData$dt$data_changed_rename){
-          session$userData$dt$meta[[session$userData$dt$act_name]]$var <- get_act_dt(session) |> names()
+        if(session$userData$dt$data_changed_type == 'rename_cols'){
+
+          session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
+            previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
+            col_names = get_act_dt(session) |> names(),
+            change_type = session$userData$dt$data_changed_type
+          )
+          # keep meta of selected vars
+        } else if (session$userData$dt$data_changed_type == 'select_cols'){
+
+          session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
+            previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
+            col_names = get_act_dt(session) |> names(),
+            ncols = get_act_dt(session) |> ncol(),
+            change_type = session$userData$dt$data_changed_type
+          )
 
           # update order of vars in meta df
-        } else if (session$userData$dt$data_changed_reorder){
-          order_df <- data.table(var = get_act_dt(session) |> names(),
-                                 index = 1:length(get_act_dt(session) |> names()))
+        } else if (session$userData$dt$data_changed_type == 'order_cols'){
 
-          meta_reordered <- merge(session$userData$dt$meta[[session$userData$dt$act_name]],
-                                  order_df, by = 'var', all.x = TRUE)
-
-          setorderv(meta_reordered, c('index'))
-
-          meta_reordered$index <- NULL
-
-          session$userData$dt$meta[[session$userData$dt$act_name]] <- meta_reordered
+          session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
+            previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
+            col_names = get_act_dt(session) |> names(),
+            change_type = session$userData$dt$data_changed_type
+          )
 
         } else {
 
@@ -190,8 +110,7 @@ spada_server <- function(datasets, conf){
         }
 
         session$userData$dt$updated_cols <- NULL
-        session$userData$dt$data_changed_rename <- FALSE
-        session$userData$dt$data_changed_reorder <- FALSE
+        session$userData$dt$data_changed_type = 'new_data'
       }
 
     }) |> bindEvent(session$userData$data_changed())

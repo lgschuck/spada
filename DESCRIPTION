@@ -1,6 +1,6 @@
 Package: spada
 Title: Shiny Package for Data Analysis
-Version: 0.1.2
+Version: 0.1.2.9000
 Authors@R: 
     person("Luís Gustavo", "Schuck", email="luisgustavoschuck@yahoo.com.br",  
     role = c("aut", "cre"))

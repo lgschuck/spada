@@ -91,7 +91,7 @@ rename_cols_server <- function(id) {
           setnames(temp, input$vars_sel, input$txt_new_name)
 
           update_act_dt(session, copy(temp), updated_cols = input$txt_new_name,
-                        only_rename = TRUE)
+                        change_type = 'rename_cols')
 
           rm(temp)
 
@@ -171,7 +171,7 @@ rename_cols_server <- function(id) {
             setnames(temp, input$vars_sel_multi, new_names)
 
             update_act_dt(session, copy(temp), updated_cols = input$new_names,
-                          only_rename = TRUE)
+                          change_type = 'rename_cols')
 
             msg('Rename columns: OK')
             rm(temp)

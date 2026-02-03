@@ -77,7 +77,7 @@ order_cols_server <- function(id) {
         }
 
         update_act_dt(session, copy(temp), updated_cols = temp |> names(),
-                      only_reorder = TRUE)
+                      change_type = 'order_cols')
         rm(temp)
 
         msg('Reordering Variables: OK')

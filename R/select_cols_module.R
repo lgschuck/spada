@@ -51,6 +51,7 @@ select_cols_server <- function(id) {
         } else if (input$radio_var_sel == 'drop'){
           if(all(df_names() %in% input$vars_sel)){
             msg('Leave at least 1 variable')
+            return()
           } else {
             temp <- subset(
               temp,
@@ -60,7 +61,8 @@ select_cols_server <- function(id) {
           }
         }
 
-        update_act_dt(session, copy(temp))
+        update_act_dt(session, copy(temp), updated_cols = temp |> names(),
+                      change_type = 'select_cols')
         rm(temp)
 
       }

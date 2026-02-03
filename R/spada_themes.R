@@ -211,12 +211,6 @@ spada_theme <- bs_theme(
         border-radius: 0rem
       }
 
-      .btn-task-cancel:hover {
-        background-color: $danger !important;
-        border-color: $danger !important;
-        color: white !important;
-      }
-
       .control-label {
         margin-bottom: 3px !important;
         padding-top: 3px !important;

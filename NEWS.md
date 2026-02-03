@@ -16,7 +16,7 @@ editor_options:
 
 4 - Models: logistic regression
 
-# Spada 0.1.2 (in development)
+# Spada 0.1.2.9000 (in development)
 
 ## Highlights
 
@@ -34,7 +34,7 @@ Update **dependencies (2026-01-30)**, new **Group by and Summarise** modules, **
 
 5 - **Config nrows for plots**: now the value from the input is multiplied by 1e3
 
-6 - **Metadata calculation**: avoids some recalculation for better performance and visual feel
+6 - **Metadata calculation**: avoids some recalculation for better performance (new update_meta function) and visual feel
 
 7 - **IDate in metadata table**: now IDate class receives the calenda icon ([#58](https://github.com/lgschuck/spada/issues/58))
 
@@ -49,6 +49,8 @@ Update **dependencies (2026-01-30)**, new **Group by and Summarise** modules, **
 12 - **Sidebar module**: new input to change active dataset more dynamically (also included a test in testthat) and changed from renderUI to textOutput for better visuals
 
 13 - **Output save**: now saves with a CSS style
+
+14 - **Restore Session module**: the code used to restore session is now in a new module
 
 ### New Features
 

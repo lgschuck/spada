@@ -200,7 +200,6 @@ test_that('Test metadata - selet cols - keep', {
     expect_equal(session$userData$dt$act_meta(), mtcars2 |> df_info())
 
     session$userData$dt$act_name <- 'df_iris'
-
     expect_equal(get_act_dt(session), iris |> as.data.table())
     expect_equal(session$userData$dt$act_meta(), iris |> df_info())
   })

@@ -30,9 +30,6 @@ spada_ui <- function(conf){
         underline = F
       ),
 
-      # bg = navbar_bg,
-      # underline = F,
-
       # page sidebar ----------------------------------------------------------
       sidebar = sidebar_ui('sidebar'),
 

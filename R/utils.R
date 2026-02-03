@@ -1050,10 +1050,15 @@ get_act_dt <- function(session){
 
 # update active dt ------------------------------------------------------------
 update_act_dt <- function(session, new_dt, data_changed = TRUE,
-                          updated_cols = NULL, only_rename = FALSE,
-                          only_reorder = FALSE) {
+                          updated_cols = NULL,
+                          change_type = c('new_data',
+                                          'rename_cols',
+                                          'order_cols',
+                                          'select_cols')){
 
   stopifnot(new_dt |> is.data.table())
+
+  change_type <- match.arg(change_type)
 
   new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table()
 
@@ -1062,8 +1067,7 @@ update_act_dt <- function(session, new_dt, data_changed = TRUE,
   if(data_changed) {
 
     session$userData$dt$updated_cols <- updated_cols
-    session$userData$dt$data_changed_rename <- only_rename
-    session$userData$dt$data_changed_reorder <- only_reorder
+    session$userData$dt$data_changed_type <- change_type
     session$userData$data_changed(session$userData$data_changed() + 1)
   }
 }
@@ -1096,27 +1100,59 @@ append_meta <- function(session, new_meta, new_dt_name){
 }
 
 # update meta data ------------------------------------------------------------
-update_meta <- function(dt, previous_meta, col_names, updated_cols, ncols){
+update_meta <- function(dt = data.table(),
+                        previous_meta, col_names, updated_cols, ncols,
+                        change_type = c('new_data',
+                                        'rename_cols',
+                                        'order_cols',
+                                        'select_cols')){
+
   stopifnot(dt |> is.data.table())
   stopifnot(previous_meta |> is.data.table())
 
-  new_meta <- dt |> df_info()
+  change_type <- match.arg(change_type)
 
-  # delete updated vars from previous meta
-  previous_meta <- subset(previous_meta, var %notin% updated_cols)
+  if(change_type == 'new_data'){
+    new_meta <- dt |> df_info()
 
-  new_meta <- rbind(previous_meta, new_meta)
+    # delete updated vars from previous meta
+    previous_meta <- subset(previous_meta, var %notin% updated_cols)
 
-  order_df <- data.table(var = col_names, index = 1:length(col_names))
+    new_meta <- rbind(previous_meta, new_meta)
 
-  new_meta <- merge(new_meta, order_df, by = 'var', all.x = TRUE)
+    order_df <- data.table(var = col_names, index = 1:length(col_names))
 
-  setorderv(new_meta, c('index'))
+    new_meta <- merge(new_meta, order_df, by = 'var', all.x = TRUE)
 
-  new_meta$index <- NULL
-  new_meta$cols <- ncols
+    setorderv(new_meta, c('index'))
 
-  return(new_meta)
+    new_meta$index <- NULL
+    new_meta$cols <- ncols
+
+    return(new_meta)
+  } else if (change_type == 'rename_cols'){
+    previous_meta$var <- col_names
+    return(previous_meta)
+  } else if (change_type == 'order_cols'){
+
+    order_df <- data.table(var = col_names, index = 1:length(col_names))
+
+    meta_reordered <- merge(previous_meta, order_df, by = 'var', all.x = TRUE)
+
+    setorderv(meta_reordered, c('index'))
+
+    meta_reordered$index <- NULL
+
+    return(meta_reordered)
+
+  } else if (change_type == 'select_cols'){
+    present_vars <- col_names
+
+    previous_meta <- previous_meta[var %in% col_names, ]
+
+    previous_meta$cols <- ncols
+    return(previous_meta)
+  }
 }
 
 # descriptive stats -----------------------------------------------------------
@@ -1388,7 +1424,7 @@ status_row <- function(icon_name, color, text) {
 
 # display restore status ------------------------------------------------------
 
-display_restore_status <- function(session_restore_status){
+display_restore_status <- function(session_restore_status, btn_ok){
   list_check_restore <- div(
     style = 'display:flex; flex-direction:column; gap:12px;',
 
@@ -1410,17 +1446,15 @@ display_restore_status <- function(session_restore_status){
   # show modal
   showModal(modalDialog(
     title = div(
-      h1(bs_icon('database-up', size = '55px', style = 'margin-right: 8px; color:#02517d'),
+      h1(bs_icon('database-up', size = '55px',
+                 style = 'margin-right: 8px; color:#02517d'),
         'Session Status'
       )
     ),
     div(style = 'padding:12px; border-radius:0px;', list_check_restore),
     size = 'l',
-    easyClose = F,
-    footer = div(
-      style = 'text-align:right;',
-      actionButton('btn_dismiss_restore_sesison', 'OK', class = 'btn-task')
-    )
+    easyClose = T,
+    footer = div(style = 'text-align:right;', btn_ok)
   ))
 
 }
