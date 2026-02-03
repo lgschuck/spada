@@ -21,7 +21,7 @@ convert_cols_ui <- function(id) {
           selectInput(ns('sel_format'), 'Select the new format',
                       c('', 'as.numeric', 'as.integer',
                         'as.character', 'as.Date', 'as.factor',
-                        'as.double', 'as.complex')),
+                        'as.double')),
           conditionalPanel(
             condition = sprintf("input['%s'] == 'as.Date'", ns('sel_format')),
             selectInput(
@@ -91,7 +91,7 @@ convert_cols_server <- function(id) {
       } else {
         sample(nrow_act_dt, 8, replace = F)
       }
-    }) |> bindEvent(preview_sample_trigger())
+    }) |> bindEvent(preview_sample_trigger(), session$userData$dt$act_meta())
 
     # update sample in button click ----------
     observe({
@@ -150,7 +150,8 @@ convert_cols_server <- function(id) {
                                date_origin = input$sel_date_origin),
                      env = list(var1 = input$vars_sel)]
 
-        update_act_dt(session, copy(temp), updated_cols = input$vars_sel)
+        update_act_dt(session, copy(temp), updated_cols = input$vars_sel,
+                      change_type = 'convert_cols')
         rm(temp)
 
         msg('Conversion applied')

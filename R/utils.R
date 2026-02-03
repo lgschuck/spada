@@ -1052,6 +1052,7 @@ get_act_dt <- function(session){
 update_act_dt <- function(session, new_dt, data_changed = TRUE,
                           updated_cols = NULL,
                           change_type = c('new_data',
+                                          'convert_cols',
                                           'rename_cols',
                                           'order_cols',
                                           'select_cols')){
@@ -1103,6 +1104,7 @@ append_meta <- function(session, new_meta, new_dt_name){
 update_meta <- function(dt = data.table(),
                         previous_meta, col_names, updated_cols, ncols,
                         change_type = c('new_data',
+                                        'convert_cols',
                                         'rename_cols',
                                         'order_cols',
                                         'select_cols')){
@@ -1112,7 +1114,7 @@ update_meta <- function(dt = data.table(),
 
   change_type <- match.arg(change_type)
 
-  if(change_type == 'new_data'){
+  if(change_type %in% c('new_data', 'convert_cols')){
     new_meta <- dt |> df_info()
 
     # delete updated vars from previous meta

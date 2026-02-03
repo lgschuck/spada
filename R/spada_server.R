@@ -97,7 +97,7 @@ spada_server <- function(datasets, conf){
             change_type = session$userData$dt$data_changed_type
           )
 
-        } else {
+        } else if (session$userData$dt$data_changed_type %in% c('convert_cols', 'new_data')){
 
           # update meta of changed variables
           session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
@@ -105,10 +105,10 @@ spada_server <- function(datasets, conf){
             previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
             col_names = get_act_dt(session) |> names(),
             updated_cols = session$userData$dt$updated_cols,
-            ncols = get_act_dt(session) |> ncol()
+            ncols = get_act_dt(session) |> ncol(),
+            change_type = session$userData$dt$data_changed_type
           )
         }
-
         session$userData$dt$updated_cols <- NULL
         session$userData$dt$data_changed_type = 'new_data'
       }

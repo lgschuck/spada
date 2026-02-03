@@ -34,7 +34,7 @@ Update **dependencies (2026-01-30)**, new **Group by and Summarise** modules, **
 
 5 - **Config nrows for plots**: now the value from the input is multiplied by 1e3
 
-6 - **Metadata calculation**: avoids some recalculation for better performance (new update_meta function) and visual feel
+6 - **Metadata calculation**: avoids some recalculation for better performance (new update_meta function) and visual feel ([#62](https://github.com/lgschuck/spada/issues/62))
 
 7 - **IDate in metadata table**: now IDate class receives the calenda icon ([#58](https://github.com/lgschuck/spada/issues/58))
 
@@ -54,15 +54,17 @@ Update **dependencies (2026-01-30)**, new **Group by and Summarise** modules, **
 
 ### New Features
 
-1 - **New Summarise module**: distinct and count functions by choosed variable (overwrite or create new dataset)
+1 - **New Summarise module**: distinct and count functions by choosed variable (overwrite or create new dataset) ([#60](https://github.com/lgschuck/spada/issues/60))
 
-2 - **New Group by module**: now it's possible to group by data in a new (or overwriting the active) dataset
+2 - **New Group by module**: now it's possible to group by data in a new (or overwriting the active) dataset ([#60](https://github.com/lgschuck/spada/issues/60))
 
 ### Bug Fixes
 
-1 - **Import File module**: now apply make_valid_cols when import file avoiding invalid names in variables
+1 - **Import File module**: now apply make_valid_cols when import file avoiding invalid names in variables ([#63](https://github.com/lgschuck/spada/issues/63))
 
-2 - **Sidebar preview dataset**: now shows 5 or the NROW for smaller than 5 rows datasets
+2 - **Sidebar preview dataset**: now shows 5 or the NROW for smaller than 5 rows datasets ([#61](https://github.com/lgschuck/spada/issues/61))
+
+3 - **Convert cols module**: error to preview when change tha active dataset ([#64](https://github.com/lgschuck/spada/issues/64))
 
 ### Visuals
 
