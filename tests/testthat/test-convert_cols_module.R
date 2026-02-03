@@ -45,6 +45,8 @@ test_that("Test Preview dataframe after variable and format selection", {
       dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
+
+    session$userData$dt$act_meta <- reactive({ iris |> as.data.table() |> df_info()})
     session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = 'Species')
     session$setInputs(sel_format = 'as.character')
