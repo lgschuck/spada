@@ -12,7 +12,7 @@
 
 4 - Models: logistic regression
 
-## Spada 0.1.2 (in development)
+## Spada 0.1.2.9000 (in development)
 
 ### Highlights
 
@@ -38,7 +38,8 @@ dataset and datasets) and better size for Preview datasets popover
 multiplied by 1e3
 
 6 - **Metadata calculation**: avoids some recalculation for better
-performance and visual feel
+performance (new update_meta function) and visual feel
+([\#62](https://github.com/lgschuck/spada/issues/62))
 
 7 - **IDate in metadata table**: now IDate class receives the calenda
 icon ([\#58](https://github.com/lgschuck/spada/issues/58))
@@ -59,21 +60,31 @@ to textOutput for better visuals
 
 13 - **Output save**: now saves with a CSS style
 
+14 - **Restore Session module**: the code used to restore session is now
+in a new module
+
 #### New Features
 
 1 - **New Summarise module**: distinct and count functions by choosed
 variable (overwrite or create new dataset)
+([\#60](https://github.com/lgschuck/spada/issues/60))
 
 2 - **New Group by module**: now it’s possible to group by data in a new
 (or overwriting the active) dataset
+([\#60](https://github.com/lgschuck/spada/issues/60))
 
 #### Bug Fixes
 
 1 - **Import File module**: now apply make_valid_cols when import file
 avoiding invalid names in variables
+([\#63](https://github.com/lgschuck/spada/issues/63))
 
 2 - **Sidebar preview dataset**: now shows 5 or the NROW for smaller
 than 5 rows datasets
+([\#61](https://github.com/lgschuck/spada/issues/61))
+
+3 - **Convert cols module**: error to preview when change tha active
+dataset ([\#64](https://github.com/lgschuck/spada/issues/64))
 
 #### Visuals
 
