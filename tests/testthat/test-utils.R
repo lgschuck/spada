@@ -580,3 +580,102 @@ test_that('summarise dt funciton - count', {
   expect_s3_class(dt_s, c('data.table', 'data.frame'))
 })
 
+test_that('summarise dt funciton - wrong fun', {
+  expect_error(summarise_dt(dt, 'count2', 'Species'))
+})
+
+test_that('summarise dt funciton - not data.table', {
+  expect_error(summarise_dt(iris, 'count', 'Species'))
+
+})
+
+test_that('summarise dt funciton - not variable', {
+  expect_error(summarise_dt(dt, 'count', c('Species', 'Sepal.Length2')))
+})
+
+# test update metadata function -----------------------------------------------
+dt <- iris |> as.data.table()
+
+test_that('update metadata funciton - wrogn change type', {
+  expect_error(update_meta(previous_meta = data.table(), change_type = 'xx'))
+})
+
+test_that('update metadata funciton - rename cols', {
+
+  metadata <- list('dt' = dt |> df_info())
+  meta0 <- metadata[['dt']]
+
+  dt2 <- copy(dt)
+  names(dt2)[names(dt2) == 'Species'] <- 'Species_2'
+
+  new_meta <- update_meta(
+    previous_meta = meta0,
+    col_names = dt2 |> names(),
+    change_type = 'rename_cols'
+  )
+
+  meta0 <- dt2 |> df_info()
+
+  expect_equal(meta0, new_meta)
+})
+
+test_that('update metadata funciton - select cols', {
+
+  metadata <- list('dt' = dt |> df_info())
+
+  meta0 <- metadata[['dt']]
+  dt2 <- subset(dt, select = c('Petal.Width', 'Species'))
+
+  new_meta <- update_meta(
+    previous_meta = meta0,
+    col_names = dt2 |> names(),
+    ncols = ncol(dt2),
+    change_type = 'select_cols'
+  )
+
+  meta0 <- dt2 |> df_info()
+
+  expect_equal(meta0, new_meta)
+})
+
+test_that('update metadata funciton - order cols', {
+
+  metadata <- list('dt' = dt |> df_info())
+
+  meta0 <- metadata[['dt']]
+  dt2 <- dt[, c(1, 3, 2, 4, 5)]
+
+  new_meta <- update_meta(
+    previous_meta = meta0,
+    col_names = dt2 |> names(),
+    change_type = 'order_cols'
+  )
+
+  meta0 <- dt2 |> df_info()
+
+  expect_equal(meta0, new_meta)
+})
+
+test_that('update metadata funciton - convert cols', {
+
+  metadata <- list('dt' = dt |> df_info())
+
+  meta0 <- metadata[['dt']]
+  dt2 <- copy(dt)
+  dt2$Sepal.Length <- dt2$Sepal.Length |> as.integer()
+
+  new_meta <- update_meta(
+    dt = subset(dt2, select = 'Sepal.Length'),
+    previous_meta = meta0,
+    col_names = dt2 |> names(),
+    updated_cols = 'Sepal.Length',
+    ncols = dt2 |> ncol(),
+    change_type = 'convert_cols'
+  )
+
+  meta0 <- dt2 |> df_info()
+
+  expect_equal(meta0, new_meta)
+})
+
+

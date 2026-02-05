@@ -1,7 +1,7 @@
 
-# =============================================================================
-# ---------------------------- OBJECTS ----------------------------------------
-# =============================================================================
+# ============================================================================.
+# ---------------------------- OBJECTS ---------------------------------------
+# ============================================================================.
 
 # default conf ----------------------------------------------------------------
 default_conf <- list(
@@ -328,17 +328,19 @@ waiter_screen <- tags$style(
 
       background: linear-gradient(
         55deg,
-        #FFFFFF,
-        #1A7DBA,
-        #146394,
-        #0A5A88,
         #02517D,
+		    #0A101C,
+        #0B1220,
+		    #0F172A,
+		    #02517D,
         #0F172A,
-        #0B1220
+        #0B1220,
+		    #0A101C,
+		    #02517D
       );
 
       background-size: 400% 400%;
-      animation: gradientMove 12s ease infinite;
+      animation: gradientMove 16s ease infinite;
     }
 
     @keyframes gradientMove {
@@ -418,9 +420,9 @@ output_export_css <- tags$head(tags$style(HTML(
     "
   )
 )))
-# =============================================================================
-# ---------------------------- FUNCTIONS --------------------------------------
-# =============================================================================
+# ============================================================================.
+# ---------------------------- FUNCTIONS -------------------------------------
+# ============================================================================.
 
 # load conf -------------------------------------------------------------------
 
@@ -1148,8 +1150,6 @@ update_meta <- function(dt = data.table(),
     return(meta_reordered)
 
   } else if (change_type == 'select_cols'){
-    present_vars <- col_names
-
     previous_meta <- previous_meta[var %in% col_names, ]
 
     previous_meta$cols <- ncols
@@ -1462,10 +1462,12 @@ display_restore_status <- function(session_restore_status, btn_ok){
 }
 
 # summarise dataset -----------------------------------------------------------
-summarise_dt <- function(dt, fun, vars){
+summarise_dt <- function(dt, fun = c('count', 'distinct'), vars){
 
   stopifnot(is.data.table(dt))
+  stopifnot(all(vars %in% (dt |> names())))
 
+  fun <- match.arg(fun)
   if(fun == 'distinct'){
     dt[, .SD, .SDcols = vars] |> unique()
   } else if(fun == 'count'){
