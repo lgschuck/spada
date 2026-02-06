@@ -329,12 +329,12 @@ waiter_screen <- tags$style(
       background: linear-gradient(
         55deg,
         #02517D,
-		    #0A101C,
-        #0B1220,
-		    #0F172A,
+	    	#0A101C,
+        #001030,
+		    #003452,
 		    #02517D,
-        #0F172A,
-        #0B1220,
+        #003452,
+        #001030,
 		    #0A101C,
 		    #02517D
       );
@@ -828,7 +828,7 @@ show_startup_screen <- function() {
 show_exit_screen <- function(save = TRUE) {
   waiter_show(
     html = {
-      if(isTRUE(save)){
+      if(save){
         tagList(
           div(
             class = "screen-container",
@@ -852,24 +852,30 @@ show_exit_screen <- function(save = TRUE) {
   )
 }
 
+# save session function -------------------------------------------------------
+save_session <- function(data_dir, output, data){
+  check_dir(data_dir)
+  qs_save(output, paste0(data_dir, '/output.qs2'))
+  qs_save(data, paste0(data_dir, '/data.qs2'))
+}
+
+# save conf function ----------------------------------------------------------
+save_conf <- function(conf_dir, conf){
+  check_dir(conf_dir)
+  qs_save(conf, paste0(conf_dir, '/conf.qs2'))
+}
+
 # exit spada with saving session ----------------------------------------------
 exit_with_save <- function(session){
 
   show_exit_screen()
-
   t0 <- Sys.time()
+  save_session(session$userData$conf$data_dir,
+               session$userData$out$elements,
+               session$userData$dt$dt)
 
-  check_dir(session$userData$conf$data_dir)
-  qs_save(session$userData$out$elements,
-          paste0(session$userData$conf$data_dir, '/output.qs2'))
-
-  check_dir(session$userData$conf$data_dir)
-  qs_save(session$userData$dt$dt,
-          paste0(session$userData$conf$data_dir, '/data.qs2'))
-
-  check_dir(session$userData$conf$conf_dir)
-  qs_save(reactiveValuesToList(session$userData$conf),
-          paste0(session$userData$conf$conf_dir, '/conf.qs2'))
+  save_conf(session$userData$conf$conf_dir,
+            reactiveValuesToList(session$userData$conf))
 
   t_diff <- Sys.time() - t0
   if(t_diff < 5) Sys.sleep(5 - t_diff)
@@ -882,9 +888,8 @@ exit_without_save <- function(session){
 
   show_exit_screen(F)
 
-  check_dir(session$userData$conf$conf_dir)
-  qs_save(reactiveValuesToList(session$userData$conf),
-          paste0(session$userData$conf$conf_dir, '/conf.qs2'))
+  save_conf(session$userData$conf$conf_dir,
+            reactiveValuesToList(session$userData$conf))
 
   Sys.sleep(3)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')

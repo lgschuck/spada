@@ -55,13 +55,16 @@ data module
 apply
 
 12 - **Sidebar module**: new input to change active dataset more
-dynamically (also included a test in testthat) and changed from renderUI
-to textOutput for better visuals
+dynamically (also included a test in testthat), new button Save Session,
+new mini button to Metadata and changed from renderUI to textOutput for
+better visuals
 
 13 - **Output save**: now saves with a CSS style
 
 14 - **Restore Session module**: the code used to restore session is now
 in a new module
+
+15 - **Navbar df info module**: new mini button to Metadata
 
 #### New Features
 

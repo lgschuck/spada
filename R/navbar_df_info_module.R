@@ -5,6 +5,7 @@ navbar_df_info_ui <- function(id) {
   tagList(
     uiOutput(ns('navbar_df_info')),
     actionButton(ns('df_btn_overview'), '', icon('magnifying-glass'), class = 'mini-btn'),
+    actionButton(ns('df_btn_meta'), '', bs_icon('info-circle'), class = 'mini-btn'),
     actionButton(ns('df_btn_change'), '', icon('shuffle'), class = 'mini-btn'),
     actionButton(ns('df_btn_explore'), '', icon('chart-simple'), class = 'mini-btn')
   )
@@ -31,6 +32,11 @@ navbar_df_info_server <- function(id, app_session) {
       nav_select('navbar', selected = 'Data', session = app_session)
       nav_select('navset_card_pill_data', selected = 'Overview', session = app_session)
     }) |> bindEvent(input$df_btn_overview)
+
+    observe({
+      nav_select('navbar', selected = 'Data', session = app_session)
+      nav_select('navset_card_pill_data', selected = 'Metadata', session = app_session)
+    }) |> bindEvent(input$df_btn_meta)
 
     observe({
       nav_select('navbar', selected = 'Data', session = app_session)

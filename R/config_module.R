@@ -260,6 +260,8 @@ config_server <- function(id) {
         options(shiny.maxRequestSize = max_request_size())
         session$userData$conf$file_size <- input$input_file_size
         msg('New limit applied')
+        save_conf(session$userData$conf$conf_dir,
+                  reactiveValuesToList(session$userData$conf))
       }
     }) |> bindEvent(input$btn_file_size)
 
@@ -276,6 +278,8 @@ config_server <- function(id) {
       session$userData$conf$theme <- input$theme_choice
 
       msg('New theme applied')
+      save_conf(session$userData$conf$conf_dir,
+                reactiveValuesToList(session$userData$conf))
     }) |> bindEvent(input$btn_theme)
 
     # session conf ---------------------------
@@ -284,6 +288,8 @@ config_server <- function(id) {
       session$userData$conf$save_session <- input$radio_save_session
 
       msg('New settings applied')
+      save_conf(session$userData$conf$conf_dir,
+                reactiveValuesToList(session$userData$conf))
     }) |> bindEvent(input$btn_save_session_conf)
 
     # input plot limit ------------------------
@@ -293,6 +299,8 @@ config_server <- function(id) {
       } else {
         session$userData$conf$plot_limit <- input$input_plot_limit * 1e3
         msg('New limit applied')
+        save_conf(session$userData$conf$conf_dir,
+                  reactiveValuesToList(session$userData$conf))
       }
     }) |> bindEvent(input$btn_plot_limit)
 
