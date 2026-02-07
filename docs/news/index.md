@@ -66,6 +66,10 @@ in a new module
 
 15 - **Navbar df info module**: new mini button to Metadata
 
+16 - **Test write access for session data**: now if there is no write
+access for session files they are saved in tempdir with message in
+console
+
 #### New Features
 
 1 - **New Summarise module**: distinct and count functions by choosed

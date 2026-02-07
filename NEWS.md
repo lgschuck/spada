@@ -54,6 +54,8 @@ Update **dependencies (2026-01-30)**, new **Group by and Summarise** modules, **
 
 15 - **Navbar df info module**: new mini button to Metadata
 
+16 - **Test write access for session data**: now if there is no write access for session files they are saved in tempdir with message in console
+
 ### New Features
 
 1 - **New Summarise module**: distinct and count functions by choosed variable (overwrite or create new dataset) ([#60](https://github.com/lgschuck/spada/issues/60))

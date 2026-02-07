@@ -60,7 +60,7 @@ spada_server <- function(datasets, conf){
 
     # datasets metadata -------------------------------------------------------
     observe({
-      req(session$userData$dt$dt)
+      req(session$userData$dt$dt, session$userData$data_changed() > 0)
 
       if(is.null(session$userData$dt$updated_cols) &
          session$userData$dt$data_changed_type == 'new_data'){

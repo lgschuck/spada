@@ -425,7 +425,6 @@ output_export_css <- tags$head(tags$style(HTML(
 # ============================================================================.
 
 # load conf -------------------------------------------------------------------
-
 load_conf <- function(start_conf,
                       r_user_conf_dir,
                       themes_names) {
@@ -495,7 +494,9 @@ load_conf <- function(start_conf,
       start_conf$plot_limit <- conf_saved$plot_limit
     }
   }
-  qs_save(start_conf, conf_path)
+  if(test_write_access(conf_path) || !file.exists(conf_path)) {
+    qs_save(start_conf, conf_path)
+  }
 
   return(start_conf)
 }
@@ -854,15 +855,44 @@ show_exit_screen <- function(save = TRUE) {
 
 # save session function -------------------------------------------------------
 save_session <- function(data_dir, output, data){
+
+  data_file <- file.path(data_dir, 'data.qs2')
+  out_file <- file.path(data_dir, 'output.qs2')
+
   check_dir(data_dir)
-  qs_save(output, paste0(data_dir, '/output.qs2'))
-  qs_save(data, paste0(data_dir, '/data.qs2'))
+
+  if(test_write_access(data_file)){
+    qs_save(data, data_file)
+  } else {
+
+    tmp_file <- temp_file('data.qs2')
+    qs_save(data, tmp_file)
+    no_write_msg(data_file, tmp_file)
+  }
+
+  if(test_write_access(out_file)){
+    qs_save(output, out_file)
+  } else {
+    tmp_file <- temp_file('output.qs2')
+    qs_save(output, tmp_file)
+    no_write_msg(out_file, tmp_file)
+  }
 }
 
 # save conf function ----------------------------------------------------------
 save_conf <- function(conf_dir, conf){
+
+  conf_file <- file.path(conf_dir, 'conf.qs2')
   check_dir(conf_dir)
-  qs_save(conf, paste0(conf_dir, '/conf.qs2'))
+
+  if(test_write_access(conf_file)){
+    qs_save(conf, conf_file)
+  } else {
+    tmp_file <- temp_file('conf.qs2')
+
+    qs_save(conf, tmp_file)
+    no_write_msg(conf_file, tmp_file)
+  }
 }
 
 # exit spada with saving session ----------------------------------------------
@@ -896,7 +926,29 @@ exit_without_save <- function(session){
   stopApp()
 }
 
-# make names append lists -------------------------------------------------
+# test write access -----------------------------------------------------------
+test_write_access <- function(file){
+  isTRUE(file.access(file, 2) == 0)
+}
+
+# temp normalized file path ---------------------------------------------------
+temp_file <- function(file_name = ''){
+  file.path(normalizePath(tempdir(), winslash = '/'), file_name)
+}
+
+# no access to write message --------------------------------------------------
+no_write_msg <- function(file1, file2){
+  message(paste(
+    Sys.time(),
+    '- Spada do not have access to write on:\n',
+    file1,
+    '\n Data saved in',
+    file2
+    )
+  )
+}
+
+# make names append lists -----------------------------------------------------
 make_names_append_list <- function(new_list, actual_names,
                                    suffix = '_previous', index = 1) {
 
