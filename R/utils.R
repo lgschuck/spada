@@ -494,9 +494,7 @@ load_conf <- function(start_conf,
       start_conf$plot_limit <- conf_saved$plot_limit
     }
   }
-  if(test_write_access(conf_path) || !file.exists(conf_path)) {
-    qs_save(start_conf, conf_path)
-  }
+  if(test_write_access(conf_path)) qs_save(start_conf, conf_path)
 
   return(start_conf)
 }
@@ -928,7 +926,7 @@ exit_without_save <- function(session){
 
 # test write access -----------------------------------------------------------
 test_write_access <- function(file){
-  isTRUE(file.access(file, 2) == 0)
+  all(!file.exists(file) || isTRUE(file.access(file, 2) == 0))
 }
 
 # temp normalized file path ---------------------------------------------------
