@@ -172,7 +172,7 @@ groupby_server <- function(id) {
 
       showModal(modalDialog(
         title = div(
-          h1(bs_icon('layer-group', size = '55px', style = 'margin-right: 8px; color:#02517d'),
+          h1(icon('layer-group', size = '55px', style = 'margin-right: 8px; color:#02517d'),
              'New Variables'
           )
         ),

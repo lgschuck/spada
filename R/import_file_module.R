@@ -101,20 +101,17 @@ import_file_server <- function(id) {
         )
       } else if (ext == 'qs2' && input$radio_file_ext == 'qs2'){
         data$data <- qs_read(input$file$datapath)
+
         if (!is_spada_df(data$data)) {
           msg_error('Object must be data.frame')
           return()
         }
-        data$data <- as.data.table(data$data)
-
       } else if (ext == 'rds' && input$radio_file_ext == 'RDS'){
         data$data <- readRDS(input$file$datapath)
         if (!is_spada_df(data$data)) {
           msg_error('Object must be data.frame')
           return()
         }
-        data$data <- as.data.table(data$data)
-
       } else if (ext == 'sav' && input$radio_file_ext == 'sav'){
         n <- if (input$sav_lines == 'all') Inf else as.integer(input$sav_n_lines)
         if (n < 1) {
@@ -132,14 +129,12 @@ import_file_server <- function(id) {
       }
 
       # update dt ----------------------------
-      data$data <- lapply(data$data, make_valid_cols) |> as.data.table()
-
-      data$data <- data$data |> make_var_names()
-
       append_dt(session, data$data, input$dataset_name)
 
       # update metadata ----------------------
-      append_meta(session, data$data |> df_info(), input$dataset_name)
+      append_meta(session,
+                  session$userData$dt$dt[[input$dataset_name]] |> df_info(),
+                  input$dataset_name)
 
       msg('File imported successfully')
 

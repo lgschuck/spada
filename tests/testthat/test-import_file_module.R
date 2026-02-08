@@ -18,7 +18,8 @@ test_that('Test import RDS', {
 
     session$setInputs(btn_import = 1)
 
-    expect_equal(data$data, iris |> as.data.table())
+    expect_equal(data$data, iris)
+    expect_equal(session$userData$dt$dt[['df_test']], iris |> as.data.table())
   })
 })
 
@@ -146,3 +147,4 @@ test_that('Test import all lines - csv 2 standard', {
     expect_equal(data$data, data_temp)
   })
 })
+

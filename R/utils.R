@@ -559,7 +559,7 @@ safe_env <- function(operations = NULL){
 
 # test dataset ----------------------------------------------------------------
 test_dataset <- function(n_row = 1e3, n_col = 11){
-  test_data <- data.frame(
+  test_data <- data.table(
     integer_var = rep(sample(1:100, n_row, replace = T)),
     numeric_var = rnorm(n_row),
     char_var = rep(sample(letters, n_row, replace = T)),
@@ -1137,7 +1137,8 @@ append_dt <- function(session, new_dt, new_dt_name) {
   stopifnot(new_dt_name |> is_valid_name() &&
               new_dt_name %notin% names(session$userData$dt$dt))
 
-  new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table()
+  new_dt <- lapply(new_dt, make_valid_cols) |> as.data.table() |> make_var_names()
+
   new_list <- list(new_dt)
   names(new_list) <- new_dt_name
 
