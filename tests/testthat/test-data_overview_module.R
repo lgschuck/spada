@@ -49,7 +49,7 @@ test_that("Test first rows", {
                       sel_dataset = 'iris',
                       radio_sample = 'first')
 
-    expect_equal(data_filtered(), iris[1:5,])
+    expect_equal(data_filtered(), iris[1:5, ] |> as.data.table())
 
   })
 })

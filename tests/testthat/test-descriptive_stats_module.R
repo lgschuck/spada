@@ -1,6 +1,7 @@
 # tests/testthat/test-descriptive_stats_module.R
 
 var1 <- 'hp'
+df_mtcars <- mtcars |> as.data.table()
 
 # test ddescriptiveesc stats - reactives --------------------------------------
 test_that('Test desc stats - reactives', {
@@ -8,7 +9,7 @@ test_that('Test desc stats - reactives', {
   testServer(descriptive_stats_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = df_mtcars),
       act_name = 'mtcars'
     )
 
@@ -22,10 +23,10 @@ test_that('Test desc stats - reactives', {
     )
 
     expect_true(df |> is.reactive())
-    expect_equal(df(), mtcars)
+    expect_equal(df(), df_mtcars)
 
     expect_true(df_stats |> is.reactive())
-    expect_equal(df_stats(), mtcars[var1])
+    expect_equal(df_stats(), df_mtcars[, ..var1])
 
     expect_true(calculated_stats |> is.reactive())
     expect_true(calculated_stats() |> is.list())
@@ -39,7 +40,7 @@ test_that('Test descriptive stats - desc_stats mean 1 var', {
   testServer(descriptive_stats_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = df_mtcars),
       act_name = 'mtcars'
     )
 
@@ -52,13 +53,13 @@ test_that('Test descriptive stats - desc_stats mean 1 var', {
       btn_stats = 1
     )
 
-    expect_equal(df(), mtcars)
-    expect_equal(df_stats(), mtcars[var1])
+    expect_equal(df(), df_mtcars)
+    expect_equal(df_stats(), df_mtcars[, ..var1])
     expect_true(calculated_stats |> is.reactive())
     expect_true(calculated_stats() |> is.list())
     expect_true((calculated_stats() |> length()) == 1)
 
-    mean_hp <- mean(mtcars[, var1]) |> f_num(dig = 9)
+    mean_hp <- mean(df_mtcars[[var1]]) |> f_num(dig = 9)
     names(mean_hp) = var1
     expect_equal(calculated_stats(), list('Mean' = mean_hp))
 
@@ -71,7 +72,7 @@ test_that('Test descriptive stats - gt stats', {
   testServer(descriptive_stats_server, {
 
     session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = mtcars),
+      dt = list('mtcars' = df_mtcars),
       act_name = 'mtcars'
     )
 

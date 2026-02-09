@@ -73,9 +73,7 @@ data_overview_server <- function(id) {
     data_filtered <- reactive({
       req(idx())
 
-      df()[idx(), ] |>
-        lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
-        as.data.frame()
+      df()[idx(), ]
     })
 
     data_gt <- reactive({

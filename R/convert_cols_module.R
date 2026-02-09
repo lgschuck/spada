@@ -9,9 +9,6 @@ convert_cols_ui <- function(id) {
       card_body(
         layout_column_wrap(
           height = '200px',
-
-
-          # uiOutput(ns('ui_var_sel')),
           selectInput(ns('vars_sel'), 'Variable', NULL),
 
           textInput(ns('txt_current_format'), 'Current Type / Class')

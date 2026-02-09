@@ -1176,7 +1176,7 @@ update_meta <- function(dt = data.table(),
     new_meta <- dt |> df_info()
 
     # delete updated vars from previous meta
-    previous_meta <- subset(previous_meta, var %notin% updated_cols)
+    previous_meta <- previous_meta[var %notin% updated_cols, ]
 
     new_meta <- rbind(previous_meta, new_meta)
 

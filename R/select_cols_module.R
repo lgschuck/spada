@@ -46,18 +46,16 @@ select_cols_server <- function(id) {
         temp <- copy(get_act_dt(session))
 
         if(input$radio_var_sel == 'keep') {
-          temp <- subset(temp, select = input$vars_sel)
+          temp <- temp[, .SD, .SDcols = input$vars_sel]
           msg('Select columns: OK')
         } else if (input$radio_var_sel == 'drop'){
           if(all(df_names() %in% input$vars_sel)){
             msg('Leave at least 1 variable')
             return()
           } else {
-            temp <- subset(
-              temp,
-              select = setdiff(df_names(), input$vars_sel))
-            msg('Select columns: OK')
+            temp <- temp[, .SD, .SDcols = setdiff(df_names(), input$vars_sel)]
 
+            msg('Select columns: OK')
           }
         }
 

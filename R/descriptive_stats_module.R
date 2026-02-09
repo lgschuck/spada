@@ -72,7 +72,7 @@ descriptive_stats_server <- function(id) {
 
     df_stats <- reactive({
       req(input$sel_var)
-      subset(df(), select = input$sel_var)
+      df()[, .SD, .SDcols = input$sel_var]
     })
 
     # calculate stats ---------------------------------------------------------
