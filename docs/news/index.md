@@ -4,15 +4,13 @@
 
 ### 0.2.0 Milestone
 
-1 - Functionalities to detect and treat duplicates
+[0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
-2 - Functionalities to detect and treat outliers
+## Spada 0.1.2
 
-3 - Inference: t test
+### 2026.02.09
 
-4 - Models: logistic regression
-
-## Spada 0.1.2.9000 (in development)
+Release of 0.1.2 version.
 
 ### Highlights
 
