@@ -113,3 +113,80 @@ test_that('df_info works with an empty data frame', {
 test_that('df_info throws an error for non-data-frame inputs', {
   expect_error(df_info(1:10))
 })
+
+# df_info compare with r base function ----------------------------------------
+
+r_base_df_info <- function(df) {
+  stopifnot(is.data.frame(df))
+
+  if (ncol(df) == 0) {
+    return(data.table(
+      var = 'v1',
+      type = NA,
+      class = NA,
+      size = 0,
+      min = NA,
+      max = NA,
+      n_valid = NA,
+      perc_valid = NA,
+      n_unique = NA,
+      perc_unique = NA,
+      n_zero = NA,
+      perc_zero = NA,
+      n_nas = NA,
+      perc_nas = NA,
+      rows = NA,
+      cols = NA
+    ))
+  }
+
+  rows <- nrow(df)
+  cols <- ncol(df)
+
+  res <- lapply(seq_len(cols), function(j) {
+    x <- df[[j]]
+
+    nas <- sum(is.na(x))
+    valid <- rows - nas
+    uniq <- length(unique(x))
+    zeros <- if (is.numeric(x)) suna(x == 0) else 0
+    minv <- if (is.numeric(x)) mina(x) else NA
+    maxv <- if (is.numeric(x)) mana(x) else NA
+
+    list(
+      var = names(df)[j],
+      type = typeof(x),
+      class = paste(class(x), collapse = "/"),
+      size = as.numeric(object.size(x)),
+      min = minv,
+      max = maxv,
+      n_valid = valid,
+      perc_valid = valid / rows,
+      n_unique = uniq,
+      perc_unique = uniq / rows,
+      n_zero = zeros,
+      perc_zero = zeros / rows,
+      n_nas = nas,
+      perc_nas = nas / rows,
+      rows = rows,
+      cols = cols
+    )
+  })
+
+  do.call(rbind.data.frame, res) |> as.data.table()
+}
+
+
+test_that('df_info compare with r base function', {
+
+  df <- data.frame(
+    a = c(1, NA, 3),
+    b = c(NA, NA, 'z'),
+    c = c(TRUE, FALSE, NA)
+  )
+
+  info <- df_info(df)
+  info_rbase <- r_base_df_info(df)
+
+  expect_equal(info, info_rbase)
+})

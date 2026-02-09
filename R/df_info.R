@@ -33,18 +33,18 @@ df_info <- function(df) {
     ))
   }
 
-  rows <- nrow(df)
-  cols <- ncol(df)
+  rows <- fnrow(df)
+  cols <- fncol(df)
 
   res <- lapply(seq_len(cols), function(j) {
     x <- df[[j]]
 
-    nas <- sum(is.na(x))
+    nas <- whichNA(x) |> NROW()
     valid <- rows - nas
-    uniq <- length(unique(x))
-    zeros <- if (is.numeric(x)) suna(x == 0) else 0
-    minv <- if (is.numeric(x)) mina(x) else NA
-    maxv <- if (is.numeric(x)) mana(x) else NA
+    uniq <- fnunique(x)
+    zeros <- if (is.numeric(x)) NROW(x %==% 0) else 0
+    minv <- if (is.numeric(x)) fmin(x, na.rm = T) else NA
+    maxv <- if (is.numeric(x)) fmax(x, na.rm = T) else NA
 
     list(
       var = names(df)[j],

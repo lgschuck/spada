@@ -14,6 +14,7 @@ Depends:
 Imports:
   bsicons (>= 0.1.2),
   bslib (>= 0.10.0),
+  collapse (>= 2.1.6),
   data.table (>= 1.18.2.1),
   DescTools (>= 0.99.60),
   dplyr (>= 1.1.4),

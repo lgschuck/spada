@@ -18,7 +18,7 @@
 
 Update **dependencies (2026-01-30)**, new **Group by and Summarise**
 modules, **new startup and exit screens** (waiter package) and better
-**Metadata recalculation**
+**Metadata (re)calculation** (collapse package)
 
 #### Improvements
 
@@ -37,8 +37,9 @@ dataset and datasets) and better size for Preview datasets popover
 5 - **Config nrows for plots**: now the value from the input is
 multiplied by 1e3
 
-6 - **Metadata calculation**: avoids some recalculation for better
-performance (new update_meta function) and visual feel
+6 - **Metadata calculation**: new functions from collapse package,
+avoids some recalculation for better performance (new update_meta
+function) and visual feel
 ([\#62](https://github.com/lgschuck/spada/issues/62))
 
 7 - **IDate in metadata table**: now IDate class receives the calenda
@@ -82,9 +83,8 @@ variable (overwrite or create new dataset)
 
 #### Bug Fixes
 
-1 - **Import File module**: now apply make_valid_cols when import file
-avoiding invalid names in variables
-([\#63](https://github.com/lgschuck/spada/issues/63))
+1 - **Import File module**: now apply make_valid_cols and make_var_names
+when import file ([\#65](https://github.com/lgschuck/spada/issues/65))
 
 2 - **Sidebar preview dataset**: now shows 5 or the NROW for smaller
 than 5 rows datasets
