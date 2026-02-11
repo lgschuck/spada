@@ -19,7 +19,8 @@
 #'             nav_panel nav_select nav_spacer navset_card_pill page_navbar
 #'             popover sidebar tooltip value_box
 #'
-#' @importFrom collapse fmin fmax fncol fnrow fnunique whichNA %==%
+#' @importFrom collapse fmean fmedian fmin fmax fncol fnrow fnunique
+#'             fquantile fsd fvar whichNA %==%
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
 #'             data.table fcase fifelse fread fwrite hour is.data.table mday

@@ -21,21 +21,21 @@ stats_table_ui <- function(id) {
 stats_table_server <- function(id, var1, var2, input_percentile, percentile,
                                var1_sd, pearson_correlation) {
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
     stats_obs <- reactive(length(var1()))
-    stats_n_nas <- reactive(sum(is.na(var1())))
-    stats_min <- reactive(if(is.numeric(var1())) mina(var1()) else NA)
-    stats_q1 <- reactive(if(is.numeric(var1())) p25(var1()) else NA)
-    stats_median <- reactive(if(is.numeric(var1())) median(var1(), na.rm = T) else NA)
-    stats_mean <- reactive(if(is.numeric(var1())) mean(var1(), na.rm = T) else NA)
+    stats_n_nas <- reactive(whichNA(var1()) |> NROW())
+    stats_min <- reactive(if(is.numeric(var1())) fmin(var1(), na.rm = T) else NA)
+    stats_q1 <- reactive(if(is.numeric(var1())) fquantile(var1(), 0.25) else NA)
+    stats_median <- reactive(if(is.numeric(var1())) fmedian(var1(), na.rm = T) else NA)
+    stats_mean <- reactive(if(is.numeric(var1())) fmean(var1(), na.rm = T) else NA)
     stats_mode <- reactive(
       if(var1() |> is.numeric() ||
          var1() |> is.character() ||
          var1() |> is.factor()) Mode(var1(), na.rm = T) else NA
       )
-    stats_q3 <- reactive(if(is.numeric(var1())) p75(var1()) else NA)
-    stats_max <- reactive(if(is.numeric(var1())) mana(var1()) else NA)
-
+    stats_q3 <- reactive(if(is.numeric(var1())) fquantile(var1(), 0.75) else NA)
+    stats_max <- reactive(if(is.numeric(var1())) fmax(var1(), na.rm = T) else NA)
 
     # table -------------------------------------------------------------------
     stats_table <- reactive({

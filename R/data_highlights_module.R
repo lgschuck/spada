@@ -97,118 +97,128 @@ data_highlights_ui <- function(id) {
 data_highlights_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
-    df <- reactive({
+    dt <- reactive({
       req(session$userData$dt$dt)
       get_act_dt(session)
     })
 
-    df_metadata <- reactive({
+    dt_meta <- reactive({
       req(session$userData$dt$act_meta())
-      session$userData$dt$act_meta()
+      copy(session$userData$dt$act_meta())
     })
 
-    output$var_num_vars <- renderText(sapply(df(), is.numeric) |> sum())
-    output$var_char_vars <- renderText(sapply(df(), is.character) |> sum())
-    output$var_factor_vars <- renderText(sapply(df(), is.factor) |> sum())
-    output$var_date_vars <- renderText(sapply(df(), is_date) |> sum())
+    output$var_num_vars <- renderText(sapply(dt(), is.numeric) |> sum())
+    output$var_char_vars <- renderText(sapply(dt(), is.character) |> sum())
+    output$var_factor_vars <- renderText(sapply(dt(), is.factor) |> sum())
+    output$var_date_vars <- renderText(sapply(dt(), is_date) |> sum())
 
-    output$n_rows <- renderText(
-      df() |> nrow() |> f_num()
-    )
+    output$n_rows <- renderText( dt_meta()[1, ]$rows |> f_num() )
+
     output$var_most_valid <- renderText(
-      if(df_metadata() |> filter(n_valid > 0) |> nrow() < 1) { '---'
+      if (dt_meta()[n_valid > 0, ] |> nrow() < 1) {
+        '---'
       } else {
-        df_metadata() |> arrange(-n_valid) |> head(1) |> pull(var)
+        setorderv(dt_meta(), 'n_valid', -1, na.last = T)[1, var]
       }
     )
 
     output$var_most_valid_n_valid <- renderText(
-      if(df_metadata() |> filter(n_valid > 0) |> nrow() < 1) { '0'
+      if (dt_meta()[n_valid > 0, ] |> nrow() < 1) {
+        '0'
       } else {
-        df_metadata() |> arrange(-n_valid) |> head(1) |> pull(n_valid) |> f_num()
+        setorderv(dt_meta(), 'n_valid', -1, na.last = T)[1, f_num(n_valid)]
       }
     )
 
     output$var_most_unique <- renderText(
-      if(df_metadata() |> filter(n_unique > 0) |> nrow() < 1) { '---'
+      if (dt_meta()[n_unique > 0, ] |> nrow() < 1) {
+        '---'
       } else {
-        df_metadata() |> arrange(-n_unique) |> head(1) |> pull(var)
+        setorderv(dt_meta(), 'n_unique', -1, na.last = T)[1, var]
       }
     )
 
     output$var_most_unique_n_unique <- renderText(
-      if(df_metadata() |> filter(n_unique > 0) |> nrow() < 1) { '0'
+      if (dt_meta()[n_unique > 0, ] |> nrow() < 1) {
+        '0'
       } else {
-        df_metadata() |> arrange(-n_unique) |> head(1) |> pull(n_unique) |> f_num()
+        setorderv(dt_meta(), 'n_unique', -1, na.last = T)[1, f_num(n_unique)]
       }
     )
 
     output$var_most_zeros <- renderText(
-      if(df_metadata() |> filter(n_zero > 0) |> nrow() < 1) { '---'
+      if (dt_meta()[n_zero > 0, ] |> nrow() < 1) {
+        '---'
       } else {
-        df_metadata() |> arrange(-n_zero) |> head(1) |> pull(var)
+        setorderv(dt_meta(), 'n_zero', -1, na.last = T)[1, var]
       }
     )
 
     output$var_most_zeros_n_zeros <- renderText(
-      if(df_metadata() |> filter(n_zero > 0) |> nrow() < 1) { '0'
+      if (dt_meta()[n_zero > 0, ] |> nrow() < 1) {
+        '0'
       } else {
-        df_metadata() |> arrange(-n_zero) |> head(1) |> pull(n_zero) |> f_num()
+        setorderv(dt_meta(), 'n_zero', -1, na.last = T)[1, f_num(n_zero)]
       }
     )
 
-    output$var_most_nas <- renderText(
-      {
-        if(df_metadata() |> filter(n_nas > 0) |> nrow() < 1) { '---'
-        } else {
-          df_metadata() |> filter(n_nas > 0)|> arrange(-n_nas, -perc_nas) |>
-            head(1) |> pull(var) }
+    output$var_most_nas <- renderText({
+      if (dt_meta()[n_nas > 0, ] |> nrow() < 1) {
+        '---'
+      } else {
+        setorderv(dt_meta()[n_nas > 0, ],
+                  c('n_nas', 'perc_nas'), c(-1, -1), na.last = T)[1, var]
       }
-    )
+    })
 
-    output$var_most_nas_n <- renderText(
-      {
-        if(df_metadata() |> filter(n_nas > 0) |> nrow() < 1) { '0'
-        } else {
-          df_metadata() |> filter(n_nas > 0)|> arrange(-n_nas, -perc_nas) |>
-            head(1) |> pull(n_nas) |> f_num()}
+    output$var_most_nas_n <- renderText({
+      if (dt_meta()[n_nas > 0, ] |> nrow() < 1) {
+        '0'
+      } else {
+        setorderv(dt_meta()[n_nas > 0, ],
+                  c('n_nas', 'perc_nas'), c(-1, -1), na.last = T)[1, f_num(n_nas)]
       }
-    )
+    })
 
     output$var_max_value <- renderText(
-      if(df_metadata() |> filter(!is.na(max)) |> nrow() < 1) { '---'
+      if (dt_meta()[!is.na(max), ] |> nrow() < 1) {
+        '---'
       } else {
-        df_metadata() |> arrange(-max) |> head(1) |> pull(var)
+        setorderv(dt_meta(), 'max', -1, na.last = T)[1, var]
       }
     )
 
     output$max_value <- renderText(
-      if(df_metadata() |> filter(!is.na(max)) |> nrow() < 1) { '0'
+      if (dt_meta()[!is.na(max), ] |> nrow() < 1) {
+        '0'
       } else {
-        df_metadata() |> arrange(-max) |> head(1) |> pull(max) |> f_num(dig = 3)
+        setorderv(dt_meta(), 'max', -1, na.last = T)[1, f_num(max, dig = 3)]
       }
     )
 
     output$var_min_value <- renderText(
-      if(df_metadata() |> filter(!is.na(min)) |> nrow() < 1) { '---'
+      if (dt_meta()[!is.na(min), ] |> nrow() < 1) {
+        '---'
       } else {
-        df_metadata() |> arrange(min) |> head(1) |> pull(var)
+        dt_meta() |> arrange(min) |> head(1) |> pull(var)
+        setorderv(dt_meta(), 'min', na.last = T)[1, var]
       }
     )
 
     output$min_value <- renderText(
-      if(df_metadata() |> filter(!is.na(min)) |> nrow() < 1) { '0'
+      if (dt_meta()[!is.na(min), ] |> nrow() < 1) {
+        '0'
       } else {
-        df_metadata() |> arrange(min) |> head(1) |> pull(min) |> f_num(dig = 3)
+        setorderv(dt_meta(), 'min', na.last = T)[1, f_num(min, dig = 3)]
       }
     )
 
     output$var_biggest_size <- renderText(
-      df_metadata() |> arrange(-size) |> head(1) |> pull(var)
+      setorderv(dt_meta(), 'size', -1, na.last = T)[1, var]
     )
 
     output$var_biggest_size_size <- renderText(
-      df_metadata() |> arrange(-size) |> head(1) |> pull(size) |> f_num()
+      setorderv(dt_meta(), 'size', -1, na.last = T)[1, f_num(size)]
     )
 
   })

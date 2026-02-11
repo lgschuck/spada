@@ -1226,7 +1226,7 @@ desc_stats <- function(df = NULL,
   if('mean' %in% central_tendency){
     desc_stats$Mean <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) mean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) fmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('gmean' %in% central_tendency){
@@ -1244,7 +1244,7 @@ desc_stats <- function(df = NULL,
   if('median' %in% central_tendency){
     desc_stats$Median <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) median(x, na.rm = T) |> f_num(dig = fmt_digits)  else NA })
+      \(x) {if(x |> is.numeric()) fmedian(x, na.rm = T) |> f_num(dig = fmt_digits)  else NA })
   }
 
   if('mode' %in% central_tendency){
@@ -1263,13 +1263,13 @@ desc_stats <- function(df = NULL,
   if('min' %in% dispersion){
     desc_stats$Min <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) mina(x) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) fmin(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('max' %in% dispersion){
     desc_stats$Max <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) mana(x) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) fmax(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('IQR' %in% dispersion){
@@ -1292,13 +1292,13 @@ desc_stats <- function(df = NULL,
   if('var' %in% dispersion){
     desc_stats$Variance <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) var(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) fvar(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('sd' %in% dispersion){
     desc_stats[['Standard Deviation']] <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) sd(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) fsd(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('skew' %in% shape){

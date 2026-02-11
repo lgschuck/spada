@@ -173,8 +173,8 @@ normality_test_server <- function(id) {
                  fill_color = session$userData$conf$plot_fill_color,
                  line_color = session$userData$conf$plot_line_color,
                  sample_limit = session$userData$conf$plot_limit,
-                 mean_value = mean(var(), na.rm = TRUE),
-                 sd_value = sd(var(), na.rm = TRUE)
+                 mean_value = fmean(var(), na.rm = TRUE),
+                 sd_value = fsd(var(), na.rm = TRUE)
       )
     }) |> bindEvent(input$btn_hist)
 

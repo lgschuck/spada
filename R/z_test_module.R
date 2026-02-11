@@ -116,13 +116,13 @@ z_test_server <- function(id) {
     })
 
     # calculate values --------------------------------------------------------
-    sample_mean <- reactive(var() |> mean(na.rm = T))
+    sample_mean <- reactive(var() |> fmean(na.rm = T))
 
     output$sample_mean <- renderText({
       paste('Mean:', sample_mean() |> f_num(dig = 2))
     })
 
-    sample_sd <- reactive(var() |> sd(na.rm = T))
+    sample_sd <- reactive(var() |> fsd(na.rm = T))
 
     output$sample_sd <- renderText({
       paste('Std Deviation:', sample_sd() |> f_num(dig = 2))
@@ -302,8 +302,8 @@ z_test_server <- function(id) {
                  fill_color = session$userData$conf$plot_fill_color,
                  line_color = session$userData$conf$plot_line_color,
                  sample_limit = session$userData$conf$plot_limit,
-                 mean_value = mean(var(), na.rm = TRUE),
-                 sd_value = sd(var(), na.rm = TRUE)
+                 mean_value = fmean(var(), na.rm = TRUE),
+                 sd_value = fsd(var(), na.rm = TRUE)
       )
     }) |> bindEvent(input$btn_hist)
 
