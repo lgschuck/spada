@@ -419,7 +419,7 @@ test_that('descriptive stats function', {
   expect_equal(as.numeric(res$Median['a']), median(df$a, na.rm = TRUE))
 
   # Mode (coluna fator deve retornar um valor não vazio)
-  expect_equal(res$Mode['c'][[1]], 'x | y')
+  expect_equal(res$Mode['c'][[1]], 'x')
 
   # Min e Max
   expect_equal(res$Min['a'][[1]], min(df$a, na.rm = TRUE) |> f_num(dig = 2))
@@ -431,7 +431,7 @@ test_that('descriptive stats function', {
 
   # Range
   expect_equal(res[['Range']]['b'][[1]],
-               paste('[', df$b |> range() |> f_num(dig = 2) , ']', collapse = '--->'))
+               paste('[', df$b |> range(na.rm = T) |> f_num(dig = 2) , ']', collapse = '--->'))
 
   # Variance
   expect_equal(res[['Variance']]['b'][[1]],

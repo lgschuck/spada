@@ -330,7 +330,6 @@ filter_rows_server <- function(id) {
       if(!isTruthy(input$filter_type)){
         msg('Select the Filter type')
       } else {
-        temp <- copy(get_act_dt(session))
         # filter events for one variable --------------------------------------
         if (input$filter_type == 'one') {
           # test if var and operator were informed
@@ -381,6 +380,7 @@ filter_rows_server <- function(id) {
           # pass values to filter function
           if (input$one_var_operator %in%
               c(na_operators, logical_operators, outlier_operators)) {
+            temp <- copy(get_act_dt(session))
             temp <- filter_rows(temp, input$one_var_sel, input$one_var_operator, NULL)
             msg('Filter rows: OK')
           } else if (value_temp$len > 1 & input$one_var_operator %in%
@@ -388,6 +388,7 @@ filter_rows_server <- function(id) {
             msg('Operator requires value of length 1')
             return()
           } else {
+            temp <- copy(get_act_dt(session))
             temp <- filter_rows(temp,
                                 input$one_var_sel,
                                 input$one_var_operator,
@@ -407,6 +408,7 @@ filter_rows_server <- function(id) {
 
           # filter events for 2 variables -------------------------------------
         } else if (input$filter_type == 'two') {
+          temp <- copy(get_act_dt(session))
           if (!isTruthy(input$two_var_sel1) || !isTruthy(input$two_var_sel2)) {
             msg_error('Choose 2 variables')
             return()
@@ -433,6 +435,7 @@ filter_rows_server <- function(id) {
               msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
               return()
             } else {
+              temp <- copy(get_act_dt(session))
               temp <- temp[sample(1:nrow_df_active(),
                                   input$n_rows,
                                   replace = input$x_sample_replace), ]
@@ -441,6 +444,7 @@ filter_rows_server <- function(id) {
             }
 
           } else if (input$sample_type == 'percent') {
+            temp <- copy(get_act_dt(session))
             temp <- temp[sample(
               1:nrow_df_active(),
               input$sample_size / 100 * nrow_df_active(),
@@ -478,7 +482,7 @@ filter_rows_server <- function(id) {
             e1 <- safe_env(allowed_operations)
 
             # run code --------------------------------------------------------
-
+            temp <- copy(get_act_dt(session))
             e1$temp <- copy(temp)
             e1$parsed_code <- parsed_code
 
@@ -515,6 +519,7 @@ filter_rows_server <- function(id) {
           }
 
           # apply filter -----
+          temp <- copy(get_act_dt(session))
           temp <- filter_rows(
             temp,
             input$dt_1_var_sel,

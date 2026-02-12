@@ -151,7 +151,7 @@ exploratory_server <- function(id, output_report) {
     })
 
     var_analysis <- reactive({
-      session$userData$dt$act_meta() |> filter(perc_nas != 1) |>  pull(var)
+      session$userData$dt$act_meta()[perc_nas != 1, var]
     })
 
     output$ui_var_names <- renderUI(
@@ -171,8 +171,8 @@ exploratory_server <- function(id, output_report) {
     outliers_index <- reactive({
       v <- df$df_active[[input$sel_vars]]
       if(input$outliers & is.numeric(v)) {
-        q1 <- p25(v)
-        q3 <- p75(v)
+        q1 <- fquantile(v, 0.25)
+        q3 <- fquantile(v, 0.75)
         dist_interquatile <- q3 - q1
         v >= (q1 - 1.5 * dist_interquatile) & v <= (q3 + 1.5 * dist_interquatile)
       } else {
@@ -194,7 +194,7 @@ exploratory_server <- function(id, output_report) {
     var_percentile <- reactive(
       if(isTruthy(input$var_percentile) && is.numeric(var()) &&
          between(input$var_percentile, 0, 100)){
-        pn(var(), input$var_percentile / 100)
+        fquantile(var(), input$var_percentile / 100)
       } else { NA }
     )
 
@@ -224,19 +224,20 @@ exploratory_server <- function(id, output_report) {
             need(!is.complex(var2()), 'Variable 2 can not be complex')
           )
 
-          spada_plot(type = 'boxplot_group',
-                     df = data.frame(x = {
-                       if (var2() |> is.numeric())
-                         as.factor(var2())
-                       else
-                         var2()
-                     }, y = var()),
-                     xvar = 'x',
-                     yvar = 'y',
-                     fill_color = session$userData$conf$plot_fill_color,
-                     line_color = session$userData$conf$plot_line_color,
-                     vertical_line = var_percentile(),
-                     sample_limit = session$userData$conf$plot_limit
+          spada_plot(
+            type = 'boxplot_group',
+            df = data.frame(x = {
+              if (var2() |> is.numeric())
+                as.factor(var2())
+              else
+                var2()
+            }, y = var()),
+            xvar = 'x',
+            yvar = 'y',
+            fill_color = session$userData$conf$plot_fill_color,
+            line_color = session$userData$conf$plot_line_color,
+            vertical_line = var_percentile(),
+            sample_limit = session$userData$conf$plot_limit
           )
 
         } else {
@@ -574,7 +575,7 @@ exploratory_server <- function(id, output_report) {
     stats_correlation <- reactive(
       if(is.numeric(var()) && is.numeric(var2()) && stats_sd() != 0 &&
          !is.na(stats_sd())){
-        sd_var2 <- sd(var2(), na.rm = T)
+        sd_var2 <- fsd(var2(), na.rm = T)
         if(sd_var2 == 0 || sd_var2 |> is.na()) {
           NA
         } else {

@@ -335,8 +335,6 @@ test_that("Test filter rows - two variables - bigger", {
   })
 })
 
-
-
 # test filter rows - sample ---------------------------------------------------
 test_that("Test filter rows - sample - nrows", {
   testServer(filter_rows_server, {

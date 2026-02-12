@@ -1253,7 +1253,7 @@ desc_stats <- function(df = NULL,
       \(x) {if(x |> is.numeric() ||
                x |> is.character() ||
                x |> is.factor()){
-        x_mode <- Mode(x, na.rm = T) |> f_num(dig = fmt_digits)
+        x_mode <- fmode(x, na.rm = T) |> f_num(dig = fmt_digits)
         if(is.na(x_mode) |> all()) NA else paste(x_mode, collapse = ' | ')
       } else { NA }
       })
@@ -1283,7 +1283,7 @@ desc_stats <- function(df = NULL,
       df,
       \(x) {
         if(x |> is.numeric()){
-          paste('[', range(x) |> f_num(dig = fmt_digits) , ']', collapse = '--->')
+          paste('[', frange(x, na.rm = T) |> f_num(dig = fmt_digits) , ']', collapse = '--->')
         } else { NA }
       }
     )

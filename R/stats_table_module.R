@@ -23,22 +23,59 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    stats_obs <- reactive(length(var1()))
-    stats_n_nas <- reactive(whichNA(var1()) |> NROW())
-    stats_min <- reactive(if(is.numeric(var1())) fmin(var1(), na.rm = T) else NA)
-    stats_q1 <- reactive(if(is.numeric(var1())) fquantile(var1(), 0.25) else NA)
-    stats_median <- reactive(if(is.numeric(var1())) fmedian(var1(), na.rm = T) else NA)
-    stats_mean <- reactive(if(is.numeric(var1())) fmean(var1(), na.rm = T) else NA)
-    stats_mode <- reactive(
-      if(var1() |> is.numeric() ||
-         var1() |> is.character() ||
-         var1() |> is.factor()) Mode(var1(), na.rm = T) else NA
-      )
-    stats_q3 <- reactive(if(is.numeric(var1())) fquantile(var1(), 0.75) else NA)
-    stats_max <- reactive(if(is.numeric(var1())) fmax(var1(), na.rm = T) else NA)
+    stats_obs <- reactive({
+      req(var1())
+      length(var1())
+    })
+
+    stats_n_nas <- reactive({
+      req(var1())
+      whichNA(var1()) |> NROW()
+    })
+
+    stats_min <- reactive({
+      req(var1())
+      if(is.numeric(var1())) fmin(var1(), na.rm = T) else NA
+    })
+
+    stats_q1 <- reactive({
+      req(var1())
+      if(is.numeric(var1())) fquantile(var1(), 0.25) else NA
+    })
+
+    stats_median <- reactive({
+      req(var1())
+      if(is.numeric(var1())) fmedian(var1(), na.rm = T) else NA
+    })
+
+    stats_mean <- reactive({
+      req(var1())
+      if(is.numeric(var1())) fmean(var1(), na.rm = T) else NA
+    })
+
+    stats_mode <- reactive({
+      req(var1())
+      if(var1() |> is.numeric() || var1() |> is.character() ||
+          var1() |> is.factor()){
+        fmode(var1(), na.rm = T)
+      } else {
+        NA
+      }
+    })
+
+    stats_q3 <- reactive({
+      req(var1())
+      if(is.numeric(var1())) fquantile(var1(), 0.75) else NA
+    })
+
+    stats_max <- reactive({
+      req(var1())
+      if(is.numeric(var1())) fmax(var1(), na.rm = T) else NA
+    })
 
     # table -------------------------------------------------------------------
     stats_table <- reactive({
+      req(var1(), input_percentile())
 
       fmt_digits <- min(max(0, input$table_digits), 9)
 
@@ -62,7 +99,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           stats_q1() |> f_num(dig = fmt_digits),
           stats_median() |> f_num(dig = fmt_digits),
           stats_mean() |> f_num(dig = fmt_digits),
-          if(stats_mode() |> is.na() |> all()) NA else paste(
+          if(stats_mode() |> allNA()) NA else paste(
             stats_mode()|> f_num(dig = fmt_digits), collapse = ' | '),
           stats_q3() |> f_num(dig = fmt_digits),
           stats_max() |> f_num(dig = fmt_digits),
@@ -75,6 +112,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
 
     # format tabe -------------------------------------------------------------
     stats_table_fmt <- reactive({
+      req(stats_table())
       stats_table() |>
         gt() |>
         sub_missing(missing_text = '-') |>
@@ -86,6 +124,7 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
 
     # render table ------------------------------------------------------------
     output$gt_stats <- render_gt({
+      req(stats_table_fmt())
       validate(
         need(
           isTruthy(input_percentile()) &&

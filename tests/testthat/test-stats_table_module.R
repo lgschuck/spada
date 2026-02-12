@@ -30,7 +30,7 @@ test_that('stats table server - test calculations', {
       expect_equal(stats_q1(), p25(v1))
       expect_equal(stats_median(), median(v1, na.rm = T))
       expect_equal(stats_mean(), mean(v1, na.rm = T))
-      expect_equal(stats_mode(), Mode(v1, na.rm = T))
+      expect_equal(stats_mode(), fmode(v1, na.rm = T))
       expect_equal(stats_q3(), p75(v1))
       expect_equal(stats_max(), mana(v1))
   })
