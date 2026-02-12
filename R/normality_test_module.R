@@ -179,21 +179,13 @@ normality_test_server <- function(id) {
     }) |> bindEvent(input$btn_hist)
 
     # insert histogram to output ----------------------------------------------
-    mod_insert_output_hist <- insert_output_server(
+    insert_output_server(
       'norm_insert_output_hist',
       reactive(
         plotTag(norm_hist(), '', width = 1000, height = 500)
-      )
+      ),
+      'Histogram'
     )
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_hist$output_element())
-      req(mod_insert_output_hist$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_hist$output_element()$id]] <- mod_insert_output_hist$output_element()
-
-    }) |> bindEvent(mod_insert_output_hist$output_element())
 
     # qq plot -----------------------------------------------------------------
     output$qq_plot <- renderPlot({
@@ -217,24 +209,16 @@ normality_test_server <- function(id) {
     }) |> bindEvent(input$btn_qq)
 
     # insert to output --------------------------------------------------------
-    mod_insert_output_qq <- insert_output_server(
+    insert_output_server(
       'norm_insert_output_qq',
-      reactive(plotTag(norm_qq_plot(), '', width = 1000, height = 500))
+      reactive(plotTag(norm_qq_plot(), '', width = 1000, height = 500)),
+      'QQ Plot'
     )
 
     output$conditional_add_output_qq <- renderUI({
       req(norm_qq_plot())
       insert_output_ui(ns('norm_insert_output_qq'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_qq$output_element())
-      req(mod_insert_output_qq$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_qq$output_element()$id]] <- mod_insert_output_qq$output_element()
-
-    }) |> bindEvent(mod_insert_output_qq$output_element())
 
     # ks test -----------------------------------------------------------------
     ks_results <- reactive({
@@ -327,24 +311,16 @@ normality_test_server <- function(id) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output_ks <- insert_output_server(
+    insert_output_server(
       'norm_insert_output_ks',
-      reactive(ks_results_gt())
+      reactive(ks_results_gt()),
+      'Kolmogorov-Smirnov Normality Test'
     )
 
     output$conditional_add_output_ks <- renderUI({
       req(ks_results_gt())
       insert_output_ui(ns('norm_insert_output_ks'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_ks$output_element())
-      req(mod_insert_output_ks$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_ks$output_element()$id]] <- mod_insert_output_ks$output_element()
-
-    }) |> bindEvent(mod_insert_output_ks$output_element())
 
     # help ks function --------------------------------------------------------
     observe({
@@ -423,23 +399,16 @@ normality_test_server <- function(id) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output_sw <- insert_output_server(
+    insert_output_server(
       'norm_insert_output_sw',
-      reactive(sw_results_gt())
+      reactive(sw_results_gt()),
+      'Shapiro-Wilk Normality Test'
     )
 
     output$conditional_add_output_sw <- renderUI({
       req(sw_results_gt())
       insert_output_ui(ns('norm_insert_output_sw'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_sw$output_element())
-      req(mod_insert_output_sw$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_sw$output_element()$id]] <- mod_insert_output_sw$output_element()
-    }) |> bindEvent(mod_insert_output_sw$output_element())
 
     # help file of shapiro.test
     observe({
@@ -519,24 +488,16 @@ normality_test_server <- function(id) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output_sf <- insert_output_server(
+    insert_output_server(
       'norm_insert_output_sf',
-      reactive(sf_results_gt())
+      reactive(sf_results_gt()),
+      'Shapiro-Francia Normality Test'
     )
 
     output$conditional_add_output_sf <- renderUI({
       req(sf_results_gt())
       insert_output_ui(ns('norm_insert_output_sf'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_sf$output_element())
-      req(mod_insert_output_sf$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_sf$output_element()$id]] <- mod_insert_output_sf$output_element()
-
-    }) |> bindEvent(mod_insert_output_sf$output_element())
 
     # help file of ShapiroFranciaTest
     observe({

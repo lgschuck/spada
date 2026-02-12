@@ -118,21 +118,11 @@ descriptive_stats_server <- function(id) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output <- insert_output_server('desc_stats_insert_output', gt_stats)
+    insert_output_server('desc_stats_insert_output', gt_stats, 'Descriptive Statistics')
 
     output$conditional_add_output <- renderUI({
       req(gt_stats())
       insert_output_ui(ns('desc_stats_insert_output'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output$output_element())
-      req(mod_insert_output$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output$output_element()$id]] <- mod_insert_output$output_element()
-
-    }) |> bindEvent(mod_insert_output$output_element())
-
   })
 }

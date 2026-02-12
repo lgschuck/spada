@@ -57,19 +57,11 @@ metadata_server <- function(id) {
     })
 
     # insert to output module -------------------------------------------------
-    mod_insert_output <- insert_output_server(
+    insert_output_server(
       'metadata_insert_output',
-      reactive(act_meta_gt() |> tab_options(table.width = pct(90)))
+      reactive(act_meta_gt() |> tab_options(table.width = pct(90))),
+      'Metadata'
     )
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output$output_element())
-      req(mod_insert_output$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output$output_element()$id]] <- mod_insert_output$output_element()
-
-    }) |> bindEvent(mod_insert_output$output_element())
 
   })
 }

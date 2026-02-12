@@ -197,29 +197,21 @@ z_test_server <- function(id) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_insert_output <- insert_output_server(
+    insert_output_server(
       'ztest_insert_output',
       reactive(
         gen_table2(
           plotTag(ztest_plot()(), '', width = 1000, height = 500),
           ztest_results_gt()
         )
-      )
+      ),
+      'Z Test'
     )
 
     output$conditional_add_output <- renderUI({
       req(ztest_results_gt())
       insert_output_ui(ns('ztest_insert_output'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output$output_element())
-      req(mod_insert_output$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output$output_element()$id]] <- mod_insert_output$output_element()
-
-    }) |> bindEvent(mod_insert_output$output_element())
 
     # test plot ---------------------------------------------------------------
     output$conditional_plot <- renderUI({
@@ -308,21 +300,13 @@ z_test_server <- function(id) {
     }) |> bindEvent(input$btn_hist)
 
     # insert histogram to output ----------------------------------------------
-    mod_insert_output_hist <- insert_output_server(
+    insert_output_server(
       'ztest_insert_output_hist',
       reactive(
         plotTag(ztest_hist(), '', width = 1000, height = 500)
-      )
+      ),
+      'Histogram'
     )
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_hist$output_element())
-      req(mod_insert_output$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_hist$output_element()$id]] <- mod_insert_output_hist$output_element()
-
-    }) |> bindEvent(mod_insert_output_hist$output_element())
 
   })
 }

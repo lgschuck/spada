@@ -601,89 +601,38 @@ exploratory_server <- function(id, output_report) {
     })
 
     # insert dist plot to output ----------------------------------------------
-    mod_output_dist_plot <- insert_output_server(
+    insert_output_server(
       'insert_dist_plot',
-      reactive(plotTag(dist_plot(), '', width = 1000, height = 500)))
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_dist_plot$output_element())
-      req(mod_output_dist_plot$output_element()$id)
-
-      session$userData$out$elements[[mod_output_dist_plot$output_element()$id]] <- mod_output_dist_plot$output_element()
-
-    }) |> bindEvent(mod_output_dist_plot$output_element())
+      reactive(plotTag(dist_plot(), '', width = 1000, height = 500)),
+      'Exploratory Plot'
+    )
 
     # insert scatter to output ------------------------------------------------
-    mod_output_scatter <- insert_output_server(
+    insert_output_server(
       'insert_scatter',
-      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)))
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_scatter$output_element())
-      req(mod_output_scatter$output_element()$id)
-
-      session$userData$out$elements[[mod_output_scatter$output_element()$id]] <- mod_output_scatter$output_element()
-
-    }) |> bindEvent(mod_output_scatter$output_element())
+      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)),
+      'Scatter Plot'
+    )
 
     # insert lm model output --------------------------------------------------
-    mod_output_lm_model_output <- insert_output_server(
+    insert_output_server(
       'insert_lm_model_output',
-      reactive(gen_table2(lm_var_table(), lm_metrics()))
+      reactive(gen_table2(lm_var_table(), lm_metrics())),
+      'Linear Model'
     )
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_lm_model_output$output_element())
-      req(mod_output_lm_model_output$output_element()$id)
-
-      session$userData$out$elements[[mod_output_lm_model_output$output_element()$id]] <- mod_output_lm_model_output$output_element()
-
-    }) |> bindEvent(mod_output_lm_model_output$output_element())
 
     # insert lm residual plot to output ---------------------------------------
-    mod_output_lm_resid_plot <- insert_output_server(
+    insert_output_server(
       'insert_lm_resid_plot',
-      reactive(plotTag(lm_resid_plot(), '', width = 1000, height = 500)))
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_lm_resid_plot$output_element())
-      req(mod_output_lm_resid_plot$output_element()$id)
-
-      session$userData$out$elements[[mod_output_lm_resid_plot$output_element()$id]] <- mod_output_lm_resid_plot$output_element()
-
-    }) |> bindEvent(mod_output_lm_resid_plot$output_element())
-
-    # insert stats table ------------------------------------------------------
-    mod_output_stats_table <- insert_output_server(
-      'insert_stats_table', stats_table)
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_stats_table$output_element())
-      req(mod_output_stats_table$output_element()$id)
-
-      session$userData$out$elements[[mod_output_stats_table$output_element()$id]] <- mod_output_stats_table$output_element()
-
-    }) |> bindEvent(mod_output_stats_table$output_element())
-
-    # insert table of values to output ----------------------------------------
-    mod_output_table_values <- insert_output_server(
-      'insert_table_values',
-      table_values_gt
+      reactive(plotTag(lm_resid_plot(), '', width = 1000, height = 500)),
+      'Linear Model - Residuals Plot'
     )
 
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_table_values$output_element())
-      req(mod_output_table_values$output_element()$id)
+    # insert stats table ------------------------------------------------------
+    insert_output_server('insert_stats_table', stats_table, 'Stats Table')
 
-      session$userData$out$elements[[mod_output_table_values$output_element()$id]] <- mod_output_table_values$output_element()
-
-    }) |> bindEvent(mod_output_table_values$output_element())
+    # insert table of values to output ----------------------------------------
+    insert_output_server('insert_table_values', table_values_gt, 'Table')
 
   })
 }

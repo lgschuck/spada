@@ -135,24 +135,16 @@ lm_server <- function(id) {
     }) |> bindEvent(input$btn_help_lm)
 
     # insert model to output --------------------------------------------------
-    mod_insert_output_model <- insert_output_server(
+    insert_output_server(
       'lm_insert_output',
-      reactive(gen_table2(lm_var_table(), lm_metrics()))
+      reactive(gen_table2(lm_var_table(), lm_metrics())),
+      'Linear Model'
     )
 
     output$conditional_add_output <- renderUI({
       req(linear_model$model)
       insert_output_ui(ns('lm_insert_output'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output_model$output_element())
-      req(mod_insert_output_model$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output_model$output_element()$id]] <- mod_insert_output_model$output_element()
-
-    }) |> bindEvent(mod_insert_output_model$output_element())
 
     # save model object -------------------------------------------------------
     output$conditional_save_model <- renderUI({

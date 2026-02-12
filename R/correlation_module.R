@@ -156,21 +156,12 @@ correlation_server <- function(id) {
     })
 
     # insert to output --------------------------------------------------------
-    mod_output_gt <- insert_output_server('insert_gt', cor_results_gt)
+    insert_output_server('insert_gt', cor_results_gt, 'Correlation Test')
 
     output$cond_add_output <- renderUI({
       req(cor_results_gt())
       insert_output_ui(ns('insert_gt'))
     })
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_gt$output_element())
-      req(mod_output_gt$output_element()$id)
-
-      session$userData$out$elements[[mod_output_gt$output_element()$id]] <- mod_output_gt$output_element()
-
-    }) |> bindEvent(mod_output_gt$output_element())
 
     # staticards --------------------------------------------------------------
     cor_staticards <- reactive({
@@ -222,18 +213,11 @@ correlation_server <- function(id) {
     }, res = 96)
 
     # insert scatter to output --------------------------------------------------------
-    mod_output_scatter <- insert_output_server(
+    insert_output_server(
       'insert_scatter',
-      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)))
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_output_scatter$output_element())
-      req(mod_output_scatter$output_element()$id)
-
-      session$userData$out$elements[[mod_output_scatter$output_element()$id]] <- mod_output_scatter$output_element()
-
-    }) |> bindEvent(mod_output_scatter$output_element())
+      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)),
+      'Scatter Plot'
+    )
 
     # help events -------------------------------------------------------------
     observe({

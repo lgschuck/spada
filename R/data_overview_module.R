@@ -100,19 +100,11 @@ data_overview_server <- function(id) {
     })
 
     # insert to output module -------------------------------------------------
-    mod_insert_output <- insert_output_server(
+    insert_output_server(
       'data_overview_insert_output',
-      reactive(data_gt() |> tab_options(table.width = pct(90)))
+      reactive(data_gt() |> tab_options(table.width = pct(90))),
+      'Data Overview'
     )
-
-    # get return from insert output module ------------------------------------
-    observe({
-      req(mod_insert_output$output_element())
-      req(mod_insert_output$output_element()$id)
-
-      session$userData$out$elements[[mod_insert_output$output_element()$id]] <- mod_insert_output$output_element()
-
-    }) |> bindEvent(mod_insert_output$output_element())
 
   })
 }

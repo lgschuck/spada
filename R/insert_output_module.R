@@ -7,7 +7,7 @@ insert_output_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-insert_output_server <- function(id, input_element) {
+insert_output_server <- function(id, input_element, element_title = 'Title') {
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
@@ -39,7 +39,7 @@ insert_output_server <- function(id, input_element) {
                 'Inserting an extensive data.frame in the Output may cause performance degradation'
               )
             },
-            textInput(ns('output_title'), 'Title', value = 'Title'),
+            textInput(ns('output_title'), 'Title', value = element_title),
             textAreaInput(
               ns('output_annot'),
               'Annotation',
@@ -78,22 +78,16 @@ insert_output_server <- function(id, input_element) {
         output_card(report_card(input$output_title, input$output_annot, input_element(),
                                 id = output_id()))
 
+        # insert element in the output
+        session$userData$out$elements[[output_id()]] <- list(
+          'id' = output_id(),
+          'title' = output_title(),
+          'card' = output_card()
+        )
         msg('Added to output', DURATION = 1)
       }
 
     }) |> bindEvent(input$btn_confirm_add_output)
 
-    # return
-    return(
-      list(
-        output_element = reactive({
-          list(
-              'id' = output_id(),
-              'title' = output_title(),
-              'card' = output_card()
-          )
-        })
-      )
-    )
   })
 }
