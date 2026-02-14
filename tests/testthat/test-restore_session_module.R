@@ -41,7 +41,8 @@ output_for_test <- list({
   list(
     'id' = id,
     'title' = 'Spada Output',
-    'card' = report_card(id = id)
+    'card' = report_card(title = 'Test Card', content = h2('Test content')),
+    'btn' = actionButton('id', '')
   )
 })
 
@@ -60,7 +61,13 @@ test_that('Test restore session load data and output ', {
 
     expect_equal(session$userData$dt$dt |> names(), c('df1', 'df2'))
     expect_equal(session$userData$dt$dt, dfs)
-    expect_equal(session$userData$out$elements, output_for_test)
+    expect_equal(session$userData$out$elements[[1]]$title,
+                 output_for_test[[1]]$title)
+    expect_equal(session$userData$out$elements[[1]]$card,
+                 output_for_test[[1]]$card)
+    expect_equal(session$userData$out$elements[[1]]$btn |> class(),
+                 output_for_test[[1]]$btn |> class())
+    expect_s3_class(session$userData$out$elements[[1]]$btn, 'shiny.tag')
   })
 })
 

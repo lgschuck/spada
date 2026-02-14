@@ -72,17 +72,29 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
         removeModal()
 
         output_id(gen_element_id())
-
         output_title(input$output_title)
 
-        output_card(report_card(input$output_title, input$output_annot, input_element(),
-                                id = output_id()))
+        btn <- actionButton(
+          ns(paste0('btn_xout_', output_id())),
+          '',
+          icon('x'),
+          class = 'micro-btn-cancel'
+        )
+
+        output_card(report_card(input$output_title, input$output_annot, input_element()))
+
+        observe({
+
+          session$userData$out$elements[[paste(output_id())]] <- NULL
+
+        }) |> bindEvent(input[[paste0('btn_xout_', output_id())]], once = T)
 
         # insert element in the output
         session$userData$out$elements[[output_id()]] <- list(
           'id' = output_id(),
           'title' = output_title(),
-          'card' = output_card()
+          'card' = output_card(),
+          'btn' = btn
         )
         msg('Added to output', DURATION = 1)
       }

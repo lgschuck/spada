@@ -103,6 +103,21 @@ theme_basic_rules <- as_sass(
         font-weight: 400;
       }
 
+      .micro-btn-cancel {
+        width: 18px !important;
+        height: 18px !important;
+        padding: 0 !important;
+        font-size: 0.65rem !important;
+        border: none !important;
+        background: transparent !important;
+      }
+
+      .micro-btn-cancel:hover {
+        background-color: $secondary !important;
+        border-color: $secondary !important;
+        color: white !important;
+      }
+
       .card, .well {
        --bs-card-inner-border-radius: 0;
       }

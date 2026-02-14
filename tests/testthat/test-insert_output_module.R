@@ -17,6 +17,6 @@ test_that("Test insert outuput", {
     expect_type(output_card(), 'list')
     expect_equal(output_card() |> class(), 'shiny.tag')
     expect_equal(output_card() |> length(), 3)
-    expect_equal(output_card(), report_card('Title', 'Annotation', 'Content', output_id()))
+    expect_equal(output_card(), report_card('Title', 'Annotation', 'Content'))
   })
 })

@@ -73,6 +73,28 @@ restore_session_server <- function(id) {
 	        if(!test_output_format(previous_output)){
 	          session$userData$conf$restore_output_status <- 3
 	        } else {
+	          previous_output <- lapply(previous_output, function(x) {
+
+	            id <- gen_element_id()
+	            x$id <- id
+	            btn_id <- paste0("btn_xout_", id)
+
+	            x$btn <- actionButton(
+	              ns(btn_id),
+	              '',
+	              icon('x'),
+	              class = 'micro-btn-cancel'
+	            )
+
+	            observe({
+	              session$userData$out$elements[[id]] <- NULL
+	            }) |> bindEvent(input[[btn_id]], once = TRUE)
+
+	            return(x)
+	          })
+            # rename items of list with new ids
+	          names(previous_output) <- vapply(previous_output, function(x) x$id, character(1))
+
 	          session$userData$out$elements <- previous_output
 	          session$userData$conf$restore_output_status <- 1
 	        }

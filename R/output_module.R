@@ -34,25 +34,23 @@ output_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    output_header <- reactiveVal({
-      id <- gen_element_id()
-      list(
-        'id' = id,
-        'title' = 'Spada Output',
-        'card' = report_card(id = id)
-      )
-    })
-
     # render panel ------------------------------------------------------------
     printable_output <- reactive({
       list(
-        output_header()$card,
-        lapply(session$userData$out$elements, function(x) x$card)
+        report_card(),
+        lapply(
+          session$userData$out$elements,
+          function(x){
+            printable_report_card(
+              x$btn,
+              x$card
+            )
+          }
+        )
       )
     })
 
     output$panel <- renderUI({
-      # session$userData$out$elements
       printable_output()
     })
 
@@ -96,8 +94,16 @@ output_server <- function(id) {
       },
       content = function(file) {
 
+        savable_output <- list(
+          report_card(),
+          lapply(
+            session$userData$out$elements,
+            function(x){ printable_report_card(NULL, x$card, NULL) }
+          )
+        )
+
         doc <- tags$html(
-          output_export_css, tags$body(printable_output())
+          output_export_css, tags$body(savable_output)
         )
 
         save_html(doc, file)
@@ -164,6 +170,29 @@ output_server <- function(id) {
         temp_output <- qs_read(paste0(session$userData$conf$data_dir, '/output.qs2'))
 
         if(test_output_format(temp_output)){
+
+          temp_output <- lapply(temp_output, function(x) {
+
+            id <- gen_element_id()
+            x$id <- id
+            btn_id <- paste0("btn_xout_", id)
+
+            x$btn <- actionButton(
+              ns(btn_id),
+              '',
+              icon('x'),
+              class = 'micro-btn-cancel'
+            )
+
+            observe({
+              session$userData$out$elements[[id]] <- NULL
+            }) |> bindEvent(input[[btn_id]], once = TRUE)
+
+            return(x)
+          })
+          # rename items of list with new ids
+          names(temp_output) <- vapply(temp_output, function(x) x$id, character(1))
+
           session$userData$out$elements <- temp_output
           msg(paste('Output imported from', session$userData$conf$data_dir), 2.5)
         } else {

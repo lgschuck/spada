@@ -18,7 +18,7 @@ test_that('Test import RDS', {
 
     session$setInputs(btn_import = 1)
 
-    expect_equal(data$data, iris)
+    expect_null(data$data)
     expect_equal(session$userData$dt$dt[['df_test']], iris |> as.data.table())
   })
 })
@@ -47,7 +47,8 @@ test_that('Test import Sav - all lines', {
       as.data.table()
     data_temp_test[ , names(.SD) := lapply(.SD, as_factor), .SDcols = is.labelled]
 
-    expect_equal(data$data, data_temp_test)
+    expect_null(data$data)
+    expect_equal(session$userData$dt$dt[[input$dataset_name]], data_temp_test)
   })
 })
 
@@ -75,7 +76,8 @@ test_that('Test import Sav - 10 lines', {
       as.data.table()
     data_temp_test[ , names(.SD) := lapply(.SD, as_factor), .SDcols = is.labelled]
 
-    expect_equal(data$data, data_temp_test)
+    expect_null(data$data)
+    expect_equal(session$userData$dt$dt[[input$dataset_name]], data_temp_test)
   })
 })
 
@@ -110,7 +112,8 @@ test_that('Test import all lines - csv standard', {
         skip = 0,
         header = TRUE)
 
-    expect_equal(data$data, data_temp)
+    expect_null(data$data)
+    expect_equal(session$userData$dt$dt[[input$dataset_name]], data_temp)
   })
 })
 
@@ -144,7 +147,8 @@ test_that('Test import all lines - csv 2 standard', {
       skip = 0,
       header = TRUE)
 
-    expect_equal(data$data, data_temp)
+    expect_null(data$data)
+    expect_equal(session$userData$dt$dt[[input$dataset_name]], data_temp)
   })
 })
 

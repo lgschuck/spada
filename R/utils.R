@@ -514,15 +514,30 @@ gen_table2 <- function(element1, element2) {
 
 # card to insert in output ----------------------------------------------------
 report_card <- function(title = 'Spada - Output', annotation = NULL,
-                        content = NULL, id = NULL){
+                        content = NULL){
   div(
-    div(
-      style = paste0("border: 2px solid", main_color,
-                     "; border-radius: 8px; padding: 16px; box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);"),
-      h2(title, style = paste0("font-size: 1.5rem; margin-bottom: 12px; color:",
-                               main_color ,";")),
+      h2(title,
+         style = paste0(
+           " font-size: 1.5rem;",
+           " margin-bottom: 12px;",
+           " color:", main_color ,";",
+           " text-align: center;"
+           )
+        ),
       p(annotation),
       content
+  )
+}
+
+printable_report_card <- function(btns, card, id = NULL){
+  div(
+    style = paste0(
+      "border: 2px solid", main_color, "; border-radius: 4px; ",
+      "padding: 16px; margin-bottom: 8px; "
+    ),
+    div(style = "display: flex; width: 100%;",
+        div(card, style = "width: 98%;"),
+        div(btns, style = 'width: 2%; text-align: right;')
     ),
     br(),
     p(id)
@@ -1034,7 +1049,7 @@ test_output_format <- function(output){
      # all names of inside lists must match
      all(
        sapply(output, \(x) {
-         all(names(x) %in% c('id', 'title', 'card'))
+         all(names(x) %in% c('id', 'title', 'card', 'btn'))
        })
      ) &&
     # test class of each element in the inside lists
