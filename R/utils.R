@@ -1441,7 +1441,7 @@ spada_plot <- function(
       stat_boxplot(geom = 'errorbar', width = 0.3) +
       geom_boxplot(orientation = 'x') +
       geom_hline(yintercept = vertical_line,
-                 color = plot_line_color) +
+                 color = line_color) +
       coord_flip() +
       labs(x = xlab, y = ylab) +
       theme_classic() +

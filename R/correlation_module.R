@@ -72,11 +72,12 @@ correlation_server <- function(id) {
 	  df <- reactive(get_act_dt(session))
 
     # outupt objects ----------------------------------------------------------
-	  output_list <- reactiveValues(elements = NULL)
-
     cor_test <- reactiveValues(results = NULL)
 
-    df_active <- reactive(df()[, lapply(df(), is.numeric) == T, with = F])
+    df_active <- reactive({
+      req(df())
+      df()[, lapply(df(), is.numeric) == T, with = F]
+    })
 
     var_analysis <- reactive({
       df_names <- df_active() |> names()
@@ -189,23 +190,49 @@ correlation_server <- function(id) {
     })
 
     # scatter plot ------------------------------------------------------------
-    scatter_plot <- reactive({
-      req(input$sel_var1)
-      req(input$sel_var2)
+    task_scatter <- ExtendedTask$new(
+      function(
+        spada_plot_fun,
+        df,
+        sel_var1,
+        sel_var2,
+        plot_fill_color,
+        plot_limit){
+          mirai({
+            spada_plot_fun(
+              type = 'scatter',
+              df = df,
+              xvar = sel_var1,
+              yvar = sel_var2,
+              xlab = sel_var1,
+              ylab = sel_var2,
+              fill_color = plot_fill_color,
+              point_shape = if(plot_limit > 1e4 && nrow(df) > 1e4) '.' else 20,
+              sample_limit = plot_limit
+            )},
+            spada_plot_fun = spada_plot_fun,
+            df = df,
+            sel_var1 = sel_var1,
+            sel_var2 = sel_var2,
+            plot_fill_color = plot_fill_color,
+            plot_limit = plot_limit
+          )
+      }
+    ) |> bind_task_button('btn_scatter')
 
-      spada_plot(
-        type = 'scatter',
+    observe({
+      req(input$sel_var1, input$sel_var2, df_active())
+      task_scatter$invoke(
+        spada_plot_fun = spada_plot,
         df = df_active(),
-        xvar = input$sel_var1,
-        yvar = input$sel_var2,
-        xlab = input$sel_var1,
-        ylab = input$sel_var2,
-        fill_color = session$userData$conf$plot_fill_color,
-        point_shape = if(session$userData$conf$plot_limit > 1e4 && nrow(df_active()) > 1e4) '.' else 20,
-        sample_limit = session$userData$conf$plot_limit
+        sel_var1 = input$sel_var1,
+        sel_var2 = input$sel_var2,
+        plot_fill_color = session$userData$conf$plot_fill_color,
+        plot_limit = session$userData$conf$plot_limit
       )
-
     }) |> bindEvent(input$btn_scatter)
+
+    scatter_plot <- reactive({ task_scatter$result() })
 
     output$scatter_plot <- renderPlot({
       req(scatter_plot())

@@ -3,6 +3,8 @@
 spada_server <- function(datasets, conf){
   function(input, output, session) {
 
+    onStop(function() daemons(0))
+
     session$onFlushed(function() {
       waiter_hide()
     })

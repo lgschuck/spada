@@ -188,6 +188,12 @@ test_that('test correlation - scatter plot', {
       btn_scatter = 1
     )
 
+    # wait for the extended_task
+    while (task_scatter$status() == 'running') {
+      session$flushReact()
+    }
+
+    expect_equal(task_scatter$status(), 'success')
     expect_s3_class(scatter_plot(), c('gg', 'ggplot'))
 
   })
