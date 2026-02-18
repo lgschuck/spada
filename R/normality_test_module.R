@@ -158,25 +158,59 @@ normality_test_server <- function(id) {
       norm_hist()
     }, res = 96)
 
-    norm_hist <- reactive({
-      req(df_active())
-      req(input$sel_var)
-      req(var())
+    task_hist <- ExtendedTask$new(function(spada_plot_fun,
+                                           df,
+                                           title,
+                                           bins,
+                                           plot_fill_color,
+                                           plot_line_color,
+                                           sample_limit,
+                                           mean_value,
+                                           sd_value) {
+      mirai({
+        spada_plot_fun(
+          type = 'hist_density',
+          df = df,
+          xvar = 'x',
+          xlab = 'Values',
+          ylab = 'Density',
+          title = title,
+          bins = bins,
+          fill_color = plot_fill_color,
+          line_color = plot_line_color,
+          point_shape = if (sample_limit > 1e4 && nrow(df) > 1e4) '.' else 20,
+          sample_limit = sample_limit,
+          mean_value = mean_value,
+          sd_value = sd_value
+        )
+      },
+      spada_plot_fun = spada_plot_fun,
+      df = df,
+      title = title,
+      bins = bins,
+      plot_fill_color = plot_fill_color,
+      plot_line_color = plot_line_color,
+      sample_limit = sample_limit,
+      mean_value = mean_value,
+      sd_value = sd_value)
+    }) |> bind_task_button('btn_hist')
 
-      spada_plot(type = 'hist_density',
-                 df = data.frame(x = var()),
-                 xvar = 'x',
-                 xlab = 'Values',
-                 ylab = 'Density',
-                 title = paste('Histogram -', input$sel_var),
-                 bins = input$bins,
-                 fill_color = session$userData$conf$plot_fill_color,
-                 line_color = session$userData$conf$plot_line_color,
-                 sample_limit = session$userData$conf$plot_limit,
-                 mean_value = fmean(var(), na.rm = TRUE),
-                 sd_value = fsd(var(), na.rm = TRUE)
+    observe({
+      req(input$sel_var, var())
+      task_hist$invoke(
+        spada_plot_fun = spada_plot,
+        df = data.frame(x = var()),
+        bins = input$bins,
+        title = paste('Histogram -', input$sel_var),
+        plot_fill_color = session$userData$conf$plot_fill_color,
+        plot_line_color = session$userData$conf$plot_line_color,
+        sample_limit = session$userData$conf$plot_limit,
+        mean_value = fmean(var(), na.rm = TRUE),
+        sd_value = fsd(var(), na.rm = TRUE)
       )
     }) |> bindEvent(input$btn_hist)
+
+    norm_hist <- reactive({ task_hist$result() })
 
     # insert histogram to output ----------------------------------------------
     insert_output_server(
@@ -192,21 +226,46 @@ normality_test_server <- function(id) {
       norm_qq_plot()
     }, res = 96)
 
-    norm_qq_plot <- reactive({
-      req(input$sel_var)
-      req(var())
+    task_qq <- ExtendedTask$new(function(spada_plot_fun,
+                                         df,
+                                         title,
+                                         plot_fill_color,
+                                         plot_line_color,
+                                         sample_limit) {
+      mirai({
+        spada_plot_fun(
+          type = 'qq_plot',
+          df = df,
+          xvar = 'x',
+          xlab = 'Theoretical Quantiles',
+          ylab = 'Sample Quantiles',
+          title = title,
+          fill_color = plot_fill_color,
+          line_color = plot_line_color,
+          sample_limit = sample_limit
+        )
+      },
+      spada_plot_fun = spada_plot_fun,
+      df = df,
+      title = title,
+      plot_fill_color = plot_fill_color,
+      plot_line_color = plot_line_color,
+      sample_limit = sample_limit)
+    }) |> bind_task_button('btn_qq')
 
-      spada_plot(type = 'qq_plot',
-                 df = data.frame(x = var()),
-                 xvar = 'x',
-                 xlab = 'Theoretical Quantiles',
-                 ylab = 'Sample Quantiles',
-                 title = paste('Normal QQ Plot:', input$sel_var),
-                 fill_color = session$userData$conf$plot_fill_color,
-                 line_color = session$userData$conf$plot_line_color,
-                 sample_limit = session$userData$conf$plot_limit
+    observe({
+      req(input$sel_var, var())
+      task_qq$invoke(
+        spada_plot_fun = spada_plot,
+        df = data.frame(x = var()),
+        title = paste('Normal QQ Plot:', input$sel_var),
+        plot_fill_color = session$userData$conf$plot_fill_color,
+        plot_line_color = session$userData$conf$plot_line_color,
+        sample_limit = session$userData$conf$plot_limit
       )
     }) |> bindEvent(input$btn_qq)
+
+    norm_qq_plot <- reactive({ task_qq$result() })
 
     # insert to output --------------------------------------------------------
     insert_output_server(

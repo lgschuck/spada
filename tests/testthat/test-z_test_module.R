@@ -111,6 +111,13 @@ test_that('Z Test module - histogram', {
       btn_hist = 1
     )
 
+    # wait for the extended_task histogram
+    while (task_hist$status() == 'running') {
+      session$flushReact()
+    }
+
+    expect_equal(task_hist$status(), 'success')
     expect_s3_class(ztest_hist(), c('gg', 'ggplot'))
   })
 })
+

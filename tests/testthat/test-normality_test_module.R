@@ -33,7 +33,7 @@ test_that('Normality Test module - variable selection', {
 })
 
 # test normality test - test plots --------------------------------------------
-test_that('Z Test module - test plots', {
+test_that('Normality Test module - test plots', {
   testServer(normality_test_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -64,7 +64,20 @@ test_that('Z Test module - test plots', {
       btn_hist = 1
     )
 
+    # wait for the extended_task histogram
+    while (task_hist$status() == 'running') {
+      session$flushReact()
+    }
+
+    expect_equal(task_hist$status(), 'success')
     expect_s3_class(norm_hist(), c('gg', 'ggplot'))
+
+    # wait for the extended_task qq plot
+    while (task_qq$status() == 'running') {
+      session$flushReact()
+    }
+
+    expect_equal(task_qq$status(), 'success')
     expect_s3_class(norm_qq_plot(), c('gg', 'ggplot'))
   })
 })
