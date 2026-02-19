@@ -570,7 +570,7 @@ exploratory_server <- function(id, output_report) {
     }, res = 96)
 
     # metrics -----------------------------------------------------------------
-    stats_sd <- reactive(if(is.numeric(var())) sd(var(), na.rm = T) else NA)
+    stats_sd <- reactive(if(is.numeric(var())) fsd(var(), na.rm = T) else NA)
 
     stats_correlation <- reactive(
       if(is.numeric(var()) && is.numeric(var2()) && stats_sd() != 0 &&
@@ -587,7 +587,7 @@ exploratory_server <- function(id, output_report) {
     mod_stats_table <- stats_table_server(
       'pA_stats',
       var,
-      var2,
+      reactive(input$sel_vars),
       reactive(input$var_percentile),
       var_percentile,
       stats_sd,

@@ -18,70 +18,61 @@ stats_table_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-stats_table_server <- function(id, var1, var2, input_percentile, percentile,
+stats_table_server <- function(id, var1, var1_name, input_percentile, percentile,
                                var1_sd, pearson_correlation) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    stats_obs <- reactive({
-      req(var1())
-      length(var1())
+    task_stats <- ExtendedTask$new(function(x, x_name) {
+      mirai({
+        list(
+          var_name = x_name,
+
+          n = length(x),
+
+          n_nas = collapse::whichNA(x) |> NROW(),
+
+          min = if (is.numeric(x)) collapse::fmin(x, na.rm = TRUE) else NA,
+
+          q1 = if (is.numeric(x)) collapse::fquantile(x, 0.25) else NA,
+
+          median = if (is.numeric(x)) collapse::fmedian(x, na.rm = TRUE) else NA,
+
+          mean = if (is.numeric(x)) collapse::fmean(x, na.rm = TRUE) else NA,
+
+          mode = if (is.numeric(x) || is.character(x) || is.factor(x)) {
+            collapse::fmode(x, na.rm = TRUE)
+          } else {
+            NA
+          },
+
+          q3 = if (is.numeric(x)) collapse::fquantile(x, 0.75) else NA,
+
+          max = if (is.numeric(x)) collapse::fmax(x, na.rm = TRUE) else NA
+        )
+
+      }, x = x, x_name = x_name)
     })
 
-    stats_n_nas <- reactive({
-      req(var1())
-      whichNA(var1()) |> NROW()
-    })
+    observe({
+      req(var1(), var1_name())
+      task_stats$invoke(var1(), var1_name())
+    }) |> bindEvent(var1())
 
-    stats_min <- reactive({
-      req(var1())
-      if(is.numeric(var1())) fmin(var1(), na.rm = T) else NA
-    })
-
-    stats_q1 <- reactive({
-      req(var1())
-      if(is.numeric(var1())) fquantile(var1(), 0.25) else NA
-    })
-
-    stats_median <- reactive({
-      req(var1())
-      if(is.numeric(var1())) fmedian(var1(), na.rm = T) else NA
-    })
-
-    stats_mean <- reactive({
-      req(var1())
-      if(is.numeric(var1())) fmean(var1(), na.rm = T) else NA
-    })
-
-    stats_mode <- reactive({
-      req(var1())
-      if(var1() |> is.numeric() || var1() |> is.character() ||
-          var1() |> is.factor()){
-        fmode(var1(), na.rm = T)
-      } else {
-        NA
-      }
-    })
-
-    stats_q3 <- reactive({
-      req(var1())
-      if(is.numeric(var1())) fquantile(var1(), 0.75) else NA
-    })
-
-    stats_max <- reactive({
-      req(var1())
-      if(is.numeric(var1())) fmax(var1(), na.rm = T) else NA
+    stats_result <- reactive({
+      task_stats$result()
     })
 
     # table -------------------------------------------------------------------
     stats_table <- reactive({
-      req(var1(), input_percentile())
+      req(stats_result(), input_percentile())
 
       fmt_digits <- min(max(0, input$table_digits), 9)
 
       data.frame(
         measure = c(
-          paste("% NA's (", stats_n_nas(), '/', stats_obs(), ')'),
+          'Variable',
+          paste("% NA's (", stats_result()$n_nas, '/', stats_result()$n, ')'),
           'Minimum',
           'Percentile 25',
           'Median',
@@ -94,15 +85,16 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
           'Pearson Correlation'
         ),
         value = c(
-          (stats_n_nas() / stats_obs() * 100) |> f_num(dig = fmt_digits),
-          stats_min() |> f_num(dig = fmt_digits),
-          stats_q1() |> f_num(dig = fmt_digits),
-          stats_median() |> f_num(dig = fmt_digits),
-          stats_mean() |> f_num(dig = fmt_digits),
-          if(stats_mode() |> allNA()) NA else paste(
-            stats_mode()|> f_num(dig = fmt_digits), collapse = ' | '),
-          stats_q3() |> f_num(dig = fmt_digits),
-          stats_max() |> f_num(dig = fmt_digits),
+          stats_result()$var_name,
+          (stats_result()$n_nas / stats_result()$n * 100) |> f_num(dig = fmt_digits),
+          stats_result()$min |> f_num(dig = fmt_digits),
+          stats_result()$q1 |> f_num(dig = fmt_digits),
+          stats_result()$median |> f_num(dig = fmt_digits),
+          stats_result()$mean |> f_num(dig = fmt_digits),
+          if(stats_result()$mode |> allNA()) NA else paste(
+            stats_result()$mode|> f_num(dig = fmt_digits), collapse = ' | '),
+          stats_result()$q3 |> f_num(dig = fmt_digits),
+          stats_result()$max |> f_num(dig = fmt_digits),
           percentile() |> f_num(dig = fmt_digits),
           var1_sd() |> f_num(dig = fmt_digits),
           pearson_correlation() |> f_num(dig = fmt_digits)
@@ -113,8 +105,11 @@ stats_table_server <- function(id, var1, var2, input_percentile, percentile,
     # format tabe -------------------------------------------------------------
     stats_table_fmt <- reactive({
       req(stats_table())
-      stats_table() |>
+
+      var_name <- stats_table()[1, 2]
+      stats_table()[-1, ] |>
         gt() |>
+        tab_header(var_name) |>
         sub_missing(missing_text = '-') |>
         sub_values(values = 'NA', replacement = '-') |>
         cols_label(measure = 'Measure', value = 'Value') |>

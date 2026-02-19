@@ -12,10 +12,6 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
 
     ns <- session$ns
 
-    output_card <- reactiveVal(NULL)
-    output_id <- reactiveVal(NULL)
-    output_title <- reactiveVal(NULL)
-
     is_large_data_frame <- reactive({
       if('gt_tbl' %in% (input_element() |> class()) &&
          'data.frame' %in% (input_element()$`_data` |> class()) &&
@@ -71,29 +67,29 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
       } else {
         removeModal()
 
-        output_id(gen_element_id())
-        output_title(input$output_title)
+        id <- gen_element_id()
+        btn_id <- paste0('btn_xout_', id)
 
         btn <- actionButton(
-          ns(paste0('btn_xout_', output_id())),
+          ns(btn_id),
           '',
           icon('x'),
           class = 'micro-btn-cancel'
         )
 
-        output_card(report_card(input$output_title, input$output_annot, input_element()))
+        output_card <- report_card(input$output_title, input$output_annot, input_element())
 
         observe({
 
-          session$userData$out$elements[[paste(output_id())]] <- NULL
+          session$userData$out$elements[[id]] <- NULL
 
-        }) |> bindEvent(input[[paste0('btn_xout_', output_id())]], once = T)
+        }) |> bindEvent(input[[btn_id]], once = T)
 
         # insert element in the output
-        session$userData$out$elements[[output_id()]] <- list(
-          'id' = output_id(),
-          'title' = output_title(),
-          'card' = output_card(),
+        session$userData$out$elements[[id]] <- list(
+          'id' = id,
+          'title' = input$output_title,
+          'card' = output_card,
           'btn' = btn
         )
         msg('Added to output', DURATION = 1)
