@@ -2,18 +2,21 @@
 # ui --------------------------------------------------------------------------
 stats_table_ui <- function(id) {
   ns <- NS(id)
-  card(
-    card_body(gt_output(ns('gt_stats'))),
-    card_footer(
-      layout_columns(
-        col_widths = c(6, 6),
-        numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
-        div(style = "margin-top: 28px !important;",
-            save_gt_ui(ns('pA_stats_table_save_gt'))
-        )
-      ),
-      div(style = "margin-bottom: -18px !important;")
-    )
+  tagList(
+    card(
+      card_body(gt_output(ns('gt_stats'))),
+      card_footer(
+        layout_columns(
+          col_widths = c(6, 6),
+          numericInput(ns('table_digits'), 'Digits', 2, 0, 9, 1),
+          div(style = "margin-top: 28px !important;",
+              save_gt_ui(ns('pA_stats_table_save_gt'))
+          )
+        ),
+        div(style = "margin-bottom: -18px !important;")
+      )
+    ),
+    card_footer(insert_output_ui(ns('insert_stats_table')))
   )
 }
 
@@ -141,7 +144,8 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
 
     save_gt_server('pA_stats_table_save_gt', stats_table_fmt)
 
-    # return values -----------------------------------------------------------
-    return(list(table = stats_table_fmt))
+    # insert stats table ------------------------------------------------------
+    insert_output_server('insert_stats_table', stats_table_fmt, 'Stats Table')
+
   })
 }

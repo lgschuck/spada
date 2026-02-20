@@ -15,9 +15,12 @@ exploratory_ui <- function(id) {
                     uiOutput(ns('ui_var_names')),
                     uiOutput(ns('ui_var_names2'))),
           nav_panel('Filters',
-                    checkboxInput(ns('outliers'),
-                                  list('Remove Outliers', bs_icon('info-circle')) |>
-                                    ttip('Only for numeric vars'))
+                    checkboxInput(
+                      ns('outliers'),
+                      list('Remove Outliers',
+                      bs_icon('info-circle')) |>
+                        ttip('Only for numeric vars')
+                    )
           )
         ),
         navset_card_pill(
@@ -64,34 +67,7 @@ exploratory_ui <- function(id) {
               div(style = "margin-bottom: -18px !important;"),
             )
           ),
-          nav_panel(
-            'Table',
-            full_screen = T,
-            card_body(
-              fluidRow(
-                column(4,
-                  radioGroupButtons(
-                    ns('table_var'),
-                    'Table variables:',
-                    c('1 Variable' = '1v', '2 Variables' = '2v'),
-                    size = 'sm',
-                    individual = T
-                  )
-                ),
-                column(4,
-                  radioGroupButtons(
-                    ns('table_type'),
-                    'Table type:',
-                    c('Absolute Values' = 'abs_table', 'Percent Values' = 'perc_table'),
-                    size = 'sm',
-                    individual = T
-                  )
-                ),
-              ),
-              gt_output(ns('table')),
-            ),
-            card_footer(insert_output_ui(ns('insert_table_values')))
-          ),
+          nav_panel('Table', full_screen = T, table_values_ui(ns('table_values'))),
           nav_panel(
             'Linear Model',
             full_screen = T,
@@ -115,13 +91,26 @@ exploratory_ui <- function(id) {
                 plotOutput(ns('lm_resid_plot')),
                 card_footer(
                   layout_column_wrap(
-                    radioGroupButtons(ns('radio_lm_resid'), 'Plot type:',
-                                 c('Histogram' = 'hist', 'Boxplot' = 'boxplot',
-                                   'Dots' = 'dots'), size = 'sm', individual = T),
-                    btn_task(ns('btn_lm_resid'), 'Plot residuals', icon('chart-simple'),
-                             style = 'margin-top: 28px'),
-                    div(insert_output_ui(ns('insert_lm_resid_plot')),
-                        style = 'margin-top: 28px')
+                    radioGroupButtons(
+                      ns('radio_lm_resid'),
+                      'Plot type:',
+                      c(
+                        'Histogram' = 'hist',
+                        'Boxplot' = 'boxplot',
+                        'Dots' = 'dots'
+                      ),
+                      size = 'sm',
+                      individual = T
+                    ),
+                    btn_task(
+                      ns('btn_lm_resid'),
+                      'Plot residuals',
+                      icon('chart-simple'),
+                      style = 'margin-top: 28px'
+                    ),
+                    div(insert_output_ui(ns(
+                      'insert_lm_resid_plot'
+                    )), style = 'margin-top: 28px')
                   ),
                   div(style = "margin-bottom: -24px !important;"),
                 )
@@ -130,9 +119,7 @@ exploratory_ui <- function(id) {
           ),
         ),
         navset_card_pill(
-          nav_panel('Stats', full_screen = T, stats_table_ui(ns('pA_stats')),
-                    card_footer(insert_output_ui(ns('insert_stats_table')))
-          )
+          nav_panel('Stats', full_screen = T, stats_table_ui(ns('pA_stats')))
         )
       )
     )
@@ -284,7 +271,8 @@ exploratory_server <- function(id, output_report) {
                        fill_color = session$userData$conf$plot_fill_color,
                        line_color = session$userData$conf$plot_line_color,
                        vertical_line = var_percentile(),
-                       point_shape = if(session$userData$conf$plot_limit > 1e4 && length(var()) > 1e4) '.' else 20,
+                       point_shape = if(session$userData$conf$plot_limit > 1e4 &&
+                                        length(var()) > 1e4) '.' else 20,
                        sample_limit = session$userData$conf$plot_limit
             )
           }
@@ -319,7 +307,8 @@ exploratory_server <- function(id, output_report) {
                  },
                  fill_color = session$userData$conf$plot_fill_color,
                  title_color = session$userData$conf$plot_title_color,
-                 point_shape = if(session$userData$conf$plot_limit > 1e4 && length(var()) > 1e4) '.' else 20,
+                 point_shape = if(session$userData$conf$plot_limit > 1e4 &&
+                                  length(var()) > 1e4) '.' else 20,
                  sample_limit = session$userData$conf$plot_limit
         )
         # insert model line
@@ -345,89 +334,11 @@ exploratory_server <- function(id, output_report) {
     }, res = 96)
 
     # tables ------------------------------------------------------------------
-    table_values <- reactive({
-      req(var())
-
-      if(input$table_var == '1v') {
-
-        validate(need(is.character(var()) || is.factor(var()) || is.logical(var()),
-                      'Var must be character, factor or logical'))
-
-        if(input$table_type == 'abs_table'){
-          tab1 <- var() |> table()
-        } else if(input$table_type == 'perc_table'){
-          tab1 <- var() |> table() |> prop.table() * 100
-        }
-
-        tab1 |> as.data.frame()
-
-      } else if (input$table_var == '2v'){
-        req(var())
-        req(var2())
-
-        validate(need(
-          input$sel_vars != input$sel_vars2 &
-          (is.character(var()) || is.factor(var()) || is.logical(var())) &
-            (is.character(var2()) || is.factor(var2()) || is.logical(var2())),
-          'Select two diferent variables of type character, factor or logical'))
-
-        if(input$table_type == 'abs_table'){
-          tab1 <- table(var(), var2())
-        } else if(input$table_type == 'perc_table'){
-          tab1 <- table(var(), var2()) |> prop.table() * 100
-        }
-
-        tab1 <- tab1 |> as.data.frame.matrix()
-
-        cbind(var1 = rownames(tab1), tab1)
-      }
-    })
-
-    table_values_gt <- reactive({
-      req(table_values())
-      req(input$table_var, input$sel_vars, input$sel_vars2)
-
-      if(input$table_var == '1v') {
-
-        if(input$table_type == 'abs_table'){
-          y_label <- 'Frequency'
-        } else if(input$table_type == 'perc_table'){
-          y_label <- 'Relative Frequency (%)'
-        }
-
-        table_values() |>
-          gt() |>
-          cols_label(
-            Var1 = input$sel_vars,
-            Freq = y_label
-          )
-      } else if (input$table_var == '2v'){
-
-        if(input$table_type == 'abs_table'){
-          y_label <- input$sel_vars2
-        } else if(input$table_type == 'perc_table'){
-          y_label <- paste(input$sel_vars2, '(%)')
-        }
-
-        table_values() |>
-          gt() |>
-            cols_label(var1 = "") |>
-            tab_spanner(
-              label = input$sel_vars,
-              columns = var1
-            ) |>
-            tab_spanner(
-              label = y_label,
-              columns = names(table_values())[2:length(names(table_values()))]
-            )
-      }
-    })
-
-    output$table <- render_gt({
-      req(table_values_gt())
-      table_values_gt() |>
-        opt_interactive()
-    })
+    table_values_server('table_values',
+                        var,
+                        var2,
+                        reactive(input$sel_vars),
+                        reactive(input$sel_vars2))
 
     # linear model ------------------------------------------------------------
     linear_model <- reactiveValues(
@@ -594,12 +505,6 @@ exploratory_server <- function(id, output_report) {
       stats_correlation
     )
 
-    # get return from stats table ---------------------------------------------
-    stats_table <- reactive({
-      req(mod_stats_table$table())
-      mod_stats_table$table()
-    })
-
     # insert dist plot to output ----------------------------------------------
     insert_output_server(
       'insert_dist_plot',
@@ -627,12 +532,6 @@ exploratory_server <- function(id, output_report) {
       reactive(plotTag(lm_resid_plot(), '', width = 1000, height = 500)),
       'Linear Model - Residuals Plot'
     )
-
-    # insert stats table ------------------------------------------------------
-    insert_output_server('insert_stats_table', stats_table, 'Stats Table')
-
-    # insert table of values to output ----------------------------------------
-    insert_output_server('insert_table_values', table_values_gt, 'Table')
 
   })
 }
