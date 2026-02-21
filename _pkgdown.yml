@@ -1,2 +1,27 @@
 template:
   bootstrap: 5
+
+destination: docs
+
+navbar:
+  structure:
+    left:  [home, get_started, reference, news]
+    right: [github]
+
+  components:
+
+    get_started:
+      text: Get started
+      href: articles/spada.html
+
+    news:
+      text: Changelog
+      menu:
+        - text: Changelog
+          href: news/index.html
+        - text: Version 0.1.0
+          href: articles/news_0.1.0.html
+
+    github:
+      icon: fab fa-github
+      href: https://github.com/lgschuck/spada
