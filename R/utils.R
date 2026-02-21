@@ -821,7 +821,7 @@ make_valid_cols <- function(x){
 
 # is data frame ---------------------------------------------------------------
 is_spada_df <- function(df){
-  is.data.frame(df) && all(sapply(df, is.atomic))
+  is.data.frame(df) && all(sapply(df, is.atomic)) && ncol(df) > 0 && nrow(df) > 0
 }
 
 # show startup function -------------------------------------------------------

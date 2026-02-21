@@ -12,8 +12,15 @@ exploratory_ui <- function(id) {
         navset_card_pill(
           full_screen = T,
           nav_panel('Parameters',
-                    uiOutput(ns('ui_var_names')),
-                    uiOutput(ns('ui_var_names2'))),
+                    selectInput(ns('sel_vars'),
+                                list('Main Variable', bs_icon('info-circle')) |>
+                                  ttip('Dependent Variable'),
+                                choices = NULL),
+                    selectInput(ns('sel_vars2'),
+                                list('Variable 2', bs_icon('info-circle')) |>
+                                  ttip('Independent Variable'),
+                                choices = NULL)
+                    ),
           nav_panel('Filters',
                     checkboxInput(
                       ns('outliers'),
@@ -141,20 +148,27 @@ exploratory_server <- function(id, output_report) {
       session$userData$dt$act_meta()[perc_nas != 1, var]
     })
 
-    output$ui_var_names <- renderUI(
-      selectInput(ns('sel_vars'),
-                  list('Main Variable', bs_icon('info-circle')) |>
-                    ttip('Dependent Variable'),
-                    var_analysis())
-    )
+    observe({
+      vars <- var_analysis()
+      req(vars)
 
-    output$ui_var_names2 <- renderUI(
-      selectInput(ns('sel_vars2'),
-                  list('Variable 2', bs_icon('info-circle')) |>
-                         ttip('Independent Variable'),
-                  var_analysis(), var_analysis()[2])
-    )
+      updateSelectInput(
+        session,
+        "sel_vars",
+        choices = vars,
+        selected = vars[1]
+      )
 
+      updateSelectInput(
+        session,
+        "sel_vars2",
+        choices = vars,
+        selected = vars[2]
+      )
+    })
+
+
+    # outlier filter ----------------------------------------------------------
     outliers_index <- reactive({
       v <- df$df_active[[input$sel_vars]]
       if(input$outliers & is.numeric(v)) {

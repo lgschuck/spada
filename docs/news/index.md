@@ -39,6 +39,23 @@ z_test (histogram) modules
 7 - New **table_values module** and new insert_output module call in
 stats_table module
 
+8 - **Exploratory module**: change renderUI foi updateSelectInput
+
+9 - **Export file module**: change if else for switch in the file name
+to export
+
+10 - **is_spada_df function**: now test for ncol \> 0
+
+11 - **Spada.R**: now uses is_spada_df in test for valid datasets and
+improved tests
+
+12 - **Filter rows module**: removed unnecessarily msg_erros
+
+#### Bug fixes
+
+1 - **Filter rows module**: Filter rows module: zero rows left
+([\#67](https://github.com/lgschuck/spada/issues/67))
+
 ## Spada 0.1.2
 
 ### 2026.02.09

@@ -83,8 +83,8 @@ spada <- function(...) {
     empty_datasets <- 0
   }
 
-  stopifnot('Objects must be data.frame and have at least 1 row each' =
-    sapply(datasets, is.data.frame) |> all() && all(sapply(datasets, nrow) > 0))
+  stopifnot('Objects must be data.frame and have at least 1 row and 1 col each' =
+              sapply(datasets, is_spada_df) |> all())
 
   # set datasets names
   if(is.null(names(datasets))){

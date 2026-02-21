@@ -65,16 +65,19 @@ export_file_server <- function(id) {
     output$down_handler <- downloadHandler(
 
       filename = function() {
-        paste0(input$file_name,
-              if(input$radio_format == 'csv'){
-                '.csv'
-              } else if (input$radio_format %in% c('qs2')){
-                '.qs2'
-              } else if (input$radio_format %in% c('RDS', 'RDS Compressed')){
-                '.RDS'
-              } else if (input$radio_format %in% c('sav')){
-                '.sav'
-              })
+        paste0(
+          input$file_name,
+          switch(
+            input$radio_format,
+            'csv' = '.csv',
+            'qs2' = '.qs2',
+            'RDS' = '.RDS',
+            'RDS Compressed' = '.RDS',
+            'sav' = '.sav',
+            ''
+          )
+        )
+
       },
       content = function(file) {
         if(input$radio_format == 'csv'){

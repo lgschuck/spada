@@ -382,7 +382,6 @@ filter_rows_server <- function(id) {
               c(na_operators, logical_operators, outlier_operators)) {
             temp <- copy(get_act_dt(session))
             temp <- filter_rows(temp, input$one_var_sel, input$one_var_operator, NULL)
-            msg('Filter rows: OK')
           } else if (value_temp$len > 1 & input$one_var_operator %in%
                      c(equal_operators, compare_operators)) {
             msg('Operator requires value of length 1')
@@ -393,7 +392,6 @@ filter_rows_server <- function(id) {
                                 input$one_var_sel,
                                 input$one_var_operator,
                                 value_temp$value_temp)
-            msg('Filter rows: OK')
           }
 
           # reset value_temp
@@ -424,7 +422,6 @@ filter_rows_server <- function(id) {
                                       input$two_var_sel1,
                                       input$two_var_sel2,
                                       input$two_var_operator)
-            msg('Filter rows: OK')
           }
 
           # filter events for sample ------------------------------------------
@@ -439,8 +436,6 @@ filter_rows_server <- function(id) {
               temp <- temp[sample(1:nrow_df_active(),
                                   input$n_rows,
                                   replace = input$x_sample_replace), ]
-
-              msg('Filter rows: OK')
             }
 
           } else if (input$sample_type == 'percent') {
@@ -450,8 +445,6 @@ filter_rows_server <- function(id) {
               input$sample_size / 100 * nrow_df_active(),
               replace = input$x_sample_replace
             ), ]
-
-            msg('Filter rows: OK')
           }
 
           # filter events for freehand ----------------------------------------
@@ -499,7 +492,6 @@ filter_rows_server <- function(id) {
             } else{
               temp <- copy(e1$temp)
               rm(e1)
-              msg('Filter rows: OK')
 
               updateTextAreaInput(session, 'txt_code_input', value = '')
             }
@@ -527,11 +519,19 @@ filter_rows_server <- function(id) {
             session$userData$dt$dt[[ input$dt_dt_sel ]][[ input$dt_2_var_sel ]] |>
               unique()
           )
-
-          msg('Filter rows: OK')
         }
 
-        update_act_dt(session, copy(temp))
+        if(!is_spada_df(temp)){
+          showModal(modalDialog(
+            'The resultant dataset must be valid (nrow and ncol > 0)',
+            title = 'Operation Aborted'
+            )
+          )
+        } else {
+          msg('Filter rows: OK')
+          update_act_dt(session, copy(temp))
+        }
+
         rm(temp)
       }
 

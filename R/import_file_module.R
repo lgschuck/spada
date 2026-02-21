@@ -103,13 +103,13 @@ import_file_server <- function(id) {
         data$data <- qs_read(input$file$datapath)
 
         if (!is_spada_df(data$data)) {
-          msg_error('Object must be data.frame')
+          msg_error('Object must be a valid dataset (nrow and ncol > 0)', 5)
           return()
         }
       } else if (ext == 'rds' && input$radio_file_ext == 'RDS'){
         data$data <- readRDS(input$file$datapath)
         if (!is_spada_df(data$data)) {
-          msg_error('Object must be data.frame')
+          msg_error('Object must be a valid dataset (nrow and ncol > 0)', 5)
           return()
         }
       } else if (ext == 'sav' && input$radio_file_ext == 'sav'){
