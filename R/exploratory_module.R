@@ -55,7 +55,7 @@ exploratory_ui <- function(id) {
                 column(3, div(insert_output_ui(ns('insert_dist_plot'))),
                     style = 'margin-top: 28px')
               ),
-              div(style = "margin-bottom: -8px !important;"),
+              div(style = 'margin-bottom: -8px !important;'),
             )
           ),
           nav_panel(
@@ -71,7 +71,7 @@ exploratory_ui <- function(id) {
                 btn_task(ns('btn_scatter'), 'Generate Plot', icon('chart-simple')),
                 insert_output_ui(ns('insert_scatter'))
               ),
-              div(style = "margin-bottom: -18px !important;"),
+              div(style = 'margin-bottom: -18px !important;'),
             )
           ),
           nav_panel('Table', full_screen = T, table_values_ui(ns('table_values'))),
@@ -119,7 +119,7 @@ exploratory_ui <- function(id) {
                       'insert_lm_resid_plot'
                     )), style = 'margin-top: 28px')
                   ),
-                  div(style = "margin-bottom: -24px !important;"),
+                  div(style = 'margin-bottom: -24px !important;'),
                 )
               ),
             )

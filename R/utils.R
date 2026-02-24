@@ -635,6 +635,22 @@ msg_error <- function(TEXT, DURATION = 2.3){
   )
 }
 
+bmsg <- function(TEXT, DURATION = 2.3){
+  bslib::show_toast(
+
+    bslib::toast(
+      TEXT,
+      header = bslib::toast_header(
+        title = TEXT,
+        status = "Spada"
+      ),
+      type = NULL,
+      duration_s = DURATION,
+      position = c('middle', 'center')
+    )
+  )
+}
+
 # try convert -----------------------------------------------------------------
 try_convert <- function(x, fun){
   tryCatch(fun(x),

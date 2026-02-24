@@ -3,30 +3,57 @@
 output_ui <- function(id) {
   ns <- NS(id)
 
-  navset_card_pill(
-    nav_panel('Output',
-      card(
-        card_body(fillable = F,
-          uiOutput(ns('panel'))
-        ),
-        card_footer(
-          layout_columns(
-            col_widths = c(2, 2),
-            actionButton(ns('btn_reset'), 'Reset', icon('rotate-right'), class = 'btn-task'),
-            downloadButton(ns('btn_save_html'), 'Save HTML', class = 'btn-task',
-                           icon = icon('download')),
-            actionButton(ns('btn_save_output_session'), 'Save Output', icon('download'),
-                         class = 'btn-task', ),
-            actionButton(ns('btn_import_output_session'), 'Import Output', icon('upload'),
-                         class = 'btn-task')
+  navset_card_pill(nav_panel('Output', card(
+    card_body(fillable = F, uiOutput(ns('panel'))),
+    card_footer(fluidRow(
+      column(1, checkboxInput(ns('x_flip'), 'Flip', T) |>
+               ttip('Flip upside down')),
+      column(
+        3,
+        radioGroupButtons(
+          ns('sel_show_output'),
+          'Show',
+          c('All' = Inf,
+            'Last 1' = 1,
+            'Last 3' = 3,
+            'Last 5' = 5,
+            'None' = -Inf
+          ),
+          selected = 1,
+          size = 'sm',
+          individual = T
+        )
+      ),
+      column(
+        8,
+        layout_columns(
+          col_widths = c(3, 3, 3, 3),
+          actionButton(ns('btn_reset'), 'Reset', icon('rotate-right'), class = 'btn-task'),
+          downloadButton(
+            ns('btn_save_html'),
+            'Save HTML',
+            class = 'btn-task',
+            icon = icon('download')
+          ),
+          actionButton(
+            ns('btn_save_output_session'),
+            'Save Output',
+            icon('download'),
+            class = 'btn-task'
+          ),
+          actionButton(
+            ns('btn_import_output_session'),
+            'Import Output',
+            icon('upload'),
+            class = 'btn-task'
           )
         )
       )
     ),
-    nav_panel('Output Meta',
-      gt_output(ns('elements_meta'))
+    div(style = 'margin-bottom: -8px !important;')
     )
-  )
+  )),
+  nav_panel('Output Meta', gt_output(ns('elements_meta'))))
 }
 
 # server ----------------------------------------------------------------------
@@ -36,22 +63,33 @@ output_server <- function(id) {
 
     # render panel ------------------------------------------------------------
     printable_output <- reactive({
-      list(
-        report_card(),
-        lapply(
-          session$userData$out$elements,
-          function(x){
-            printable_report_card(
-              x$btn,
-              x$card
+      if(session$userData$out$elements |> length() == 0){
+        list()
+      } else {
+        lapply(session$userData$out$elements, function(x) {
+          num <- which(names(session$userData$out$elements) == x$id)
+          len <- length(session$userData$out$elements)
+          div(style = 'margin-bottom: 8px;',
+            accordion(
+              open = if(num > len - as.numeric(input$sel_show_output)) T else F,
+              multiple = T,
+              accordion_panel(
+                paste(num, '-', x$title),
+                printable_report_card(x$btn, x$card)
+              )
             )
-          }
+          )
+        }
         )
-      )
+      }
     })
 
     output$panel <- renderUI({
-      printable_output()
+      if (input$x_flip) {
+        printable_output() |> rev()
+      } else {
+        printable_output()
+      }
     })
 
     # render output metadata --------------------------------------------------
