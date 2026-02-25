@@ -20,25 +20,28 @@ default_conf <- list(
 
 # math functions --------------------------------------------------------------
 math_funs <- c(
-  'Mean' = 'mean',
+  'Mean' = 'mean_na',
+  'Mean no NA' = 'mean_nona',
   'Geometric Mean' = 'Gmean',
   'Harmonic Mean' = 'Hmean',
   # 'Mode' = 'Mode',
-  'Standard Deviation' = 'sd',
-  'Variance' = 'var',
-  'Min' = 'min',
-  'Mina' = 'mina',
-  'Max' = 'max',
-  'Mana' = 'mana',
-  'First' = 'fina',
-  'Last' = 'lana',
+  'Standard Deviation' = 'fsd',
+  'Variance' = 'fvar',
+  'Min' = 'min_na',
+  'Min no NA' = 'min_nona',
+  'Max' = 'max_na',
+  'Max no NA' = 'max_nona',
+  'First' = 'first_na',
+  'First no NA' = 'first_nona',
+  'Last' = 'last_na',
+  'Last no NA' = 'last_nona',
   'Lag' = 'shift',
   # 'Range' = 'range',
   'IQR' = 'IQR',
   'Skewness' = 'Skew',
   'Kurtosis' = 'Kurt',
-  'Sum' = 'sum',
-  'Suna' = 'suna',
+  'Sum' = 'sum_na',
+  'Sum no NA' = 'sum_nona',
   'Cum Sum' = 'cumsum',
   'Prod' = 'prod',
   'Cum Prod' = 'cumprod',
@@ -69,21 +72,22 @@ math_funs <- c(
   )
 
 groupby_math_funs <- c(
-  'Mean' = 'mean',
+  'Mean' = 'mean_na',
+  'Mean no NA' = 'mean_nona',
   'Geometric Mean' = 'Gmean',
   'Harmonic Mean' = 'Hmean',
   'Standard Deviation' = 'sd',
   'Variance' = 'var',
-  'Min' = 'min',
-  'Mina' = 'mina',
-  'Max' = 'max',
-  'Mana' = 'mana',
+  'Min' = 'min_na',
+  'Min no NA' = 'min_nona',
+  'Max' = 'max_na',
+  'Max no NA' = 'max_nona',
   'First' = 'fina',
   'Last' = 'lana',
   'Skewness' = 'Skew',
   'Kurtosis' = 'Kurt',
-  'Sum' = 'sum',
-  'Suna' = 'suna',
+  'Sum' = 'sum_na',
+  'Sum no NA' = 'sum_nona',
   'Prod' = 'prod'
 )
 
@@ -119,10 +123,10 @@ date_funs <- c(
 )
 
 groupby_date_funs <- c(
-  'Min' = 'min',
-  'Mina' = 'mina',
-  'Max' = 'max',
-  'Mana' = 'mana',
+  'Min' = 'min_na',
+  'Min no NA' = 'min_nona',
+  'Max' = 'max_na',
+  'Max no NA' = 'max_nona',
   'First' = 'fina',
   'Last' = 'lana'
 )
@@ -140,19 +144,19 @@ logical_funs <- c(
   'All True' = 'all',
   'Any True' = 'any',
   'Is Logical' = 'is.logical',
-  'Number of True' = 'sum',
-  'Proportion of True' = 'mean'
+  'Number of True' = 'sum_na',
+  'Proportion of True' = 'mean_na'
 )
 
 groupby_logical_funs <- c(
-  'Min' = 'min',
-  'Mina' = 'mina',
-  'Max' = 'max',
-  'Mana' = 'mana',
+  'Min' = 'min_na',
+  'Min no NA' = 'min_nona',
+  'Max' = 'max_na',
+  'Max no NA' = 'max_nona',
   'First' = 'fina',
   'Last' = 'lana',
-  'Sum' = 'sum',
-  'Suna' = 'suna'
+  'Sum' = 'sum_na',
+  'Sum no NA' = 'sum_nona'
 )
 
 # complex functions -----------------------------------------------------------
@@ -190,8 +194,9 @@ basic_operations <- c(
   #stats package
   'quantile',
 
-  #spada package
-  'fina', 'lana', 'mana', 'mina', 'suna'
+  #spada utils functions
+  'first_na', 'first_nona', 'last_na', 'last_nona', 'max_na', 'max_nona',
+  'mean_na', 'mean_nona', 'min_na', 'min_nona', 'sum_na', 'sum_nona'
 )
 
 # dangerous operations --------------------------------------------------------
@@ -1257,7 +1262,7 @@ desc_stats <- function(df = NULL,
   if('mean' %in% central_tendency){
     desc_stats$Mean <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) fmean(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) mean_nona(x) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('gmean' %in% central_tendency){
@@ -1294,13 +1299,13 @@ desc_stats <- function(df = NULL,
   if('min' %in% dispersion){
     desc_stats$Min <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) fmin(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) min_nona(x) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('max' %in% dispersion){
     desc_stats$Max <- sapply(
       df,
-      \(x) {if(x |> is.numeric()) fmax(x, na.rm = T) |> f_num(dig = fmt_digits) else NA })
+      \(x) {if(x |> is.numeric()) max_nona(x) |> f_num(dig = fmt_digits) else NA })
   }
 
   if('IQR' %in% dispersion){
@@ -1544,6 +1549,7 @@ display_restore_status <- function(session_restore_status, btn_ok){
     size = 'l',
     easyClose = T,
     footer = div(style = 'text-align:right;', btn_ok)
+
   ))
 
 }
@@ -1575,3 +1581,216 @@ build_calls <- function(new, funs, vars){
 
   as.call(c(as.name('.'), setNames(calls, new)))
 }
+
+# math and other functions ----------------------------------------------------
+
+df_info <- function(df) {
+  stopifnot(is.data.frame(df))
+
+  if (ncol(df) == 0) {
+    return(data.table(
+      var = 'v1',
+      type = NA,
+      class = NA,
+      size = 0,
+      min = NA,
+      max = NA,
+      n_valid = NA,
+      perc_valid = NA,
+      n_unique = NA,
+      perc_unique = NA,
+      n_zero = NA,
+      perc_zero = NA,
+      n_nas = NA,
+      perc_nas = NA,
+      rows = NA,
+      cols = NA
+    ))
+  }
+
+  rows <- fnrow(df)
+  cols <- fncol(df)
+
+  res <- lapply(seq_len(cols), function(j) {
+    x <- df[[j]]
+
+    nas <- whichNA(x) |> NROW()
+    valid <- rows - nas
+    uniq <- fnunique(x)
+    zeros <- if (is.numeric(x)) NROW(x %==% 0) else 0
+    minv <- if (is.numeric(x)) fmin(x, na.rm = T) else NA
+    maxv <- if (is.numeric(x)) fmax(x, na.rm = T) else NA
+
+    list(
+      var = names(df)[j],
+      type = typeof(x),
+      class = paste(class(x), collapse = "/"),
+      size = as.numeric(object.size(x)),
+      min = minv,
+      max = maxv,
+      n_valid = valid,
+      perc_valid = valid / rows,
+      n_unique = uniq,
+      perc_unique = uniq / rows,
+      n_zero = zeros,
+      perc_zero = zeros / rows,
+      n_nas = nas,
+      perc_nas = nas / rows,
+      rows = rows,
+      cols = cols
+    )
+  })
+
+  do.call(rbind.data.frame, res) |> as.data.table()
+}
+
+f_num <- function(x, big = ',', dec = '.', thousand = 'K',
+                  million = 'M', billion = 'B', dig = 0){
+
+  if(x |> is.numeric()){
+    fcase(
+      is.infinite(x), paste(x),
+      x > 1e9,
+      paste(format(round(x/1e9, digits = dig), nsmall = dig,
+                   decimal.mark = dec, big.mark = big, scientific = F), billion),
+      x > 1e6,
+      paste(format(round(x/1e6, digits = dig), nsmall = dig,
+                   decimal.mark = dec, big.mark = big, scientific = F), million),
+      x > 1e3,
+      paste(format(round(x/1e3, digits = dig), nsmall = dig,
+                   decimal.mark = dec, big.mark = big, scientific = F), thousand),
+      default = format(round(x, dig), nsmall = dig, scientific = F)
+    )
+  } else {
+    x
+  }
+}
+
+gt_info <- function(df, df_name){
+  stopifnot(is.data.frame(df))
+
+  df <- as.data.table(df)
+  df[, f_icon := fcase(
+    class == 'integer', '1',
+    class == 'character', 'a',
+    class == 'numeric', 'calculator',
+    class %in% c('Date', 'IDate/Date', 'POSIXt', 'POSIXct', 'POSIXlt',
+                 'POSIXct/POSIXt', 'POSIXlt/POSIXt'), 'calendar',
+    class == 'factor', 'sitemap',
+    class == 'raw', 'sd-card',
+    class == 'complex', 'info',
+    class == 'logical', 'puzzle-piece')]
+
+  df_gt <- df[, `:=` (n_valid = f_num(n_valid, dig = 3),
+                      n_unique = f_num(n_unique, dig = 3),
+                      n_zero = f_num(n_zero, dig = 3),
+                      n_nas = f_num(n_nas, dig = 3))] |>
+    gt()
+
+  # if all NA do nothing
+  if(!all(df$min |> is.na())){
+    df_gt <- df_gt |>
+      data_color(columns = 'min', palette = yl_palette)
+  }
+
+  # if all NA do nothing
+  if(!all(df$max |> is.na())){
+    df_gt <- df_gt |>
+      data_color(columns = 'max', palette = pk_palette)
+  }
+
+  df_gt |>
+    tab_header(df_name) |>
+    cols_hide(columns = c('rows', 'cols')) |>
+    fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
+    fmt_bytes(columns = 'size') |>
+    data_color(columns = 'size', palette = blue_palette) |>
+    data_color(columns = 'n_valid', palette = lg_palette) |>
+    data_color(columns = 'n_unique', palette = dg_palette) |>
+    data_color(columns = 'n_zero', palette = gray_palette) |>
+    data_color(columns = 'n_nas', palette = red_palette) |>
+    fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
+    fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
+    sub_missing() |>
+    cols_move(columns = 'f_icon', after = 'var') |>
+    fmt_icon(columns = 'f_icon') |>
+    cols_label(
+      var = 'Variable',
+      type = 'Type',
+      class = 'Class',
+      size = 'Size',
+      min = 'Min',
+      max = 'Max',
+      n_valid = 'Valid',
+      n_unique = 'Unique',
+      n_zero = 'Zeros',
+      n_nas = "NA's",
+      f_icon = ''
+    ) |>
+    cols_width(f_icon ~ px(30)) |>
+    cols_merge(columns = c('class', 'f_icon'), pattern = "{2} {1}") |>
+    cols_merge(columns = c('n_valid', 'perc_valid'), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('n_unique', 'perc_unique'), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('n_zero', 'perc_zero'), pattern = "{1} / {2}") |>
+    cols_merge(columns = c('n_nas', 'perc_nas'), pattern = "{1} / {2}") |>
+    tab_options(table.background.color = '#ffffff')
+}
+
+is_date <- function(x){
+  inherits(x, c('Date', 'POSIXt', 'POSIXct', 'POSIXlt'))
+}
+
+is_valid_name <- function(x){
+  x == make.names(x)
+}
+
+# wrapper functions frm collapse package for speed -------
+first_na <- function(x){
+  ffirst(x, na.rm = F)
+}
+
+first_nona <- function(x){
+  ffirst(x, na.rm = T)
+}
+
+last_na <- function(x){
+  flast(x, na.rm = F)
+}
+
+last_nona <- function(x){
+  flast(x, na.rm = T)
+}
+
+max_na <- function(x){
+  fmax(x, na.rm = F)
+}
+
+max_nona <- function(x){
+  fmax(x, na.rm = T)
+}
+
+mean_na <- function(x){
+  fmean(x, na.rm = F)
+}
+
+mean_nona <- function(x){
+  fmean(x, na.rm = T)
+}
+
+min_na <- function(x){
+  fmin(x, na.rm = F)
+}
+
+min_nona <- function(x){
+  fmin(x, na.rm = T)
+}
+
+sum_na <- function(x){
+  fsum(x, na.rm = F)
+}
+
+sum_nona <- function(x){
+  fsum(x, na.rm = T)
+}
+
+

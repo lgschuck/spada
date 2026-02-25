@@ -19,7 +19,7 @@ test_that('Test group by - no group by var - overwrite', {
     session$setInputs(
       vars_groupby = NULL,
       vars_sel = 'mpg',
-      fun = 'min',
+      fun = 'min_na',
       txt_new_name = 'min_mpg',
       radio_overwrite = 'overwrite'
     )
@@ -61,7 +61,7 @@ test_that('Test group by - 1x1 var - overwrite', {
     session$setInputs(
       vars_groupby = 'cyl',
       vars_sel = 'mpg',
-      fun = 'min',
+      fun = 'min_na',
       txt_new_name = 'min_mpg',
       radio_overwrite = 'overwrite'
     )
@@ -93,7 +93,7 @@ test_that('Test group by - 2x1 var - overwrite', {
     session$setInputs(
       vars_groupby = c('cyl', 'am'),
       vars_sel = 'hp',
-      fun = 'max',
+      fun = 'max_na',
       txt_new_name = 'max_hp',
       radio_overwrite = 'overwrite'
     )
@@ -124,7 +124,7 @@ test_that('Test group by - 2x2 var - overwrite', {
     session$setInputs(
       vars_groupby = c('cyl', 'am'),
       vars_sel = 'hp',
-      fun = 'sum',
+      fun = 'sum_na',
       txt_new_name = 'sum_hp',
       radio_overwrite = 'overwrite'
     )
@@ -132,7 +132,7 @@ test_that('Test group by - 2x2 var - overwrite', {
 
     session$setInputs(
       vars_sel = 'mpg',
-      fun = 'mean',
+      fun = 'mean_na',
       txt_new_name = 'mean_mpg',
       radio_overwrite = 'overwrite'
     )
@@ -164,7 +164,7 @@ test_that('Test group by - 2x2 var - new dataset', {
     session$setInputs(
       vars_groupby = c('cyl', 'am'),
       vars_sel = 'hp',
-      fun = 'sum',
+      fun = 'sum_na',
       txt_new_name = 'sum_hp',
       radio_overwrite = 'new',
       txt_new_dt_name = 'new_dt'
@@ -173,7 +173,7 @@ test_that('Test group by - 2x2 var - new dataset', {
 
     session$setInputs(
       vars_sel = 'mpg',
-      fun = 'mean',
+      fun = 'mean_na',
       txt_new_name = 'mean_mpg'
     )
     session$setInputs(btn_add_var = 2)
@@ -226,7 +226,7 @@ test_that('Test group by - overwrite - metadata update', {
     session$setInputs(
       'groupby-vars_groupby' = c('cyl', 'am'),
       'groupby-vars_sel' = 'hp',
-      'groupby-fun' = 'sum',
+      'groupby-fun' = 'sum_na',
       'groupby-txt_new_name' = 'sum_hp',
       'groupby-radio_overwrite' = 'overwrite',
       'groupby-txt_new_dt_name' = 'new_dt'
@@ -235,7 +235,7 @@ test_that('Test group by - overwrite - metadata update', {
 
     session$setInputs(
       'groupby-vars_sel' = 'mpg',
-      'groupby-fun' = 'mean',
+      'groupby-fun' = 'mean_na',
       'groupby-txt_new_name'= 'mean_mpg'
     )
     session$setInputs('groupby-btn_add_var' = 2)
@@ -274,7 +274,7 @@ test_that('Test group by - 1x1 var - overwrite - remove', {
     session$setInputs(
       vars_groupby = 'cyl',
       vars_sel = 'mpg',
-      fun = 'min',
+      fun = 'min_na',
       txt_new_name = 'min_mpg',
       radio_overwrite = 'overwrite'
     )
@@ -283,13 +283,13 @@ test_that('Test group by - 1x1 var - overwrite - remove', {
 
     session$setInputs(
       vars_sel = 'hp',
-      fun = 'mean',
+      fun = 'mean_na',
       txt_new_name = 'mean_hp'
     )
     session$setInputs(btn_add_var = 2)
 
     expect_equal(group$newvars, c('min_mpg', 'mean_hp'))
-    expect_equal(group$funs, c('min', 'mean'))
+    expect_equal(group$funs, c('min_na', 'mean_na'))
     expect_equal(group$vars, c('mpg', 'hp'))
 
     session$setInputs(
@@ -298,7 +298,7 @@ test_that('Test group by - 1x1 var - overwrite - remove', {
     )
 
     expect_equal(group$newvars, 'mean_hp')
-    expect_equal(group$funs, 'mean')
+    expect_equal(group$funs, 'mean_na')
     expect_equal(group$vars, 'hp')
 
     session$setInputs(btn_groupby = 1)

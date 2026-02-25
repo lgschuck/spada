@@ -33,8 +33,7 @@ module** and the module has a **new input element_title**
 5 - **Delete elements from Output**: new button to delete elements
 
 6 - **Extended tasks**: mirai now is a dependencie, new extended tasks
-in correlation, normality_test (histogram and qq plot), stats_table and
-z_test (histogram) modules
+in several modules
 
 7 - New **table_values module** and new insert_output module call in
 stats_table module
@@ -50,6 +49,12 @@ to export
 improved tests
 
 12 - **Filter rows module**: removed unnecessarily msg_erros
+
+13 - **Output module**: new accordions, buttons to order output and
+extended task
+
+14 - **Spada exported functions**: exported functions are now internall
+(maybe could put them in a separete package)
 
 #### Bug fixes
 

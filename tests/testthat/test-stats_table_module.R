@@ -32,13 +32,13 @@ test_that('stats table server - test calculations', {
 
       expect_equal(stats_result()$n, 152)
       expect_equal(stats_result()$n_nas, 2)
-      expect_equal(stats_result()$min, mina(v1))
-      expect_equal(stats_result()$q1, p25(v1))
+      expect_equal(stats_result()$min, min_nona(v1))
+      expect_equal(stats_result()$q1, quantile(v1, 0.25, na.rm = T))
       expect_equal(stats_result()$median, median(v1, na.rm = T))
       expect_equal(stats_result()$mean, mean(v1, na.rm = T))
       expect_equal(stats_result()$mode, fmode(v1, na.rm = T))
-      expect_equal(stats_result()$q3, p75(v1))
-      expect_equal(stats_result()$max, mana(v1))
+      expect_equal(stats_result()$q3, quantile(v1, 0.75, na.rm = T))
+      expect_equal(stats_result()$max, max_nona(v1))
   })
 })
 

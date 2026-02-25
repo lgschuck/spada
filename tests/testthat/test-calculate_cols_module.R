@@ -15,7 +15,7 @@ test_that('Test calculate cols - sum numeric', {
 
     session$setInputs(
       vars_sel = 'Sepal.Width',
-      fun = 'sum',
+      fun = 'sum_na',
       txt_new_name_fun = 'new_var',
       vars_groupby_fun = NULL
       )
@@ -39,7 +39,7 @@ test_that('Test calculate cols - mean numeric - groupby', {
 
     session$setInputs(
       vars_sel = 'Sepal.Width',
-      fun = 'mean',
+      fun = 'mean_na',
       txt_new_name_fun = 'new_var',
       vars_groupby_fun = 'Species'
     )
@@ -224,3 +224,4 @@ test_that('Test calculate cols - apply fun - dangerous function', {
                  iris$Sepal.Width)
   })
 })
+

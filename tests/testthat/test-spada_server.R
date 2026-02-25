@@ -103,7 +103,7 @@ test_that('Test metadata - calculate cols', {
     session$setInputs(
       `calculate_cols-vars_sel` = 'Sepal.Length',
       `calculate_cols-txt_new_name_fun` = 'mean_Sepal.Length',
-      `calculate_cols-fun` = 'mean',
+      `calculate_cols-fun` = 'mean_na',
       `calculate_cols-btn_apply_fun` = 1
     )
 
