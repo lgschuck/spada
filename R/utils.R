@@ -359,22 +359,40 @@ waiter_screen <- tags$style(
       animation: fadeIn 1.2s ease;
     }
 
+    .waiter-overlay .screen-title-box {
+      width: 100vw;
+      padding: 40px 0;
+      border-radius: 0;
+      background: rgba(10, 16, 28, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: none;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .waiter-overlay .screen-title {
       font-size: 144px;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-weight: 450;
+      letter-spacing: 10px;
     }
 
     .waiter-overlay .screen-subtitle {
       margin-top: 10px;
       font-size: 32px;
+      font-weight: 450;
       opacity: 0.9;
+      letter-spacing: 4px;
     }
 
     .waiter-overlay .screen-subtitle2 {
-      margin-top: 5px;
-      font-size: 18px;
-      opacity: 0.9;
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: 100;
+      opacity: 0.85;
+      letter-spacing: 4px;
     }
 
     .waiter-overlay .screen-spinner {
@@ -394,6 +412,7 @@ waiter_screen <- tags$style(
       bottom: 12px;
       right: 16px;
       font-size: 16px;
+      letter-spacing: 1px;
     }
 
     @keyframes spin {
@@ -850,8 +869,10 @@ show_startup_screen <- function() {
   waiterShowOnLoad(
     html = tagList(div(
       class = 'screen-container',
-      div('Spada', class = 'screen-title'),
-      div('a Shiny Package for Data Analysis', class = 'screen-subtitle2'),
+      div(class = 'screen-title-box',
+        div('Spada', class = 'screen-title'),
+        div('a Shiny Package for Data Analysis', class = 'screen-subtitle2')
+      ),
       waiter_spinner
       ),
       waiter_right_foot
@@ -867,8 +888,10 @@ show_exit_screen <- function(save = TRUE) {
         tagList(
           div(
             class = "screen-container",
+            div(class = 'screen-title-box',
             div("Spada is saving your work", class = "screen-subtitle"),
-            div("Please do not close this window", class = "screen-subtitle2"),
+            div("Please do not close this window", class = "screen-subtitle2")
+            ),
             waiter_spinner
           ),
           waiter_right_foot
@@ -877,7 +900,9 @@ show_exit_screen <- function(save = TRUE) {
         html = tagList(
           div(
             class = "screen-container",
-            div("Closing Spada", class = "screen-subtitle"),
+            div(class = 'screen-title-box',
+              div("Closing Spada", class = "screen-subtitle")
+            ),
             waiter_spinner
           ),
           waiter_right_foot
