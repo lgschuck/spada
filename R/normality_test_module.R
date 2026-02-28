@@ -286,7 +286,7 @@ normality_test_server <- function(id) {
 
       if(anyDuplicated(var()) > 0){
         # small error to avoid ties
-        inputed_error <- reactive(abs(mina(var())/1e6))
+        inputed_error <- reactive(abs(min_nona(var())/1e6))
 
         test_value <- reactive(var() + rnorm(length(var()),
                                              mean = 0,

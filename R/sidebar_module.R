@@ -154,9 +154,11 @@ sidebar_server <- function(id, app_session) {
 
     # save session ------------------------------------------------------------
     observe({
-      save_session(session$userData$conf$data_dir,
-                   session$userData$out$elements,
+      save_data(session$userData$conf$data_dir,
                    session$userData$dt$dt)
+
+      save_output(session$userData$conf$data_dir,
+                  session$userData$out$elements)
 
       save_conf(session$userData$conf$conf_dir,
                 reactiveValuesToList(session$userData$conf))

@@ -216,11 +216,10 @@ output_server <- function(id) {
     observe({
       removeModal()
 
-      check_dir(session$userData$conf$data_dir)
-      qs_save(session$userData$out$elements,
-              paste0(session$userData$conf$data_dir, '/output.qs2'))
+      save_output(session$userData$conf$data_dir,
+                  session$userData$out$elements)
 
-      msg(paste('Output saved in', session$userData$conf$data_dir), 2.5)
+      msg('Output saved', 2.5)
     }) |> bindEvent(input$btn_confirm_save_output)
 
     # import session output ---------------------------------------------------

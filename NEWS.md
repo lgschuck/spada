@@ -52,9 +52,13 @@ editor_options:
 
 14 - **Spada exported functions**: exported functions are now internall (maybe could put them in a separete package)
 
+15 - **Waiter screen**: new css for waiter screen (startup and exit screens)
+
 ### Bug fixes
 
 1 - **Filter rows module**: Filter rows module: zero rows left  ([#67](https://github.com/lgschuck/spada/issues/67))
+
+2 - **Output module**: save output - error when do not have access  ([#68](https://github.com/lgschuck/spada/issues/68))
 
 # Spada 0.1.2
 

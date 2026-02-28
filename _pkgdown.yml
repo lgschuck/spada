@@ -20,7 +20,7 @@ navbar:
         - text: Changelog
           href: news/index.html
         - text: Version 0.1.0
-          href: articles/news_0.1.0.html
+          href: NEWS_0.1.0.html
 
     github:
       icon: fab fa-github

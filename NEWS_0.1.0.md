@@ -1,15 +1,8 @@
 ---
-title: "News - 0.1.0 Version"
-date: "2025/09/22"
-output: rmarkdown::html_vignette
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
 # Spada 0.1.0
 

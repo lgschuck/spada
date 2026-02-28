@@ -913,25 +913,30 @@ show_exit_screen <- function(save = TRUE) {
 }
 
 # save session function -------------------------------------------------------
-save_session <- function(data_dir, output, data){
+save_data <- function(data_dir, data){
 
   data_file <- file.path(data_dir, 'data.qs2')
-  out_file <- file.path(data_dir, 'output.qs2')
-
   check_dir(data_dir)
 
-  if(test_write_access(data_file)){
-    qs_save(data, data_file)
-  } else {
+  try_save <- try(qs_save(data, data_file), silent = T)
 
+  if(inherits(try_save, 'try-error')){
     tmp_file <- temp_file('data.qs2')
     qs_save(data, tmp_file)
     no_write_msg(data_file, tmp_file)
   }
+}
 
-  if(test_write_access(out_file)){
-    qs_save(output, out_file)
-  } else {
+# save output function --------------------------------------------------------
+save_output <- function(data_dir, output){
+
+  out_file <- file.path(data_dir, 'output.qs2')
+
+  check_dir(data_dir)
+
+  try_save <- try(qs_save(output, out_file), silent = T)
+
+  if(inherits(try_save, 'try-error')){
     tmp_file <- temp_file('output.qs2')
     qs_save(output, tmp_file)
     no_write_msg(out_file, tmp_file)
@@ -944,11 +949,10 @@ save_conf <- function(conf_dir, conf){
   conf_file <- file.path(conf_dir, 'conf.qs2')
   check_dir(conf_dir)
 
-  if(test_write_access(conf_file)){
-    qs_save(conf, conf_file)
-  } else {
-    tmp_file <- temp_file('conf.qs2')
+  try_save <- try(qs_save(conf, conf_file), silent = T)
 
+  if(inherits(try_save, 'try-error')){
+    tmp_file <- temp_file('conf.qs2')
     qs_save(conf, tmp_file)
     no_write_msg(conf_file, tmp_file)
   }
@@ -959,9 +963,11 @@ exit_with_save <- function(session){
 
   show_exit_screen()
   t0 <- Sys.time()
-  save_session(session$userData$conf$data_dir,
-               session$userData$out$elements,
+  save_data(session$userData$conf$data_dir,
                session$userData$dt$dt)
+
+  save_output(session$userData$conf$data_dir,
+              session$userData$out$elements)
 
   save_conf(session$userData$conf$conf_dir,
             reactiveValuesToList(session$userData$conf))
@@ -999,7 +1005,7 @@ temp_file <- function(file_name = ''){
 no_write_msg <- function(file1, file2){
   message(paste(
     Sys.time(),
-    '- Spada do not have access to write on:\n',
+    '- Spada could not write on:\n',
     file1,
     '\n Data saved in',
     file2
@@ -1817,5 +1823,3 @@ sum_na <- function(x){
 sum_nona <- function(x){
   fsum(x, na.rm = T)
 }
-
-
