@@ -64,7 +64,7 @@ spada_server <- function(datasets, conf){
     observe({
       req(session$userData$dt$dt, session$userData$data_changed() > 0)
 
-      if(is.null(session$userData$dt$updated_cols) &
+      if(is.null(session$userData$dt$updated_cols) &&
          session$userData$dt$data_changed_type == 'new_data'){
 
         # recalculate meta for all cols

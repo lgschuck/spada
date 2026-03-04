@@ -374,7 +374,7 @@ waiter_screen <- tags$style(
     }
 
     .waiter-overlay .screen-title {
-      font-size: 144px;
+      font-size: 80px;
       font-weight: 450;
       letter-spacing: 10px;
     }
@@ -579,9 +579,18 @@ gen_element_id <- function(id = 'id', time_only = FALSE){
 
 # allowed operations function -------------------------------------------------
 show_allowed_op <- function(){
-  showModal(modalDialog(title = "Allowed Operations", HTML(
-    paste(allowed_operations, collapse = "<br/>")
-  ), easyClose = TRUE))
+  showModal(
+    modalDialog(
+      title = 'Allowed Operations',
+      selectInput(
+        inputId = 'allowed_op_selected',
+        label   = 'List of operations',
+        choices = allowed_operations,
+        selected = allowed_operations[1]
+      ),
+      easyClose = TRUE
+    )
+  )
 }
 
 # safe env function -----------------------------------------------------------

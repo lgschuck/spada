@@ -6,17 +6,9 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
-## Spada 0.1.3 (in development) - 31/03/2026
+## Spada 0.1.3
 
-### Goals
-
-1 - Implement Extended Tasks in some calculations
-
-2 - Delete elements from Output
-
-3 - Bug fixes
-
-4 - Minor improvements (speed, tests, messages, …)
+### 2026.03.03
 
 #### Improvements
 

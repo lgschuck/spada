@@ -157,3 +157,30 @@ test_that('Download HTML ', {
     )
   })
 })
+
+# test printable output -------------------------------------------------------
+test_that('Test output - printable output', {
+  testServer(output_server, {
+
+    session$userData$out <- reactiveValues(elements = out_el)
+
+    session$setInputs(sel_show_output = Inf)
+
+    # wait for the extended_task
+    while (task_printable_out$status() == 'running') {
+      session$flushReact()
+    }
+
+    expect_equal(task_printable_out$status(), 'success')
+    expect_s3_class(printable_output()[[1]], c('shiny.tag'))
+
+    expect_true(
+      all(
+        sapply(
+          printable_output(),
+          \(x){ class(x) == 'shiny.tag' }
+        )
+      )
+    )
+  })
+})

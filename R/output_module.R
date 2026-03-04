@@ -69,7 +69,6 @@ output_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-
     # render panel ------------------------------------------------------------
     task_printable_out <- ExtendedTask$new(function(accordion,
                                                 accordion_panel,
@@ -79,7 +78,6 @@ output_server <- function(id) {
                                                 sel_show_output) {
 
       mirai({
-
         if (is.null(elements) || length(elements) == 0) {
           list()
         } else {
@@ -123,17 +121,22 @@ output_server <- function(id) {
           div = div,
           printable_report_card = printable_report_card,
           elements = session$userData$out$elements,
-          sel_show_output = input$sel_show_output
+          sel_show_output = as.numeric(input$sel_show_output)
         )
     }) |> bindEvent(session$userData$out$elements, input$sel_show_output)
 
-    output$panel <- renderUI({
+    printable_output <- reactive({
       req(task_printable_out$result())
+      task_printable_out$result()
+    })
+
+    output$panel <- renderUI({
+      req(printable_output())
 
       if (input$x_flip) {
-        tagList(task_printable_out$result() |> rev())
+        tagList(printable_output() |> rev())
       } else {
-        tagList(task_printable_out$result())
+        tagList(printable_output())
       }
     })
 

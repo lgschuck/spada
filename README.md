@@ -42,7 +42,7 @@ install.packages("remotes")
 remotes::install_github(
   "lgschuck/spada",
   dependencies = TRUE,
-  repos = 'https://packagemanager.posit.co/cran/2024-12-10'
+  repos = 'https://packagemanager.posit.co/cran/2026-01-30'
   )
 ```
 
@@ -56,8 +56,8 @@ ref parameter bellow for the tag name:
 remotes::install_github(
   "lgschuck/spada",
   dependencies = TRUE,
-  repos = 'https://packagemanager.posit.co/cran/2024-12-10',
-  ref = "0.1.0"
+  repos = 'https://packagemanager.posit.co/cran/2026-01-30',
+  ref = "0.1.3"
   )
 ```
 
@@ -87,7 +87,7 @@ search for diferent versions.
 
 ## Screenshots
 
-![](man/figures/spada_loading.png)
+![](man/figures/spada_loading_0.1.3.png)
 
 ### Data
 
