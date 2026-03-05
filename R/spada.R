@@ -114,13 +114,8 @@ spada <- function(...) {
   r_user_conf_dir <- normalizePath(R_user_dir('spada', 'config'), winslash = '/', mustWork = F)
   r_user_data_dir <- normalizePath(R_user_dir('spada', 'data'), winslash = '/', mustWork = F)
 
-  if(!dir.exists(r_user_conf_dir)) {
-    dir.create(r_user_conf_dir, recursive = T)
-  }
-
-  if(!dir.exists(r_user_data_dir)) {
-    dir.create(r_user_data_dir, recursive = T)
-  }
+  check_dir(r_user_conf_dir)
+  check_dir(r_user_data_dir)
 
   start_conf <- c(
     'empty_datasets' = empty_datasets,

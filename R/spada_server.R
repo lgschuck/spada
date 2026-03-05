@@ -186,6 +186,9 @@ spada_server <- function(datasets, conf){
     # select cols ----------------------------
     select_cols_server('pE_filter_sel_cols')
 
+    # join datasets --------------------------
+    join_server('pE_join')
+
     # order rows events ----------------------
     order_rows_server('pE_order_rows')
 

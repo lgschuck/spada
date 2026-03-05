@@ -219,8 +219,9 @@ output_server <- function(id) {
     observe({
       removeModal()
 
-      save_output(session$userData$conf$data_dir,
-                  session$userData$out$elements)
+      spada_save(session$userData$conf$data_dir,
+                 session$userData$out$elements,
+                 'output.qs2')
 
       msg('Output saved', 2.5)
     }) |> bindEvent(input$btn_confirm_save_output)

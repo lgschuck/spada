@@ -78,6 +78,7 @@ spada_ui <- function(conf){
                      select_cols_ui('pE_filter_sel_cols'),
                    )
                  ),
+                 nav_panel('Join', join_ui('pE_join')),
                  nav_panel(
                    'Order',
                    layout_column_wrap(

@@ -154,14 +154,18 @@ sidebar_server <- function(id, app_session) {
 
     # save session ------------------------------------------------------------
     observe({
-      save_data(session$userData$conf$data_dir,
-                   session$userData$dt$dt)
 
-      save_output(session$userData$conf$data_dir,
-                  session$userData$out$elements)
+      spada_save(session$userData$conf$data_dir,
+                 session$userData$dt$dt,
+                 'data.qs2')
 
-      save_conf(session$userData$conf$conf_dir,
-                reactiveValuesToList(session$userData$conf))
+      spada_save(session$userData$conf$data_dir,
+                 session$userData$out$elements,
+                 'output.qs2')
+
+      spada_save(session$userData$conf$conf_dir,
+                 reactiveValuesToList(session$userData$conf),
+                 'conf.qs2')
 
       show_toast(
         title = 'Session saved',

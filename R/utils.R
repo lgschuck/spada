@@ -868,9 +868,14 @@ make_valid_cols <- function(x){
   }
 }
 
-# is data frame ---------------------------------------------------------------
+# is spada data frame ---------------------------------------------------------
 is_spada_df <- function(df){
   is.data.frame(df) && all(sapply(df, is.atomic)) && ncol(df) > 0 && nrow(df) > 0
+}
+
+# is spada data table ---------------------------------------------------------
+is_spada_dt <- function(dt){
+  is_spada_df(dt) && is.data.table(dt)
 }
 
 # show startup function -------------------------------------------------------
@@ -936,34 +941,18 @@ save_data <- function(data_dir, data){
   }
 }
 
-# save output function --------------------------------------------------------
-save_output <- function(data_dir, output){
+# spada save function ---------------------------------------------------------
+spada_save <- function(dir, object, file_name){
+  out_file <- file.path(dir, file_name)
 
-  out_file <- file.path(data_dir, 'output.qs2')
+  check_dir(dir)
 
-  check_dir(data_dir)
-
-  try_save <- try(qs_save(output, out_file), silent = T)
+  try_save <- try(qs_save(object, out_file), silent = T)
 
   if(inherits(try_save, 'try-error')){
-    tmp_file <- temp_file('output.qs2')
-    qs_save(output, tmp_file)
+    tmp_file <- temp_file(file_name)
+    qs_save(object, tmp_file)
     no_write_msg(out_file, tmp_file)
-  }
-}
-
-# save conf function ----------------------------------------------------------
-save_conf <- function(conf_dir, conf){
-
-  conf_file <- file.path(conf_dir, 'conf.qs2')
-  check_dir(conf_dir)
-
-  try_save <- try(qs_save(conf, conf_file), silent = T)
-
-  if(inherits(try_save, 'try-error')){
-    tmp_file <- temp_file('conf.qs2')
-    qs_save(conf, tmp_file)
-    no_write_msg(conf_file, tmp_file)
   }
 }
 
@@ -972,14 +961,18 @@ exit_with_save <- function(session){
 
   show_exit_screen()
   t0 <- Sys.time()
-  save_data(session$userData$conf$data_dir,
-               session$userData$dt$dt)
 
-  save_output(session$userData$conf$data_dir,
-              session$userData$out$elements)
+  spada_save(session$userData$conf$data_dir,
+             session$userData$dt$dt,
+             'data.qs2')
 
-  save_conf(session$userData$conf$conf_dir,
-            reactiveValuesToList(session$userData$conf))
+  spada_save(session$userData$conf$data_dir,
+             session$userData$out$elements,
+             'output.qs2')
+
+  spada_save(session$userData$conf$conf_dir,
+             reactiveValuesToList(session$userData$conf),
+             'conf.qs2')
 
   t_diff <- Sys.time() - t0
   if(t_diff < 5) Sys.sleep(5 - t_diff)
@@ -992,8 +985,9 @@ exit_without_save <- function(session){
 
   show_exit_screen(F)
 
-  save_conf(session$userData$conf$conf_dir,
-            reactiveValuesToList(session$userData$conf))
+  spada_save(session$userData$conf$conf_dir,
+             reactiveValuesToList(session$userData$conf),
+             'conf.qs2')
 
   Sys.sleep(3)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
@@ -1620,6 +1614,55 @@ build_calls <- function(new, funs, vars){
   )
 
   as.call(c(as.name('.'), setNames(calls, new)))
+}
+
+# dt join ---------------------------------------------------------------------
+dt_join <- function(dt1, dt2, vars1, vars2,
+                     join_type = c('left', 'right', 'full')){
+
+  stopifnot(is_spada_dt(dt1))
+  stopifnot(is_spada_dt(dt2))
+  stopifnot(length(vars1) > 0)
+  stopifnot(length(vars2) > 0)
+
+  join_type <- match.arg(join_type)
+
+  types_x <- sapply(dt1[, .SD, .SDcols = vars1], obj_type)
+  types_y <- sapply(dt2[, .SD, .SDcols = vars2], obj_type)
+
+  stopifnot(!all(types_x == types_y), 'The variables types must match')
+
+  if(join_type == 'left'){
+    temp <- merge(
+      dt1,
+      dt2,
+      by.x = vars1,
+      by.y = vars2,
+      all.x = T,
+      allow.cartesian = T,
+      suffixes = c('_x', '_y')
+    )
+  } else if (join_type == 'right'){
+    temp <- merge(
+      dt1,
+      dt2,
+      by.x = vars1,
+      by.y = vars2,
+      all.y = T,
+      allow.cartesian = T,
+      suffixes = c('_x', '_y')
+    )
+  } else if(join_type == 'full'){
+    temp <- merge(
+      dt1,
+      dt2,
+      by.x = vars1,
+      by.y = vars2,
+      all = T,
+      allow.cartesian = T,
+      suffixes = c('_x', '_y')
+    )
+  }
 }
 
 # math and other functions ----------------------------------------------------
