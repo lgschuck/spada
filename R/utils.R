@@ -1618,7 +1618,7 @@ build_calls <- function(new, funs, vars){
 
 # dt join ---------------------------------------------------------------------
 dt_join <- function(dt1, dt2, vars1, vars2,
-                     join_type = c('left', 'right', 'full')){
+                     join_type = c('left', 'right', 'full', 'inner')){
 
   stopifnot(is_spada_dt(dt1))
   stopifnot(is_spada_dt(dt2))
@@ -1630,40 +1630,22 @@ dt_join <- function(dt1, dt2, vars1, vars2,
   types_x <- sapply(dt1[, .SD, .SDcols = vars1], obj_type)
   types_y <- sapply(dt2[, .SD, .SDcols = vars2], obj_type)
 
-  stopifnot(!all(types_x == types_y), 'The variables types must match')
+  stopifnot('The variables types must match' = all(types_x == types_y))
 
-  if(join_type == 'left'){
-    temp <- merge(
-      dt1,
-      dt2,
-      by.x = vars1,
-      by.y = vars2,
-      all.x = T,
-      allow.cartesian = T,
-      suffixes = c('_x', '_y')
-    )
-  } else if (join_type == 'right'){
-    temp <- merge(
-      dt1,
-      dt2,
-      by.x = vars1,
-      by.y = vars2,
-      all.y = T,
-      allow.cartesian = T,
-      suffixes = c('_x', '_y')
-    )
-  } else if(join_type == 'full'){
-    temp <- merge(
-      dt1,
-      dt2,
-      by.x = vars1,
-      by.y = vars2,
-      all = T,
-      allow.cartesian = T,
-      suffixes = c('_x', '_y')
-    )
-  }
+  temp <- merge(
+    dt1,
+    dt2,
+    by.x = vars1,
+    by.y = vars2,
+    all = join_type == 'full',
+    all.x = any(c('left', 'full') %in% join_type),
+    all.y = any(c('right', 'full') %in% join_type),
+    allow.cartesian = T,
+    suffixes = c('_x', '_y')
+  )
+  return(temp)
 }
+
 
 # math and other functions ----------------------------------------------------
 

@@ -17,7 +17,8 @@ join_ui <- function(id) {
           c(
             'Left Join' = 'left',
             'Right Join' = 'right',
-            'Full Join' = 'full'
+            'Full Join' = 'full',
+            'Inner Join' = 'inner'
             # ,
             # 'Anti Join' = 'anti',
             # 'Semi Join' = 'semi'
@@ -147,7 +148,7 @@ join_server <- function(id) {
     }) |> bindEvent(var2_names(), n_dt())
 
     # # sample to preview conversion -----------
-    preview_sample_trigger <- reactiveVal(1)
+    preview_sample_trigger <- reactiveVal(0)
     preview_sample <- reactive({
       req(input$dt2_sel)
 
@@ -194,9 +195,6 @@ join_server <- function(id) {
       dt1 <- preview_sample()[[ 's_dt1' ]]
       dt2 <- preview_sample()[[ 's_dt2' ]]
 
-      # print(names(dt1))
-      # print(names(dt2))
-
       req(vars_dt1 %in% names(dt1))
       req(vars_dt2 %in% names(dt2))
 
@@ -207,13 +205,16 @@ join_server <- function(id) {
         need(all(types_x == types_y), 'All variables type must match')
       )
 
-      dt_join(
-        dt1,
-        dt2,
-        vars_dt1,
-        vars_dt2,
-        join_type
+      temp <- try(
+        dt_join(dt1, dt2, vars_dt1, vars_dt2, join_type), silent = T
       )
+
+      validate(
+        need(!inherits(temp, 'try-error'), 'Error')
+      )
+
+      temp
+
     })
 
     # render preview gt ----------------------
@@ -234,38 +235,48 @@ join_server <- function(id) {
     # apply join --------------------------------------------------------------
     observe({
 
+      join_type <- input$join_type
+      dt1_name <- input$dt1_sel
+      dt2_name <- input$dt2_sel
+      vars_dt1 <- input$vars_sel1
+      vars_dt2 <- input$vars_sel2
+      radio <- input$radio_overwrite
+      new_dt_name <- input$txt_new_dt_name
+
       # check diferrent datasets
-      if((!isTruthy(input$dt1_sel) || !isTruthy(input$dt2_sel)) ||
-         input$dt1_sel == input$dt2_sel){
+      if((!isTruthy(dt1_name) || !isTruthy(dt2_name)) || dt1_name == dt2_name){
         msg('Select two diferent datasets')
         return()
 
       # check selected variables
-      } else if (!isTruthy(input$vars_sel1) || !isTruthy(input$vars_sel2)){
+      } else if (!isTruthy(vars_dt1) || !isTruthy(vars_dt2)){
         msg('Select variables for both datasets')
         return()
 
       # check len of selected variables
-      } else if(length(input$vars_sel1) != length(input$vars_sel2)){
+      } else if(length(vars_dt1) != length(vars_dt2)){
         msg('The number of selected variables must has the same for both datasets', 4)
         return()
 
       # check new dt name
-      } else if (input$radio_overwrite == 'new' &&
-                  (!is_valid_name(input$txt_new_dt_name) ||
-                   input$txt_new_dt_name %in% session$userData$dt_names()))
+      } else if (radio == 'new' && (!is_valid_name(new_dt_name) ||
+                                    new_dt_name %in% session$userData$dt_names()))
       {
         msg_error('New name is not valid or already in use')
         return()
 
+      # check vars in datasets
+      } else if(
+        !all(
+          vars_dt1 %in% names(session$userData$dt$dt[[ dt1_name ]]),
+          vars_dt2 %in% names(session$userData$dt$dt[[ dt2_name ]])
+        ))
+        {
+        msg_error('Select valid variables')
+        return()
+
       # passed all ui checks
       } else {
-
-        join_type <- input$join_type
-        dt1_name <- input$dt1_sel
-        dt2_name <- input$dt2_sel
-        vars_dt1 <- input$vars_sel1
-        vars_dt2 <- input$vars_sel2
 
         dt1 <- copy(session$userData$dt$dt[[ dt1_name ]])
         dt2 <- copy(session$userData$dt$dt[[ dt2_name ]])
@@ -278,15 +289,9 @@ join_server <- function(id) {
           return()
         } else {
 
-          try({
-              temp <- dt_join(
-                dt1,
-                dt2,
-                vars_dt1,
-                vars_dt2,
-                join_type
-              )
-          })
+          temp <- try(
+            dt_join(dt1, dt2, vars_dt1, vars_dt2, join_type), silent = T
+          )
 
           # return error msg
           if(inherits(temp, 'try-error')){
@@ -294,11 +299,11 @@ join_server <- function(id) {
             return()
           # apply join
           } else {
-            if(input$radio_overwrite == 'overwrite'){
+            if(radio == 'overwrite'){
               update_act_dt(session, temp)
-            } else if (input$radio_overwrite == 'new'){
-              append_dt(session, temp, input$txt_new_dt_name)
-              append_meta(session, temp |> df_info(), input$txt_new_dt_name)
+            } else if (radio == 'new'){
+              append_dt(session, temp, new_dt_name)
+              append_meta(session, temp |> df_info(), new_dt_name)
             }
             msg('Join applied')
           }

@@ -10,6 +10,14 @@ editor_options:
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+# Spada 0.1.4.9000
+
+### Improvements
+
+1 - New **spada_save** function
+
+2 - New **join module**
+
 # Spada 0.1.3
 
 ## 2026.03.03

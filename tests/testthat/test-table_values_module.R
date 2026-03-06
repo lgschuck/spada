@@ -1,6 +1,6 @@
 # tests/testthat/test-table_values_module.R
 
-# test exploratory test module - tables ---------------------------------------
+# test table values module - tables -------------------------------------------
 test_that('Tables values - 1 variable', {
   testServer(table_values_server,
              args = list(reactive(iris$Species),
