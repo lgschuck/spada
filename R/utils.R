@@ -181,6 +181,8 @@ basic_operations <- c(
   'c',
   'as.Date', 'as.POSIXct', 'as.POSIXlt',
   'ifelse',
+  # base math
+  'mean', 'median', 'sd', 'var', 'min', 'max', 'sum',
 
   # data.table package
   '%notin%', 'between', '%between%', 'fifelse', 'fcase',

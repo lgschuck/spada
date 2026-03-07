@@ -295,7 +295,7 @@ join_server <- function(id) {
 
           # return error msg
           if(inherits(temp, 'try-error')){
-            msg('Error: join aborted')
+            msg_error('Error: join aborted')
             return()
           # apply join
           } else {

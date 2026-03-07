@@ -258,24 +258,14 @@ test_that('Preview_df returns validation error', {
       join_type = 'left'
     )
 
-    expect_error(
-      preview_df(),
-      class = 'shiny.silent.error'
-    )
+    expect_error(preview_df(), class = 'shiny.silent.error')
 
   })
 })
 
-# test messages ---------------------------------------------------------------
+# test check messages ---------------------------------------------------------
 test_that('Apply join - check inputs', {
   testServer(join_server, {
-
-    session$userData$dt <- reactiveValues(
-      dt = datasets,
-      act_name = 'dt1'
-    )
-
-    session$userData$dt_names <- reactive({ names(session$userData$dt$dt) })
 
     last_msg <- NULL
 
@@ -284,13 +274,19 @@ test_that('Apply join - check inputs', {
       msg = function(text, ...) { last_msg <<- text }
     )
 
+    session$userData$dt <- reactiveValues(
+      dt = datasets,
+      act_name = 'dt1'
+    )
+
+    session$userData$dt_names <- reactive({ names(session$userData$dt$dt) })
+
     # equal datasets
     session$setInputs(
       dt1_sel = 'dt1',
       dt2_sel = 'dt1',
       btn_apply = 1
     )
-
     expect_equal(last_msg, 'Select two diferent datasets')
 
     # selected variables
@@ -299,7 +295,6 @@ test_that('Apply join - check inputs', {
       dt2_sel = 'dt2',
       btn_apply = 2
     )
-
     expect_equal(last_msg, 'Select variables for both datasets')
 
     # lenght of selected variables
@@ -308,7 +303,6 @@ test_that('Apply join - check inputs', {
       vars_sel2 = c('num'),
       btn_apply = 3
     )
-
     expect_equal(last_msg, 'The number of selected variables must has the same for both datasets')
 
     # new name not valid
@@ -319,7 +313,6 @@ test_that('Apply join - check inputs', {
       txt_new_dt_name = 123,
       btn_apply = 4
     )
-
     expect_equal(last_msg, 'New name is not valid or already in use')
 
     # new name already in use
@@ -327,7 +320,6 @@ test_that('Apply join - check inputs', {
       txt_new_dt_name = 'dt1',
       btn_apply = 5
     )
-
     expect_equal(last_msg, 'New name is not valid or already in use')
 
     # invalid vars
@@ -336,7 +328,6 @@ test_that('Apply join - check inputs', {
       txt_new_dt_name = 'new_dt',
       btn_apply = 6
     )
-
     expect_equal(last_msg, 'Select valid variables')
 
     # type of vars must match
@@ -345,7 +336,6 @@ test_that('Apply join - check inputs', {
       vars_sel2 = 'num',
       btn_apply = 7
     )
-
     expect_equal(last_msg, 'The variables types must match')
 
     # join applied
@@ -354,8 +344,17 @@ test_that('Apply join - check inputs', {
       vars_sel2 = 'char_y',
       btn_apply = 8
     )
-
     expect_equal(last_msg, 'Join applied')
+
+    # error
+    session$setInputs(
+      vars_sel1 = 'char_x',
+      vars_sel2 = 'char_y',
+      txt_new_dt_name = 'dt_error',
+      join_type = 'error',
+      btn_apply = 9
+    )
+    expect_equal(last_msg, 'Error: join aborted')
 
   })
 })

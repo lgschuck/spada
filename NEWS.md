@@ -18,6 +18,8 @@ editor_options:
 
 2 - New **join module**
 
+3 - **Tests**: test check input/messages calculate module, join module
+
 # Spada 0.1.3
 
 ## 2026.03.03
