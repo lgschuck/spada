@@ -12,7 +12,6 @@ pearson_correlation <- reactive(cor(v1, v2, method = 'p', use = 'na.or.complete'
 
 # test stats table - calculations ---------------------------------------------
 test_that('stats table server - test calculations', {
-
   testServer(
     stats_table_server,
     args = list(
@@ -44,7 +43,6 @@ test_that('stats table server - test calculations', {
 
 # test stats table - data.frame  and gt table ---------------------------------
 test_that('stats table server - test data.frame and gt table', {
-
   testServer(
     stats_table_server,
     args = list(

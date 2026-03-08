@@ -158,7 +158,7 @@ rename_cols_server <- function(id) {
           }
         }
 
-        # Validação de nomes únicos e válidos --------------------------------
+        # validate unique and valid names -------------------------------------
         if (is_valid_name(new_names) |> all()) {
 
           if(all(new_names == selected_names)){

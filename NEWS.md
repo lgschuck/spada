@@ -18,7 +18,7 @@ editor_options:
 
 2 - New **join module**
 
-3 - **Tests**: test check input/messages calculate module, join module
+3 - **Tests**: new tests in input/messages across several modules
 
 # Spada 0.1.3
 

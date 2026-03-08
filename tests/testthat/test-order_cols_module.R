@@ -1,7 +1,7 @@
 # tests/testthat/test-order_cols_module.R
 
 # test order columns - before -------------------------------------------------
-test_that("Test order one column - before all", {
+test_that('Test order one column - before all', {
   testServer(order_cols_server, {
 
     vars <- c('wt')
@@ -24,7 +24,7 @@ test_that("Test order one column - before all", {
   })
 })
 
-test_that("Test order two column - before all", {
+test_that('Test order two column - before all', {
   testServer(order_cols_server, {
 
     vars <- c('wt', 'hp')
@@ -47,7 +47,7 @@ test_that("Test order two column - before all", {
   })
 })
 
-test_that("Test order one column - before especific", {
+test_that('Test order one column - before especific', {
   testServer(order_cols_server, {
 
     vars <- c('wt')
@@ -70,7 +70,7 @@ test_that("Test order one column - before especific", {
   })
 })
 
-test_that("Test order two columns - before especific", {
+test_that('Test order two columns - before especific', {
   testServer(order_cols_server, {
 
     vars <- c('wt','mpg')
@@ -94,7 +94,7 @@ test_that("Test order two columns - before especific", {
 })
 
 # test order columns - after -------------------------------------------------
-test_that("Test order one column - after all", {
+test_that('Test order one column - after all', {
   testServer(order_cols_server, {
 
     vars <- c('wt')
@@ -117,7 +117,7 @@ test_that("Test order one column - after all", {
   })
 })
 
-test_that("Test order two columns - after all", {
+test_that('Test order two columns - after all', {
   testServer(order_cols_server, {
 
     vars <- c('wt', 'drat')
@@ -140,7 +140,7 @@ test_that("Test order two columns - after all", {
   })
 })
 
-test_that("Test order one column - after specific", {
+test_that('Test order one column - after specific', {
   testServer(order_cols_server, {
 
     vars <- c('am')
@@ -163,7 +163,7 @@ test_that("Test order one column - after specific", {
   })
 })
 
-test_that("Test order two columns - after specific", {
+test_that('Test order two columns - after specific', {
   testServer(order_cols_server, {
 
     vars <- c('am', 'carb')
@@ -185,3 +185,26 @@ test_that("Test order two columns - after specific", {
                  mtcars_reordered |> as.data.table())
   })
 })
+
+# test input check messages ---------------------------------------------------
+test_that('Test order col - chek inputs', {
+  testServer(order_cols_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      msg_error = function(text, ...) { last_msg <<- text },
+      msg = function(text, ...) { last_msg <<- text }
+    )
+
+    session$userData$dt <- reactiveValues(
+      dt = list('mtcars' = mtcars |> as.data.table()),
+      act_name = 'mtcars'
+    )
+
+    session$setInputs(vars_cols = NULL, btn_order_cols = 1)
+
+    expect_equal(last_msg, 'Choose at least one variable')
+  })
+})
+

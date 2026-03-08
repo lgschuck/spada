@@ -4,7 +4,7 @@ df_test <- iris |> as.data.table()
 df_test[150, 1:5] <- NA
 
 # test order rows - na last ---------------------------------------------------
-test_that("Test order rows - na last - one variable ascending", {
+test_that('Test order rows - na last - one variable ascending', {
   testServer(order_rows_server, {
 
     vars <- c('Species')
@@ -25,7 +25,7 @@ test_that("Test order rows - na last - one variable ascending", {
   })
 })
 
-test_that("Test order rows - na last - one variable descending", {
+test_that('Test order rows - na last - one variable descending', {
   testServer(order_rows_server, {
 
     vars <- c('Species')
@@ -46,7 +46,7 @@ test_that("Test order rows - na last - one variable descending", {
   })
 })
 
-test_that("Test order rows - na last - two variables ascending", {
+test_that('Test order rows - na last - two variables ascending', {
   testServer(order_rows_server, {
 
     vars <- c('Sepal.Length', 'Sepal.Width')
@@ -67,7 +67,7 @@ test_that("Test order rows - na last - two variables ascending", {
   })
 })
 
-test_that("Test order rows - na last - two variables descending", {
+test_that('Test order rows - na last - two variables descending', {
   testServer(order_rows_server, {
 
     vars <- c('Sepal.Length', 'Sepal.Width')
@@ -89,7 +89,7 @@ test_that("Test order rows - na last - two variables descending", {
 })
 
 # test order rows - na first --------------------------------------------------
-test_that("Test order rows - na first - one variable ascending", {
+test_that('Test order rows - na first - one variable ascending', {
   testServer(order_rows_server, {
 
     vars <- c('Species')
@@ -110,7 +110,7 @@ test_that("Test order rows - na first - one variable ascending", {
   })
 })
 
-test_that("Test order rows - na first - one variable descending", {
+test_that('Test order rows - na first - one variable descending', {
   testServer(order_rows_server, {
 
     vars <- c('Species')
@@ -131,7 +131,7 @@ test_that("Test order rows - na first - one variable descending", {
   })
 })
 
-test_that("Test order rows - na first - two variables ascending", {
+test_that('Test order rows - na first - two variables ascending', {
   testServer(order_rows_server, {
 
     vars <- c('Sepal.Length', 'Petal.Width')
@@ -152,7 +152,7 @@ test_that("Test order rows - na first - two variables ascending", {
   })
 })
 
-test_that("Test order rows - na first - two variables descending", {
+test_that('Test order rows - na first - two variables descending', {
   testServer(order_rows_server, {
 
     vars <- c('Sepal.Length', 'Sepal.Width')
@@ -170,5 +170,27 @@ test_that("Test order rows - na first - two variables descending", {
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = FALSE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+  })
+})
+
+# test input check messages ---------------------------------------------------
+test_that('Test order rows - check inputs', {
+  testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      msg_error = function(text, ...) { last_msg <<- text },
+      msg = function(text, ...) { last_msg <<- text }
+    )
+
+    session$userData$dt <- reactiveValues(
+      dt = list('df_test' = df_test),
+      act_name = 'df_test'
+    )
+
+    session$setInputs(vars_rows = NULL, btn_order_rows = 1)
+
+    expect_equal(last_msg, 'Choose at least one variable')
   })
 })
