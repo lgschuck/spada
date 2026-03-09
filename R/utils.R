@@ -574,6 +574,44 @@ printable_report_card <- function(btns, card, id = NULL){
   )
 }
 
+# generate output object ------------------------------------------------------
+gen_output <- function(){
+
+  x <- sample(1e3, 1)
+  title <- paste('Test title', x)
+  annotation <- paste('Test annotation', x)
+  id <- gen_element_id()
+  btn_xid <- paste0('btn_xout_', id)
+  btn_eid <- paste0('btn_eout_', id)
+
+  btn_x <- actionButton(
+    btn_xid,
+    '',
+    icon('x'),
+    class = 'micro-btn-cancel'
+  )
+
+  btn_e <- actionButton(
+    btn_eid,
+    '',
+    icon('pen-to-square'),
+    class = 'micro-btn-cancel'
+  )
+
+  element <- iris |> gt()
+  output_card <- report_card(title, annotation, element)
+
+  list(
+    'id' = id,
+    'title' = title,
+    'annotation' = annotation,
+    'element' = element,
+    'card' = output_card,
+    'btn_x' = btn_x,
+    'btn_edit' = btn_e
+  )
+}
+
 # generate element id for outputs ---------------------------------------------
 gen_element_id <- function(id = 'id', time_only = FALSE){
   if(time_only){

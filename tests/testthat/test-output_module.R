@@ -1,26 +1,31 @@
 # tests/testthat/test-output_module.R
 
+# out_el <- list(
+#   'id_1' = list(
+#     'id' = 'id_1',
+#     'title' = 'Title 1',
+#     'card' = report_card(
+#         title = 'Test element 1',
+#         annotation = 'Annotation test 1',
+#         content = tags$p('Element 1')
+#     ),
+#     'btn' = actionButton('id_1', '')
+#   ),
+#   'id_2' = list(
+#     'id' = 'id_2',
+#     'title' = 'Title 2',
+#     'card' = report_card(
+#       title = 'Test element 2',
+#       annotation = 'Annotation test 2',
+#       content = tags$p('Element 2')
+#     ),
+#     'btn' = actionButton('id_2', '')
+#   )
+# )
+
 out_el <- list(
-  'id_1' = list(
-    'id' = 'id_1',
-    'title' = 'Title 1',
-    'card' = report_card(
-        title = 'Test element 1',
-        annotation = 'Annotation test 1',
-        content = tags$p('Element 1')
-    ),
-    'btn' = actionButton('id_1', '')
-  ),
-  'id_2' = list(
-    'id' = 'id_2',
-    'title' = 'Title 2',
-    'card' = report_card(
-      title = 'Test element 2',
-      annotation = 'Annotation test 2',
-      content = tags$p('Element 2')
-    ),
-    'btn' = actionButton('id_2', '')
-  )
+  'id_1' = gen_output(),
+  'id_2' = gen_output()
 )
 
 # test elements ---------------------------------------------------------------
@@ -35,19 +40,31 @@ test_that('Test output structure', {
 
     # test id
     expect_true(inherits(session$userData$out$elements[[1]]$id, 'character'))
-    expect_true(inherits(session$userData$out$elements[[1]]$id, 'character'))
+    expect_true(inherits(session$userData$out$elements[[2]]$id, 'character'))
 
     # test title
+    expect_true(inherits(session$userData$out$elements[[1]]$title, 'character'))
     expect_true(inherits(session$userData$out$elements[[2]]$title, 'character'))
-    expect_true(inherits(session$userData$out$elements[[2]]$title, 'character'))
+
+    # test annotation
+    expect_true(inherits(session$userData$out$elements[[1]]$annotation, 'character'))
+    expect_true(inherits(session$userData$out$elements[[2]]$annotation, 'character'))
+
+    # test element
+    expect_true(inherits(session$userData$out$elements[[1]]$element, c('shiny.tag', 'gt_tbl')))
+    expect_true(inherits(session$userData$out$elements[[2]]$element, c('shiny.tag', 'gt_tbl')))
 
     # test card
     expect_true(inherits(session$userData$out$elements[[1]]$card, 'shiny.tag'))
     expect_true(inherits(session$userData$out$elements[[2]]$card, 'shiny.tag'))
 
-    # test btn
-    expect_true(inherits(session$userData$out$elements[[1]]$btn, 'shiny.tag'))
-    expect_true(inherits(session$userData$out$elements[[2]]$btn, 'shiny.tag'))
+    # test btn_x
+    expect_true(inherits(session$userData$out$elements[[1]]$btn_x, 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[2]]$btn_x, 'shiny.tag'))
+
+    # test btn_e
+    expect_true(inherits(session$userData$out$elements[[1]]$btn_e, 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[2]]$btn_e, 'shiny.tag'))
 
   })
 })
@@ -57,8 +74,12 @@ test_that('Reset button clears output', {
   testServer(output_server, {
 
     session$userData$out <- reactiveValues(elements = out_el)
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
 
+    expect_length(session$userData$out$elements, 2)
     session$setInputs(btn_reset = 1)
+
+    expect_length(session$userData$out$elements, 2)
     session$setInputs(btn_confirm_reset = 1)
 
     expect_length(session$userData$out$elements, 0)
@@ -74,6 +95,7 @@ test_that('Save output stores qs2 file', {
 
     session$userData$conf <- reactiveValues(data_dir = tmpdir)
     session$userData$out <- reactiveValues(elements = out_el)
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
 
     session$setInputs(btn_save_output_session = 1)
     session$setInputs(btn_confirm_save_output = 1)
@@ -95,13 +117,26 @@ test_that('Save output stores qs2 file', {
     expect_true(inherits(saved_content[[1]]$title, 'character'))
     expect_true(inherits(saved_content[[2]]$title, 'character'))
 
+    # test annotation
+    expect_true(inherits(saved_content[[1]]$annotation, 'character'))
+    expect_true(inherits(saved_content[[2]]$annotation, 'character'))
+
+    # test element
+    expect_true(inherits(saved_content[[1]]$element, c('shiny.tag', 'gt_tbl')))
+    expect_true(inherits(saved_content[[2]]$element, c('shiny.tag', 'gt_tbl')))
+
     # test card
     expect_true(inherits(saved_content[[1]]$card, 'shiny.tag'))
     expect_true(inherits(saved_content[[2]]$card, 'shiny.tag'))
 
-    # test btn
-    expect_true(inherits(saved_content[[1]]$btn, 'shiny.tag'))
-    expect_true(inherits(saved_content[[2]]$btn, 'shiny.tag'))
+    # test btn_x
+    expect_true(inherits(saved_content[[1]]$btn_x, 'shiny.tag'))
+    expect_true(inherits(saved_content[[2]]$btn_x, 'shiny.tag'))
+
+    # test btn_edit
+    expect_true(inherits(saved_content[[1]]$btn_edit, 'shiny.tag'))
+    expect_true(inherits(saved_content[[2]]$btn_edit, 'shiny.tag'))
+
   })
 })
 
@@ -114,6 +149,7 @@ test_that('Import output loads qs2 file correctly', {
 
     session$userData$conf <- reactiveValues(data_dir = tmpdir)
     session$userData$out <- reactiveValues(elements = list())
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
 
     session$setInputs(btn_import_output_session = 1)
     session$setInputs(btn_confirm_import_output = 1)
@@ -123,6 +159,7 @@ test_that('Import output loads qs2 file correctly', {
       grepl(pattern = 'id_', session$userData$out$elements),
       grepl(pattern = 'id_', out_el)
     )
+
     expect_true(inherits(session$userData$out$elements[[1]], 'list'))
     expect_true(inherits(session$userData$out$elements[[2]], 'list'))
 
@@ -131,16 +168,28 @@ test_that('Import output loads qs2 file correctly', {
     expect_true(inherits(session$userData$out$elements[[2]]$id, 'character'))
 
     # test title
+    expect_true(inherits(session$userData$out$elements[[1]]$title, 'character'))
     expect_true(inherits(session$userData$out$elements[[2]]$title, 'character'))
-    expect_true(inherits(session$userData$out$elements[[2]]$title, 'character'))
+
+    # test annotation
+    expect_true(inherits(session$userData$out$elements[[1]]$annotation, 'character'))
+    expect_true(inherits(session$userData$out$elements[[2]]$annotation, 'character'))
+
+    # test element
+    expect_true(inherits(session$userData$out$elements[[1]]$element, c('shiny.tag', 'gt_tbl')))
+    expect_true(inherits(session$userData$out$elements[[2]]$element, c('shiny.tag', 'gt_tbl')))
 
     # test card
     expect_true(inherits(session$userData$out$elements[[1]]$card, 'shiny.tag'))
     expect_true(inherits(session$userData$out$elements[[2]]$card, 'shiny.tag'))
 
-    # test btn
-    expect_true(inherits(session$userData$out$elements[[1]]$btn, 'shiny.tag'))
-    expect_true(inherits(session$userData$out$elements[[2]]$btn, 'shiny.tag'))
+    # test btn_x
+    expect_true(inherits(session$userData$out$elements[[1]]$btn_x, 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[2]]$btn_x, 'shiny.tag'))
+
+    # test btn_e
+    expect_true(inherits(session$userData$out$elements[[1]]$btn_e, 'shiny.tag'))
+    expect_true(inherits(session$userData$out$elements[[2]]$btn_e, 'shiny.tag'))
   })
 })
 
@@ -149,6 +198,8 @@ test_that('Download HTML ', {
   testServer(output_server, {
 
     session$userData$out <- reactiveValues(elements = out_el)
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
+
     expect_equal(
       output$btn_save_html |> basename(),
       paste0('output_',
@@ -163,6 +214,7 @@ test_that('Test output - printable output', {
   testServer(output_server, {
 
     session$userData$out <- reactiveValues(elements = out_el)
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
 
     session$setInputs(sel_show_output = Inf)
 
