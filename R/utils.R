@@ -563,7 +563,11 @@ printable_report_card <- function(btns, card, id = NULL){
     ),
     div(style = "display: flex; width: 100%;",
         div(card, style = "width: 98%;"),
-        div(btns, style = 'width: 2%; text-align: right;')
+        tagList(
+          lapply(btns,
+               function(x){ div(x, style = 'width: 2%; text-align: right;') }
+          )
+        )
     ),
     br(),
     p(id)
@@ -928,21 +932,6 @@ show_exit_screen <- function(save = TRUE) {
   )
 }
 
-# save session function -------------------------------------------------------
-save_data <- function(data_dir, data){
-
-  data_file <- file.path(data_dir, 'data.qs2')
-  check_dir(data_dir)
-
-  try_save <- try(qs_save(data, data_file), silent = T)
-
-  if(inherits(try_save, 'try-error')){
-    tmp_file <- temp_file('data.qs2')
-    qs_save(data, tmp_file)
-    no_write_msg(data_file, tmp_file)
-  }
-}
-
 # spada save function ---------------------------------------------------------
 spada_save <- function(dir, object, file_name){
   out_file <- file.path(dir, file_name)
@@ -1094,28 +1083,32 @@ is_hex_color <- function(x) {
 # test output format-----------------------------------------------------------
 test_output_format <- function(output){
 
-  # if list of len 0  is OK
+  # if list of len 0 is OK
   (is.list(output) && length(output) == 0) ||
 
-  # if len > 0 must pass
-  (is.list(output) && length(output) > 0 &&
+    # if len > 0 must pass
+    (is.list(output) && length(output) > 0 &&
 
-     # all inside elements must be lists
-     all(sapply(output, class) == 'list') &&
+       # all inside elements must be lists
+       all(sapply(output, class) == 'list') &&
 
-     # all names of inside lists must match
-     all(
-       sapply(output, \(x) {
-         all(names(x) %in% c('id', 'title', 'card', 'btn'))
-       })
-     ) &&
-    # test class of each element in the inside lists
-      (
-        all(sapply(output, \(x){ x$id |> class() == 'character'})) &&
-          all(sapply(output, \(x){ x$title |> class() == 'character'})) &&
-          all(sapply(output, \(x){ x$card |> class() == 'shiny.tag'}))
-      )
-  )
+       # all names of inside lists must match
+       all(
+         sapply(output, \(x) {
+           all(names(x) %in% c('id', 'title', 'annotation', 'element', 'card', 'btn_x', 'btn_edit'))
+         })
+       ) &&
+       # test class of each element in the inside lists
+       (
+         all(sapply(output, \(x){ 'character' %in% class(x$id)})) &&
+           all(sapply(output, \(x){ 'character' %in% class(x$title) })) &&
+           all(sapply(output, \(x){ 'character' %in% class(x$annotation) })) &&
+           all(sapply(output, \(x){ any(c('gt_tbl', 'shiny.tag') %in% class(x$element)) })) &&
+           all(sapply(output, \(x){ 'shiny.tag' %in% class(x$card) })) &&
+           all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_x) })) &&
+           all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_edit) }))
+       )
+    )
 }
 
 # test data format-------------------------------------------------------------

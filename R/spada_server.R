@@ -42,8 +42,10 @@ spada_server <- function(datasets, conf){
       updated_cols = NULL,
       data_changed_type = 'new_data'
     )
+    session$userData$out <- reactiveValues(elements = list())
 
     session$userData$data_changed <- reactiveVal(0)
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
 
     session$userData$dt$bkp0 <- isolate(get_act_dt(session))
 
@@ -225,8 +227,6 @@ spada_server <- function(datasets, conf){
     lm_server('pA_lm')
 
     # output events -----------------------------------------------------------
-    session$userData$out <- reactiveValues(elements = list())
-
     output_server('pO_output')
 
     # config events -----------------------------------------------------------

@@ -69,6 +69,63 @@ output_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    # edit output events ------------------------------------------------------
+    observe({
+      id <- session$userData$out_edit_trigger()
+
+      el_title <- session$userData$out$elements[[ id ]]$title
+      el_annot <- session$userData$out$elements[[ id ]]$annotation
+      el_element <- session$userData$out$elements[[ id ]]$element
+
+      showModal(
+        modalDialog(
+          title = 'Edit Output element',
+          size = 'l',
+          tagList(
+            textInput(ns('output_edit_title'), 'Title', value = el_title),
+            textAreaInput(
+              ns('output_edit_annot'),
+              'Annotation',
+              value = el_annot,
+              width = '90%',
+              rows = 5,
+              resize = 'both'
+            )
+          ),
+          footer = tagList(
+            actionButton(ns('btn_cancel_edit_output'), 'Cancel',
+                         icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
+            actionButton(ns('btn_confirm_edit_output'), 'Submit',
+                         icon = icon('check'), class = 'btn-task')
+          )
+        )
+      )
+
+    }) |> bindEvent(session$userData$out_edit_trigger())
+
+    # cancel_edit_output ----------------------
+    observe({
+      session$userData$out_edit_trigger(NULL)
+      removeModal()
+    }) |> bindEvent(input$btn_cancel_edit_output)
+
+    # cancel_confirm_edit_output ----------------------
+    observe({
+      id <- session$userData$out_edit_trigger()
+      new_title <- input$output_edit_title
+      new_annot <- input$output_edit_annot
+      new_element <- session$userData$out$elements[[ id ]]$element
+
+      # update values ----------
+      session$userData$out$elements[[ id ]]$title <- new_title
+      session$userData$out$elements[[ id ]]$annotation <- new_annot
+      session$userData$out$elements[[ id ]]$card <- report_card(
+        new_title, new_annot, new_element)
+
+      session$userData$out_edit_trigger(NULL)
+      removeModal()
+    }) |> bindEvent(input$btn_confirm_edit_output)
+
     # render panel ------------------------------------------------------------
     task_printable_out <- ExtendedTask$new(function(accordion,
                                                 accordion_panel,
@@ -95,7 +152,7 @@ output_server <- function(id) {
                 multiple = TRUE,
                 accordion_panel(
                   paste(i, '-', x$title),
-                  printable_report_card(x$btn, x$card)
+                  printable_report_card(list(x$btn_e, x$btn_x), x$card)
                 )
               )
             )
@@ -261,10 +318,10 @@ output_server <- function(id) {
 
             id <- gen_element_id()
             x$id <- id
-            btn_id <- paste0("btn_xout_", id)
+            btn_xid <- paste0('btn_xout_', id)
 
-            x$btn <- actionButton(
-              ns(btn_id),
+            x$btn_x <- actionButton(
+              ns(btn_xid),
               '',
               icon('x'),
               class = 'micro-btn-cancel'
@@ -272,7 +329,7 @@ output_server <- function(id) {
 
             observe({
               session$userData$out$elements[[id]] <- NULL
-            }) |> bindEvent(input[[btn_id]], once = TRUE)
+            }) |> bindEvent(input[[btn_xid]], once = TRUE)
 
             return(x)
           })
