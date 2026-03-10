@@ -598,7 +598,7 @@ gen_output <- function(){
     class = 'micro-btn-cancel'
   )
 
-  element <- iris |> gt()
+  element <- data.frame(x = letters) |> gt()
   output_card <- report_card(title, annotation, element)
 
   list(
@@ -608,7 +608,7 @@ gen_output <- function(){
     'element' = element,
     'card' = output_card,
     'btn_x' = btn_x,
-    'btn_edit' = btn_e
+    'btn_e' = btn_e
   )
 }
 
@@ -1133,7 +1133,7 @@ test_output_format <- function(output){
        # all names of inside lists must match
        all(
          sapply(output, \(x) {
-           all(names(x) %in% c('id', 'title', 'annotation', 'element', 'card', 'btn_x', 'btn_edit'))
+           all(names(x) %in% c('id', 'title', 'annotation', 'element', 'card', 'btn_x', 'btn_e'))
          })
        ) &&
        # test class of each element in the inside lists
@@ -1144,7 +1144,7 @@ test_output_format <- function(output){
            all(sapply(output, \(x){ any(c('gt_tbl', 'shiny.tag') %in% class(x$element)) })) &&
            all(sapply(output, \(x){ 'shiny.tag' %in% class(x$card) })) &&
            all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_x) })) &&
-           all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_edit) }))
+           all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_e) }))
        )
     )
 }

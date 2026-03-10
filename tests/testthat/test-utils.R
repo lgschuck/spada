@@ -472,12 +472,20 @@ test_that('test valid output', {
     'id1' = list(
       id = '123',
       title = 'Title 1',
-      card = shiny::tags$div('content 1')
+      annotation = 'Annotation 1',
+      element = shiny::tags$div('content 1'),
+      card = shiny::tags$div('content 1'),
+      btn_x = actionButton('b1', 'l1'),
+      btn_e = actionButton('b2', 'l2')
     ),
     'id2' = list(
       id = '456',
-      title = 'itle 2',
-      card = shiny::tags$p('content 2')
+      title = 'title 2',
+      annotation = 'Annotation 1',
+      element = shiny::tags$div('content 2'),
+      card = shiny::tags$div('content 2'),
+      btn_x = actionButton('b1', 'l1'),
+      btn_e = actionButton('b2', 'l2')
     )
   )
 

@@ -20,6 +20,8 @@ editor_options:
 
 3 - **Tests**: new tests in input/messages across several modules
 
+4 - **Output**: new format to accommodate  edit elements
+
 # Spada 0.1.3
 
 ## 2026.03.03

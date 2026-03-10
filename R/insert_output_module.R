@@ -105,7 +105,7 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
           'element' = input_element(),
           'card' = output_card,
           'btn_x' = btn_x,
-          'btn_edit' = btn_e
+          'btn_e' = btn_e
         )
         msg('Added to output', DURATION = 1)
       }

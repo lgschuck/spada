@@ -36,15 +36,7 @@ test_that('Test restore session no data and no output ', {
 })
 
 # test restore session - load data and output ---------------------------------
-output_for_test <- list({
-  id <- gen_element_id()
-  list(
-    'id' = id,
-    'title' = 'Spada Output',
-    'card' = report_card(title = 'Test Card', content = h2('Test content')),
-    'btn' = actionButton('id', '')
-  )
-})
+output_for_test <- list('id_1' = gen_output())
 
 qs_save(dfs, paste0(temp_dir, '\\data\\data.qs2'))
 qs_save(output_for_test, paste0(temp_dir, '\\data\\output.qs2'))
@@ -63,16 +55,22 @@ test_that('Test restore session load data and output ', {
     expect_equal(session$userData$dt$dt, dfs)
     expect_equal(session$userData$out$elements[[1]]$title,
                  output_for_test[[1]]$title)
+    expect_equal(session$userData$out$elements[[1]]$annotation,
+                 output_for_test[[1]]$annotation)
+    expect_equal(session$userData$out$elements[[1]]$element,
+                 output_for_test[[1]]$element)
     expect_equal(session$userData$out$elements[[1]]$card,
                  output_for_test[[1]]$card)
-    expect_equal(session$userData$out$elements[[1]]$btn |> class(),
-                 output_for_test[[1]]$btn |> class())
-    expect_s3_class(session$userData$out$elements[[1]]$btn, 'shiny.tag')
+    expect_equal(session$userData$out$elements[[1]]$btn_x |> class(),
+                 output_for_test[[1]]$btn_x |> class())
+    expect_s3_class(session$userData$out$elements[[1]]$btn_x, 'shiny.tag')
+    expect_equal(session$userData$out$elements[[1]]$btn_e |> class(),
+                 output_for_test[[1]]$btn_e |> class())
+    expect_s3_class(session$userData$out$elements[[1]]$btn_e, 'shiny.tag')
   })
 })
 
 # test restore session - invalid format data and output -----------------------
-
 qs_save(list(1:5), paste0(temp_dir, '\\data\\data.qs2'))
 qs_save(list(letters), paste0(temp_dir, '\\data\\output.qs2'))
 

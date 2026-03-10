@@ -1,28 +1,5 @@
 # tests/testthat/test-output_module.R
 
-# out_el <- list(
-#   'id_1' = list(
-#     'id' = 'id_1',
-#     'title' = 'Title 1',
-#     'card' = report_card(
-#         title = 'Test element 1',
-#         annotation = 'Annotation test 1',
-#         content = tags$p('Element 1')
-#     ),
-#     'btn' = actionButton('id_1', '')
-#   ),
-#   'id_2' = list(
-#     'id' = 'id_2',
-#     'title' = 'Title 2',
-#     'card' = report_card(
-#       title = 'Test element 2',
-#       annotation = 'Annotation test 2',
-#       content = tags$p('Element 2')
-#     ),
-#     'btn' = actionButton('id_2', '')
-#   )
-# )
-
 out_el <- list(
   'id_1' = gen_output(),
   'id_2' = gen_output()
@@ -133,9 +110,9 @@ test_that('Save output stores qs2 file', {
     expect_true(inherits(saved_content[[1]]$btn_x, 'shiny.tag'))
     expect_true(inherits(saved_content[[2]]$btn_x, 'shiny.tag'))
 
-    # test btn_edit
-    expect_true(inherits(saved_content[[1]]$btn_edit, 'shiny.tag'))
-    expect_true(inherits(saved_content[[2]]$btn_edit, 'shiny.tag'))
+    # test btn_e
+    expect_true(inherits(saved_content[[1]]$btn_e, 'shiny.tag'))
+    expect_true(inherits(saved_content[[2]]$btn_e, 'shiny.tag'))
 
   })
 })

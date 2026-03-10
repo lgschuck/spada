@@ -24,7 +24,7 @@ output_ui <- function(id) {
                   'Last 5' = 5,
                   'None' = -Inf
                 ),
-                selected = 1,
+                selected = 3,
                 size = 'sm',
                 individual = T
               )
@@ -319,6 +319,7 @@ output_server <- function(id) {
             id <- gen_element_id()
             x$id <- id
             btn_xid <- paste0('btn_xout_', id)
+            btn_eid <- paste0('btn_eout_', id)
 
             x$btn_x <- actionButton(
               ns(btn_xid),
@@ -327,9 +328,22 @@ output_server <- function(id) {
               class = 'micro-btn-cancel'
             )
 
+            x$btn_e <- actionButton(
+              ns(btn_eid),
+              '',
+              icon('pen-to-square'),
+              class = 'micro-btn-cancel'
+            )
+
+            # delete event
             observe({
               session$userData$out$elements[[id]] <- NULL
             }) |> bindEvent(input[[btn_xid]], once = TRUE)
+
+            # edit event
+            observe({
+              session$userData$out_edit_trigger(id)
+            }) |> bindEvent(input[[btn_eid]])
 
             return(x)
           })
