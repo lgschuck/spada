@@ -213,3 +213,103 @@ test_that('Test output - printable output', {
     )
   })
 })
+
+# test edit output element ----------------------------------------------------
+dfs <- list('df_iris' = iris |> as.data.table(),
+            'df_mtcars' = mtcars |> as.data.table())
+
+temp_dir <- tempdir()
+
+start_conf <- list(
+  'conf_dir' = paste0(temp_dir, '\\conf'),
+  'data_dir' = paste0(temp_dir, '\\data'),
+  'theme' = 'spada_theme',
+  'file_size' = 1000,
+  'restore_session' = 'never',
+  'save_session' = 'ask',
+  'restore_data_status' = 0,
+  'restore_output_status' = 0,
+  'restore_status' = NULL,
+  'plot_fill_color' = plot_fill_color,
+  'plot_line_color' = plot_line_color
+)
+
+
+test_that('Test output - edit element', {
+  testServer(spada_server(datasets = dfs, conf = start_conf), {
+
+    session$userData$out <- reactiveValues(elements = list())
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
+
+    out_el <- div(h2('Element'))
+
+    insert_output_server('insert_output', reactive(out_el))
+    output_server('output')
+
+    # insert output
+    session$setInputs(
+      'insert_output-output_title' = 'Title 1',
+      'insert_output-output_annot' = 'Annotation 1',
+      'insert_output-btn_add_output' = 1,
+      'insert_output-btn_confirm_add_output' = 1
+    )
+
+    expect_length(session$userData$out$elements, 1)
+    expect_equal(session$userData$out$elements[[ 1 ]]$title, 'Title 1')
+    expect_equal(session$userData$out$elements[[ 1 ]]$annotation, 'Annotation 1')
+
+    # trigger btn edit
+    id <- session$userData$out$elements[[ 1 ]]$id
+    edit_btn <- list()
+    edit_btn[[paste0('insert_output-btn_eout_', id)]] = 1
+    do.call(session$setInputs, edit_btn)
+
+    # edit output
+    session$setInputs(
+      'output-output_edit_title' = 'New title',
+      'output-output_edit_annot' = 'New annotation',
+      'output-btn_confirm_edit_output' = 1
+    )
+
+    expect_type(session$userData$out$elements, 'list')
+    expect_length(session$userData$out$elements, 1)
+    expect_equal(session$userData$out$elements[[ 1 ]]$title, 'New title')
+    expect_equal(session$userData$out$elements[[ 1 ]]$annotation, 'New annotation')
+  })
+})
+
+
+# test delete output element --------------------------------------------------
+test_that('Test output - edit element', {
+  testServer(spada_server(datasets = dfs, conf = start_conf), {
+
+    session$userData$out <- reactiveValues(elements = list())
+    session$userData$out_edit_trigger <- reactiveVal(NULL)
+
+    out_el <- div(h2('Element'))
+
+    insert_output_server('insert_output', reactive(out_el))
+    output_server('output')
+
+    # insert output
+    session$setInputs(
+      'insert_output-output_title' = 'Title 1',
+      'insert_output-output_annot' = 'Annotation 1',
+      'insert_output-btn_add_output' = 1,
+      'insert_output-btn_confirm_add_output' = 1
+    )
+
+    expect_length(session$userData$out$elements, 1)
+    expect_equal(session$userData$out$elements[[ 1 ]]$title, 'Title 1')
+    expect_equal(session$userData$out$elements[[ 1 ]]$annotation, 'Annotation 1')
+
+    # trigger btn edit
+    id <- session$userData$out$elements[[ 1 ]]$id
+    delete_btn <- list()
+    delete_btn[[paste0('insert_output-btn_xout_', id)]] = 1
+    do.call(session$setInputs, delete_btn)
+
+    expect_type(session$userData$out$elements, 'list')
+    expect_length(session$userData$out$elements, 0)
+  })
+})

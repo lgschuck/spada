@@ -575,7 +575,7 @@ printable_report_card <- function(btns, card, id = NULL){
 }
 
 # generate output object ------------------------------------------------------
-gen_output <- function(){
+gen_output <- function(element = div(h2('Element'))){
 
   x <- sample(1e3, 1)
   title <- paste('Test title', x)
@@ -598,7 +598,7 @@ gen_output <- function(){
     class = 'micro-btn-cancel'
   )
 
-  element <- data.frame(x = letters) |> gt()
+  element <- if(is.null(element)) data.frame(x = letters) |> gt() else element
   output_card <- report_card(title, annotation, element)
 
   list(

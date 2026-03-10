@@ -18,9 +18,9 @@ editor_options:
 
 2 - New **join module**
 
-3 - **Tests**: new tests in input/messages across several modules
+3 - **Tests**: new tests in input/messages across several modules, new test for edit and delete output elements (**output_module**)
 
-4 - **Output**: new format to accommodate  edit elements
+4 - **Output**: new edit output buttn and new format of output elements to accommodate edit events
 
 # Spada 0.1.3
 
