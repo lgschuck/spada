@@ -65,7 +65,7 @@ order_cols_server <- function(id) {
       if(!isTruthy(input$vars_cols)){
         msg('Choose at least one variable')
       } else {
-
+        running_modal()
         temp <- copy(get_act_dt(session))
 
         if(all(df_names() %in% input$vars_cols) || input$vars_rest == ''){
@@ -79,8 +79,7 @@ order_cols_server <- function(id) {
         update_act_dt(session, copy(temp), updated_cols = temp |> names(),
                       change_type = 'order_cols')
         rm(temp)
-
-        msg('Reordering Variables: OK')
+        remove_running_modal()
       }
     }) |> bindEvent(input$btn_order_cols)
 

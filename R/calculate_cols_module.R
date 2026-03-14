@@ -88,12 +88,12 @@ calculate_cols_server <- function(id) {
         'fun',
         choices = switch(
           selected_var_type(),
-          "numeric"  = math_funs,
-          "char"     = char_funs,
-          "date"     = date_funs,
-          "logical"  = logical_funs,
-          "factor"   = factor_funs,
-          "complex"  = complex_funs,
+          'numeric'  = math_funs,
+          'char'     = char_funs,
+          'date'     = date_funs,
+          'logical'  = logical_funs,
+          'factor'   = factor_funs,
+          'complex'  = complex_funs,
           character(0)
         )
       )
@@ -112,6 +112,8 @@ calculate_cols_server <- function(id) {
         if(is_valid_name(input$txt_new_name_fun) &&
             input$txt_new_name_fun %notin% df_names()) {
 
+          running_modal()
+
           temp <- copy(get_act_dt(session))
 
           temp[, new_var := fun(var1), by = groupby, env = list(
@@ -124,7 +126,7 @@ calculate_cols_server <- function(id) {
           update_act_dt(session, copy(temp), updated_cols = input$txt_new_name_fun)
           rm(temp)
 
-          msg('Apply function: OK')
+          remove_running_modal()
 
           updateTextInput(session, 'txt_new_name_fun', value = '')
 
@@ -155,7 +157,7 @@ calculate_cols_server <- function(id) {
         # parse code ----------------------------------------------------------
         parsed_code <- try(parse_expr(input$txt_code_input), silent = T)
 
-        if(inherits(parsed_code, "try-error")){
+        if(inherits(parsed_code, 'try-error')){
           return(msg_error('Error to validate expression. Check code'))
         }
 
@@ -171,7 +173,9 @@ calculate_cols_server <- function(id) {
         } else if (!all(code_vars %in% c(df_names(), 'T', 'F'))) {
           msg_error('Some variables are not present in the dataset')
         } else {
-          # create safe env foe evaluation ------------------------------------
+          # create safe env for evaluation ------------------------------------
+          running_modal()
+
           e1 <- safe_env(allowed_operations)
 
           # run code ----------------------------------------------------------
@@ -193,14 +197,14 @@ calculate_cols_server <- function(id) {
             ),
             envir = e1
           )
+          remove_running_modal()
 
-          if(inherits(e1$temp, "try-error")){
+          if(inherits(e1$temp, 'try-error')){
             return(msg_error('Error in expression. Check code'))
           } else{
 
             update_act_dt(session, copy(e1$temp), updated_cols = input$txt_new_name_free)
 
-            msg('Calculate new var: OK')
             rm(e1)
 
             updateTextInput(session, 'txt_new_name_free',

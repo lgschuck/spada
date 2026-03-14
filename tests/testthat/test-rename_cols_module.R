@@ -135,7 +135,8 @@ test_that('Test rename - check inputs', {
 
     local_mocked_bindings(
       msg_error = function(text, ...) { last_msg <<- text },
-      msg = function(text, ...) { last_msg <<- text }
+      msg = function(text, ...) { last_msg <<- text },
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
     )
 
     session$userData$dt <- reactiveValues(
@@ -154,7 +155,7 @@ test_that('Test rename - check inputs', {
 
     session$setInputs(vars_sel = 'Species', txt_new_name = 'v123', btn_rename = 3)
 
-    expect_equal(last_msg, 'Rename column: OK')
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 

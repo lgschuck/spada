@@ -65,6 +65,7 @@ order_rows_server <- function(id) {
       if(!isTruthy(input$vars_rows)){
         msg('Choose at least one variable')
       } else {
+        running_modal()
         rows_position <- rep(1, input$vars_rows |> length())
 
         rows_position[which(input$vars_rows %in% input$vars_descending)] <- -1
@@ -83,7 +84,7 @@ order_rows_server <- function(id) {
         update_act_dt(session, copy(temp), FALSE)
         rm(temp)
 
-        msg('Reordering Rows: OK')
+        remove_running_modal()
       }
     }) |> bindEvent(input$btn_order_rows)
 

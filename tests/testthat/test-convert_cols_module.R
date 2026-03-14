@@ -1,7 +1,7 @@
 # tests/testthat/test-convert_cols_module.R
 
 # test textInput - type/class -------------------------------------------------
-test_that("Test currernt type/class ", {
+test_that('Test currernt type/class', {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -21,7 +21,7 @@ test_that("Test currernt type/class ", {
 })
 
 # test sample trigger reactiveVal ---------------------------------------------
-test_that("Test Sample trigger - updates on button click", {
+test_that('Test Sample trigger - updates on button click', {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -39,7 +39,7 @@ test_that("Test Sample trigger - updates on button click", {
 })
 
 # test preview df -------------------------------------------------------------
-test_that("Test Preview dataframe after variable and format selection", {
+test_that('Test Preview dataframe after variable and format selection', {
   testServer(convert_cols_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -48,8 +48,7 @@ test_that("Test Preview dataframe after variable and format selection", {
 
     session$userData$dt$act_meta <- reactive({ iris |> as.data.table() |> df_info()})
     session$userData$data_changed <- reactiveVal(0)
-    session$setInputs(vars_sel = 'Species')
-    session$setInputs(sel_format = 'as.character')
+    session$setInputs(vars_sel = 'Species', sel_format = 'as.character')
 
     expect_true(is.data.frame(preview_df()))
     expect_true(ncol(preview_df()) == 2)
@@ -64,19 +63,30 @@ test_that("Test Preview dataframe after variable and format selection", {
 })
 
 # test conversion -------------------------------------------------------------
-test_that("Test Conversion applies when button clicked", {
+test_that('Test Conversion applies when button clicked', {
   testServer(convert_cols_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      msg = function(text, ...) { last_msg <<- text },
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
+
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
     )
     session$userData$data_changed <- reactiveVal(0)
-    session$setInputs(vars_sel = 'Species')
-    session$setInputs(sel_format = 'as.character')
+    session$setInputs(vars_sel = '', sel_format = '', btn_apply = 1)
+
+    expect_equal(last_msg, 'Choose a variable and a new format')
 
     original_class <- class(get_act_dt(session)[['Species']])
 
-    session$setInputs(btn_apply = 1)
+    session$setInputs(vars_sel = 'Species',
+                      sel_format = 'as.character',
+                      btn_apply = 2)
 
     converted_class <- class(get_act_dt(session)[['Species']])
 
@@ -84,7 +94,7 @@ test_that("Test Conversion applies when button clicked", {
     expect_equal(converted_class, 'character')
     expect_equal(get_act_dt(session)[['Species']] |> class(), 'character')
     expect_equal(get_act_dt(session) |> class(), c('data.table', 'data.frame'))
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 

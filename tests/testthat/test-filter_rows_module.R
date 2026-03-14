@@ -4,7 +4,7 @@ df_test <- iris
 df_test[150, 1:5] <- NA
 
 # test filter rows - empty inputs ---------------------------------------------
-test_that("Test filter rows - empty inputs - should not crash", {
+test_that('Test filter rows - empty inputs - should not crash', {
   testServer(filter_rows_server, {
 
     session$userData$dt <- reactiveValues(
@@ -19,8 +19,14 @@ test_that("Test filter rows - empty inputs - should not crash", {
 })
 
 # test filter rows - one variable ---------------------------------------------
-test_that("Test filter rows - one variable - equal operator", {
+test_that('Test filter rows - one variable - equal operator', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -36,12 +42,18 @@ test_that("Test filter rows - one variable - equal operator", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species == 'setosa') |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - not equal operator", {
+test_that('Test filter rows - one variable - not equal operator', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -57,12 +69,18 @@ test_that("Test filter rows - one variable - not equal operator", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species != 'virginica') |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - in operator", {
+test_that('Test filter rows - one variable - in operator', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -78,12 +96,18 @@ test_that("Test filter rows - one variable - in operator", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species %in% c('virginica', 'setosa')) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - not in operator", {
+test_that('Test filter rows - one variable - not in operator', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -99,12 +123,18 @@ test_that("Test filter rows - one variable - not in operator", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Species %notin% c('virginica', 'setosa')) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - is na", {
+test_that('Test filter rows - one variable - is na', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -119,12 +149,18 @@ test_that("Test filter rows - one variable - is na", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = is.na(Species)) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - not na", {
+test_that('Test filter rows - one variable - not na', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -139,12 +175,18 @@ test_that("Test filter rows - one variable - not na", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = !is.na(Species)) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - grater", {
+test_that('Test filter rows - one variable - grater', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -160,12 +202,18 @@ test_that("Test filter rows - one variable - grater", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Length > 5) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - grater or equal", {
+test_that('Test filter rows - one variable - grater or equal', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -181,12 +229,18 @@ test_that("Test filter rows - one variable - grater or equal", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Length >= 6) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - less", {
+test_that('Test filter rows - one variable - less', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -202,12 +256,18 @@ test_that("Test filter rows - one variable - less", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Width < 3) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - less or equal", {
+test_that('Test filter rows - one variable - less or equal', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -223,12 +283,18 @@ test_that("Test filter rows - one variable - less or equal", {
     expect_equal(get_act_dt(session),
                  subset(df_test, subset = Sepal.Width <= 3.3) |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - outlier", {
+test_that('Test filter rows - one variable - outlier', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = mtcars |> as.data.table()),
@@ -243,12 +309,18 @@ test_that("Test filter rows - one variable - outlier", {
     expect_equal(get_act_dt(session),
                  mtcars[Outlier(mtcars$hp, value = F), ] |>
                    as.data.table())
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - not outlier", {
+test_that('Test filter rows - one variable - not outlier', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = mtcars |> as.data.table()),
@@ -263,12 +335,18 @@ test_that("Test filter rows - one variable - not outlier", {
 
     mtcars_dt <- mtcars |> as.data.table()
     expect_equal(get_act_dt(session), mtcars_dt[!Outlier(mtcars$hp, value = F), ])
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - between", {
+test_that('Test filter rows - one variable - between', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = mtcars |> as.data.table()),
@@ -285,12 +363,18 @@ test_that("Test filter rows - one variable - between", {
 
     mtcars_dt <- mtcars |> as.data.table()
     expect_equal(get_act_dt(session), mtcars_dt[hp %between% c(90, 100), ])
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - one variable - not between", {
+test_that('Test filter rows - one variable - not between', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = mtcars |> as.data.table()),
@@ -307,13 +391,19 @@ test_that("Test filter rows - one variable - not between", {
 
     mtcars_dt <- mtcars |> as.data.table()
     expect_equal(get_act_dt(session), mtcars_dt[!(hp %between% c(100, 110)), ])
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 # test filter rows - two variables --------------------------------------------
-test_that("Test filter rows - two variables - bigger", {
+test_that('Test filter rows - two variables - bigger', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -336,8 +426,14 @@ test_that("Test filter rows - two variables - bigger", {
 })
 
 # test filter rows - sample ---------------------------------------------------
-test_that("Test filter rows - sample - nrows", {
+test_that('Test filter rows - sample - nrows', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -355,12 +451,18 @@ test_that("Test filter rows - sample - nrows", {
       get_act_dt(session) |> nrow(),
       as.data.table(iris)[sample(1:nrow(iris), 15, replace = T), ] |> nrow()
     )
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - sample - percent", {
+test_that('Test filter rows - sample - percent', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -378,13 +480,19 @@ test_that("Test filter rows - sample - percent", {
       get_act_dt(session) |> nrow(),
       as.data.table(iris)[sample(1:nrow(iris), 10/100 * nrow(iris), replace = T), ] |> nrow()
     )
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 # test filter rows - free -----------------------------------------------------
-test_that("Test filter rows - free - allowed code", {
+test_that('Test filter rows - free - allowed code', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -401,11 +509,11 @@ test_that("Test filter rows - free - allowed code", {
       get_act_dt(session),
       iris |> as.data.table() |> subset(Sepal.Width <= Petal.Length)
     )
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - free - not allowed code - data stay unchanged", {
+test_that('Test filter rows - free - not allowed code - data stay unchanged', {
   testServer(filter_rows_server, {
 
     session$userData$dt <- reactiveValues(
@@ -423,12 +531,19 @@ test_that("Test filter rows - free - not allowed code - data stay unchanged", {
       get_act_dt(session),
       iris |> as.data.table()
     )
+
   })
 })
 
 # test filter rows - from other dataset ---------------------------------------
-test_that("Test filter rows - from other dataset - in", {
+test_that('Test filter rows - from other dataset - in', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table(),
@@ -445,12 +560,18 @@ test_that("Test filter rows - from other dataset - in", {
 
     session$setInputs(btn_filter = 1)
     expect_equal(get_act_dt(session), iris |> as.data.table() |> subset(Species == 'setosa'))
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
-test_that("Test filter rows - from other dataset - not in", {
+test_that('Test filter rows - from other dataset - not in', {
   testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table(),
@@ -467,7 +588,96 @@ test_that("Test filter rows - from other dataset - not in", {
 
     session$setInputs(btn_filter = 1)
     expect_equal(get_act_dt(session), iris |> as.data.table() |> subset(Species != 'setosa'))
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
+# test input check messages ---------------------------------------------------
+iris_dt <- iris |> as.data.table()
+iris_dt$date <- Sys.Date()
+
+test_that('Test filter rows - check inputs - filter type on', {
+  testServer(filter_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      msg_error = function(text, ...) { last_msg <<- text },
+      msg = function(text, ...) { last_msg <<- text }
+    )
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt,
+                'df_test' = iris_dt |> subset(Species == 'setosa')),
+      act_name = 'iris'
+    )
+
+    session$userData$data_changed <- reactiveVal(0)
+
+    session$setInputs(filter_type = NULL, btn_filter = 1)
+
+    expect_equal(last_msg, 'Select the Filter type')
+
+    session$setInputs(
+      filter_type = 'one',
+      one_var_sel = NULL,
+      btn_filter = 2
+    )
+
+    expect_equal(last_msg, 'Choose a variable')
+
+    session$setInputs(
+      one_var_sel = 'Species',
+      one_var_operator = NULL,
+      btn_filter = 3
+    )
+
+    expect_equal(last_msg, 'Choose an operator')
+
+    session$setInputs(
+      one_var_sel = 'Species',
+      one_var_operator = 'in',
+      one_var_value = NULL,
+      btn_filter = 4
+    )
+
+    expect_equal(last_msg, 'Insert a value')
+
+    session$setInputs(
+      one_var_sel = 'Sepal.Length',
+      one_var_operator = 'between',
+      one_var_value = 3,
+      one_var_value2 = NULL,
+      btn_filter = 5
+    )
+
+    expect_equal(last_msg, 'Inform inicial and final values')
+
+    session$setInputs(
+      one_var_sel = 'date',
+      one_var_operator = 'between',
+      one_var_value = c('1970-01-01', NA),
+      btn_filter = 6
+    )
+
+    expect_equal(last_msg, 'Inform inicial and final dates')
+
+    session$setInputs(
+      one_var_sel = 'date',
+      one_var_operator = 'in',
+      one_var_value = c('1970-01-01', NA),
+      btn_filter = 6
+    )
+
+    expect_equal(last_msg, 'Insert values')
+
+    session$setInputs(
+      one_var_sel = 'date',
+      one_var_operator = '==',
+      one_var_value = c('1970-01-01', '1971-01-01'),
+      btn_filter = 7
+    )
+
+    expect_equal(last_msg, 'Operator requires value of length 1')
+  })
+})

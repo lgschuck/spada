@@ -288,6 +288,7 @@ join_server <- function(id) {
           msg_error('The variables types must match')
           return()
         } else {
+          running_modal()
 
           temp <- try(
             dt_join(dt1, dt2, vars_dt1, vars_dt2, join_type), silent = T
@@ -295,6 +296,7 @@ join_server <- function(id) {
 
           # return error msg
           if(inherits(temp, 'try-error')){
+            remove_running_modal()
             msg_error('Error: join aborted')
             return()
           # apply join
@@ -305,7 +307,7 @@ join_server <- function(id) {
               append_dt(session, temp, new_dt_name)
               append_meta(session, temp |> df_info(), new_dt_name)
             }
-            msg('Join applied')
+            remove_running_modal()
           }
         }
       }

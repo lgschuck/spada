@@ -40,7 +40,7 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
               ns('output_annot'),
               'Annotation',
               width = '90%',
-              rows = 10,
+              rows = 7,
               resize = 'both'
             )
           ),

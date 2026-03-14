@@ -6,6 +6,12 @@ dt <- mtcars |> as.data.table()
 test_that('Test group by - no group by var - overwrite', {
   testServer(groupby_server, {
 
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
+
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = dt),
       act_name = 'mtcars',
@@ -41,12 +47,19 @@ test_that('Test group by - no group by var - overwrite', {
       session$userData$dt$dt[[session$userData$dt$act_name]],
       dt[, .(min_mpg = min(mpg)), by = c() |> as.list()]
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 # test group by - add and group -----------------------------------------------
 test_that('Test group by - 1x1 var - overwrite', {
   testServer(groupby_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = dt),
@@ -74,11 +87,18 @@ test_that('Test group by - 1x1 var - overwrite', {
       session$userData$dt$dt[[session$userData$dt$act_name]],
       dt[, .(min_mpg = min(mpg)), by = 'cyl']
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test group by - 2x1 var - overwrite', {
   testServer(groupby_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = dt),
@@ -105,11 +125,18 @@ test_that('Test group by - 2x1 var - overwrite', {
       session$userData$dt$dt[[session$userData$dt$act_name]],
       dt[, .(max_hp = max(hp)), by = c('cyl', 'am')]
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test group by - 2x2 var - overwrite', {
   testServer(groupby_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = dt),
@@ -145,11 +172,18 @@ test_that('Test group by - 2x2 var - overwrite', {
       dt[, .(sum_hp = sum(hp),
              mean_mpg = mean(mpg)), by = c('cyl', 'am')]
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test group by - 2x2 var - new dataset', {
   testServer(groupby_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = dt),
@@ -191,6 +225,7 @@ test_that('Test group by - 2x2 var - new dataset', {
       dt[, .(sum_hp = sum(hp),
              mean_mpg = mean(mpg)), by = c('cyl', 'am')] |> df_info()
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
@@ -218,6 +253,12 @@ start_conf <- list(
 
 test_that('Test group by - overwrite - metadata update', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt$act_name <- 'df_mtcars'
 
@@ -253,13 +294,19 @@ test_that('Test group by - overwrite - metadata update', {
       dt[, .(sum_hp = sum(hp),
              mean_mpg = mean(mpg)), by = c('cyl', 'am')] |> df_info()
     )
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 # test group by - remove and group --------------------------------------------
 test_that('Test group by - 1x1 var - overwrite - remove', {
   testServer(groupby_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = list('mtcars' = dt),
@@ -307,5 +354,6 @@ test_that('Test group by - 1x1 var - overwrite - remove', {
       session$userData$dt$dt[[session$userData$dt$act_name]],
       dt[, .(mean_hp = mean(hp)), by = 'cyl']
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })

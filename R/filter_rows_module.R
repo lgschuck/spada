@@ -387,6 +387,7 @@ filter_rows_server <- function(id) {
             msg('Operator requires value of length 1')
             return()
           } else {
+
             temp <- copy(get_act_dt(session))
             temp <- filter_rows(temp,
                                 input$one_var_sel,
@@ -418,6 +419,7 @@ filter_rows_server <- function(id) {
             msg('Variables must be of the same type')
             return()
           } else {
+
             temp <- filter_rows_2vars(temp,
                                       input$two_var_sel1,
                                       input$two_var_sel2,
@@ -432,6 +434,7 @@ filter_rows_server <- function(id) {
               msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
               return()
             } else {
+
               temp <- copy(get_act_dt(session))
               temp <- temp[sample(1:nrow_df_active(),
                                   input$n_rows,
@@ -439,6 +442,7 @@ filter_rows_server <- function(id) {
             }
 
           } else if (input$sample_type == 'percent') {
+
             temp <- copy(get_act_dt(session))
             temp <- temp[sample(
               1:nrow_df_active(),
@@ -471,6 +475,7 @@ filter_rows_server <- function(id) {
             msg_error('Some variables are not present in the dataset')
             return()
           } else {
+
             # create safe env for evaluation ----------------------------------
             e1 <- safe_env(allowed_operations)
 
@@ -483,11 +488,11 @@ filter_rows_server <- function(id) {
 
               try(temp[parsed_code, , env = list(parsed_code = parsed_code)],
                   silent = TRUE)
-            ),
-            envir = e1
+              ),
+              envir = e1
             )
 
-            if(inherits(e1$temp, "try-error")){
+            if(inherits(e1$temp, 'try-error')){
               return(msg_error('Error in expression. Check code'))
             } else{
               temp <- copy(e1$temp)
@@ -509,7 +514,6 @@ filter_rows_server <- function(id) {
             msg_error('Choose an operator')
             return()
           }
-
           # apply filter -----
           temp <- copy(get_act_dt(session))
           temp <- filter_rows(
@@ -527,14 +531,16 @@ filter_rows_server <- function(id) {
             title = 'Operation Aborted'
             )
           )
+
         } else {
-          msg('Filter rows: OK')
+          running_modal()
           update_act_dt(session, copy(temp))
+          remove_running_modal()
         }
 
         rm(temp)
-      }
 
+      }
     }) |> bindEvent(input$btn_filter)
 
     # show allowed operations -------------------------------------------------

@@ -41,28 +41,27 @@ select_cols_server <- function(id) {
     observe({
       if(input$vars_sel |> length() == 0){
         msg('Select at least one variable')
+        return()
+      } else if(input$radio_var_sel == 'drop' && (all(df_names() %in% input$vars_sel))){
+        msg('Leave at least 1 variable')
+        return()
       } else {
 
+        running_modal()
         temp <- copy(get_act_dt(session))
 
         if(input$radio_var_sel == 'keep') {
-          temp <- temp[, .SD, .SDcols = input$vars_sel]
-          msg('Select columns: OK')
-        } else if (input$radio_var_sel == 'drop'){
-          if(all(df_names() %in% input$vars_sel)){
-            msg('Leave at least 1 variable')
-            return()
-          } else {
-            temp <- temp[, .SD, .SDcols = setdiff(df_names(), input$vars_sel)]
 
-            msg('Select columns: OK')
-          }
+          temp <- temp[, .SD, .SDcols = input$vars_sel]
+
+        } else if (input$radio_var_sel == 'drop'){
+          temp <- temp[, .SD, .SDcols = setdiff(df_names(), input$vars_sel)]
         }
 
         update_act_dt(session, copy(temp), updated_cols = temp |> names(),
                       change_type = 'select_cols')
         rm(temp)
-
+        remove_running_modal()
       }
     }) |> bindEvent(input$btn_sel)
 

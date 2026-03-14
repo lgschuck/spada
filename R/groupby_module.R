@@ -213,6 +213,8 @@ groupby_server <- function(id) {
         msg_error('New name is not valid or already in use')
         return()
       } else {
+        running_modal()
+
         j_calls <- build_calls(group$newvars, group$funs, group$vars)
 
         temp <- copy(get_act_dt(session))
@@ -239,7 +241,7 @@ groupby_server <- function(id) {
         group$funs <- NULL
         group$vars <- NULL
 
-        msg('Group By: OK')
+        remove_running_modal()
       }
 
     }) |> bindEvent(input$btn_groupby)

@@ -53,6 +53,8 @@ summarise_server <- function(id) {
         msg_error('New name is not valid or already in use')
         return()
       } else {
+
+        running_modal()
         temp <- copy(get_act_dt(session))
 
         temp <- summarise_dt(temp, input$fun_sel, input$vars_sel)
@@ -69,7 +71,7 @@ summarise_server <- function(id) {
 
         }
         rm(temp)
-        msg('Summarise: OK')
+        remove_running_modal()
       }
 
     }) |> bindEvent(input$btn_summarise)

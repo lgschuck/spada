@@ -22,6 +22,8 @@ editor_options:
 
 4 - **Output**: new edit output buttn and new format of output elements to accommodate edit events
 
+5 - **Running modal**: new modal to block screen when running changes in active dataset
+
 # Spada 0.1.3
 
 ## 2026.03.03

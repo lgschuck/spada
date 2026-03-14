@@ -9,6 +9,12 @@ datasets <- list('dt1' = dt1, 'dt2' = dt2)
 test_that('Test joins - new', {
   testServer(join_server, {
 
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
+
     session$userData$dt <- reactiveValues(
       dt = datasets,
       act_name = 'dt1'
@@ -67,13 +73,19 @@ test_that('Test joins - new', {
     expect_equal(session$userData$dt$dt [['inner_dt']],
                  dt_join(dt1, dt2, 'char_x', 'char_y', 'inner'),
                  ignore_attr = TRUE)
-
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 # test joins - overwrite ------------------------------------------------------
 test_that('Test joins - overwrite - left', {
   testServer(join_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = datasets,
@@ -97,11 +109,18 @@ test_that('Test joins - overwrite - left', {
     expect_equal(session$userData$dt$dt [['dt1']],
                  dt_join(dt1, dt2, 'char_x', 'char_y', 'left'),
                  ignore_attr = TRUE)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test joins - overwrite - right', {
   testServer(join_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = datasets,
@@ -125,11 +144,18 @@ test_that('Test joins - overwrite - right', {
     expect_equal(session$userData$dt$dt [['dt1']],
                  dt_join(dt1, dt2, 'char_x', 'char_y', 'right'),
                  ignore_attr = TRUE)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test joins - overwrite - full', {
   testServer(join_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = datasets,
@@ -153,12 +179,19 @@ test_that('Test joins - overwrite - full', {
     expect_equal(session$userData$dt$dt [['dt1']],
                  dt_join(dt1, dt2, 'char_x', 'char_y', 'full'),
                  ignore_attr = TRUE)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 
 test_that('Test joins - overwrite - inner', {
   testServer(join_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     session$userData$dt <- reactiveValues(
       dt = datasets,
@@ -182,6 +215,7 @@ test_that('Test joins - overwrite - inner', {
     expect_equal(session$userData$dt$dt [['dt1']],
                  dt_join(dt1, dt2, 'char_x', 'char_y', 'inner'),
                  ignore_attr = TRUE)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
@@ -271,7 +305,8 @@ test_that('Apply join - check inputs', {
 
     local_mocked_bindings(
       msg_error = function(text, ...) { last_msg <<- text },
-      msg = function(text, ...) { last_msg <<- text }
+      msg = function(text, ...) { last_msg <<- text },
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
     )
 
     session$userData$dt <- reactiveValues(
@@ -344,7 +379,7 @@ test_that('Apply join - check inputs', {
       vars_sel2 = 'char_y',
       btn_apply = 8
     )
-    expect_equal(last_msg, 'Join applied')
+    expect_equal(last_msg, 'Remove modal')
 
     # error
     session$setInputs(

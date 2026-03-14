@@ -86,6 +86,7 @@ rename_cols_server <- function(id) {
         if(is_valid_name(input$txt_new_name) &&
            input$txt_new_name %notin% df_names()){
 
+          running_modal()
           temp <- copy(get_act_dt(session))
 
           setnames(temp, input$vars_sel, input$txt_new_name)
@@ -95,7 +96,7 @@ rename_cols_server <- function(id) {
 
           rm(temp)
 
-          msg('Rename column: OK')
+          remove_running_modal()
         } else {
           msg_error('New name is not valid or already in use')
         }
@@ -119,7 +120,6 @@ rename_cols_server <- function(id) {
         msg('Select at least one variable')
       } else {
 
-        temp <- copy(get_act_dt(session))
         selected_names <- input$vars_sel_multi
 
         if (input$rename_method == 'prefix_suffix') {
@@ -168,13 +168,16 @@ rename_cols_server <- function(id) {
           } else if(any(new_names %in% setdiff(df_names(), selected_names))){
             msg_error('Some new names already in use')
           } else {
+            running_modal()
+            temp <- copy(get_act_dt(session))
+
             setnames(temp, input$vars_sel_multi, new_names)
 
             update_act_dt(session, copy(temp), updated_cols = input$new_names,
                           change_type = 'rename_cols')
 
-            msg('Rename columns: OK')
             rm(temp)
+            remove_running_modal()
           }
         } else {
           msg_error('New names are not valid')

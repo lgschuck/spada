@@ -134,10 +134,11 @@ convert_cols_server <- function(id) {
 
     # apply conversions -------------------------------------------------------
     observe({
-      if(input$vars_sel == '' | input$sel_format == ''){
+      if(!isTruthy(input$vars_sel) || !isTruthy(input$sel_format)){
         msg('Choose a variable and a new format')
+        return()
       } else {
-
+        running_modal()
         temp <- copy(get_act_dt(session))
 
         temp[, input$vars_sel :=
@@ -150,8 +151,7 @@ convert_cols_server <- function(id) {
         update_act_dt(session, copy(temp), updated_cols = input$vars_sel,
                       change_type = 'convert_cols')
         rm(temp)
-
-        msg('Conversion applied')
+        remove_running_modal()
       }
     }) |> bindEvent(input$btn_apply)
   })

@@ -7,6 +7,12 @@ df_test[150, 1:5] <- NA
 test_that('Test order rows - na last - one variable ascending', {
   testServer(order_rows_server, {
 
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
+
     vars <- c('Species')
 
     session$userData$dt <- reactiveValues(
@@ -22,11 +28,18 @@ test_that('Test order rows - na last - one variable ascending', {
     df_reordered <- df_test[order(df_test[[vars]]), ]
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test order rows - na last - one variable descending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Species')
 
@@ -43,11 +56,18 @@ test_that('Test order rows - na last - one variable descending', {
     df_reordered <- df_test[order(df_test[[vars]], decreasing = TRUE), ]
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test order rows - na last - two variables ascending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Sepal.Length', 'Sepal.Width')
 
@@ -64,11 +84,18 @@ test_that('Test order rows - na last - two variables ascending', {
     df_reordered <- setorderv(df_test, vars, na.last = TRUE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test order rows - na last - two variables descending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Sepal.Length', 'Sepal.Width')
 
@@ -85,12 +112,19 @@ test_that('Test order rows - na last - two variables descending', {
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = TRUE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 # test order rows - na first --------------------------------------------------
 test_that('Test order rows - na first - one variable ascending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Species')
 
@@ -107,11 +141,18 @@ test_that('Test order rows - na first - one variable ascending', {
     df_reordered <- setorderv(df_test, vars, na.last = FALSE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test order rows - na first - one variable descending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Species')
 
@@ -128,11 +169,18 @@ test_that('Test order rows - na first - one variable descending', {
     df_reordered <- setorderv(df_test, vars, -1, na.last = FALSE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test order rows - na first - two variables ascending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Sepal.Length', 'Petal.Width')
 
@@ -149,11 +197,18 @@ test_that('Test order rows - na first - two variables ascending', {
     df_reordered <- setorderv(df_test, vars, na.last = FALSE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test order rows - na first - two variables descending', {
   testServer(order_rows_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function() { last_msg <<- 'Remove modal' }
+    )
 
     vars <- c('Sepal.Length', 'Sepal.Width')
 
@@ -170,6 +225,7 @@ test_that('Test order rows - na first - two variables descending', {
     df_reordered <- setorderv(df_test, vars, c(-1, -1), na.last = FALSE)
 
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]], df_reordered)
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 

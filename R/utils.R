@@ -662,7 +662,6 @@ test_dataset <- function(n_row = 1e3, n_col = 11){
     num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
     int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
     logical_var = rep(sample(c(TRUE, FALSE), n_row, replace = T)),
-    complex_var = rep(sample(1:100, n_row, replace = T) |> as.complex()),
     all_na = rep(NA, n_row)
   )
 
@@ -920,6 +919,27 @@ is_spada_df <- function(df){
 # is spada data table ---------------------------------------------------------
 is_spada_dt <- function(dt){
   is_spada_df(dt) && is.data.table(dt)
+}
+
+# running modal ---------------------------------------------------------------
+running_modal <- function(text = 'Running...'){
+  showModal(
+    modalDialog(
+      div(
+        icon('spinner', class='fa fa-spinner fa-spin fa-1x'),
+        span(text, style = 'color:#585c5e;')
+      ),
+      footer = NULL,
+      easyClose = FALSE,
+      size = 'm',
+      fade = T
+    )
+  )
+}
+
+remove_running_modal <- function(time = 0.7){
+  Sys.sleep(time)
+  removeModal()
 }
 
 # show startup function -------------------------------------------------------

@@ -6,6 +6,12 @@ dt <- iris |> as.data.table()
 test_that('Test summarise - new dt - distinct function', {
   testServer(summarise_server, {
 
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
+
     session$userData$dt_names <- reactive('iris')
     session$userData$dt$dt[['iris']] <- dt
     session$userData$dt$act_name <- 'iris'
@@ -22,11 +28,18 @@ test_that('Test summarise - new dt - distinct function', {
       session$userData$dt$dt[['new_dt']],
       dt[, .SD, .SDcols = 'Petal.Length'] |> unique()
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
 test_that('Test summarise - overwrite dt - distinct function', {
   testServer(summarise_server, {
+
+    last_msg <- NULL
+
+    local_mocked_bindings(
+      remove_running_modal = function(){last_msg <<- 'Remove modal'}
+    )
 
     session$userData$dt_names <- reactive('iris')
     session$userData$dt$dt[['iris']] <- dt
@@ -44,6 +57,7 @@ test_that('Test summarise - overwrite dt - distinct function', {
       session$userData$dt$dt[['iris']],
       dt[, .SD, .SDcols = 'Petal.Length'] |> unique()
     )
+    expect_equal(last_msg, 'Remove modal')
   })
 })
 
