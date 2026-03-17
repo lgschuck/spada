@@ -1301,7 +1301,7 @@ update_meta <- function(dt = data.table(),
     # delete updated vars from previous meta
     previous_meta <- previous_meta[var %notin% updated_cols, ]
 
-    new_meta <- rbind(previous_meta, new_meta)
+    new_meta <- rbindlist(list(previous_meta, new_meta), fill = T)
 
     order_df <- data.table(var = col_names, index = 1:length(col_names))
 
@@ -1702,76 +1702,134 @@ dt_join <- function(dt1, dt2, vars1, vars2,
 
 # math and other functions ----------------------------------------------------
 
-df_info <- function(df) {
+df_info <- function(df, type = c('basic', 'complete')){
   stopifnot(is.data.frame(df))
 
-  if (ncol(df) == 0) {
-    return(data.table(
+  type = match.arg(type)
+
+  if (fncol(df) == 0) {
+    dt <- data.table(
       var = 'v1',
       type = NA,
       class = NA,
-      size = 0,
       min = NA,
       max = NA,
       n_valid = NA,
       perc_valid = NA,
-      n_unique = NA,
-      perc_unique = NA,
       n_zero = NA,
       perc_zero = NA,
       n_nas = NA,
       perc_nas = NA,
       rows = NA,
       cols = NA
-    ))
-  }
-
-  rows <- fnrow(df)
-  cols <- fncol(df)
-
-  res <- lapply(seq_len(cols), function(j) {
-    x <- df[[j]]
-
-    nas <- whichNA(x) |> NROW()
-    valid <- rows - nas
-    uniq <- fnunique(x)
-
-    if (is.numeric(x)){
-      zeros <- NROW(x %==% 0)
-
-      rangev <- frange(x, na.rm = T)
-      minv <- rangev[1]
-      maxv <- rangev[2]
-    } else {
-      zeros <- 0
-      minv <- NA
-      maxv <- NA
+    )
+    if(type == 'complete'){
+      dt[, `:=`(n_unique = NA, perc_unique = NA, size = 0)]
     }
 
-    list(
+  } else {
+    rows <- fnrow(df)
+    cols <- fncol(df)
 
-      type = typeof(x),
-      class = paste(class(x), collapse = '/'),
-      size = as.numeric(object.size(x)),
-      min = minv,
-      max = maxv,
-      n_valid = valid,
-      perc_valid = valid / rows,
-      n_unique = uniq,
-      perc_unique = uniq / rows,
-      n_zero = zeros,
-      perc_zero = zeros / rows,
-      n_nas = nas,
-      perc_nas = nas / rows
+    res <- lapply(seq_len(cols), function(j) {
+      x <- df[[j]]
+
+      nas <- whichNA(x) |> NROW()
+      valid <- rows - nas
+
+      if(type == 'complete'){ uniq <- fnunique(x) }
+
+      if (is.numeric(x)){
+        zeros <- NROW(x %==% 0)
+
+        rangev <- frange(x, na.rm = T)
+        minv <- rangev[1]
+        maxv <- rangev[2]
+      } else {
+        zeros <- 0
+        minv <- NA
+        maxv <- NA
+      }
+
+      if(type == 'basic'){
+        list(
+          type = typeof(x),
+          class = paste(class(x), collapse = '/'),
+          min = minv,
+          max = maxv,
+          n_valid = valid,
+          perc_valid = valid / rows,
+          n_zero = zeros,
+          perc_zero = zeros / rows,
+          n_nas = nas,
+          perc_nas = nas / rows
+        )
+      } else if (type == 'complete'){
+        list(
+          type = typeof(x),
+          class = paste(class(x), collapse = '/'),
+          size = as.numeric(object.size(x)),
+          min = minv,
+          max = maxv,
+          n_valid = valid,
+          perc_valid = valid / rows,
+          n_unique = uniq,
+          perc_unique = uniq / rows,
+          n_zero = zeros,
+          perc_zero = zeros / rows,
+          n_nas = nas,
+          perc_nas = nas / rows
+        )
+      }
+    })
+
+    dt <- data.table::rbindlist(res)
+    dt$var <- names(df)
+    dt[, `:=`(rows = rows, cols = cols)]
+
+  }
+
+  if(type == 'basic'){
+    setcolorder(
+      dt,
+      neworder = c(
+        'var',
+        'type',
+        'class',
+        'min',
+        'max',
+        'n_valid',
+        'perc_valid',
+        'n_zero',
+        'perc_zero',
+        'n_nas',
+        'perc_nas',
+        'rows',
+        'cols')
     )
-  })
-
-  dt <- data.table::rbindlist(res)
-  dt$var <- names(df)
-  dt[, `:=`(rows = rows, cols = cols)]
-  setcolorder(dt, 'var', before = 'type')
+  } else if(type =='complete'){
+    setcolorder(
+      dt,
+      neworder = c(
+        'var',
+        'type',
+        'class',
+        'size',
+        'min',
+        'max',
+        'n_valid',
+        'perc_valid',
+        'n_unique',
+        'perc_unique',
+        'n_zero',
+        'perc_zero',
+        'n_nas',
+        'perc_nas',
+        'rows',
+        'cols')
+    )
+  }
   return(dt)
-
 }
 
 f_num <- function(x, big = ',', dec = '.', thousand = 'K',
@@ -1799,8 +1857,9 @@ f_num <- function(x, big = ',', dec = '.', thousand = 'K',
 gt_info <- function(df, df_name){
   stopifnot(is.data.frame(df))
 
-  df <- as.data.table(df)
-  df[, f_icon := fcase(
+  dt <- df |> as.data.table()
+
+  dt[, f_icon := fcase(
     class == 'integer', '1',
     class == 'character', 'a',
     class == 'numeric', 'calculator',
@@ -1811,36 +1870,32 @@ gt_info <- function(df, df_name){
     class == 'complex', 'info',
     class == 'logical', 'puzzle-piece')]
 
-  df_gt <- df[, `:=` (n_valid = f_num(n_valid, dig = 3),
-                      n_unique = f_num(n_unique, dig = 3),
+  dt_gt <- dt[, `:=` (n_valid = f_num(n_valid, dig = 3),
                       n_zero = f_num(n_zero, dig = 3),
                       n_nas = f_num(n_nas, dig = 3))] |>
     gt()
 
   # if all NA do nothing
-  if(!all(df$min |> is.na())){
-    df_gt <- df_gt |>
+  if(!allNA(dt$min)){
+    dt_gt <- dt_gt |>
       data_color(columns = 'min', palette = yl_palette)
   }
 
   # if all NA do nothing
-  if(!all(df$max |> is.na())){
-    df_gt <- df_gt |>
+  if(!allNA(dt$max)){
+    dt_gt <- dt_gt |>
       data_color(columns = 'max', palette = pk_palette)
   }
 
-  df_gt |>
+  dt_gt |>
     tab_header(df_name) |>
     cols_hide(columns = c('rows', 'cols')) |>
-    fmt_percent(columns = c('perc_valid', 'perc_unique', 'perc_zero', 'perc_nas')) |>
-    fmt_bytes(columns = 'size') |>
-    data_color(columns = 'size', palette = blue_palette) |>
+    fmt_percent(columns = c('perc_valid', 'perc_zero', 'perc_nas')) |>
     data_color(columns = 'n_valid', palette = lg_palette) |>
-    data_color(columns = 'n_unique', palette = dg_palette) |>
     data_color(columns = 'n_zero', palette = gray_palette) |>
     data_color(columns = 'n_nas', palette = red_palette) |>
-    fmt_integer(columns = c('n_valid', 'n_unique', 'n_nas')) |>
-    fmt_number(columns = c('min', 'max', 'n_valid', 'n_unique', 'n_zero', 'n_nas')) |>
+    fmt_integer(columns = c('n_valid', 'n_nas')) |>
+    fmt_number(columns = c('min', 'max', 'n_valid', 'n_zero', 'n_nas')) |>
     sub_missing() |>
     cols_move(columns = 'f_icon', after = 'var') |>
     fmt_icon(columns = 'f_icon') |>
@@ -1848,11 +1903,9 @@ gt_info <- function(df, df_name){
       var = 'Variable',
       type = 'Type',
       class = 'Class',
-      size = 'Size',
       min = 'Min',
       max = 'Max',
       n_valid = 'Valid',
-      n_unique = 'Unique',
       n_zero = 'Zeros',
       n_nas = "NA's",
       f_icon = ''
@@ -1860,7 +1913,6 @@ gt_info <- function(df, df_name){
     cols_width(f_icon ~ px(30)) |>
     cols_merge(columns = c('class', 'f_icon'), pattern = "{2} {1}") |>
     cols_merge(columns = c('n_valid', 'perc_valid'), pattern = "{1} / {2}") |>
-    cols_merge(columns = c('n_unique', 'perc_unique'), pattern = "{1} / {2}") |>
     cols_merge(columns = c('n_zero', 'perc_zero'), pattern = "{1} / {2}") |>
     cols_merge(columns = c('n_nas', 'perc_nas'), pattern = "{1} / {2}") |>
     tab_options(table.background.color = '#ffffff')

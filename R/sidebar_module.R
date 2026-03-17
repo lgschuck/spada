@@ -62,10 +62,6 @@ sidebar_server <- function(id, app_session) {
         p(
           "Columns with NA's: ",
           textOutput(ns('col_nas'), inline = TRUE)
-        ),
-        p(
-          'Size (MB): ',
-          textOutput(ns('size_mb'), inline = TRUE)
         )
       )
     })
@@ -76,10 +72,6 @@ sidebar_server <- function(id, app_session) {
 
     output$col_nas <- renderText({
       session$userData$dt$act_mini_meta()[['col_nas']]
-    })
-
-    output$size_mb <- renderText({
-      session$userData$dt$act_mini_meta()[['size']]
     })
 
     # update active dataset list --------
@@ -142,7 +134,7 @@ sidebar_server <- function(id, app_session) {
     output$df_preview <- renderUI({
       req(session$userData$dt$dt, input$sel_datasets_names)
 
-      n <- min(5, session$userData$dt$dt[[input$sel_datasets_names]] |> nrow())
+      n <- min(5, session$userData$dt$dt[[input$sel_datasets_names]] |> fnrow())
       df <- session$userData$dt$dt[[input$sel_datasets_names]][1:n, ]
 
       gt::gt(df) |>

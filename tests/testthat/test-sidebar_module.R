@@ -140,13 +140,11 @@ test_that('Test render df_info UI', {
     })
 
     expect_true(is.list(output$df_info))
-    expect_true(grepl('Size', output$df_info$html))
     expect_true(grepl('Rows/Columns:', output$df_info$html))
     expect_true(grepl("Columns with NA's:", output$df_info$html))
 
     expect_equal(output$row_col, '5.0 / 2')
     expect_equal(output$col_nas, '1')
-    expect_equal(output$size_mb, '0')
   })
 })
 

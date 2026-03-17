@@ -24,6 +24,8 @@ editor_options:
 
 5 - **Running modal**: new modal to block screen when running changes in active dataset
 
+6 - **df_info x metadata**: removed fnunique and object.size from df_info given the cost to evaluate for big datasets. In future versions will be created a new funtion with more metadata on demand via bind event
+
 # Spada 0.1.3
 
 ## 2026.03.03

@@ -935,7 +935,7 @@ test_that('df_info calculates unique counts and percentages correctly', {
     c = c(TRUE, FALSE, TRUE)
   )
 
-  info <- df_info(df)
+  info <- df_info(df, type = 'complete')
 
   expect_equal(info$n_unique, c(2, 2, 2))
   expect_equal(info$perc_unique, c(2/3, 2/3, 2/3))
@@ -983,7 +983,7 @@ test_that('df_info handles numeric min and max correctly', {
 test_that('df_info works with an empty data frame', {
   df <- data.frame()
 
-  info <- df_info(df)
+  info <- df_info(df, type = 'complete')
 
   df0 <- data.table(
     var = 'v1',
@@ -1075,7 +1075,6 @@ r_base_df_info <- function(df) {
   do.call(rbind.data.frame, res) |> as.data.table()
 }
 
-
 test_that('df_info compare with r base function', {
 
   df <- data.frame(
@@ -1084,12 +1083,11 @@ test_that('df_info compare with r base function', {
     c = c(TRUE, FALSE, NA)
   )
 
-  info <- df_info(df)
+  info <- df_info(df, type = 'complete')
   info_rbase <- r_base_df_info(df)
 
   expect_equal(info, info_rbase)
 })
-
 
 # test f_num function ---------------------------------------------------------
 
@@ -1130,4 +1128,3 @@ test_that('Test gt info', {
   expect_equal(gt_info_test$`_data`$rows, rep(150, 5))
   expect_equal(gt_info_test$`_data`$cols, rep(5, 5))
 })
-

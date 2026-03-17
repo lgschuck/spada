@@ -38,6 +38,12 @@ data_highlights_ui <- function(id) {
         theme = 'bg-gradient-blue-purple'
       ),
       value_box(
+        title = 'Columns',
+        value = textOutput(ns('n_cols')),
+        showcase = bs_icon('grid-3x3-gap-fill'),
+        theme = 'bg-gradient-indigo-green'
+      ),
+      value_box(
         title = 'Most valid values',
         value = textOutput(ns('var_most_valid')),
         showcase = bs_icon('list-check'),
@@ -45,28 +51,14 @@ data_highlights_ui <- function(id) {
         p('Number of valid:', textOutput(ns('var_most_valid_n_valid'), inline = T))
       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
       value_box(
-        title = 'Most unique values',
-        value = textOutput(ns('var_most_unique')),
-        showcase = bs_icon('fingerprint'),
-        theme = 'bg-gradient-indigo-green',
-        p('Number of unique:', textOutput(ns('var_most_unique_n_unique'), inline = T))
-      ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
-      value_box(
-        title = 'Most zeros',
-        value = textOutput(ns('var_most_zeros')),
-        showcase = bs_icon('0-circle'),
-        theme = 'bg-gradient-orange-indigo',
-        p('Number of zeros:', textOutput(ns('var_most_zeros_n_zeros'), inline = T))
-      ) |> tooltip('Showing 1, there may be ties', placement = 'top')
-    ),
-    layout_column_wrap(
-      value_box(
         title = "Most NA's",
         value = textOutput(ns('var_most_nas')),
         showcase = bs_icon('database-x'),
         theme = 'bg-gradient-red-indigo',
         p("Number of NA's:", textOutput(ns('var_most_nas_n'), inline = T), ' rows')
       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
+    ),
+    layout_column_wrap(
       value_box(
         title = 'Max value',
         value = textOutput(ns('var_max_value'), inline = T),
@@ -82,12 +74,18 @@ data_highlights_ui <- function(id) {
         p('Min value:', textOutput(ns('min_value'), inline = T))
       ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
       value_box(
-        title = 'Biggest size',
-        value = textOutput(ns('var_biggest_size')),
+        title = 'Most zeros',
+        value = textOutput(ns('var_most_zeros')),
+        showcase = bs_icon('0-circle'),
+        theme = 'bg-gradient-orange-indigo',
+        p('Number of zeros:', textOutput(ns('var_most_zeros_n_zeros'), inline = T))
+      ) |> tooltip('Showing 1, there may be ties', placement = 'top'),
+      value_box(
+        title = 'Size',
+        value = p(textOutput(ns('act_dt_size'), inline = T), 'MB'),
         showcase = bs_icon('sd-card'),
-        theme = 'bg-gradient-teal-indigo',
-        p('Size:', textOutput(ns('var_biggest_size_size'), inline = T), 'Bytes')
-      ) |> tooltip('Showing 1, there may be ties', placement = 'top')
+        theme = 'bg-gradient-teal-indigo'
+      )
     )
   )
 
@@ -107,12 +105,14 @@ data_highlights_server <- function(id) {
       copy(session$userData$dt$act_meta())
     })
 
-    output$var_num_vars <- renderText(sapply(dt(), is.numeric) |> sum())
-    output$var_char_vars <- renderText(sapply(dt(), is.character) |> sum())
-    output$var_factor_vars <- renderText(sapply(dt(), is.factor) |> sum())
-    output$var_date_vars <- renderText(sapply(dt(), is_date) |> sum())
+    output$var_num_vars <- renderText(sapply(dt(), is.numeric) |> sum_nona())
+    output$var_char_vars <- renderText(sapply(dt(), is.character) |> sum_nona())
+    output$var_factor_vars <- renderText(sapply(dt(), is.factor) |> sum_nona())
+    output$var_date_vars <- renderText(sapply(dt(), is_date) |> sum_nona())
 
     output$n_rows <- renderText( dt_meta()[1, ]$rows |> f_num() )
+
+    output$n_cols <- renderText( dt_meta()[1, ]$cols |> f_num() )
 
     output$var_most_valid <- renderText(
       if (dt_meta()[n_valid > 0, ] |> nrow() < 1) {
@@ -127,22 +127,6 @@ data_highlights_server <- function(id) {
         '0'
       } else {
         setorderv(dt_meta(), 'n_valid', -1, na.last = T)[1, f_num(n_valid)]
-      }
-    )
-
-    output$var_most_unique <- renderText(
-      if (dt_meta()[n_unique > 0, ] |> nrow() < 1) {
-        '---'
-      } else {
-        setorderv(dt_meta(), 'n_unique', -1, na.last = T)[1, var]
-      }
-    )
-
-    output$var_most_unique_n_unique <- renderText(
-      if (dt_meta()[n_unique > 0, ] |> nrow() < 1) {
-        '0'
-      } else {
-        setorderv(dt_meta(), 'n_unique', -1, na.last = T)[1, f_num(n_unique)]
       }
     )
 
@@ -213,13 +197,14 @@ data_highlights_server <- function(id) {
       }
     )
 
-    output$var_biggest_size <- renderText(
-      setorderv(dt_meta(), 'size', -1, na.last = T)[1, var]
-    )
+    act_dt_size <- reactive({
+      req(dt())
+      (object.size(dt()) / 2^20) |> as.numeric() |> round(2)
+    })
 
-    output$var_biggest_size_size <- renderText(
-      setorderv(dt_meta(), 'size', -1, na.last = T)[1, f_num(size)]
-    )
-
+    output$act_dt_size <- renderText({
+      req(act_dt_size())
+      act_dt_size()
+    })
   })
 }

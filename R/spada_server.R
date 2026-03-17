@@ -88,7 +88,7 @@ spada_server <- function(datasets, conf){
           session$userData$dt$meta[[session$userData$dt$act_name]] <- update_meta(
             previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
             col_names = get_act_dt(session) |> names(),
-            ncols = get_act_dt(session) |> ncol(),
+            ncols = get_act_dt(session) |> fncol(),
             change_type = session$userData$dt$data_changed_type
           )
 
@@ -109,7 +109,7 @@ spada_server <- function(datasets, conf){
             previous_meta = session$userData$dt$meta[[session$userData$dt$act_name]],
             col_names = get_act_dt(session) |> names(),
             updated_cols = session$userData$dt$updated_cols,
-            ncols = get_act_dt(session) |> ncol(),
+            ncols = get_act_dt(session) |> fncol(),
             change_type = session$userData$dt$data_changed_type
           )
         }
@@ -138,15 +138,14 @@ spada_server <- function(datasets, conf){
       req(session$userData$dt$act_meta())
 
       list(
-        'row_col' = paste(session$userData$dt$act_meta() |>
-                                pull(rows) |> head(1) |> f_num(dig = 1),
-                              '/',
-                              session$userData$dt$act_meta() |>
-                                pull(cols) |> head(1) |> f_num()),
-        'col_nas' = session$userData$dt$act_meta() |>
-          filter(n_nas > 0) |> nrow(),
-        'size' = (object.size(get_act_dt(session)) / 2^20) |>
-          as.numeric() |> round(2)
+        'row_col' = paste(
+          session$userData$dt$act_meta() |>
+            pull(rows) |> head(1) |> f_num(dig = 1),
+          '/',
+          session$userData$dt$act_meta() |>
+            pull(cols) |> head(1) |> f_num()
+        ),
+        'col_nas' = session$userData$dt$act_meta()[n_nas > 0, ] |> fnrow()
       )
     })
 

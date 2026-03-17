@@ -1,7 +1,7 @@
 # tests/testthat/test-data_highlights_module.R
 
 # test data highlights - basic test -------------------------------------------
-test_that("Test data highlights - basic test", {
+test_that('Test data highlights - basic test', {
   testServer(data_highlights_server, {
 
     df_test <- data.frame(
@@ -14,6 +14,8 @@ test_that("Test data highlights - basic test", {
       max_value = rep(Inf, 5),
       min_value = rep(-Inf, 5)
     )
+
+    df_test_size <- (object.size(df_test) / 2^20) |> as.numeric() |> round(2)
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
@@ -40,9 +42,6 @@ test_that("Test data highlights - basic test", {
     expect_equal(output$var_most_valid, 'fact')
     expect_equal(output$var_most_valid_n_valid, '5')
 
-    expect_equal(output$var_most_unique, 'num')
-    expect_equal(output$var_most_unique_n_unique, '5')
-
     expect_equal(output$var_most_zeros, 'all_zeros')
     expect_equal(output$var_most_zeros_n_zeros, '5')
 
@@ -55,12 +54,8 @@ test_that("Test data highlights - basic test", {
     expect_equal(output$var_min_value, 'min_value')
     expect_equal(output$min_value, '-Inf')
 
-    expect_equal(output$var_biggest_size, 'fact')
-    expect_equal(output$var_biggest_size_size,
-                 factor(c('x', 'y', 'x', 'y', 'z')) |>
-                   object.size() |>
-                   as.character()
-                 )
+    expect_equal(act_dt_size(), df_test_size)
+    expect_equal(output$act_dt_size, as.character(df_test_size))
 
   })
 })

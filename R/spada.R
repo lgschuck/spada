@@ -24,8 +24,8 @@
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
 #'             data.table fcase fifelse fread fwrite hour is.data.table mday
-#'             minute month quarter second setcolorder setDT setnames setorderv
-#'             shift wday week yday year
+#'             minute month quarter rbindlist second setcolorder setDT setnames
+#'             setorderv shift wday week yday year
 #'
 #' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest
