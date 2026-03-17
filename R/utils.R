@@ -1735,14 +1735,23 @@ df_info <- function(df) {
     nas <- whichNA(x) |> NROW()
     valid <- rows - nas
     uniq <- fnunique(x)
-    zeros <- if (is.numeric(x)) NROW(x %==% 0) else 0
-    minv <- if (is.numeric(x)) fmin(x, na.rm = T) else NA
-    maxv <- if (is.numeric(x)) fmax(x, na.rm = T) else NA
+
+    if (is.numeric(x)){
+      zeros <- NROW(x %==% 0)
+
+      rangev <- frange(x, na.rm = T)
+      minv <- rangev[1]
+      maxv <- rangev[2]
+    } else {
+      zeros <- 0
+      minv <- NA
+      maxv <- NA
+    }
 
     list(
-      var = names(df)[j],
+
       type = typeof(x),
-      class = paste(class(x), collapse = "/"),
+      class = paste(class(x), collapse = '/'),
       size = as.numeric(object.size(x)),
       min = minv,
       max = maxv,
@@ -1753,13 +1762,16 @@ df_info <- function(df) {
       n_zero = zeros,
       perc_zero = zeros / rows,
       n_nas = nas,
-      perc_nas = nas / rows,
-      rows = rows,
-      cols = cols
+      perc_nas = nas / rows
     )
   })
 
-  do.call(rbind.data.frame, res) |> as.data.table()
+  dt <- data.table::rbindlist(res)
+  dt$var <- names(df)
+  dt[, `:=`(rows = rows, cols = cols)]
+  setcolorder(dt, 'var', before = 'type')
+  return(dt)
+
 }
 
 f_num <- function(x, big = ',', dec = '.', thousand = 'K',

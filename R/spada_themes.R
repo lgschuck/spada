@@ -47,7 +47,7 @@ theme_basic_rules <- as_sass(
       }*/
 
       .navbar {
-        height: 45px !important;
+        min-height: 45px !important;
         padding-top: 4px !important;
         padding-bottom: 4px !important;
       }
