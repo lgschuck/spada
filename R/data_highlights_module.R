@@ -199,7 +199,8 @@ data_highlights_server <- function(id) {
 
     act_dt_size <- reactive({
       req(dt())
-      (object.size(dt()) / 2^20) |> as.numeric() |> round(2)
+      (object.size(dt()) / 2^20) |> as.numeric() |> round(2) |>
+        format(big.mark = ',', decimal.mark = '.')
     })
 
     output$act_dt_size <- renderText({

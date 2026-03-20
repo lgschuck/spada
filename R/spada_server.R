@@ -3,13 +3,17 @@
 spada_server <- function(datasets, conf){
   function(input, output, session) {
 
-    onStop(function() daemons(0))
+    previous_shiny.maxRequestSize <- getOption('shiny.maxRequestSize')
+    options(shiny.maxRequestSize = conf$file_size * 1024 ^ 2)
+
+    onStop(function(){
+      options(shiny.maxRequestSize = previous_shiny.maxRequestSize)
+      daemons(0)
+    })
 
     session$onFlushed(function() {
       waiter_hide()
     })
-
-    options(shiny.maxRequestSize = conf$file_size * 1024 ^ 2)
 
     # conf values -------------------------------------------------------------
     session$userData$conf <- reactiveValues(

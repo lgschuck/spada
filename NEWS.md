@@ -26,6 +26,10 @@ editor_options:
 
 6 - **df_info x metadata**: removed fnunique and object.size from df_info given the cost to evaluate for big datasets. In future versions will be created a new funtion with more metadata on demand via bind event
 
+7 - **shiny.maxRequestSize** option: now the value is restored when the app is closed
+
+8 - **Minor visuals**: dataset size formated with big mark
+
 # Spada 0.1.3
 
 ## 2026.03.03

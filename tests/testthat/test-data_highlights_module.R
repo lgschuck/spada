@@ -15,7 +15,8 @@ test_that('Test data highlights - basic test', {
       min_value = rep(-Inf, 5)
     )
 
-    df_test_size <- (object.size(df_test) / 2^20) |> as.numeric() |> round(2)
+    df_test_size <- (object.size(df_test) / 2^20) |> as.numeric() |> round(2) |>
+      format(big.mark = ',', decimal = '.')
 
     session$userData$dt <- reactiveValues(
       dt = list('df_test' = df_test |> as.data.table()),
