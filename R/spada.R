@@ -3,6 +3,7 @@
 #' Function that generates a Shiny App for Data Analysis
 #'
 #' @param ... Objects of data.frame class
+#' @param run_local Run on local machine
 #'
 #' @examples
 #' if(interactive()) spada(datasets::mtcars)
@@ -71,8 +72,9 @@
 #'
 #' @importFrom waiter useWaiter waiter_hide waiter_show waiterShowOnLoad
 
-spada <- function(...) {
+spada <- function(..., run_local = TRUE) {
 
+  run_local <- !isFALSE(run_local)
   daemons(1)
 
   datasets <- list(...)
@@ -127,6 +129,7 @@ spada <- function(...) {
   start_conf <- load_conf(start_conf, r_user_conf_dir, themes_names)
 
   ### Run App -----------------------------------------------------------------
-  shinyApp(spada_ui(start_conf), spada_server(datasets, start_conf),
+  shinyApp(spada_ui(start_conf),
+           spada_server(datasets, start_conf, run_local),
            options = list(launch.browser = T))
 }

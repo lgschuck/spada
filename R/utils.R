@@ -1026,7 +1026,7 @@ exit_with_save <- function(session){
   t_diff <- Sys.time() - t0
   if(t_diff < 5) Sys.sleep(5 - t_diff)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
-  stopApp()
+  if(session$userData$run_local) stopApp()
 }
 
 # exit spada without saving session -------------------------------------------
@@ -1040,7 +1040,7 @@ exit_without_save <- function(session){
 
   Sys.sleep(3)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
-  stopApp()
+  if(session$userData$run_local) stopApp()
 }
 
 # test write access -----------------------------------------------------------

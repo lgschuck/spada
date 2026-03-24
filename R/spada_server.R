@@ -1,6 +1,6 @@
 
 # Function with the server of spada.R
-spada_server <- function(datasets, conf){
+spada_server <- function(datasets, conf, run_local = TRUE){
   function(input, output, session) {
 
     previous_shiny.maxRequestSize <- getOption('shiny.maxRequestSize')
@@ -13,6 +13,11 @@ spada_server <- function(datasets, conf){
 
     session$onFlushed(function() {
       waiter_hide()
+    })
+
+    session$userData$run_local <- run_local
+    session$onSessionEnded(function(){
+      if(session$userData$run_local) stopApp()
     })
 
     # conf values -------------------------------------------------------------
@@ -239,7 +244,6 @@ spada_server <- function(datasets, conf){
     about_spada_server('about_spada')
 
     # exit app event ----------------------------------------------------------
-    session$onSessionEnded(stopApp)
     observe({
       req(input$navbar)
       if (input$navbar == 'exit') {

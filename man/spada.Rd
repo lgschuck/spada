@@ -4,10 +4,12 @@
 \alias{spada}
 \title{Spada (Data Analysis)}
 \usage{
-spada(...)
+spada(..., run_local = TRUE)
 }
 \arguments{
 \item{...}{Objects of data.frame class}
+
+\item{run_local}{Run on local machine}
 }
 \description{
 Function that generates a Shiny App for Data Analysis

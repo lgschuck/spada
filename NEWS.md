@@ -24,11 +24,13 @@ editor_options:
 
 5 - **Running modal**: new modal to block screen when running changes in active dataset
 
-6 - **df_info x metadata**: removed fnunique and object.size from df_info given the cost to evaluate for big datasets. In future versions will be created a new funtion with more metadata on demand via bind event
+6 - **df_info x metadata**: removed fnunique and object.size from df_info given the cost to evaluate for big datasets. In future versions will be created a new funtion to run more metadata
 
 7 - **shiny.maxRequestSize** option: now the value is restored when the app is closed
 
-8 - **Minor visuals**: dataset size formated with big mark
+8 - **Minor visuals**: dataset size (data highlights module) formatted with big mark
+
+9 - **Run local** arg: new argument to run locally
 
 # Spada 0.1.3
 
