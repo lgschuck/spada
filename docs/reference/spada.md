@@ -5,7 +5,7 @@ Function that generates a Shiny App for Data Analysis
 ## Usage
 
 ``` r
-spada(...)
+spada(..., run_local = TRUE)
 ```
 
 ## Arguments
@@ -13,6 +13,10 @@ spada(...)
 - ...:
 
   Objects of data.frame class
+
+- run_local:
+
+  Run on local machine
 
 ## Examples
 

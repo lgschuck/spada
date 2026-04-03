@@ -26,6 +26,11 @@ This package is inspired in many other tools like:
 
 </div>
 
+## [Live Demo](http://lgschuck.shinyapps.io/spada)
+
+You may try Spada in shinyapps.io
+[Spada](http://lgschuck.shinyapps.io/spada)
+
 ## Documentation
 
 You can access Spada Book on this website: [Spada

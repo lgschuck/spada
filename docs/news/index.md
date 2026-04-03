@@ -6,6 +6,45 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+## Spada 0.1.4
+
+### 2026.04.02
+
+#### Improvements
+
+1 - New **spada_save** function
+
+2 - New **join module**
+([\#39](https://github.com/lgschuck/spada/issues/39))
+
+3 - **Tests**: new tests in input/messages across several modules, new
+test for edit and delete output elements (**output_module**)
+
+4 - **Output**: new edit output button and new format of output elements
+to accommodate edit events
+([\#66](https://github.com/lgschuck/spada/issues/66))
+
+5 - **Running modal**: new modal to block screen when running changes in
+active dataset
+
+6 - **df_info x metadata**: removed fnunique and object.size from
+df_info given the cost to evaluate for big datasets. In future versions
+will be created a new funtion to run more metadata
+
+7 - **shiny.maxRequestSize** option: now the value is restored when the
+app is closed
+
+8 - **Minor visuals**: dataset size (data highlights module) formatted
+with big mark
+
+9 - **Run local** arg: new argument to run locally
+
+#### Bug fixes
+
+1 - **Navbar menu do not open when zoomed**: change height for
+min_height in navbar class
+([\#70](https://github.com/lgschuck/spada/issues/70))
+
 ## Spada 0.1.3
 
 ### 2026.03.03
