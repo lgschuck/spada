@@ -6,8 +6,8 @@ dfs <- list('df_iris' = iris |> as.data.table(),
 temp_dir <- tempdir()
 
 start_conf <- list(
-  'conf_dir' = paste0(temp_dir, '\\conf'),
-  'data_dir' = paste0(temp_dir, '\\data'),
+  'conf_dir' = file.path(temp_dir, 'conf'),
+  'data_dir' = file.path(temp_dir, 'data'),
   'theme' = 'spada_theme',
   'file_size' = 1000,
   'restore_session' = 'never',

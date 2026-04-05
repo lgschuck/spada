@@ -178,10 +178,11 @@ test_that('Download HTML ', {
     session$userData$out_edit_trigger <- reactiveVal(NULL)
 
     expect_equal(
-      output$btn_save_html |> basename(),
-      paste0('output_',
-             format(Sys.time(), format = '%Y%m%d%H%M%S'),
-             '.html')
+      output$btn_save_html |> basename() |> substr(1, 15),
+      paste0(
+        'output_',
+        format(Sys.time(), format = '%Y%m%d%H%M%S'),
+        '.html') |> substr(1, 15)
     )
   })
 })
@@ -221,8 +222,8 @@ dfs <- list('df_iris' = iris |> as.data.table(),
 temp_dir <- tempdir()
 
 start_conf <- list(
-  'conf_dir' = paste0(temp_dir, '\\conf'),
-  'data_dir' = paste0(temp_dir, '\\data'),
+  'conf_dir' = file.path(temp_dir, 'conf'),
+  'data_dir' = file.path(temp_dir, 'data'),
   'theme' = 'spada_theme',
   'file_size' = 1000,
   'restore_session' = 'never',

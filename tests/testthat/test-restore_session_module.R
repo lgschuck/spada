@@ -71,8 +71,8 @@ test_that('Test restore session load data and output ', {
 })
 
 # test restore session - invalid format data and output -----------------------
-qs_save(list(1:5), paste0(temp_dir, '\\data\\data.qs2'))
-qs_save(list(letters), paste0(temp_dir, '\\data\\output.qs2'))
+qs_save(list(1:5), file.path(temp_dir, 'data', 'data.qs2'))
+qs_save(list(letters), file.path(temp_dir, 'data', 'output.qs2'))
 
 test_that('Test restore session load data and output ', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {

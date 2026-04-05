@@ -6,6 +6,14 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+## Spada 0.1.5
+
+Version for **CRAN submission** (based on 0.1.4).
+
+#### Fixes
+
+1 - Now the dir paths are created with file.path instead of paste0
+
 ## Spada 0.1.4
 
 ### 2026.04.02
