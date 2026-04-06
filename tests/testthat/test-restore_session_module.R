@@ -4,12 +4,12 @@ dfs <- list('df1' = data.table(x = 1:5),
             'df2' = data.table(y = letters[1:20]))
 
 temp_dir <- tempdir()
-dir.create(paste0(temp_dir, '\\data'))
+dir.create(file.path(temp_dir, 'data'))
 
 start_conf <- list(
   'empty_datasets' = 1,
-  'conf_dir' = paste0(temp_dir, '\\conf'),
-  'data_dir' = paste0(temp_dir, '\\data'),
+  'conf_dir' = file.path(temp_dir, 'conf'),
+  'data_dir' = file.path(temp_dir, 'data'),
   'theme' = 'spada_theme',
   'file_size' = 1000,
   'restore_session' = 'always',
@@ -38,8 +38,8 @@ test_that('Test restore session no data and no output ', {
 # test restore session - load data and output ---------------------------------
 output_for_test <- list('id_1' = gen_output())
 
-qs_save(dfs, paste0(temp_dir, '\\data\\data.qs2'))
-qs_save(output_for_test, paste0(temp_dir, '\\data\\output.qs2'))
+qs_save(dfs, file.path(temp_dir, 'data', 'data.qs2'))
+qs_save(output_for_test, file.path(temp_dir, 'data', 'output.qs2'))
 
 test_that('Test restore session load data and output ', {
   testServer(spada_server(datasets = dfs, conf = start_conf), {
