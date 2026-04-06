@@ -28,7 +28,7 @@ This package is inspired in many other tools like:
 ## [Live Demo](https://lgschuck.shinyapps.io/spada)
 
 You may try Spada in shinyapps.io
-[Spada](http://lgschuck.shinyapps.io/spada)
+[Spada](https://lgschuck.shinyapps.io/spada)
 
 ## Documentation
 
@@ -61,7 +61,7 @@ remotes::install_github(
   "lgschuck/spada",
   dependencies = TRUE,
   repos = 'https://packagemanager.posit.co/cran/2026-01-30',
-  ref = "0.1.3"
+  ref = "0.1.4"
   )
 ```
 
@@ -121,4 +121,4 @@ search for diferent versions.
 
 ### Options
 
-![](man/figures/spada_options.png)
+![](man/figures/spada_config.png)

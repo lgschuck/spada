@@ -14,6 +14,8 @@ Version for **CRAN submission** (based on 0.1.4).
 
 1 - Now the dir paths are created with file.path instead of paste0
 
+2 - Deleted LICENSE file (not needed for AGPL)
+
 ## Spada 0.1.4
 
 ### 2026.04.02

@@ -7,8 +7,7 @@ This package is inspired in many other tools like:
 
 - IBM SPSS Statistics (<https://www.ibm.com/products/spss-statistics>)
 
-- R Commander package
-  (<https://cran.r-project.org/web/packages/Rcmdr/index.html>)
+- R Commander package (<https://CRAN.R-project.org/package=Rcmdr>)
 
 - Jamovi (<https://www.jamovi.org/>)
 
@@ -16,10 +15,10 @@ This package is inspired in many other tools like:
 
 **Warning:** Spada is in active development.
 
-## [Live Demo](http://lgschuck.shinyapps.io/spada)
+## [Live Demo](https://lgschuck.shinyapps.io/spada)
 
 You may try Spada in shinyapps.io
-[Spada](http://lgschuck.shinyapps.io/spada)
+[Spada](https://lgschuck.shinyapps.io/spada)
 
 ## Documentation
 
@@ -52,7 +51,7 @@ remotes::install_github(
   "lgschuck/spada",
   dependencies = TRUE,
   repos = 'https://packagemanager.posit.co/cran/2026-01-30',
-  ref = "0.1.3"
+  ref = "0.1.4"
   )
 ```
 
@@ -112,4 +111,4 @@ search for diferent versions.
 
 ### Options
 
-![](reference/figures/spada_options.png)
+![](reference/figures/spada_config.png)
