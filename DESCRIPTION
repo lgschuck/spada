@@ -1,11 +1,16 @@
 Package: spada
-Title: Shiny Package for Data Analysis
+Title: A 'shiny' Package for Data Analysis
 Version: 0.1.5
 Authors@R: 
     person("Luís Gustavo", "Schuck", email="luisgustavoschuck@yahoo.com.br",  
     role = c("aut", "cre"))
 Maintainer: Luís Gustavo Schuck <luisgustavoschuck@yahoo.com.br>
-Description: Tools for visual Data Analysis.
+Description: Provides a 'shiny' application with a user-friendly interface 
+  for interactive data analysis. It supports exploratory data analysis 
+  through descriptive statistics, data visualization, statistical 
+  tests (e.g., normality assessment), linear modeling, data 
+  import, transformation and reporting. For more details see Shapiro and Wilk 
+  (1965) <doi:10.2307/2333709>.
 License: AGPL (>= 3)
 URL: https://github.com/lgschuck/spada
 BugReports: https://github.com/lgschuck/spada/issues

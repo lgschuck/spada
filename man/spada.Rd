@@ -2,17 +2,21 @@
 % Please edit documentation in R/spada.R
 \name{spada}
 \alias{spada}
-\title{Spada (Data Analysis)}
+\title{Launch a 'shiny' application for data analysis}
 \usage{
 spada(..., run_local = TRUE)
 }
 \arguments{
 \item{...}{Objects of data.frame class}
 
-\item{run_local}{Run on local machine}
+\item{run_local}{Logical. Whether to run the application locally.}
+}
+\value{
+An object of class 'shiny.appobj' representing the 'shiny' application.
+  Printing the object launches the interactive app in a web browser.
 }
 \description{
-Function that generates a Shiny App for Data Analysis
+Generates a 'shiny' application for interactive data analysis.
 }
 \examples{
 if(interactive()) spada(datasets::mtcars)

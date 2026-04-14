@@ -2,4 +2,4 @@
 
 ## All functions
 
-- [`spada()`](spada.md) : Spada (Data Analysis)
+- [`spada()`](spada.md) : Launch a 'shiny' application for data analysis

@@ -8,7 +8,7 @@ test_that('Test info about spada', {
     package_output <- output$info_about_spada
     expect_type(package_output, 'character')
     expect_true(grepl('Package: spada', package_output))
-    expect_true(grepl('Shiny Package for Data Analysis', package_output))
+    expect_true(grepl("A 'shiny' Package for Data Analysis", package_output))
     expect_true(grepl('Depends: R (>= 4.4.0)', package_output, fixed = T))
   })
 })

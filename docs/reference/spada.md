@@ -1,6 +1,6 @@
-# Spada (Data Analysis)
+# Launch a 'shiny' application for data analysis
 
-Function that generates a Shiny App for Data Analysis
+Generates a 'shiny' application for interactive data analysis.
 
 ## Usage
 
@@ -16,7 +16,12 @@ spada(..., run_local = TRUE)
 
 - run_local:
 
-  Run on local machine
+  Logical. Whether to run the application locally.
+
+## Value
+
+An object of class 'shiny.appobj' representing the 'shiny' application.
+Printing the object launches the interactive app in a web browser.
 
 ## Examples
 

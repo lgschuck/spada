@@ -1,12 +1,15 @@
-#' Spada (Data Analysis)
+#' Launch a 'shiny' application for data analysis
 #'
-#' Function that generates a Shiny App for Data Analysis
+#' @description Generates a 'shiny' application for interactive data analysis.
 #'
 #' @param ... Objects of data.frame class
-#' @param run_local Run on local machine
+#' @param run_local Logical. Whether to run the application locally.
 #'
 #' @examples
 #' if(interactive()) spada(datasets::mtcars)
+#'
+#' @return An object of class 'shiny.appobj' representing the 'shiny' application.
+#'   Printing the object launches the interactive app in a web browser.
 #'
 #' @export
 #'
