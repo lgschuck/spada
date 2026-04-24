@@ -32,6 +32,7 @@ utils::globalVariables(
     'Pr(>|t|)',
     'i',
     '.N',
-    'j'
+    'j',
+    'dup'
     )
   )

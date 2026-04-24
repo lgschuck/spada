@@ -259,8 +259,8 @@ join_server <- function(id) {
         return()
 
       # check new dt name
-      } else if (radio == 'new' && (!is_valid_name(new_dt_name) ||
-                                    new_dt_name %in% session$userData$dt_names()))
+      } else if (radio == 'new' &&
+                 (!is_name_available(new_dt_name, session$userData$dt_names())))
       {
         msg_error('New name is not valid or already in use')
         return()

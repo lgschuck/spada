@@ -71,6 +71,7 @@ spada_ui <- function(conf){
                    calculate_cols_ui('pE_calculate_cols')
                  ),
                  nav_panel('Convert', convert_cols_ui('pE_convert_cols')),
+                 nav_panel('Duplicates', duplicates_ui('pE_duplicates')),
                  nav_panel(
                    'Filter',
                    layout_column_wrap(

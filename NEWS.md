@@ -10,6 +10,12 @@ editor_options:
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+# Spada 0.1.6
+
+### Improvements
+
+1 - New **duplicates** module
+
 # Spada 0.1.5
 
 Version for **CRAN submission** (based on 0.1.4).

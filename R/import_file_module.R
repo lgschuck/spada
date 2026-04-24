@@ -73,8 +73,7 @@ import_file_server <- function(id) {
         return()
       }
 
-      if (!is_valid_name(input$dataset_name) ||
-          input$dataset_name %in% session$userData$dt_names()) {
+      if (!is_name_available(input$dataset_name, session$userData$dt_names())){
         msg_error('Name invalid or already in use')
         return()
       }

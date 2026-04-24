@@ -190,6 +190,9 @@ spada_server <- function(datasets, conf, run_local = TRUE){
     # convert events -------------------------
     convert_cols_server('pE_convert_cols')
 
+    # duplicates events -------------------------
+    duplicates_server('pE_duplicates')
+
     # filter events --------------------------
     filter_rows_server('pE_filter_rows')
 

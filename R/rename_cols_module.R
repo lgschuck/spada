@@ -83,9 +83,7 @@ rename_cols_server <- function(id) {
       if(!isTruthy(input$vars_sel)){
         msg('Select at least one variable')
       } else {
-        if(is_valid_name(input$txt_new_name) &&
-           input$txt_new_name %notin% df_names()){
-
+        if(is_name_available(input$txt_new_name, df_names())){
           running_modal()
           temp <- copy(get_act_dt(session))
 
@@ -100,7 +98,6 @@ rename_cols_server <- function(id) {
         } else {
           msg_error('New name is not valid or already in use')
         }
-
       }
     }) |> bindEvent(input$btn_rename)
 
@@ -113,7 +110,6 @@ rename_cols_server <- function(id) {
         choices = c('', df_names())
       )
     }) |> bindEvent(df_names())
-
 
     observe({
       if(!isTruthy(input$vars_sel_multi)){

@@ -109,8 +109,7 @@ calculate_cols_server <- function(id) {
                 input$fun %notin% allowed_operations){
         msg('Function is not allowed')
       } else {
-        if(is_valid_name(input$txt_new_name_fun) &&
-            input$txt_new_name_fun %notin% df_names()) {
+        if(is_name_available(input$txt_new_name_fun, df_names())) {
 
           running_modal()
 
@@ -151,8 +150,7 @@ calculate_cols_server <- function(id) {
     # calculate var -----------------------------------------------------------
     observe({
 
-      if(is_valid_name(input$txt_new_name_free) &&
-         input$txt_new_name_free %notin% df_names()){
+      if(is_name_available(input$txt_new_name_free, df_names())){
 
         # parse code ----------------------------------------------------------
         parsed_code <- try(parse_expr(input$txt_code_input), silent = T)

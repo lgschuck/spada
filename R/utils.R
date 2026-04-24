@@ -1926,7 +1926,15 @@ is_valid_name <- function(x){
   x == make.names(x)
 }
 
-# wrapper functions frm collapse package for speed -------
+is_name_available <- function(n, names){
+  is_valid_name(n) && n %notin% names
+}
+
+is_var_available <- function(var_name, df){
+  is_valid_name(var_name) && var_name %notin% names(df)
+}
+
+# wrapper functions from collapse package for speed ---------------------------
 first_na <- function(x){
   ffirst(x, na.rm = F)
 }

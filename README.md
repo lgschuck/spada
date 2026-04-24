@@ -4,6 +4,12 @@
 # spada (<u>**S**</u>hiny <u>**Pa**</u>ckage for <u>**D**</u>ata <u>**A**</u>nalysis) <img src="man/figures/logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/spada)](https://cran.r-project.org/package=spada)
+
+[![](https://cranlogs.r-pkg.org/badges/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
+
 <!-- badges: end -->
 
 The goal of **spada** is to provide visual tools for Data Analysis in a
@@ -37,32 +43,19 @@ Book](https://lgschuck.github.io/spada_book/).
 
 ## Installation
 
+``` r
+install.packages("spada")
+```
+
 You can install the development version of spada from
-[GitHub](https://github.com/) using the command below. This way you will
-get the same packages used in the Spada development.
+[GitHub](https://github.com/) using the command below.
 
 ``` r
 install.packages("remotes")
 remotes::install_github(
   "lgschuck/spada",
-  dependencies = TRUE,
-  repos = 'https://packagemanager.posit.co/cran/2026-01-30'
-  )
-```
-
-For a specific release visit
-[Releases](https://github.com/lgschuck/spada/releases) and change the
-ref parameter bellow for the tag name:
-
-![](man/figures/install_release.png)
-
-``` r
-remotes::install_github(
-  "lgschuck/spada",
-  dependencies = TRUE,
-  repos = 'https://packagemanager.posit.co/cran/2026-01-30',
-  ref = "0.1.4"
-  )
+  dependencies = TRUE
+)
 ```
 
 ### Loading the package

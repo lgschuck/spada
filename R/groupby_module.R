@@ -22,7 +22,7 @@ groupby_ui <- function(id) {
           btn_task(ns('btn_view_var'), 'View New Variables',
                    icon('magnifying-glass'))
         ),
-        radioButtons(ns('radio_overwrite'), NULL,
+        radioButtons(ns('radio_overwrite'), 'Dataset',
                        c('New' = 'new', 'Overwrite' = 'overwrite'), inline = T
                        ),
         conditionalPanel(
@@ -105,8 +105,7 @@ groupby_server <- function(id) {
     # add new vars --------
     observe({
 
-      if(!is_valid_name(input$txt_new_name) ||
-         input$txt_new_name %in% group$newvars){
+      if(!is_name_available(input$txt_new_name, group$newvars)){
         msg('New name is not valid or already inserted')
         return()
       } else if(!(input$fun %in% allowed_operations)) {
@@ -207,8 +206,9 @@ groupby_server <- function(id) {
         msg_error('Function are not allowed')
         return()
       }  else if (input$radio_overwrite == 'new' &&
-                  (!is_valid_name(input$txt_new_dt_name) ||
-                   input$txt_new_dt_name %in% session$userData$dt_names()))
+                  (!is_name_available(input$txt_new_dt_name,
+                                      session$userData$dt_names()))
+                  )
       {
         msg_error('New name is not valid or already in use')
         return()
@@ -221,7 +221,6 @@ groupby_server <- function(id) {
 
         temp <- temp[, j, by = groupby ,
                      env = list(j = j_calls, groupby = input$vars_groupby |> as.list())]
-
 
         # overwrite -------
         if(input$radio_overwrite == 'overwrite'){

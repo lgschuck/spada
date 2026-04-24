@@ -5,7 +5,6 @@ data_ui <- function(id) {
 
   card(
     card_body(
-      # uiOutput(ns('ui_sel_dt')),
       selectInput(
         ns('sel_dt'),
         'Select a dataset',
@@ -56,8 +55,7 @@ data_server <- function(id) {
 
 	  # rename dataset event -------------------
 	  observe({
-	    if(!is_valid_name(input$txt_new_name) |
-	       input$txt_new_name %in% session$userData$dt_names()){
+	    if(!is_name_available(input$txt_new_name, session$userData$dt_names())){
 	      msg_error('New name is not valid or already in use')
 	    } else {
 	      names(session$userData$dt$dt)[session$userData$dt_names() == input$sel_dt] <- input$txt_new_name
@@ -75,8 +73,7 @@ data_server <- function(id) {
 
 	  # copy dataset event ---------------------
 	  observe({
-	    if(!is_valid_name(input$txt_new_name) ||
-	       (input$txt_new_name %in% session$userData$dt_names())){
+	    if(!is_name_available(input$txt_new_name, session$userData$dt_names())){
 	      msg_error('New name is not valid or already in use')
 	    } else {
 	      session$userData$dt$dt[[input$txt_new_name]] <- session$userData$dt$dt[[input$sel_dt]]
