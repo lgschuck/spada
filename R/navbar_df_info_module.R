@@ -22,8 +22,7 @@ navbar_df_info_server <- function(id, app_session) {
       mini_meta <- session$userData$dt$act_mini_meta()
       tagList(
         p('Rows/Columns:', mini_meta[['row_col']]),
-        p("Columns with NA's:", mini_meta[['col_nas']]),
-        p('Size (MB):', mini_meta[['size']])
+        p("Columns with NA's:", mini_meta[['col_nas']])
       )
     })
 

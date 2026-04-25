@@ -7,7 +7,7 @@ export_file_ui <- function(id) {
         fluidRow(
           column(3, textInput(ns('file_name'), 'File name', value = 'dataset')),
           column(3, radioButtons(ns('radio_format'), 'File format',
-                                 c('csv', 'qs2', 'RDS', 'sav'), inline = T))
+                                 c('csv', 'qs2', 'RDS', 'sav', 'xlsx'), inline = T))
         ),
         conditionalPanel(
           condition = "input.radio_format == 'csv'", ns = ns,
@@ -62,26 +62,44 @@ export_file_ui <- function(id) {
 # server ----------------------------------------------------------------------
 export_file_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+
+    act_dt <- reactive({ get_act_dt(session) })
+
+    pass_xlsx <- reactive({
+      req(act_dt())
+      nrow(act_dt()) <= 1048575 && ncol(act_dt()) <= 16384
+    })
+
     output$down_handler <- downloadHandler(
 
       filename = function() {
-        paste0(
-          input$file_name,
-          switch(
-            input$radio_format,
-            'csv' = '.csv',
-            'qs2' = '.qs2',
-            'RDS' = '.RDS',
-            'RDS Compressed' = '.RDS',
-            'sav' = '.sav',
-            ''
+
+        if(input$radio_format == 'xlsx' && !pass_xlsx()){
+          paste0(input$file_name, '.csv')
+        } else {
+
+          paste0(
+            input$file_name,
+            switch(
+              input$radio_format,
+              'csv' = '.csv',
+              'qs2' = '.qs2',
+              'RDS' = '.RDS',
+              'RDS Compressed' = '.RDS',
+              'sav' = '.sav',
+              'xlsx' = '.xlsx',
+              ''
+            )
           )
-        )
+        }
 
       },
       content = function(file) {
+
+        dt <- act_dt()
+
         if(input$radio_format == 'csv'){
-          fwrite(get_act_dt(session), file,
+          fwrite(dt, file,
                  row.names = input$x_rownames,
                  sep = input$radio_separator,
                  dec = input$radio_decimal,
@@ -89,11 +107,27 @@ export_file_server <- function(id) {
                  scipen = as.integer(input$radio_scientific)
           )
         } else if (input$radio_format == 'qs2'){
-          qs_save(get_act_dt(session), file)
+          qs_save(dt, file)
         } else if (input$radio_format == 'RDS'){
-          saveRDS(get_act_dt(session), file, compress = input$checkbox_rds_compress)
+          saveRDS(dt, file, compress = input$checkbox_rds_compress)
         } else if (input$radio_format == 'sav') {
-          write_sav(get_act_dt(session), file, compress = input$radio_sav_compress)
+          write_sav(dt, file, compress = input$radio_sav_compress)
+        } else if (input$radio_format == 'xlsx') {
+
+          if (pass_xlsx()) {
+            write_xlsx(dt, file, format_headers = F)
+          } else {
+
+            showModal(
+              modalDialog(
+                title = 'xlsx Limits',
+                'xlsx format supports 1,048,576 rows and 16,384 columns. Exporting csv file instead.',
+                easyClose = TRUE,
+                footer = modalButton('Dismiss')
+              )
+            )
+            fwrite(dt, file)
+          }
         }
       }
     )

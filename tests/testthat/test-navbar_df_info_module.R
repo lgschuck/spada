@@ -35,15 +35,12 @@ test_that("Test render df_info UI", {
                           session$userData$dt$act_meta() |>
                             pull(cols) |> head(1) |> f_num()),
         'col_nas' = session$userData$dt$act_meta() |>
-          filter(n_nas > 0) |> nrow(),
-        'size' = (object.size(get_act_dt(session)) / 2^20) |>
-          as.numeric() |> round(2)
+          filter(n_nas > 0) |> nrow()
       )
     })
 
     expect_true(is.list(output$navbar_df_info))
 
-    expect_true(grepl('Size', output$navbar_df_info$html))
     expect_true(grepl('0', output$navbar_df_info$html))
     expect_true(grepl('Rows/Columns:\n  150.0 / 5\n', output$navbar_df_info$html))
     expect_true(grepl("Columns with NA's:\n  0", output$navbar_df_info$html))

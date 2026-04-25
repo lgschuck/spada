@@ -12,6 +12,8 @@
 
 1 - New **duplicates** module
 
+2 - New **xlsx** format (from writexl package) in **export_file** module
+
 ## Spada 0.1.5
 
 CRAN release: 2026-04-21

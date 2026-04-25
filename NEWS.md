@@ -16,6 +16,8 @@ editor_options:
 
 1 - New **duplicates** module
 
+2 - New **xlsx** format (from writexl package) in **export_file** module
+
 # Spada 0.1.5
 
 Version for **CRAN submission** (based on 0.1.4).

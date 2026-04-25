@@ -74,9 +74,7 @@ duplicates_server <- function(id) {
   	      running_modal()
   	      temp <- copy(get_act_dt(session))
 
-  	      dup_vector <- duplicated(temp,
-  	                        fromLast = last_dup,
-  	                        by = selected_vars)
+  	      dup_vector <- duplicated(temp, fromLast = last_dup, by = selected_vars)
 
   	      temp[, new_var := dup, env = list(
   	        new_var = dup_name,

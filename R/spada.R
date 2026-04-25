@@ -74,6 +74,7 @@
 #' @importFrom utils object.size head packageDescription sessionInfo
 #'
 #' @importFrom waiter useWaiter waiter_hide waiter_show waiterShowOnLoad
+#' @importFrom writexl write_xlsx
 
 spada <- function(..., run_local = TRUE) {
 
