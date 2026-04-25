@@ -64,7 +64,7 @@ The dataset in which the operations will be applied are the **Active dataset**. 
 
 Spada uses a page_navbar from bslib package. In the left side are the menus that lead to the app pages. In the right side are the **Active dataset** name.
 
-![](../man/figures/articles/spada/navbar_active_dataset.png)
+![](../man/figures/navbar_active_dataset.png)
 
 ## Navbar Menus
 
@@ -74,40 +74,40 @@ This is the default selected item.
 
 #### Highlights
 
-![](../man/figures/articles/spada/data_menu/highlights.png)
+![](../man/figures/highlights.png)
 
 #### Metadata
 
-![](../man/figures/articles/spada/data_menu/metadata.png)
+![](../man/figures/metadata.png)
 
 #### Overview
 
-![](../man/figures/articles/spada/data_menu/overview.png)
+![](../man/figures/overview.png)
 
 #### Data
 
-![](../man/figures/articles/spada/data_menu/data.png)
+![](../man/figures/data.png)
 
 #### Import
 
-![](../man/figures/articles/spada/data_menu/import.png)
+![](../man/figures/import.png)
 
 #### Export
 
-![](../man/figures/articles/spada/data_menu/export.png)
+![](../man/figures/export.png)
 
 ### Edit
 
-![](../man/figures/articles/spada/spada_edit.png)
+![](../man/figures/spada_edit.png)
 
 ### Analysis
 
-![](../man/figures/articles/spada/spada_analysis_exploratory.png)
+![](../man/figures/spada_analysis_exploratory.png)
 
 ### Output
 
-![](../man/figures/articles/spada/spada_output.png)
+![](../man/figures/spada_output.png)
 
 ### Config
 
-![](../man/figures/articles/spada/spada_config.png)
+![](../man/figures/spada_config.png)

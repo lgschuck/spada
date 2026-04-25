@@ -27,32 +27,19 @@ Book](https://lgschuck.github.io/spada_book/).
 
 ## Installation
 
+``` r
+install.packages("spada")
+```
+
 You can install the development version of spada from
-[GitHub](https://github.com/) using the command below. This way you will
-get the same packages used in the Spada development.
+[GitHub](https://github.com/) using the command below.
 
 ``` r
 install.packages("remotes")
 remotes::install_github(
   "lgschuck/spada",
-  dependencies = TRUE,
-  repos = 'https://packagemanager.posit.co/cran/2026-01-30'
-  )
-```
-
-For a specific release visit
-[Releases](https://github.com/lgschuck/spada/releases) and change the
-ref parameter bellow for the tag name:
-
-![](reference/figures/install_release.png)
-
-``` r
-remotes::install_github(
-  "lgschuck/spada",
-  dependencies = TRUE,
-  repos = 'https://packagemanager.posit.co/cran/2026-01-30',
-  ref = "0.1.4"
-  )
+  dependencies = TRUE
+)
 ```
 
 ### Loading the package

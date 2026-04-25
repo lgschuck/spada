@@ -81,7 +81,7 @@ if(interactive()){
 
 Spada is distributed as a **Docker Image**.
 
-For instructions in how to download and use Spada go to [Articles > Docker]( https://lgschuck.github.io/spada/articles/docker.html)
+For instructions in how to download and use Spada go to [Docker]( https://lgschuck.github.io/spada_book/docker.html)
 
 You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to search for diferent versions.
 
