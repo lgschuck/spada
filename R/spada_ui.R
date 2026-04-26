@@ -3,6 +3,9 @@
 spada_ui <- function(conf){
   tagList(
 
+    # favicon
+    tags$head(tags$link(rel = 'icon', href = 'spada/favicon.ico')),
+
     busyIndicatorOptions(
       spinner_type = 'bars2',
       spinner_color = main_color,

@@ -132,6 +132,12 @@ spada <- function(..., run_local = TRUE) {
 
   start_conf <- load_conf(start_conf, r_user_conf_dir, themes_names)
 
+  # resources -----------------------------------------------------------------
+  addResourcePath(
+    'spada',
+    system.file('www', package = 'spada')
+  )
+
   ### Run App -----------------------------------------------------------------
   shinyApp(spada_ui(start_conf),
            spada_server(datasets, start_conf, run_local),

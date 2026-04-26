@@ -65,34 +65,23 @@ export_file_server <- function(id) {
 
     act_dt <- reactive({ get_act_dt(session) })
 
-    pass_xlsx <- reactive({
-      req(act_dt())
-      nrow(act_dt()) <= 1048575 && ncol(act_dt()) <= 16384
-    })
-
     output$down_handler <- downloadHandler(
 
       filename = function() {
 
-        if(input$radio_format == 'xlsx' && !pass_xlsx()){
-          paste0(input$file_name, '.csv')
-        } else {
-
-          paste0(
-            input$file_name,
-            switch(
-              input$radio_format,
-              'csv' = '.csv',
-              'qs2' = '.qs2',
-              'RDS' = '.RDS',
-              'RDS Compressed' = '.RDS',
-              'sav' = '.sav',
-              'xlsx' = '.xlsx',
-              ''
-            )
+        paste0(
+          input$file_name,
+          switch(
+            input$radio_format,
+            'csv' = '.csv',
+            'qs2' = '.qs2',
+            'RDS' = '.RDS',
+            'RDS Compressed' = '.RDS',
+            'sav' = '.sav',
+            'xlsx' = '.xlsx',
+            ''
           )
-        }
-
+        )
       },
       content = function(file) {
 
@@ -114,19 +103,26 @@ export_file_server <- function(id) {
           write_sav(dt, file, compress = input$radio_sav_compress)
         } else if (input$radio_format == 'xlsx') {
 
-          if (pass_xlsx()) {
+          if (nrow(dt) <= 1048575 && ncol(dt) <= 16384) {
             write_xlsx(dt, file, format_headers = F)
           } else {
 
+            rows <- min(1048575, nrow(dt))
+            cols <- min(16384, ncol(dt))
             showModal(
               modalDialog(
                 title = 'xlsx Limits',
-                'xlsx format supports 1,048,576 rows and 16,384 columns. Exporting csv file instead.',
+                paste(
+                  'xlsx format supports 1,048,576 rows and 16,384 columns.',
+                  'Exporting', f_int(rows), 'rows (and the headers) and',
+                  f_int(cols), 'columns.'
+                ),
                 easyClose = TRUE,
                 footer = modalButton('Dismiss')
               )
             )
-            fwrite(dt, file)
+
+            write_xlsx(dt[1:rows, 1:cols], file, format_headers = F)
           }
         }
       }

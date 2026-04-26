@@ -90,7 +90,6 @@ test_that('Test export qs2 - test name', {
 
 # test export xlsx ------------------------------------------------------------
 test_that('Test export xlsx - test name', {
-
   testServer(export_file_server, {
 
     session$userData$dt <- reactiveValues(
@@ -109,7 +108,7 @@ test_that('Test export xlsx - test name', {
   })
 })
 
-test_that('Test export xlsx - test limit - csv instead', {
+test_that('Test export xlsx - test limit', {
 
   testServer(export_file_server, {
 
@@ -124,7 +123,7 @@ test_that('Test export xlsx - test limit - csv instead', {
       radio_sav_compress = 'none'
     )
 
-    expect_equal(output$down_handler |> basename(), 'df_export.csv')
+    expect_equal(output$down_handler |> basename(), 'df_export.xlsx')
 
   })
 })

@@ -1854,6 +1854,10 @@ f_num <- function(x, big = ',', dec = '.', thousand = 'K',
   }
 }
 
+f_int <- function(int){
+  formatC(int, format = 'd', big.mark = ',', digits = 0)
+}
+
 gt_info <- function(df, df_name){
   stopifnot(is.data.frame(df))
 
