@@ -153,7 +153,7 @@ import_file_server <- function(id) {
 
           showModal(modalDialog(
             size = 'xl',
-            title = 'Preview Raw File',
+            title = div(icon('magnifying-glass'), 'Preview Raw File'),
             HTML(paste(preview_data, collapse = '<br>'))
           ))
 

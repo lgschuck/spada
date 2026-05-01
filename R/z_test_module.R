@@ -268,6 +268,7 @@ z_test_server <- function(id) {
     observe({
       showModal(modalDialog(
         HTML(get_help_file('DescTools', 'ZTest')),
+		title = 'Help',
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_ztest)

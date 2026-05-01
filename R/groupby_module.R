@@ -170,11 +170,7 @@ groupby_server <- function(id) {
         tab_options(column_labels.hidden = T)
 
       showModal(modalDialog(
-        title = div(
-          h1(icon('layer-group', size = '55px', style = 'margin-right: 8px; color:#02517d'),
-             'New Variables'
-          )
-        ),
+        title = div(icon('layer-group'), 'New Variables'),
         div(df),
         div(p(paste('Group by:', paste0(input$vars_groupby, collapse = ', ')))),
         size = 'l',

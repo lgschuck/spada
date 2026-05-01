@@ -255,7 +255,7 @@ join_server <- function(id) {
 
       # check len of selected variables
       } else if(length(vars_dt1) != length(vars_dt2)){
-        msg('The number of selected variables must has the same for both datasets', 4)
+        msg('The number of selected variables must be the same for both datasets', 4)
         return()
 
       # check new dt name

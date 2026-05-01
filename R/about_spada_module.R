@@ -12,13 +12,17 @@ about_spada_ui <- function(id) {
         col_widths = c(6, 6),
         card(
           card_body(
-            h4('Spada - Package Description'),
+            div(
+              style = 'display:flex; align-items:center; gap:12px;',
+              tags$img(src = 'spada/favicon-32x32.png'),
+              h4('Package Description', style = 'margin:0;')
+            ),
             verbatimTextOutput(ns('info_about_spada'))
           )
         ),
         card(
           card_body(
-            h4('Session Info'),
+            h4(icon('r-project'), 'Session Info'),
             verbatimTextOutput(ns('session_info'))
           )
         )

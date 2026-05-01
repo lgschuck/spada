@@ -25,7 +25,7 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
 
       showModal(
         modalDialog(
-          title = 'Add element to Output',
+          title = div(icon('plus'), 'Add element to Output'),
           size = 'l',
           tagList(
             if (is_large_data_frame()) {

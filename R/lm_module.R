@@ -130,6 +130,7 @@ lm_server <- function(id) {
     observe({
       showModal(modalDialog(
         HTML(get_help_file('stats', 'lm')),
+        title = 'Help',
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_lm)

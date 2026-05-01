@@ -79,7 +79,7 @@ output_server <- function(id) {
 
       showModal(
         modalDialog(
-          title = 'Edit Output element',
+          title = div(icon('pen-to-square'), 'Edit Output element'),
           size = 'l',
           tagList(
             textInput(ns('output_edit_title'), 'Title', value = el_title),
@@ -209,7 +209,7 @@ output_server <- function(id) {
     # reset output ------------------------------------------------------------
     observe({
       showModal(modalDialog(
-        title = 'Reset Output',
+        title = div(icon('rotate-right'), 'Reset Output'),
         'Do you want to remove all the elements?',
         easyClose = FALSE,
         size = 'l',
@@ -257,7 +257,7 @@ output_server <- function(id) {
     observe({
 
       showModal(modalDialog(
-        title = 'Save Output',
+        title = div(icon('download'), 'Save Output'),
         'Do you want to save the current Output? This will overwrite the previous one.',
         easyClose = FALSE,
         size = 'l',
@@ -286,7 +286,7 @@ output_server <- function(id) {
     # import session output ---------------------------------------------------
     observe({
       showModal(modalDialog(
-        title = 'Import Output',
+        title = div(icon('upload'), 'Import Output'),
         'Do you want to import the previous saved Output? This will erase
         the current Output elements.',
         easyClose = FALSE,

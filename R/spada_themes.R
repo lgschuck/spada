@@ -112,10 +112,10 @@ theme_basic_rules <- as_sass(
         background: transparent !important;
       }
 
-      .micro-btn-cancel:hover {
-        background-color: $secondary !important;
-        border-color: $secondary !important;
-        color: white !important;
+      .micro-btn-cancel:hover,
+      .micro-btn-cancel:focus,
+      .micro-btn-cancel:active {
+        color: $secondary !important;
       }
 
       .card, .well {
@@ -160,6 +160,12 @@ theme_basic_rules <- as_sass(
       }
 
       .modal-content {
+        border-radius: 0 !important;
+      }
+
+      .modal-header {
+        background-color: #02517d;
+        color: white;
         border-radius: 0 !important;
       }
  ")

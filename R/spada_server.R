@@ -254,7 +254,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
         if(session$userData$conf$save_session == 'ask'){
           # ask to save data and ouput
           showModal(modalDialog(
-            title = 'Save Session',
+            title = div(icon('save'), 'Save Session'),
             'Do you want to save Data and Output objects?',
             easyClose = FALSE,
             size = 'm',

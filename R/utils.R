@@ -622,7 +622,7 @@ gen_element_id <- function(id = 'id', time_only = FALSE){
 show_allowed_op <- function(){
   showModal(
     modalDialog(
-      title = 'Allowed Operations',
+      title = div(icon('check'), 'Allowed Operations'),
       selectInput(
         inputId = 'allowed_op_selected',
         label   = 'List of operations',
@@ -943,7 +943,7 @@ remove_running_modal <- function(time = 0.7){
 abort_filter_modal <- function(){
   showModal(
     modalDialog('The resultant dataset must be valid (nrow and ncol > 0)',
-                title = 'Operation Aborted')
+                title = div(icon('triangle-exclamation'), 'Operation Aborted'))
   )
 }
 
@@ -1631,19 +1631,16 @@ display_restore_status <- function(session_restore_status, btn_ok){
 
   # show modal
   showModal(modalDialog(
-    title = div(
-      h1(bs_icon('database-up', size = '55px',
-                 style = 'margin-right: 8px; color:#02517d'),
+    title = div(h1(bs_icon('database-up', size = '40px',
+                       style = 'margin-right: 8px; color:#FFFFFF'),
         'Session Status'
-      )
-    ),
+    )),
     div(style = 'padding:12px; border-radius:0px;', list_check_restore),
     size = 'l',
     easyClose = T,
     footer = div(style = 'text-align:right;', btn_ok)
 
   ))
-
 }
 
 # summarise dataset -----------------------------------------------------------
