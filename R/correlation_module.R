@@ -247,7 +247,7 @@ correlation_server <- function(id) {
     observe({
       showModal(modalDialog(
         HTML(get_help_file('stats', 'cor.test')),
-        title = 'Help',
+        title = div(icon('circle-question'), 'Help'),
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_cor)

@@ -20,6 +20,8 @@ editor_options:
 
 3 - New **favicon**
 
+4 - New style in modal header and new icons in modal titles
+
 # Spada 0.1.5
 
 Version for **CRAN submission** (based on 0.1.4).

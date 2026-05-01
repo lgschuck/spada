@@ -385,7 +385,7 @@ normality_test_server <- function(id) {
     observe({
       showModal(modalDialog(
         HTML(get_help_file('stats', 'ks.test')),
-        title = 'Help',
+        title = div(icon('circle-question'), 'Help'),
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_ks)
@@ -474,7 +474,7 @@ normality_test_server <- function(id) {
     observe({
       showModal(modalDialog(
         HTML(get_help_file('stats', 'shapiro.test')),
-        title = 'Help',
+        title = div(icon('circle-question'), 'Help'),
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_sw)
@@ -564,7 +564,7 @@ normality_test_server <- function(id) {
     observe({
       showModal(modalDialog(
         HTML(get_help_file('DescTools', 'ShapiroFranciaTest')),
-        title = 'Help',
+        title = div(icon('circle-question'), 'Help'),
         easyClose = TRUE, size = 'xl'
       ))
     }) |> bindEvent(input$btn_help_sf)
