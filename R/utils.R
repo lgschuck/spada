@@ -190,9 +190,6 @@ basic_operations <- c(
   # DescTools package
   'Outlier',
 
-  # dplyr package
-  'if_else',
-
   #stats package
   'quantile',
 
@@ -940,6 +937,14 @@ running_modal <- function(text = 'Running...'){
 remove_running_modal <- function(time = 0.7){
   Sys.sleep(time)
   removeModal()
+}
+
+# not spada df modal ----------------------------------------------------------
+abort_filter_modal <- function(){
+  showModal(
+    modalDialog('The resultant dataset must be valid (nrow and ncol > 0)',
+                title = 'Operation Aborted')
+  )
 }
 
 # show startup function -------------------------------------------------------

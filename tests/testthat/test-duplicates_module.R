@@ -21,20 +21,20 @@ test_that('Test duplicates - check inputs', {
     session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
-      vars_sel = NULL,
+      vars_sel_dup = NULL,
       txt_new_dup_name = 'Duplicated',
       radio_last = 'FALSE',
       radio_primary = 'FALSE',
       txt_new_primary_name = 'Primary',
-      btn_apply = 1
+      btn_identify = 1
     )
 
     expect_equal(last_msg, 'Select at least one variable')
 
     session$setInputs(
-      vars_sel = 'Species',
+      vars_sel_dup = 'Species',
       txt_new_dup_name = 'Species',
-      btn_apply = 2
+      btn_identify = 2
     )
 
     expect_equal(last_msg, 'New names are not valid or already in use')
@@ -42,15 +42,23 @@ test_that('Test duplicates - check inputs', {
     session$setInputs(
       txt_new_dup_name = 'Species2',
       txt_new_primary_name = 'Species',
-      btn_apply = 3
+      btn_identify = 3
     )
 
     expect_equal(last_msg, 'New names are not valid or already in use')
+
+    # remove duplicates
+    session$setInputs(
+      vars_sel_drop = 'Species',
+      btn_remove = 2
+    )
+
+    expect_equal(last_msg, 'The variable is not a factor of Duplicated and Not Duplicated Levels')
+
   })
 })
 
-
-# test duplicates -------------------------------------------------------------
+# test duplicates - identify --------------------------------------------------
 test_that('Test duplicates', {
   testServer(duplicates_server, {
 
@@ -62,33 +70,84 @@ test_that('Test duplicates', {
     session$userData$data_changed <- reactiveVal(0)
 
     session$setInputs(
-      vars_sel = 'Species',
+      vars_sel_dup = 'Species',
       txt_new_dup_name = 'Duplicated',
       radio_last = 'FALSE',
       radio_primary = 'TRUE',
       txt_new_primary_name = 'Primary',
-      btn_apply = 1
+      btn_identify = 1
     )
 
-    expect_equal(get_act_dt(session)$Duplicated,
-                 duplicated(iris_dt, by = 'Species') |> as.integer())
+    expect_equal(
+      get_act_dt(session)$Duplicated,
+      factor(
+        duplicated(iris_dt, by = 'Species'),
+        levels = c(T, F),
+        labels = c('Duplicated', 'Not Duplicated')
+      )
+    )
 
-    expect_equal(get_act_dt(session)$Primary,
-                 as.integer(!duplicated(iris_dt, by = 'Species')))
+    expect_equal(
+      get_act_dt(session)$Primary,
+      factor(
+        !duplicated(iris_dt, by = 'Species'),
+        levels = c(T, F),
+        labels = c('Primary', 'Not Primary')
+      )
+    )
 
     session$setInputs(
       radio_last = 'TRUE',
       txt_new_dup_name = 'Duplicated2',
       txt_new_primary_name = 'Primary2',
-      btn_apply = 2
+      btn_identify = 2
     )
 
-    expect_equal(get_act_dt(session)$Duplicated2,
-                 duplicated(iris_dt, fromLast = TRUE, by = 'Species') |> as.integer())
+    expect_equal(
+      get_act_dt(session)$Duplicated2,
+      factor(
+        duplicated(iris_dt, fromLast = TRUE, by = 'Species'),
+        levels = c(T, F),
+        labels = c('Duplicated', 'Not Duplicated')
+      )
+    )
 
-    expect_equal(get_act_dt(session)$Primary2,
-                 as.integer(!duplicated(iris_dt, fromLast = TRUE,by = 'Species')))
+    expect_equal(
+      get_act_dt(session)$Primary2,
+      factor(
+        !duplicated(iris_dt, fromLast = TRUE, by = 'Species'),
+        levels = c(T, F),
+        labels = c('Primary', 'Not Primary')
+      )
+    )
+  })
+})
 
+# test duplicates - remove ----------------------------------------------------
+test_that('Test duplicates', {
+  testServer(duplicates_server, {
+
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris_dt),
+      act_name = 'iris'
+    )
+
+    session$userData$data_changed <- reactiveVal(0)
+
+    session$setInputs(
+      vars_sel_dup = 'Species',
+      txt_new_dup_name = 'Duplicated',
+      radio_last = 'FALSE',
+      radio_primary = 'FALSE',
+      btn_identify = 1
+    )
+
+    session$setInputs(
+      vars_sel_drop = 'Duplicated',
+      btn_remove = 2
+    )
+
+    expect_equal(get_act_dt(session) |> nrow(), 3)
   })
 })
 

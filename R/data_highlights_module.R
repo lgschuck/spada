@@ -184,7 +184,6 @@ data_highlights_server <- function(id) {
       if (dt_meta()[!is.na(min), ] |> nrow() < 1) {
         '---'
       } else {
-        dt_meta() |> arrange(min) |> head(1) |> pull(var)
         setorderv(dt_meta(), 'min', na.last = T)[1, var]
       }
     )

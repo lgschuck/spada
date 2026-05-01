@@ -34,7 +34,7 @@
 #' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest
 #'
-#' @importFrom dplyr arrange if_else filter mutate pull select
+#' @importFrom dplyr filter pull
 #'
 #' @importFrom ggplot2 .data aes after_stat coord_flip element_blank
 #'             element_rect element_text geom_bar geom_boxplot geom_histogram

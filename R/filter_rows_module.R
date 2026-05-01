@@ -526,12 +526,7 @@ filter_rows_server <- function(id) {
         }
 
         if(!is_spada_df(temp)){
-          showModal(modalDialog(
-            'The resultant dataset must be valid (nrow and ncol > 0)',
-            title = 'Operation Aborted'
-            )
-          )
-
+          abort_filter_modal()
         } else {
           running_modal()
           update_act_dt(session, copy(temp))
