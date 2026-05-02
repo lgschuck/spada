@@ -9,8 +9,7 @@ convert_cols_ui <- function(id) {
       card_body(
         layout_column_wrap(
           height = '200px',
-          selectInput(ns('vars_sel'), 'Variable', NULL),
-
+          selectInput(ns('vars_sel'), 'Variable', ''),
           textInput(ns('txt_current_format'), 'Current Type / Class')
         ),
         layout_column_wrap(
@@ -54,29 +53,27 @@ convert_cols_server <- function(id) {
     # update select vars input ---------------
     observe({
       req(df_names())
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'vars_sel',
         choices = c('', df_names())
       )
     }) |> bindEvent(df_names())
 
-    # current format -------------------------
-    current_format <- reactive({
-      req(input$vars_sel)
-      paste('Type: [', get_act_dt(session)[[input$vars_sel]] |> typeof(), '] |',
-            'Class: [',
-            paste(get_act_dt(session)[[input$vars_sel]] |> class(), collapse = '/'),
-            ']')
-    })
-
     # update current format txt --------------
     observe({
-      updateTextInput(session, 'txt_current_format',
-                      label = 'Current Type / Class',
-                      value = current_format()
-      )
-    }) |> bindEvent(current_format())
+      if(!isTruthy(input$vars_sel)){
+        format <- ''
+      } else {
+        format <- paste(
+          'Type: [', get_act_dt(session)[[input$vars_sel]] |> typeof(),
+          '] | Class: [',
+          paste(get_act_dt(session)[[input$vars_sel]] |> class(), collapse = '/'),
+          ']'
+        )
+      }
+      updateTextInput(session, 'txt_current_format', value = format)
+    }) |> bindEvent(input$vars_sel)
 
     # sample to preview conversion -----------
     preview_sample_trigger <- reactiveVal(1)
@@ -116,7 +113,7 @@ convert_cols_server <- function(id) {
 
     # render preview gt ----------------------
     output$preview_gt <- render_gt({
-      req(input$vars_sel)
+      req(input$vars_sel, input$sel_format, preview_df())
       if(input$vars_sel %in% df_names()){
         preview_df() |>
           lapply(\(x) if(is.complex(x)) as.character(x) else x) |>
@@ -152,6 +149,9 @@ convert_cols_server <- function(id) {
                       change_type = 'convert_cols')
         rm(temp)
         remove_running_modal()
+
+        updateSelectInput(session, 'vars_sel', selected = character(0))
+        updateSelectInput(session, 'sel_format', selected = character(0))
       }
     }) |> bindEvent(input$btn_apply)
   })

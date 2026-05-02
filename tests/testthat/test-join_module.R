@@ -338,7 +338,7 @@ test_that('Apply join - check inputs', {
       vars_sel2 = c('num'),
       btn_apply = 3
     )
-    expect_equal(last_msg, 'The number of selected variables must has the same for both datasets')
+    expect_equal(last_msg, 'The number of selected variables must be the same for both datasets')
 
     # new name not valid
     session$setInputs(

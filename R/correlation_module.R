@@ -82,7 +82,7 @@ correlation_server <- function(id) {
     var_analysis <- reactive({
       df_names <- df_active() |> names()
 
-      var_analysis <- session$userData$dt$act_meta() |> filter(perc_nas != 1) |> pull(var)
+      var_analysis <- session$userData$dt$act_meta()[perc_nas != 1, var]
 
       df_names[df_names %in% var_analysis]
     })

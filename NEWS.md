@@ -22,6 +22,12 @@ editor_options:
 
 4 - New style in modal header and new icons in modal titles
 
+5 - Change **updateSelectizeInput** for updateSelectInput when erroneously used with selecInput
+
+### Bug fixes
+
+1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))
+
 # Spada 0.1.5
 
 Version for **CRAN submission** (based on 0.1.4).

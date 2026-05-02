@@ -105,7 +105,7 @@ filter_rows_server <- function(id) {
     # variable inputs ---------------------------------------------------------
     observe({
       req(df_names())
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'one_var_sel',
         choices = c('', df_names())
@@ -114,7 +114,7 @@ filter_rows_server <- function(id) {
 
     observe({
       req(df_names())
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'two_var_sel1',
         choices = c('', df_names())
@@ -123,7 +123,7 @@ filter_rows_server <- function(id) {
 
     observe({
       req(df_names())
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'two_var_sel2',
         choices = c('', df_names())
@@ -133,7 +133,7 @@ filter_rows_server <- function(id) {
     # dataset filter var 1 ----------
     observe({
       req(df_names())
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'dt_1_var_sel',
         choices = c('', df_names())
@@ -143,7 +143,7 @@ filter_rows_server <- function(id) {
     # dataset filter dt names ----------
     observe({
       req(dts())
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'dt_dt_sel',
         choices = c('', dts())
@@ -153,7 +153,7 @@ filter_rows_server <- function(id) {
     # dataset filter var 2 ----------
     observe({
       req(input$dt_dt_sel)
-      updateSelectizeInput(
+      updateSelectInput(
         session,
         'dt_2_var_sel',
         choices = c('', session$userData$dt$dt[[ input$dt_dt_sel ]] |> names())
