@@ -74,6 +74,7 @@
 #' @importFrom utils object.size head packageDescription sessionInfo
 #'
 #' @importFrom waiter useWaiter waiter_hide waiter_show waiterShowOnLoad
+#'
 #' @importFrom writexl write_xlsx
 
 spada <- function(..., run_local = TRUE) {
@@ -84,9 +85,9 @@ spada <- function(..., run_local = TRUE) {
   datasets <- list(...)
   if(length(datasets) == 0){
     datasets <- list('iris' = datasets::iris, 'mtcars' = datasets::mtcars)
-    empty_datasets <- 1
+    no_input_data <- TRUE
   } else{
-    empty_datasets <- 0
+    no_input_data <- FALSE
   }
 
   stopifnot('Objects must be data.frame and have at least 1 row and 1 col each' =
@@ -117,26 +118,20 @@ spada <- function(..., run_local = TRUE) {
   )
 
   # read conf values ----------------------------------------------------------
-  r_user_conf_dir <- normalizePath(R_user_dir('spada', 'config'), winslash = '/', mustWork = F)
-  r_user_data_dir <- normalizePath(R_user_dir('spada', 'data'), winslash = '/', mustWork = F)
-
-  check_dir(r_user_conf_dir)
-  check_dir(r_user_data_dir)
+  spada_conf_dir <- spada_user_dir('config')
+  spada_data_dir <- spada_user_dir('data')
 
   start_conf <- c(
-    'empty_datasets' = empty_datasets,
-    'conf_dir' = r_user_conf_dir,
-    'data_dir' = r_user_data_dir,
+    'no_input_data' = no_input_data,
+    'conf_dir' = spada_conf_dir,
+    'data_dir' = spada_data_dir,
     default_conf
   )
 
   start_conf <- load_conf(start_conf, r_user_conf_dir, themes_names)
 
   # resources -----------------------------------------------------------------
-  addResourcePath(
-    'spada',
-    system.file('www', package = 'spada')
-  )
+  addResourcePath('spada', system.file('www', package = 'spada'))
 
   ### Run App -----------------------------------------------------------------
   shinyApp(spada_ui(start_conf),

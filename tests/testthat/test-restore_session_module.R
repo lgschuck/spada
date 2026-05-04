@@ -7,7 +7,7 @@ temp_dir <- tempdir()
 dir.create(file.path(temp_dir, 'data'))
 
 start_conf <- list(
-  'empty_datasets' = 1,
+  'no_input_data' = TRUE,
   'conf_dir' = file.path(temp_dir, 'conf'),
   'data_dir' = file.path(temp_dir, 'data'),
   'theme' = 'spada_theme',

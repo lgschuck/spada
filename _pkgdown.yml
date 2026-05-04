@@ -1,3 +1,5 @@
+url: https://lgschuck.github.io/spada/
+
 template:
   bootstrap: 5
 
@@ -25,3 +27,4 @@ navbar:
     github:
       icon: fab fa-github
       href: https://github.com/lgschuck/spada
+      aria-label: GitHub repository

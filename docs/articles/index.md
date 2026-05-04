@@ -2,4 +2,4 @@
 
 ### All vignettes
 
-- [Intro](spada.md):
+- [Intro](https://lgschuck.github.io/spada/articles/spada.md):

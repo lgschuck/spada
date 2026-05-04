@@ -60,42 +60,60 @@ if(interactive()){
 
 Spada is distributed as a **Docker Image**.
 
-For instructions in how to download and use Spada go to [Articles \>
-Docker](https://lgschuck.github.io/spada/articles/docker.html)
+For instructions in how to download and use Spada go to
+[Docker](https://lgschuck.github.io/spada_book/docker.html)
 
 You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to
 search for diferent versions.
 
 ## Screenshots
 
-![](reference/figures/spada_loading_0.1.3.png)
+![Loading](reference/figures/spada_loading_0.1.3.png)
+
+Loading
 
 ### Data
 
-![](reference/figures/spada_home.png)
+![Home](reference/figures/spada_home.png)
 
-![](reference/figures/spada_home2.png)
+Home
+
+![Home 2](reference/figures/spada_home2.png)
+
+Home 2
 
 #### Data \> Metadata
 
-![](reference/figures/spada_data_metadata.png)
+![Metadata](reference/figures/spada_data_metadata.png)
+
+Metadata
 
 #### Data \> Overview
 
-![](reference/figures/spada_data_overview.png)
+![Overview](reference/figures/spada_data_overview.png)
+
+Overview
 
 ### Edit
 
-![](reference/figures/spada_edit.png)
+![Edit](reference/figures/spada_edit.png)
+
+Edit
 
 ### Analysis
 
-![](reference/figures/spada_analysis_exploratory.png)
+![Analysis](reference/figures/spada_analysis_exploratory.png)
+
+Analysis
 
 ### Output
 
-![](reference/figures/spada_output.png)
+![Output](reference/figures/spada_output.png)
+
+Output
 
 ### Options
 
-![](reference/figures/spada_config.png)
+![Options](reference/figures/spada_config.png)
+
+Options

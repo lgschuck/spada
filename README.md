@@ -76,42 +76,69 @@ if(interactive()){
 
 Spada is distributed as a **Docker Image**.
 
-For instructions in how to download and use Spada go to [Articles \>
-Docker](https://lgschuck.github.io/spada/articles/docker.html)
+For instructions in how to download and use Spada go to
+[Docker](https://lgschuck.github.io/spada_book/docker.html)
 
 You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to
 search for diferent versions.
 
 ## Screenshots
 
-![](man/figures/spada_loading_0.1.3.png)
+<figure>
+<img src="man/figures/spada_loading_0.1.3.png" alt="Loading" />
+<figcaption aria-hidden="true">Loading</figcaption>
+</figure>
 
 ### Data
 
-![](man/figures/spada_home.png)
+<figure>
+<img src="man/figures/spada_home.png" alt="Home" />
+<figcaption aria-hidden="true">Home</figcaption>
+</figure>
 
-![](man/figures/spada_home2.png)
+<figure>
+<img src="man/figures/spada_home2.png" alt="Home 2" />
+<figcaption aria-hidden="true">Home 2</figcaption>
+</figure>
 
 #### Data \> Metadata
 
-![](man/figures/spada_data_metadata.png)
+<figure>
+<img src="man/figures/spada_data_metadata.png" alt="Metadata" />
+<figcaption aria-hidden="true">Metadata</figcaption>
+</figure>
 
 #### Data \> Overview
 
-![](man/figures/spada_data_overview.png)
+<figure>
+<img src="man/figures/spada_data_overview.png" alt="Overview" />
+<figcaption aria-hidden="true">Overview</figcaption>
+</figure>
 
 ### Edit
 
-![](man/figures/spada_edit.png)
+<figure>
+<img src="man/figures/spada_edit.png" alt="Edit" />
+<figcaption aria-hidden="true">Edit</figcaption>
+</figure>
 
 ### Analysis
 
-![](man/figures/spada_analysis_exploratory.png)
+<figure>
+<img src="man/figures/spada_analysis_exploratory.png" alt="Analysis" />
+<figcaption aria-hidden="true">Analysis</figcaption>
+</figure>
 
 ### Output
 
-![](man/figures/spada_output.png)
+<figure>
+<img src="man/figures/spada_output.png" alt="Output" />
+<figcaption aria-hidden="true">Output</figcaption>
+</figure>
 
 ### Options
 
-![](man/figures/spada_config.png)
+<figure>
+<img src="man/figures/spada_config.png" alt="Options" />
+<figcaption aria-hidden="true">Options</figcaption>
+</figure>

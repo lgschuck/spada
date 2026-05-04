@@ -447,6 +447,15 @@ output_export_css <- tags$head(tags$style(HTML(
 # ---------------------------- FUNCTIONS -------------------------------------
 # ============================================================================.
 
+# spada_user_dir --------------------------------------------------------------
+spada_user_dir <- function(which){
+  dir <- normalizePath(R_user_dir('spada', which), winslash = '/', mustWork = F)
+
+  check_dir(dir)
+
+  return(dir)
+}
+
 # load conf -------------------------------------------------------------------
 load_conf <- function(start_conf,
                       r_user_conf_dir,

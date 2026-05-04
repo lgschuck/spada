@@ -22,7 +22,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
 
     # conf values -------------------------------------------------------------
     session$userData$conf <- reactiveValues(
-      empty_datasets = conf$empty_datasets,
+      no_input_data = conf$no_input_data,
       conf_dir = conf$conf_dir,
       data_dir = conf$data_dir,
       theme = conf$theme,

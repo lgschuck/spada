@@ -14,7 +14,7 @@ editor_options:
 
 ### Improvements
 
-1 - New **duplicates** module
+1 - New **duplicates** module:allows identify and drop duplicate cases
 
 2 - New **xlsx** format (from writexl package) in **export_file** module
 
@@ -24,13 +24,19 @@ editor_options:
 
 5 - Change **updateSelectizeInput** for updateSelectInput when erroneously used with selecInput
 
+6 - **Save/import** with run_local = FALSE: now a modal warns that is not possible to save/import (session and output)
+
+7 - **Exit** with run_local = FALSE: when run_local = FALSE the app closes witout saving (data, output and conf)
+
+8 - **Restore sesison** with run_local = FALSE: now only restore previous session if run_local = TRUE
+
 ### Bug fixes
 
-1 - **Edit > Convert: convert even with no variable selected #71**([#71](https://github.com/lgschuck/spada/issues/71))
+1 - **Edit > Convert: convert even with no variable selected **([#71](https://github.com/lgschuck/spada/issues/71))
 
-2 - **Filter Rows: filter with no variable selected #74**([#74](https://github.com/lgschuck/spada/issues/74))
+2 - **Filter Rows: filter with no variable selected **([#74](https://github.com/lgschuck/spada/issues/74))
 
-3 - **Calculate: apply function even without select a variable #74**([#75](https://github.com/lgschuck/spada/issues/75))
+3 - **Calculate: apply function even without select a variable **([#75](https://github.com/lgschuck/spada/issues/75))
 
 # Spada 0.1.5
 

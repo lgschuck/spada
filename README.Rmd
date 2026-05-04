@@ -87,34 +87,34 @@ You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to search for 
 
 ## Screenshots
 
-![](man/figures/spada_loading_0.1.3.png)
+![Loading](man/figures/spada_loading_0.1.3.png)
 
 ### Data
 
-![](man/figures/spada_home.png)
+![Home](man/figures/spada_home.png)
 
-![](man/figures/spada_home2.png)
+![Home 2](man/figures/spada_home2.png)
 
 #### Data > Metadata
 
-![](man/figures/spada_data_metadata.png)
+![Metadata](man/figures/spada_data_metadata.png)
 
 #### Data > Overview
 
-![](man/figures/spada_data_overview.png)
+![Overview](man/figures/spada_data_overview.png)
 
 ### Edit
 
-![](man/figures/spada_edit.png)
+![Edit](man/figures/spada_edit.png)
 
 ### Analysis
 
-![](man/figures/spada_analysis_exploratory.png)
+![Analysis](man/figures/spada_analysis_exploratory.png)
 
 ### Output
 
-![](man/figures/spada_output.png)
+![Output](man/figures/spada_output.png)
 
 ### Options
 
-![](man/figures/spada_config.png)
+![Options](man/figures/spada_config.png)
