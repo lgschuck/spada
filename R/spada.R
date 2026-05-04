@@ -3,7 +3,7 @@
 #' @description Generates a 'shiny' application for interactive data analysis.
 #'
 #' @param ... Objects of data.frame class
-#' @param run_local Logical. Whether to run the application locally.
+#' @param run_local Logical. Whether to run the application locally. If TRUE the app will close at session end.
 #'
 #' @examples
 #' if(interactive()) spada(datasets::mtcars)

@@ -147,27 +147,30 @@ sidebar_server <- function(id, app_session) {
     # save session ------------------------------------------------------------
     observe({
 
-      spada_save(session$userData$conf$data_dir,
-                 session$userData$dt$dt,
-                 'data.qs2')
+      if(!session$userData$run_local){
+        abort_run_local_modal('Spada must run locally to be able to save the session.')
+      } else {
+        spada_save(session$userData$conf$data_dir,
+                   session$userData$dt$dt,
+                   'data.qs2')
 
-      spada_save(session$userData$conf$data_dir,
-                 session$userData$out$elements,
-                 'output.qs2')
+        spada_save(session$userData$conf$data_dir,
+                   session$userData$out$elements,
+                   'output.qs2')
 
-      spada_save(session$userData$conf$conf_dir,
-                 reactiveValuesToList(session$userData$conf),
-                 'conf.qs2')
+        spada_save(session$userData$conf$conf_dir,
+                   reactiveValuesToList(session$userData$conf),
+                   'conf.qs2')
 
-      show_toast(
-        title = 'Session saved',
-        type = 'info',
-        position = 'bottom-start',
-        timer = 2000,
-        timerProgressBar = F,
-        width = '250px'
-      )
-
+        show_toast(
+          title = 'Session saved',
+          type = 'info',
+          position = 'bottom-start',
+          timer = 2000,
+          timerProgressBar = F,
+          width = '250px'
+        )
+      }
     }) |> bindEvent(input$btn_save_session)
   })
 }

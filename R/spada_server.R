@@ -35,7 +35,8 @@ spada_server <- function(datasets, conf, run_local = TRUE){
       plot_fill_color = conf$plot_fill_color,
       plot_line_color = conf$plot_line_color,
       plot_title_color = conf$plot_title_color,
-      plot_limit = conf$plot_limit
+      plot_limit = conf$plot_limit,
+      run_local = run_local
     )
 
     # restore session module --------------------------------------------------
@@ -251,7 +252,10 @@ spada_server <- function(datasets, conf, run_local = TRUE){
       req(input$navbar)
       if (input$navbar == 'exit') {
 
-        if(session$userData$conf$save_session == 'ask'){
+        if (!session$userData$run_local ||
+            session$userData$conf$save_session == 'never'){
+          exit_without_save(session)
+        } else if(session$userData$conf$save_session == 'ask'){
           # ask to save data and ouput
           showModal(modalDialog(
             title = div(icon('save'), 'Save Session'),
@@ -264,8 +268,6 @@ spada_server <- function(datasets, conf, run_local = TRUE){
               actionButton('btn_confirm_save_session', 'Yes', icon = icon('check'), class = 'btn-task')
             )
           ))
-        } else if (session$userData$conf$save_session == 'never'){
-          exit_without_save(session)
         } else if (session$userData$conf$save_session == 'always'){
           exit_with_save(session)
         }

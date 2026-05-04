@@ -941,10 +941,19 @@ remove_running_modal <- function(time = 0.7){
 
 # not spada df modal ----------------------------------------------------------
 abort_filter_modal <- function(){
-  showModal(
-    modalDialog('The resultant dataset must be valid (nrow and ncol > 0)',
-                title = div(icon('triangle-exclamation'), 'Operation Aborted'))
-  )
+  showModal(modalDialog(
+    'The resultant dataset must be valid (nrow and ncol > 0)',
+    title = div(icon('triangle-exclamation'), 'Operation Aborted')
+  ))
+}
+
+# abort save session/output ---------------------------------------------------
+abort_run_local_modal <- function(msg = 'Spada must run locally'){
+  showModal(modalDialog(
+    msg,
+    title = div(icon('triangle-exclamation'), 'Operation Aborted'),
+    easyClose = T
+  ))
 }
 
 # show startup function -------------------------------------------------------

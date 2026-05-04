@@ -255,18 +255,21 @@ output_server <- function(id) {
 
     # save session output -----------------------------------------------------
     observe({
-
-      showModal(modalDialog(
-        title = div(icon('download'), 'Save Output'),
-        'Do you want to save the current Output? This will overwrite the previous one.',
-        easyClose = FALSE,
-        size = 'l',
-        footer = tagList(
-          actionButton(ns('btn_cancel_save_output'), 'No', icon('xmark'),
-                   class = 'btn-task btn-task-cancel'),
-          btn_task(ns('btn_confirm_save_output'), 'Yes', icon('check'))
-        )
-      ))
+      if(!session$userData$run_local){
+        abort_run_local_modal('Spada must run locally to be able to save the output.')
+      } else {
+        showModal(modalDialog(
+          title = div(icon('download'), 'Save Output'),
+          'Do you want to save the current Output? This will overwrite the previous one.',
+          easyClose = FALSE,
+          size = 'l',
+          footer = tagList(
+            actionButton(ns('btn_cancel_save_output'), 'No', icon('xmark'),
+                         class = 'btn-task btn-task-cancel'),
+            btn_task(ns('btn_confirm_save_output'), 'Yes', icon('check'))
+          )
+        ))
+      }
     }) |> bindEvent(input$btn_save_output_session)
 
     # cancel save output
@@ -285,18 +288,22 @@ output_server <- function(id) {
 
     # import session output ---------------------------------------------------
     observe({
-      showModal(modalDialog(
-        title = div(icon('upload'), 'Import Output'),
-        'Do you want to import the previous saved Output? This will erase
-        the current Output elements.',
-        easyClose = FALSE,
-        size = 'l',
-        footer = tagList(
-          actionButton(ns('btn_cancel_import_output'), 'No', icon('xmark'),
-                   class = 'btn-task btn-task-cancel'),
-          btn_task(ns('btn_confirm_import_output'), 'Yes', icon('check'))
-        )
-      ))
+      if(!session$userData$run_local){
+        abort_run_local_modal('Spada must run locally to be able to import the output.')
+      } else {
+        showModal(modalDialog(
+          title = div(icon('upload'), 'Import Output'),
+          'Do you want to import the previous saved Output? This will erase
+          the current Output elements.',
+          easyClose = FALSE,
+          size = 'l',
+          footer = tagList(
+            actionButton(ns('btn_cancel_import_output'), 'No', icon('xmark'),
+                     class = 'btn-task btn-task-cancel'),
+            btn_task(ns('btn_confirm_import_output'), 'Yes', icon('check'))
+          )
+        ))
+      }
     }) |> bindEvent(input$btn_import_output_session)
 
     # cancel import output
