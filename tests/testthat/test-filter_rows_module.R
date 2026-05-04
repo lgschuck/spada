@@ -25,6 +25,7 @@ test_that('Test filter rows - one variable - equal operator', {
     last_msg <- NULL
 
     local_mocked_bindings(
+      msg = function(text, ...) { last_msg <<- text },
       remove_running_modal = function(){last_msg <<- 'Remove modal'}
     )
 
@@ -43,6 +44,19 @@ test_that('Test filter rows - one variable - equal operator', {
                  subset(df_test, subset = Species == 'setosa') |>
                    as.data.table())
     expect_equal(last_msg, 'Remove modal')
+
+    # test no selection after first operation -----
+    session$setInputs(filter_type = character(0),
+                      one_var_sel = character(0),
+                      btn_filter = 2)
+
+    expect_equal(last_msg, 'Select the Filter type')
+
+    session$setInputs(filter_type = 'one',
+                      one_var_sel = character(0),
+                      btn_filter = 3)
+
+    expect_equal(last_msg, 'Select a variable')
   })
 })
 
@@ -624,7 +638,7 @@ test_that('Test filter rows - check inputs - filter type on', {
       btn_filter = 2
     )
 
-    expect_equal(last_msg, 'Choose a variable')
+    expect_equal(last_msg, 'Select a variable')
 
     session$setInputs(
       one_var_sel = 'Species',
@@ -632,7 +646,7 @@ test_that('Test filter rows - check inputs - filter type on', {
       btn_filter = 3
     )
 
-    expect_equal(last_msg, 'Choose an operator')
+    expect_equal(last_msg, 'Select an operator')
 
     session$setInputs(
       one_var_sel = 'Species',

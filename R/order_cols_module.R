@@ -63,7 +63,7 @@ order_cols_server <- function(id) {
     # btn order cols ---------------------------
     observe({
       if(!isTruthy(input$vars_cols)){
-        msg('Choose at least one variable')
+        msg('Select at least one variable')
       } else {
         running_modal()
         temp <- copy(get_act_dt(session))

@@ -367,7 +367,7 @@ exploratory_server <- function(id, output_report) {
       if(!is.numeric(var())){
         msg('The Dependent variable must be numeric', 2.5)
       } else if (input$sel_vars == input$sel_vars2) {
-        msg('Choose diferent variables for X and Y.', 2.5)
+        msg('Select diferent variables for X and Y.', 2.5)
       } else {
         linear_model$y_name <- input$sel_vars
         linear_model$x_name <- input$sel_vars2

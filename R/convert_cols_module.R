@@ -22,11 +22,11 @@ convert_cols_ui <- function(id) {
             condition = sprintf("input['%s'] == 'as.Date'", ns('sel_format')),
             selectInput(
               ns('sel_date_formats'),
-              list('Choose the entry format', bs_icon('info-circle')) |>
+              list('Select the entry format', bs_icon('info-circle')) |>
                 tooltip('For character and factor inputs'),
               date_formats),
             dateInput(ns('sel_date_origin'),
-                      list('Choose a start date', bs_icon('info-circle')) |>
+                      list('Select a start date', bs_icon('info-circle')) |>
                         tooltip('For numeric inputs'),
                       value = '1970-01-01')
           )
@@ -132,7 +132,7 @@ convert_cols_server <- function(id) {
     # apply conversions -------------------------------------------------------
     observe({
       if(!isTruthy(input$vars_sel) || !isTruthy(input$sel_format)){
-        msg('Choose a variable and a new format')
+        msg('Select a variable and a new format')
         return()
       } else {
         running_modal()

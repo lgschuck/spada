@@ -6,14 +6,14 @@ groupby_ui <- function(id) {
   card(
     card_header('Group By', class = 'mini-header'),
     card_body(
-      selectizeInput(ns('vars_groupby'), 'Group by', NULL,
+      selectizeInput(ns('vars_groupby'), 'Group by', '',
                      multiple = T,
                      width = '80%',
                      options = list(plugins = list('remove_button', 'clear_button'))),
       div(
         layout_column_wrap(
-          selectInput(ns('vars_sel'), 'Variables', NULL),
-          selectInput(ns('fun'), 'Choose a function', character(0)),
+          selectInput(ns('vars_sel'), 'Variables', ''),
+          selectInput(ns('fun'), 'Select a function', ''),
           textInput(ns('txt_new_name'), 'New variable name')
         ),
         layout_column_wrap(

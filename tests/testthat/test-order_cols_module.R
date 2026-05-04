@@ -260,7 +260,7 @@ test_that('Test order cols - check inputs', {
 
     session$setInputs(vars_cols = NULL, btn_order_cols = 1)
 
-    expect_equal(last_msg, 'Choose at least one variable')
+    expect_equal(last_msg, 'Select at least one variable')
 
   })
 })

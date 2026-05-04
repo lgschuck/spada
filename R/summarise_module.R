@@ -7,7 +7,7 @@ summarise_ui <- function(id) {
     card_header('Summarise', class = 'mini-header'),
     card_body(
       selectizeInput(
-        ns('vars_sel'), 'Variables', NULL,
+        ns('vars_sel'), 'Variables', '',
         multiple = T,
         options = list(plugins = list('remove_button', 'clear_button')),
         width = '80%'

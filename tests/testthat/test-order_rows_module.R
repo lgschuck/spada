@@ -247,6 +247,6 @@ test_that('Test order rows - check inputs', {
 
     session$setInputs(vars_rows = NULL, btn_order_rows = 1)
 
-    expect_equal(last_msg, 'Choose at least one variable')
+    expect_equal(last_msg, 'Select at least one variable')
   })
 })

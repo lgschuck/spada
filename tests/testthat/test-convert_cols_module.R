@@ -89,7 +89,7 @@ test_that('Test Conversion applies when button clicked', {
     session$userData$data_changed <- reactiveVal(0)
     session$setInputs(vars_sel = '', sel_format = '', btn_apply = 1)
 
-    expect_equal(last_msg, 'Choose a variable and a new format')
+    expect_equal(last_msg, 'Select a variable and a new format')
 
     original_class <- class(get_act_dt(session)[['Species']])
 
@@ -105,21 +105,20 @@ test_that('Test Conversion applies when button clicked', {
     expect_equal(get_act_dt(session) |> class(), c('data.table', 'data.frame'))
     expect_equal(last_msg, 'Remove modal')
 
+    # test no selection after first operation -----
     last_msg <- NULL
-
     session$setInputs(vars_sel = character(0),
                       sel_format = 'as.Date',
                       btn_apply = 3)
 
-    expect_equal(last_msg, 'Choose a variable and a new format')
+    expect_equal(last_msg, 'Select a variable and a new format')
 
     last_msg <- NULL
-
     session$setInputs(vars_sel = 'Species',
                       sel_format = character(0),
                       btn_apply = 4)
 
-    expect_equal(last_msg, 'Choose a variable and a new format')
+    expect_equal(last_msg, 'Select a variable and a new format')
   })
 })
 

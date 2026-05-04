@@ -25,7 +25,7 @@ filter_rows_ui <- function(id) {
       conditionalPanel(
         condition = "input.filter_type == 'one'",
         ns = ns,
-        selectInput(ns('one_var_sel'), 'Variable', NULL),
+        selectInput(ns('one_var_sel'), 'Variable', ''),
         selectInput(ns('one_var_operator'), 'Operator', c('', filter_operators)),
         uiOutput(ns('ui_one_var_value'))
       ),
@@ -34,13 +34,13 @@ filter_rows_ui <- function(id) {
       conditionalPanel(
         condition = "input.filter_type == 'two'",
         ns = ns,
-        selectInput(ns('two_var_sel1'), 'Variable 1', NULL),
+        selectInput(ns('two_var_sel1'), 'Variable 1', ''),
         selectInput(
           ns('two_var_operator'),
           'Operator',
           c('', equal_operators, compare_operators)
         ),
-        selectInput(ns('two_var_sel2'), 'Variable 2', NULL)
+        selectInput(ns('two_var_sel2'), 'Variable 2', '')
       ),
 
       # panel for sample filter -----------------------------------------------
@@ -74,14 +74,14 @@ filter_rows_ui <- function(id) {
       conditionalPanel(
         condition = "input.filter_type == 'dataset'",
         ns = ns,
-        selectInput(ns('dt_1_var_sel'), 'Variable (active dataset)', NULL),
+        selectInput(ns('dt_1_var_sel'), 'Variable (active dataset)', ''),
         selectInput(
           ns('dt_var_operator'),
           'Operator',
           c('', in_operators)
         ),
-        selectInput(ns('dt_dt_sel'), 'Dataset (other non active)', NULL),
-        selectInput(ns('dt_2_var_sel'), 'Variable (from other dataset)', NULL)
+        selectInput(ns('dt_dt_sel'), 'Dataset (other non active)', ''),
+        selectInput(ns('dt_2_var_sel'), 'Variable (from other dataset)', '')
       ),
     ),
     card_footer(btn_task(ns('btn_filter'), 'Apply filters', icon('check')))
@@ -329,36 +329,37 @@ filter_rows_server <- function(id) {
     observe({
       if(!isTruthy(input$filter_type)){
         msg('Select the Filter type')
+        return()
       } else {
         # filter events for one variable --------------------------------------
         if (input$filter_type == 'one') {
           # test if var and operator were informed
           if (!isTruthy(input$one_var_sel)) {
-            msg_error('Choose a variable')
+            msg('Select a variable')
             return()
           } else if (!isTruthy(input$one_var_operator)) {
-            msg_error('Choose an operator')
+            msg('Select an operator')
             return()
           } else if (!isTruthy(input$one_var_value) &
                      input$one_var_operator %notin%
                      c(na_operators, logical_operators, outlier_operators)) {
-            msg_error('Insert a value')
+            msg('Insert a value')
             return()
           } else if (input$one_var_operator %in% between_operators) {
             if (col_type_one_var() == 'numeric' &
                 !isTruthy(input$one_var_value2)) {
-              msg_error('Inform inicial and final values')
+              msg('Inform inicial and final values')
               return()
             } else if (col_type_one_var() == 'date' &
                        (!isTruthy(input$one_var_value[1]) |
                         !isTruthy(input$one_var_value[2]))) {
-              msg_error('Inform inicial and final dates')
+              msg('Inform inicial and final dates')
               return()
             }
           } else if (input$one_var_operator %in% in_operators &
                      col_type_one_var() %in% c('date', 'numeric') &
                      is.null(value_temp$value_temp_inserted)) {
-            msg_error('Insert values')
+            msg('Insert values')
             return()
           }
 
@@ -402,17 +403,16 @@ filter_rows_server <- function(id) {
 
           # clear value after click in button
           updateSelectInput(session, 'var', selected = '')
-
           updateSelectInput(session, 'operator', selected = '')
 
           # filter events for 2 variables -------------------------------------
         } else if (input$filter_type == 'two') {
           temp <- copy(get_act_dt(session))
           if (!isTruthy(input$two_var_sel1) || !isTruthy(input$two_var_sel2)) {
-            msg_error('Choose 2 variables')
+            msg('Select 2 variables')
             return()
           } else if (!isTruthy(input$two_var_operator)) {
-            msg_error('Choose an operator')
+            msg('Select an operator')
             return()
           } else if (temp[[input$two_var_sel1]] |> obj_type() !=
                      temp[[input$two_var_sel2]] |> obj_type()) {
@@ -431,7 +431,7 @@ filter_rows_server <- function(id) {
           if (input$sample_type == 'rows') {
             if (!isTruthy(input$n_rows) ||
                 !between(input$n_rows, 1, nrow_df_active())) {
-              msg_error(paste('Number of rows must be between 1 and', nrow_df_active()))
+              msg(paste('Number of rows must be between 1 and', nrow_df_active()))
               return()
             } else {
 
@@ -505,13 +505,13 @@ filter_rows_server <- function(id) {
           # filter dataset -------------------------------------
         } else if (input$filter_type == 'dataset') {
           if (!isTruthy(input$dt_1_var_sel) || !isTruthy(input$dt_2_var_sel)) {
-          msg_error('Choose 2 variables')
+          msg('Select 2 variables')
           return()
           } else if (!isTruthy(input$dt_dt_sel)) {
-            msg_error('Choose a dataset')
+            msg('Select a dataset')
             return()
           } else if (!isTruthy(input$dt_var_operator)) {
-            msg_error('Choose an operator')
+            msg('Select an operator')
             return()
           }
           # apply filter -----

@@ -10,7 +10,7 @@ duplicates_ui <- function(id) {
         selectizeInput(
           ns('vars_sel_dup'),
           'Variables',
-          NULL,
+          '',
           multiple = T,
           options = list(plugins = list('remove_button', 'clear_button')),
           width = '80%'

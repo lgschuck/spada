@@ -63,7 +63,7 @@ order_rows_server <- function(id) {
     # btn order rows ---------------------------
     observe({
       if(!isTruthy(input$vars_rows)){
-        msg('Choose at least one variable')
+        msg('Select at least one variable')
       } else {
         running_modal()
         rows_position <- rep(1, input$vars_rows |> length())

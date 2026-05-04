@@ -9,6 +9,7 @@ test_that('Test calculate cols - sum numeric', {
     last_msg <- NULL
 
     local_mocked_bindings(
+      msg = function(text, ...) { last_msg <<- text },
       remove_running_modal = function(){last_msg <<- 'Remove modal'}
     )
 
@@ -31,6 +32,12 @@ test_that('Test calculate cols - sum numeric', {
     expect_equal(session$userData$dt$dt[[session$userData$dt$act_name]]$new_var[1],
                  iris$Sepal.Width |> sum())
     expect_equal(last_msg, 'Remove modal')
+
+    # test no selection after first operation -----
+    session$setInputs(vars_sel = character(0),
+                      btn_apply_fun = 2)
+
+    expect_equal(last_msg, 'Select a variable')
   })
 })
 
@@ -252,7 +259,7 @@ test_that('Calculate cols - apply fun - check inputs', {
 
     # vars_sel NULL
     session$setInputs(vars_sel = NULL, btn_apply_fun = 1)
-    expect_equal(last_msg, 'Select at least one variable')
+    expect_equal(last_msg, 'Select a variable')
 
     # fun NULL
     session$setInputs(vars_sel = 'Species', fun = NULL, btn_apply_fun = 2)

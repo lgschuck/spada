@@ -20,13 +20,17 @@ editor_options:
 
 3 - New **favicon**
 
-4 - New style in modal header and new icons in modal titles
+4 - New **style in modal header** and new icons in modal titles
 
 5 - Change **updateSelectizeInput** for updateSelectInput when erroneously used with selecInput
 
 ### Bug fixes
 
-1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))
+1 - **Edit > Convert: convert even with no variable selected #71**([#71](https://github.com/lgschuck/spada/issues/71))
+
+2 - **Filter Rows: filter with no variable selected #74**([#74](https://github.com/lgschuck/spada/issues/74))
+
+3 - **Calculate: apply function even without select a variable #74**([#75](https://github.com/lgschuck/spada/issues/75))
 
 # Spada 0.1.5
 

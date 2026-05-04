@@ -9,7 +9,7 @@ import_file_ui <- function(id) {
           column(3, textInput(ns('dataset_name'), 'Dataset name', 'dataset')),
           column(3, radioButtons(ns('radio_file_ext'), 'File format',
                                         file_extensions, inline = T)),
-          column(3, fileInput(ns('file'), 'Choose a File')),
+          column(3, fileInput(ns('file'), 'Select a File')),
         ),
         conditionalPanel(
           condition = "input.radio_file_ext == 'csv'", ns = ns,
