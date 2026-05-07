@@ -522,14 +522,14 @@ exploratory_server <- function(id, output_report) {
     # insert dist plot to output ----------------------------------------------
     insert_output_server(
       'insert_dist_plot',
-      reactive(plotTag(dist_plot(), '', width = 1000, height = 500)),
+      reactive(plot_tag(dist_plot())),
       'Exploratory Plot'
     )
 
     # insert scatter to output ------------------------------------------------
     insert_output_server(
       'insert_scatter',
-      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)),
+      reactive(plot_tag(scatter_plot())),
       'Scatter Plot'
     )
 
@@ -543,7 +543,7 @@ exploratory_server <- function(id, output_report) {
     # insert lm residual plot to output ---------------------------------------
     insert_output_server(
       'insert_lm_resid_plot',
-      reactive(plotTag(lm_resid_plot(), '', width = 1000, height = 500)),
+      reactive(plot_tag(lm_resid_plot())),
       'Linear Model - Residuals Plot'
     )
 

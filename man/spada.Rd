@@ -9,7 +9,7 @@ spada(..., run_local = TRUE)
 \arguments{
 \item{...}{Objects of data.frame class}
 
-\item{run_local}{Logical. Whether to run the application locally.}
+\item{run_local}{Logical. Whether to run the application locally. If TRUE the app will close at session end.}
 }
 \value{
 An object of class 'shiny.appobj' representing the 'shiny' application.

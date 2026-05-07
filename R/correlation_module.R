@@ -239,7 +239,7 @@ correlation_server <- function(id) {
     # insert scatter to output ------------------------------------------------
     insert_output_server(
       'insert_scatter',
-      reactive(plotTag(scatter_plot(), '', width = 1000, height = 500)),
+      reactive(plot_tag(scatter_plot())),
       'Scatter Plot'
     )
 

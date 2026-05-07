@@ -128,7 +128,7 @@ spada <- function(..., run_local = TRUE) {
     default_conf
   )
 
-  start_conf <- load_conf(start_conf, r_user_conf_dir, themes_names)
+  start_conf <- load_conf(start_conf, spada_conf_dir, themes_names)
 
   # resources -----------------------------------------------------------------
   addResourcePath('spada', system.file('www', package = 'spada'))

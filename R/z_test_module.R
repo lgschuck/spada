@@ -201,8 +201,10 @@ z_test_server <- function(id) {
       'ztest_insert_output',
       reactive(
         gen_table2(
-          plotTag(ztest_plot()(), '', width = 1000, height = 500),
-          ztest_results_gt()
+          plot_tag(ztest_plot()(), w = 600, h = 300),
+          ztest_results_gt(),
+          '75%',
+          '25%'
         )
       ),
       'Z Test'
@@ -338,9 +340,7 @@ z_test_server <- function(id) {
     # insert histogram to output ----------------------------------------------
     insert_output_server(
       'ztest_insert_output_hist',
-      reactive(
-        plotTag(ztest_hist(), '', width = 1000, height = 500)
-      ),
+      reactive(plot_tag(ztest_hist())),
       'Histogram'
     )
 

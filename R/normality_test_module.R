@@ -215,9 +215,7 @@ normality_test_server <- function(id) {
     # insert histogram to output ----------------------------------------------
     insert_output_server(
       'norm_insert_output_hist',
-      reactive(
-        plotTag(norm_hist(), '', width = 1000, height = 500)
-      ),
+      reactive(plot_tag(norm_hist())),
       'Histogram'
     )
 
@@ -270,7 +268,7 @@ normality_test_server <- function(id) {
     # insert to output --------------------------------------------------------
     insert_output_server(
       'norm_insert_output_qq',
-      reactive(plotTag(norm_qq_plot(), '', width = 1000, height = 500)),
+      reactive(plot_tag(norm_qq_plot())),
       'QQ Plot'
     )
 

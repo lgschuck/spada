@@ -532,13 +532,13 @@ load_conf <- function(start_conf,
 }
 
 # generate 2 column table in html ---------------------------------------------
-gen_table2 <- function(element1, element2) {
+gen_table2 <- function(element1, element2, w1 = '50%', w2 = '50%') {
   div(
     tags$table(
       style = 'width: 95%',
       tags$tr(
-        tags$td(style = 'padding: 10px; width: 50%;', element1),
-        tags$td(style = 'padding: 10px; width: 50%;', element2)
+        tags$td(style = paste('padding: 10px; width:', w1, ';'), element1),
+        tags$td(style = paste('padding: 10px; width:', w2, ';'), element2)
       )
     )
   )
@@ -1481,7 +1481,8 @@ spada_plot <- function(
     line_type = 1,
     mean_value = NULL,
     sd_value = NULL,
-    sample_limit = 1e5
+    sample_limit = 1e5,
+    na_rm = TRUE
   ){
 
   if(nrow(df) > sample_limit){
@@ -1496,7 +1497,8 @@ spada_plot <- function(
       geom_histogram(
         bins = bins,
         fill = fill_color,
-        color = '#000000'
+        color = '#000000',
+        na.rm = na_rm
       ) +
       geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
       labs(x = xlab, y = ylab, title = title) +
@@ -1512,7 +1514,8 @@ spada_plot <- function(
       geom_histogram(aes(y = after_stat(density)),
                      bins = bins,
                      fill = fill_color,
-                     color = 'black') +
+                     color = 'black',
+                     na.rm = na_rm) +
       stat_function(fun = dnorm,
                     args = list(mean = mean_value,
                                 sd = sd_value),
@@ -1530,8 +1533,8 @@ spada_plot <- function(
   } else if (type == 'boxplot'){
 
     ggplot(data = df, aes(x = .data[[xvar]])) +
-      stat_boxplot(geom = 'errorbar', width = 0.3) +
-      geom_boxplot(fill = fill_color) +
+      stat_boxplot(geom = 'errorbar', width = 0.3, na.rm = na_rm) +
+      geom_boxplot(fill = fill_color, na.rm = na_rm) +
       ylim(-1.2, 1.2) +
       geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
       labs(x = '', y = '') +
@@ -1546,7 +1549,7 @@ spada_plot <- function(
   } else if(type == 'dots'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
-      geom_point(shape = point_shape, color = fill_color) +
+      geom_point(shape = point_shape, color = fill_color, na.rm = na_rm) +
       geom_hline(yintercept = vertical_line, color = line_color, linetype = line_type) +
       labs(x = xlab, y = ylab) +
       theme_classic() +
@@ -1558,7 +1561,7 @@ spada_plot <- function(
   } else if (type == 'barplot'){
 
     ggplot(data = df, aes(x = factor(.data[[xvar]]))) +
-      geom_bar(fill = fill_color) +
+      geom_bar(fill = fill_color, na.rm = na_rm) +
       labs(x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
@@ -1569,8 +1572,8 @@ spada_plot <- function(
   } else if (type == 'boxplot_group'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]], fill = .data[[xvar]])) +
-      stat_boxplot(geom = 'errorbar', width = 0.3) +
-      geom_boxplot(orientation = 'x') +
+      stat_boxplot(geom = 'errorbar', width = 0.3, na.rm = na_rm) +
+      geom_boxplot(orientation = 'x', na.rm = na_rm) +
       geom_hline(yintercept = vertical_line,
                  color = line_color) +
       coord_flip() +
@@ -1587,7 +1590,7 @@ spada_plot <- function(
   } else if (type == 'scatter'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
-      geom_point(color = fill_color, shape = point_shape) +
+      geom_point(color = fill_color, shape = point_shape, na.rm = na_rm) +
       labs(title = title,
            x = xlab, y = ylab) +
       theme_classic() +
@@ -1599,8 +1602,8 @@ spada_plot <- function(
       )
   } else if (type == 'qq_plot'){
     ggplot(data = df, aes(sample = .data[[xvar]])) +
-      stat_qq(color = fill_color) +
-      stat_qq_line(color = line_color) +
+      stat_qq(color = fill_color, na.rm = na_rm) +
+      stat_qq_line(color = line_color, na.rm = na_rm) +
       labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
@@ -1610,6 +1613,18 @@ spada_plot <- function(
             plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
   }
+}
+
+# plotTag with attributes -----------------------------------------------------
+plot_tag <- function(plot, w = 900, h = 300){
+  plotTag(
+    plot,
+    '',
+    width = w,
+    height = h,
+    suppressSize = 'xy',
+    attribs = list(style = 'max-width:90%; height:auto;')
+  )
 }
 
 # status row for restore session ----------------------------------------------
