@@ -24,7 +24,7 @@
 #'             popover sidebar tooltip value_box
 #'
 #' @importFrom collapse allNA ffirst flast fmean fmedian fmax fmin fmode fncol
-#'             fnrow fnunique fquantile fsd fsum fvar frange whichNA %==%
+#'             fnrow fnunique fquantile fsd fsum fvar frange qtab whichNA %==%
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
 #'             data.table fcase fifelse fread fwrite hour is.data.table mday

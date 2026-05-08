@@ -1664,9 +1664,10 @@ display_restore_status <- function(session_restore_status, btn_ok){
 
   # show modal
   showModal(modalDialog(
-    title = div(h1(bs_icon('database-up', size = '40px',
-                       style = 'margin-right: 8px; color:#FFFFFF'),
-        'Session Status'
+    title = div(h2(
+      bs_icon('database-up', size = '40px',
+              style = 'margin-right: 8px; color:#FFFFFF'),
+      'Session Status'
     )),
     div(style = 'padding:12px; border-radius:0px;', list_check_restore),
     size = 'l',

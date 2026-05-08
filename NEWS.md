@@ -32,6 +32,8 @@ editor_options:
 
 9 - New **plot_tag** function: better control in how plots images are inserted in the output
 
+10 - **Table values** module: now uses collapse::qtab isntead of base::table for speed improvement
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))

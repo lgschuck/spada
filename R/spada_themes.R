@@ -253,6 +253,7 @@ spada_theme <- bs_theme(
     ")
   )
 
+
 # darkly spada theme ----------------------------------------------------------
 spada_dark_theme <- bs_theme(
   version = 5,
@@ -292,3 +293,4 @@ spada_dark_theme <- bs_theme(
 
     ")
   )
+

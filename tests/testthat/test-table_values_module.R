@@ -37,7 +37,7 @@ test_that('Exploratory module - tables - 2 variables', {
     tab1 <- table(mtcars$cyl |> as.integer() |> as.factor(),
                   mtcars$am |> as.integer() |> as.factor())
     tab1 <- tab1 |> as.data.frame.matrix()
-    tab1 <- cbind(var1 = rownames(tab1), tab1)
+    tab1 <- cbind(Var1 = rownames(tab1), tab1)
 
     expect_equal(var(), mtcars$cyl |> as.integer() |> as.factor())
     expect_equal(table_values(), tab1)

@@ -40,18 +40,23 @@ table_values_server <- function(id, var, var2, var_name, var2_name) {
     table_values <- reactive({
       req(var(), var2(), input$table_var, input$table_type)
 
+      var <- var()
+      var2 <- var2()
+
       if(input$table_var == '1v') {
 
-        validate(need(is.character(var()) || is.factor(var()) || is.logical(var()),
+        validate(need(is.character(var) || is.factor(var) || is.logical(var),
                       'Var must be character, factor or logical'))
 
         if(input$table_type == 'abs_table'){
-          tab1 <- var() |> table()
+          tab1 <- var |> qtab()
         } else if(input$table_type == 'perc_table'){
-          tab1 <- var() |> table() |> prop.table() * 100
+          tab1 <- var |> qtab() |> prop.table() * 100
         }
 
-        tab1 |> as.data.frame()
+        tab1 <- tab1 |> as.data.frame()
+        names(tab1) <- c('Var1', 'Freq')
+        tab1
 
       } else if (input$table_var == '2v'){
         req(var())
@@ -59,19 +64,18 @@ table_values_server <- function(id, var, var2, var_name, var2_name) {
 
         validate(need(
           var_name() != var2_name() &
-            (is.character(var()) || is.factor(var()) || is.logical(var())) &
-            (is.character(var2()) || is.factor(var2()) || is.logical(var2())),
+            (is.character(var) || is.factor(var) || is.logical(var)) &
+            (is.character(var2) || is.factor(var2) || is.logical(var2)),
           'Select two diferent variables of type character, factor or logical'))
 
         if(input$table_type == 'abs_table'){
-          tab1 <- table(var(), var2())
+          tab1 <- qtab(var, var2)
         } else if(input$table_type == 'perc_table'){
-          tab1 <- table(var(), var2()) |> prop.table() * 100
+          tab1 <- qtab(var, var2) |> prop.table() * 100
         }
 
         tab1 <- tab1 |> as.data.frame.matrix()
-
-        cbind(var1 = rownames(tab1), tab1)
+        cbind(Var1 = rownames(tab1), tab1)
       }
     })
 
@@ -103,10 +107,10 @@ table_values_server <- function(id, var, var2, var_name, var2_name) {
 
         table_values() |>
           gt() |>
-          cols_label(var1 = "") |>
+          cols_label(Var1 = "") |>
           tab_spanner(
             label = var_name(),
-            columns = var1
+            columns = Var1
           ) |>
           tab_spanner(
             label = y_label,
