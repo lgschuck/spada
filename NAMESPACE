@@ -2,6 +2,7 @@
 
 export(spada)
 import(shiny)
+importFrom(DescTools,Freq)
 importFrom(DescTools,Gmean)
 importFrom(DescTools,Hmean)
 importFrom(DescTools,Kurt)

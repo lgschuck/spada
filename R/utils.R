@@ -143,6 +143,7 @@ factor_funs <- c(
 logical_funs <- c(
   'All True' = 'all',
   'Any True' = 'any',
+  'As Logical' = 'as.logical',
   'Is Logical' = 'is.logical',
   'Number of True' = 'sum_na',
   'Proportion of True' = 'mean_na'

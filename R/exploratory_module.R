@@ -75,6 +75,7 @@ exploratory_ui <- function(id) {
             )
           ),
           nav_panel('Table', full_screen = T, table_values_ui(ns('table_values'))),
+          nav_panel('Frequencies', full_screen = T, frequencies_ui(ns('frequencies'))),
           nav_panel(
             'Linear Model',
             full_screen = T,
@@ -353,6 +354,9 @@ exploratory_server <- function(id, output_report) {
                         var2,
                         reactive(input$sel_vars),
                         reactive(input$sel_vars2))
+
+    # frequencies -------------------------------------------------------------
+    frequencies_server('frequencies', var)
 
     # linear model ------------------------------------------------------------
     linear_model <- reactiveValues(

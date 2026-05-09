@@ -31,7 +31,7 @@
 #'             minute month quarter rbindlist second setcolorder setDT setnames
 #'             setorderv shift wday week yday year
 #'
-#' @importFrom DescTools Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
+#' @importFrom DescTools Freq Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
 #'             Skew ZTest
 #'
 #' @importFrom dplyr filter pull

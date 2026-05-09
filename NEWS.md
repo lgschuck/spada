@@ -34,6 +34,8 @@ editor_options:
 
 10 - **Table values** module: now uses collapse::qtab isntead of base::table for speed improvement
 
+11 - New **Frequencies** module: new Frequencies table inside Exploratory module
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))

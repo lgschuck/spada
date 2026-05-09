@@ -168,6 +168,26 @@ theme_basic_rules <- as_sass(
         color: white;
         border-radius: 0 !important;
       }
+
+    .navbar-nav .nav-link {
+      transition: background-color 0.2s ease;
+
+      border-radius: 10px;
+      margin: 1px;
+
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+      color: white !important;
+    }
+
+    .navbar-nav .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.18);
+      color: white !important;
+    }
  ")
 )
 
