@@ -38,91 +38,103 @@ table_values_server <- function(id, var, var2, var_name, var2_name) {
     ns <- session$ns
 
     table_values <- reactive({
-      req(var(), var2(), input$table_var, input$table_type)
+      req(var(), input$table_var, input$table_type)
 
       var <- var()
-      var2 <- var2()
 
       if(input$table_var == '1v') {
 
         validate(need(is.character(var) || is.factor(var) || is.logical(var),
                       'Var must be character, factor or logical'))
 
-        if(input$table_type == 'abs_table'){
-          tab1 <- var |> qtab()
-        } else if(input$table_type == 'perc_table'){
-          tab1 <- var |> qtab() |> prop.table() * 100
-        }
+        tab <- var |> qtab()
+        if(input$table_type == 'perc_table') tab <- tab |> prop.table()
 
-        tab1 <- tab1 |> as.data.frame()
-        names(tab1) <- c('Var1', 'Freq')
-        tab1
+        tab <- tab |> as.data.frame()
+        names(tab) <- c('Var1', 'Freq')
+        tab
 
       } else if (input$table_var == '2v'){
-        req(var())
         req(var2())
+        var2 <- var2()
 
         validate(need(
-          var_name() != var2_name() &
-            (is.character(var) || is.factor(var) || is.logical(var)) &
-            (is.character(var2) || is.factor(var2) || is.logical(var2)),
-          'Select two diferent variables of type character, factor or logical'))
+          var_name() != var2_name() && is_categorical(var) && is_categorical(var2),
+          'Select two different variables of type character, factor or logical')
+        )
 
-        if(input$table_type == 'abs_table'){
-          tab1 <- qtab(var, var2)
-        } else if(input$table_type == 'perc_table'){
-          tab1 <- qtab(var, var2) |> prop.table() * 100
-        }
+        tab <- qtab(var, var2)
 
-        tab1 <- tab1 |> as.data.frame.matrix()
-        cbind(Var1 = rownames(tab1), tab1)
+        if(input$table_type == 'perc_table') tab <- tab |> prop.table()
+
+        tab <- tab |> as.data.frame.matrix()
+
+        cbind(Var1 = rownames(tab), tab)
       }
     })
 
     table_values_gt <- reactive({
       req(table_values())
-      req(input$table_var, input$table_type, var_name(), var2_name())
+      req(input$table_var, input$table_type, var_name())
+
+      var_name <- var_name()
+      tab <- table_values()
 
       if(input$table_var == '1v') {
 
-        if(input$table_type == 'abs_table'){
-          y_label <- 'Frequency'
-        } else if(input$table_type == 'perc_table'){
-          y_label <- 'Relative Frequency (%)'
-        }
+        y_label <- if(input$table_type == 'abs_table') 'Frequency' else 'Relative Frequency'
 
-        table_values() |>
+        tab <- tab |>
           gt() |>
           cols_label(
-            Var1 = var_name(),
+            Var1 = var_name,
             Freq = y_label
           )
-      } else if (input$table_var == '2v'){
 
-        if(input$table_type == 'abs_table'){
-          y_label <- var2_name()
-        } else if(input$table_type == 'perc_table'){
-          y_label <- paste(var2_name(), '(%)')
+        if(input$table_type == 'abs_table') {
+          tab |> fmt_number(columns = Freq)
+        } else {
+          tab |> fmt_percent(columns = Freq, decimals = 4)
         }
 
-        table_values() |>
+      } else if(input$table_var == '2v'){
+        req(var2_name())
+        var2_name <- var2_name()
+
+        cols <- names(tab)[-1]
+
+        tab <- tab |>
           gt() |>
-          cols_label(Var1 = "") |>
+          cols_label(Var1 = '') |>
           tab_spanner(
-            label = var_name(),
+            label = var_name,
             columns = Var1
           ) |>
           tab_spanner(
-            label = y_label,
-            columns = names(table_values())[2:length(names(table_values()))]
+            label = var2_name,
+            columns = cols
           )
+
+        if(input$table_type == 'abs_table') {
+          tab |> fmt_number()
+        } else {
+          tab |> fmt_percent(decimals = 4)
+        }
       }
     })
 
     output$table <- render_gt({
       req(table_values_gt())
       table_values_gt() |>
-        opt_interactive()
+        opt_interactive(
+          page_size_default = 10,
+          use_filters = T,
+          use_resizers = T,
+          use_highlight = T,
+          use_compact_mode = T,
+          use_text_wrapping = F,
+          use_page_size_select = T
+        )
     })
 
     # insert table of values to output ----------------------------------------

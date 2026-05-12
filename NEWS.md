@@ -32,13 +32,15 @@ editor_options:
 
 9 - New **plot_tag** function: better control in how plots images are inserted in the output
 
-10 - **Table values** module: now uses collapse::qtab isntead of base::table for speed improvement
+10 - **Table values** module: now uses collapse::qtab instead of base::table for speed improvement
 
 11 - New **Frequencies** module: new Frequencies table inside Exploratory module
 
 12 - New switch for activate **Dark mode** (Sidebar module)
 
 13 - **Removed sass** package as dependencie
+
+14 - **gt tables x Output**: gt tables are inserted as raw_html for speed improvement
 
 ### Bug fixes
 

@@ -19,9 +19,10 @@
 #'
 #' @importFrom bslib accordion accordion_panel bind_task_button bs_add_rules
 #'             bs_theme card card_body card_footer card_header font_collection
-#'             layout_column_wrap layout_columns layout_sidebar navbar_options
-#'             nav_item nav_menu nav_panel nav_select nav_spacer navset_card_pill
-#'             page_navbar popover sidebar tooltip update_switch value_box
+#'             input_switch layout_column_wrap layout_columns layout_sidebar
+#'             navbar_options nav_item nav_menu nav_panel nav_select nav_spacer
+#'             navset_card_pill page_navbar popover sidebar tooltip update_switch
+#'             value_box
 #'
 #' @importFrom collapse allNA ffirst flast fmean fmedian fmax fmin fmode fncol
 #'             fnrow fnunique fquantile fsd fsum fvar frange qtab whichNA %==%

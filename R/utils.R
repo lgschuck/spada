@@ -1970,6 +1970,10 @@ is_date <- function(x){
   inherits(x, c('Date', 'POSIXt', 'POSIXct', 'POSIXlt'))
 }
 
+is_categorical <- function(x) {
+  is.character(x) || is.factor(x) || is.logical(x)
+}
+
 is_valid_name <- function(x){
   x == make.names(x)
 }

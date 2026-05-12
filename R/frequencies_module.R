@@ -17,19 +17,22 @@ frequencies_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-frequencies_server <- function(id, var) {
+frequencies_server <- function(id, var, var_name) {
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
     freq_table <- reactive({
-      req(var())
+      req(var(), var_name())
 
       var <- var()
+      var_name <- var_name()
 
       if(is_date(var)) var <- as.factor(var)
 
-      Freq(var, useNA = 'always') |> as.data.frame()
+      freq_df <- Freq(var, useNA = 'always') |> as.data.frame()
+      attr(freq_df, 'title') <- var_name
+      freq_df
 
     })|> bindEvent(input$btn_freq)
 
@@ -39,6 +42,7 @@ frequencies_server <- function(id, var) {
 
       freq_table() |>
         gt() |>
+        tab_header(attr(freq_table(), 'title')) |>
         fmt_percent(
           columns = c('perc', 'cumperc'),
           decimals = 4

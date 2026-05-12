@@ -23,8 +23,8 @@ test_that('Tables values - 1 variable', {
 
 test_that('Exploratory module - tables - 2 variables', {
   testServer(table_values_server,
-             args = list(reactive(mtcars$cyl |> as.integer() |> as.factor()),
-                         reactive(mtcars$am |> as.integer() |> as.factor()),
+             args = list(reactive(mtcars$cyl |> as.factor()),
+                         reactive(mtcars$am |> as.factor()),
                          reactive('cyl'),
                          reactive('am')
              ), {
@@ -34,8 +34,8 @@ test_that('Exploratory module - tables - 2 variables', {
       table_type = 'abs_table'
     )
 
-    tab1 <- table(mtcars$cyl |> as.integer() |> as.factor(),
-                  mtcars$am |> as.integer() |> as.factor())
+    tab1 <- table(mtcars$cyl |> as.factor(),
+                  mtcars$am |> as.factor())
     tab1 <- tab1 |> as.data.frame.matrix()
     tab1 <- cbind(Var1 = rownames(tab1), tab1)
 

@@ -135,7 +135,7 @@ exploratory_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-exploratory_server <- function(id, output_report) {
+exploratory_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -356,7 +356,7 @@ exploratory_server <- function(id, output_report) {
                         reactive(input$sel_vars2))
 
     # frequencies -------------------------------------------------------------
-    frequencies_server('frequencies', var)
+    frequencies_server('frequencies', var, reactive(input$sel_vars))
 
     # linear model ------------------------------------------------------------
     linear_model <- reactiveValues(

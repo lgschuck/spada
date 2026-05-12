@@ -75,7 +75,7 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
       data.frame(
         measure = c(
           'Variable',
-          paste("% NA's (", stats_result()$n_nas, '/', stats_result()$n, ')'),
+          paste("% NA's (", f_int(stats_result()$n_nas), '/', f_int(stats_result()$n), ')'),
           'Minimum',
           'Percentile 25',
           'Median',

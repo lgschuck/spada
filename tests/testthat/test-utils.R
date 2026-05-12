@@ -715,6 +715,17 @@ test_that('is_date - test only first element of vector - 2', {
   expect_equal(is_date(c(10, Sys.Date())), FALSE)
 })
 
+# test is_categorical function ------------------------------------------------
+test_that("is_categorical", {
+  expect_equal(is_categorical('A'), TRUE)
+  expect_equal(is_categorical(TRUE), TRUE)
+  expect_equal(is_categorical(factor(1:2)), TRUE)
+  expect_equal(is_categorical(NA), TRUE)
+  expect_equal(is_categorical(1), FALSE)
+  expect_equal(is_categorical(Sys.Date()), FALSE)
+  expect_equal(is_categorical(NA_real_), FALSE)
+})
+
 # test is_valid_name function -------------------------------------------------
 test_that("is_valid_name - test a valid name", {
   expect_equal(is_valid_name('name'), TRUE)
