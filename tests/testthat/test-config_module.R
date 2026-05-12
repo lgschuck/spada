@@ -2,7 +2,7 @@
 
 # test colors -----------------------------------------------------------------
 test_that('Test chose colors', {
-  testServer(config_server, {
+  testServer(config_server, args = list(app_session = NULL), {
 
     session$setInputs(sel_fill = '#aaccff')
     session$setInputs(sel_line = '#ccee55')
@@ -14,7 +14,7 @@ test_that('Test chose colors', {
 
 # test input file size --------------------------------------------------------
 test_that('Test input file size', {
-  testServer(config_server, {
+  testServer(config_server, args = list(app_session = NULL),  {
 
     last_msg <- NULL
 
@@ -34,26 +34,22 @@ test_that('Test input file size', {
 
 # test theme choice -----------------------------------------------------------
 test_that('Test theme choice', {
-  testServer(config_server, {
-
-    last_msg <- NULL
-
-    local_mocked_bindings(
-      msg_error = function(text, ...) { last_msg <<- text },
-      msg = function(text, ...) { last_msg <<- text }
-    )
+  testServer(config_server, args = list(app_session = MockShinySession$new()), {
+    session$userData$conf <- reactiveValues(theme = 'spada_theme')
 
     session$setInputs(theme_choice = 'spada_dark_theme', btn_theme = 1)
 
     expect_equal(session$userData$conf$theme, 'spada_dark_theme')
-    expect_equal(last_msg, 'New theme applied')
 
+    session$setInputs(theme_choice = 'spada_theme', btn_theme = 2)
+
+    expect_equal(session$userData$conf$theme, 'spada_theme')
   })
 })
 
 # test restore session settings -----------------------------------------------
 test_that('Test restore session settings', {
-  testServer(config_server, {
+  testServer(config_server, args = list(app_session = NULL),  {
 
     last_msg <- NULL
 
@@ -74,8 +70,8 @@ test_that('Test restore session settings', {
 })
 
 # test plot limit -------------------------------------------------------------
-test_that('Test plot limit ', {
-  testServer(config_server, {
+test_that('Test plot limit', {
+  testServer(config_server, args = list(app_session = NULL),  {
 
     last_msg <- NULL
 

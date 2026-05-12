@@ -14,7 +14,6 @@ plot_fill_color <- '#0099F8'
 plot_line_color <- '#EE7942'
 plot_title_color <- '#02517d'
 
-
 startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------
 gray_palette <- c('#ffffff', '#585858', '#232323')
@@ -27,24 +26,21 @@ red_palette <- c('#ffffff', '#b60020', '#750217')
 
 # basic rules -----------------------------------------------------------------
 
-theme_basic_rules <- as_sass(
-  list(
-    list(main_color = main_color,
-         secondary = secondary,
-         bg_color = bg_color,
-         sidebar_bg = sidebar_color,
-         grad1 = '#1f4e72',
-         grad2 = '#2a6485',
-         grad3 = '#3a7f9d',
-         grad4 = '#4b97b6',
-         grad5 = '#5fa3c2',
-         grad6 = '#4e96b6',
-         stati_card_text = '#ffffff'
-    ),
+theme_basic_rules <- list(
+  paste(
+    " $main_color:", main_color, ";",
+    " $secondary:", secondary, ";",
+    " $bg_color:", bg_color, ";",
+    " $sidebar_bg:", sidebar_color, ";",
+
     "
-      /*.navbar-brand {
-        font-family: 'Open Sans', Ubuntu, 'system-ui';
-      }*/
+      $grad1: #1f4e72;
+      $grad2: #2a6485;
+      $grad3: #3a7f9d;
+      $grad4: #4b97b6;
+      $grad5: #5fa3c2;
+      $grad6: #4e96b6;
+      $stati_card_text: #ffffff;
 
       .navbar {
         min-height: 45px !important;
@@ -188,11 +184,11 @@ theme_basic_rules <- as_sass(
       background-color: rgba(255, 255, 255, 0.18);
       color: white !important;
     }
- ")
+  "
+  )
 )
 
 # default theme ---------------------------------------------------------------
-
 spada_theme <- bs_theme(
   version = 5,
   bg = bg_color,
@@ -213,7 +209,7 @@ spada_theme <- bs_theme(
   'dropdown-bg' = '#f9f9f9',
   'dropdown-color' = main_color,
   'dropdown-link-color' = '#000000',
-  'dropdown-link-hover-bg' = '#e3e3e4',
+  'dropdown-link-hover-bg' = sidebar_color,
   base_font = font_collection('Segoe UI', 'Ubuntu', 'system-ui')
 ) |> bs_add_rules(theme_basic_rules) |>
   bs_add_rules(
@@ -314,3 +310,8 @@ spada_dark_theme <- bs_theme(
     ")
   )
 
+# themes ----------------------------------------------------------------------
+spada_themes <- list(
+  spada_theme = spada_theme,
+  spada_dark_theme = spada_dark_theme
+)

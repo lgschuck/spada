@@ -36,6 +36,10 @@ editor_options:
 
 11 - New **Frequencies** module: new Frequencies table inside Exploratory module
 
+12 - New switch for activate **Dark mode** (Sidebar module)
+
+13 - **Removed sass** package as dependencie
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))

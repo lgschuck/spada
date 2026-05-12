@@ -121,7 +121,7 @@ config_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-config_server <- function(id) {
+config_server <- function(id, app_session) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
@@ -265,17 +265,20 @@ config_server <- function(id) {
 
     # change theme ---------------------------
     observe({
-      session$setCurrentTheme(
-
-        if(input$theme_choice == 'spada_theme'){
-          spada_theme
-        } else if(input$theme_choice == 'spada_dark_theme'){
-          spada_dark_theme
-        }
+      set_spada_theme(
+        session = session,
+        theme = input$theme_choice
       )
-      session$userData$conf$theme <- input$theme_choice
 
-      msg('New theme applied')
+      if(input$theme_choice == 'spada_dark_theme') {
+        update_switch(
+          id = 'sidebar-dark_mode', value = TRUE, session = app_session
+        )
+      } else {
+        update_switch(
+          id = 'sidebar-dark_mode', value = FALSE, session = app_session
+        )
+      }
     }) |> bindEvent(input$btn_theme)
 
     # session conf ---------------------------

@@ -42,7 +42,8 @@ sidebar_ui <- function(id) {
                   options = list(customClass = 'preview-dt-popup'))
       )
     ),
-    btn_task(ns('btn_save_session'), 'Save Session', icon('save'))
+    btn_task(ns('btn_save_session'), 'Save Session', icon('save')),
+    input_switch(id = ns('dark_mode'), label = 'Dark mode', value = FALSE)
   )
 }
 
@@ -172,5 +173,20 @@ sidebar_server <- function(id, app_session) {
         )
       }
     }) |> bindEvent(input$btn_save_session)
+
+    # apply dark mode ------------
+    observe({
+      new_theme <- if(isTRUE(input$dark_mode)) {
+        'spada_dark_theme'
+      } else {
+        'spada_theme'
+      }
+
+      if(identical(session$userData$conf$theme, new_theme)) return()
+
+      set_spada_theme(session = session, theme = new_theme)
+
+    }) |> bindEvent(input$dark_mode, ignoreInit = TRUE)
+
   })
 }

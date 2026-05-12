@@ -30,7 +30,6 @@ Imports:
   mirai (>= 2.5.3),
   qs2 (>= 0.1.7),
   rlang (>= 1.1.7),
-  sass (>= 0.4.10),
   shiny (>= 1.12.1),
   shinyWidgets (>= 0.9.0),
   waiter (>= 0.2.5.1),

@@ -32,7 +32,6 @@ test_that('Test dependencies', {
     expect_true(grepl('mirai', package_output, fixed = T))
     expect_true(grepl('qs2', package_output, fixed = T))
     expect_true(grepl('rlang', package_output, fixed = T))
-    expect_true(grepl('sass', package_output, fixed = T))
     expect_true(grepl('shiny', package_output, fixed = T))
     expect_true(grepl('shinyWidgets', package_output, fixed = T))
     expect_true(grepl('waiter', package_output, fixed = T))

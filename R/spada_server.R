@@ -242,7 +242,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
     output_server('pO_output')
 
     # config events -----------------------------------------------------------
-    config_server('pC')
+    config_server('pC', app_session = session)
 
     # about events ------------------------------------------------------------
     about_spada_server('about_spada')

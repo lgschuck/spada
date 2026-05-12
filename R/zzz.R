@@ -21,6 +21,7 @@ utils::globalVariables(
     'results',
     'value',
     'var1',
+    'Var1',
     'measure',
     'new_var',
     'fun',
