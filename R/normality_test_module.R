@@ -329,19 +329,16 @@ normality_test_server <- function(id) {
     # ks staticards -----------------------------------------------------------
     output$conditional_staticard_ks <- renderUI({
       req(ks_results())
+
+      idx_d <- ks_results()$results %in% c('statistic.D')
+      stat_d <- ks_results()$values[idx_d]
+
+      idx_p <- ks_results()$results %in% c('p.value')
+      p_value <- ks_results()$values[idx_p]
+
       tagList(
-        stati_card(ks_results()$results |>
-                   filter(results %in% c('statistic.D')) |>
-                   pull(values) |>
-                   as.numeric() |>
-                   f_num(dig = 5),
-                   'Statistic D (test value)'),
-        stati_card(ks_results()$results |>
-                   filter(results %in% c('p.value')) |>
-                   pull(values) |>
-                   as.numeric() |>
-                   f_num(dig = 5),
-                   'p value')
+        stati_card(stat_d |> as.numeric() |> f_num(dig = 5), 'Statistic D (test value)'),
+        stati_card(p_value |> as.numeric() |> f_num(dig = 5), 'p value')
       )
     })
 
@@ -428,19 +425,16 @@ normality_test_server <- function(id) {
     # sharpiro-wilk staticards ------------------------------------------------
     output$conditional_staticard_sw <- renderUI({
       req(sw_results())
+
+      idx_w <- sw_results()$results %in% c('statistic.W')
+      stat_w <- sw_results()$values[idx_w]
+
+      idx_p <- sw_results()$results %in% c('p.value')
+      p_value <- sw_results()$values[idx_p]
+
       tagList(
-        stati_card(sw_results() |>
-                   filter(results %in% c('statistic.W')) |>
-                   pull(values) |>
-                   as.numeric() |>
-                   f_num(dig = 5),
-                   'Statistic W (test value)'),
-        stati_card(sw_results() |>
-                   filter(results %in% c('p.value')) |>
-                   pull(values) |>
-                   as.numeric() |>
-                   f_num(dig = 5),
-                   'p value')
+        stati_card(stat_w |> as.numeric() |> f_num(dig = 5), 'Statistic W (test value)'),
+        stati_card(p_value |> as.numeric() |> f_num(dig = 5), 'p value')
       )
     })
 
@@ -518,19 +512,16 @@ normality_test_server <- function(id) {
     # sharpiro-francia staticards ---------------------------------------------
     output$conditional_staticard_sf <- renderUI({
       req(sf_results())
+
+      idx_w <- sf_results()$results %in% c('statistic.W')
+      stat_w <- sf_results()$values[idx_w]
+
+      idx_p <- sf_results()$results %in% c('p.value')
+      p_value <- sf_results()$values[idx_p]
+
       tagList(
-        stati_card(sf_results() |>
-                     filter(results %in% c('statistic.W')) |>
-                     pull(values) |>
-                     as.numeric() |>
-                     f_num(dig = 5),
-                   'Statistic W (test value)'),
-        stati_card(sf_results() |>
-                     filter(results %in% c('p.value')) |>
-                     pull(values) |>
-                     as.numeric() |>
-                     f_num(dig = 5),
-                   'p value')
+        stati_card(stat_w |> as.numeric() |> f_num(dig = 5), 'Statistic W (test value)'),
+        stati_card(p_value |> as.numeric() |> f_num(dig = 5), 'p value')
       )
     })
 

@@ -45,20 +45,28 @@
 <h2 class="pkg-version" data-toc-text="0.1.6.9000" id="spada-0169000">Spada 0.1.6.9000<a class="anchor" aria-label="anchor" href="#spada-0169000"></a></h2>
 <div class="section level4">
 <h4 id="improvements-0-1-6-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-6-9000"></a></h4>
-<p>1 - New <strong>duplicates</strong> module:allows identify and drop duplicate cases</p>
-<p>2 - New <strong>xlsx</strong> format (from writexl package) in <strong>export_file</strong> module</p>
-<p>3 - New <strong>favicon</strong></p>
+<p>1 - New <strong>duplicates</strong> module: allows identify and drop duplicate cases</p>
+<p>2 - New <strong>xlsx</strong> format (from <strong>writexl</strong> package) in <strong>export_file</strong> module</p>
+<p>3 - New Spada <strong>favicon</strong></p>
 <p>4 - New <strong>style in modal header</strong> and new icons in modal titles</p>
 <p>5 - Change <strong>updateSelectizeInput</strong> for updateSelectInput when erroneously used with selecInput</p>
 <p>6 - <strong>Save/import</strong> with run_local = FALSE: now a modal warns that is not possible to save/import (session and output)</p>
 <p>7 - <strong>Exit</strong> with run_local = FALSE: when run_local = FALSE the app closes witout saving (data, output and conf)</p>
 <p>8 - <strong>Restore sesison</strong> with run_local = FALSE: now only restore previous session if run_local = TRUE</p>
+<p>9 - New <strong>plot_tag</strong> function: better control in how plots images are inserted in the output</p>
+<p>10 - <strong>Table values</strong> module: now uses collapse::qtab instead of base::table for speed improvement</p>
+<p>11 - New <strong>Frequencies</strong> module: new Frequencies table inside Exploratory module</p>
+<p>12 - New switch for activate <strong>Dark mode</strong> (Sidebar module)</p>
+<p>13 - <strong>Removed sass</strong> package as dependencie</p>
+<p>14 - <strong>gt tables x Output</strong>: gt tables are inserted as raw_html for speed improvement</p>
+<p>15 - <strong>dplyr</strong>: removed as dependencie (only filter and pull functions were used)</p>
 </div>
 <div class="section level4">
 <h4 id="bug-fixes-0-1-6-9000">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-6-9000"></a></h4>
-<p>1 - <strong>Edit &gt; Convert: convert even with no variable selected </strong>(<a href="https://github.com/lgschuck/spada/issues/71" class="external-link">#71</a>)</p>
-<p>2 - <strong>Filter Rows: filter with no variable selected </strong>(<a href="https://github.com/lgschuck/spada/issues/74" class="external-link">#74</a>)</p>
-<p>3 - <strong>Calculate: apply function even without select a variable </strong>(<a href="https://github.com/lgschuck/spada/issues/75" class="external-link">#75</a>)</p>
+<p>1 - <strong>Edit &gt; Convert: convert even with no variable selected</strong>(<a href="https://github.com/lgschuck/spada/issues/71" class="external-link">#71</a>)</p>
+<p>2 - <strong>Filter Rows: filter with no variable selected</strong>(<a href="https://github.com/lgschuck/spada/issues/74" class="external-link">#74</a>)</p>
+<p>3 - <strong>Calculate: apply function even without select a variable</strong>(<a href="https://github.com/lgschuck/spada/issues/75" class="external-link">#75</a>)</p>
+<p>4 - <strong>Exploratory module: histogram with NA values</strong>(<a href="https://github.com/lgschuck/spada/issues/69" class="external-link">#69</a>)</p>
 </div>
 </div>
     <div class="section level2">

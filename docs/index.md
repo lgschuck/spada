@@ -1,7 +1,10 @@
 # spada (***S***hiny ***Pa***ckage for ***D***ata ***A***nalysis)
 
-The goal of **spada** is to provide visual tools for Data Analysis in a
-Shiny App.
+**Spada** provides a ‘shiny’ application with a user-friendly interface
+for interactive data analysis. It supports exploratory data analysis
+through descriptive statistics, data visualization, statistical tests
+(e.g., normality assessment), linear modeling, data import,
+transformation and reporting.
 
 This package is inspired in many other tools like:
 

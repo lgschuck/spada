@@ -225,16 +225,17 @@ z_test_server <- function(id) {
       req(ztest$results)
       req(ztest$confidence)
 
+      idx_alt <- ztest$results$results %in% c('alternative')
+      alt <- ztest$results$values[idx_alt]
+
+      idx_z <- ztest$results$results %in% c('statistic.z')
+      z_value <- ztest$results$values[idx_z]
+
       function(){
         plot_z_test(
           confidence = ztest$confidence,
-          test_type = ztest$results |>
-            filter(results == 'alternative') |>
-            pull(values),
-          z_value = ztest$results |>
-            filter(results == 'statistic.z') |>
-            pull(values) |>
-            as.numeric()
+          test_type = alt,
+          z_value = z_value |> as.numeric()
         )
       }
     })
@@ -250,19 +251,16 @@ z_test_server <- function(id) {
     # staticards --------------------------------------------------------------
     output$conditional_staticard_ztest <- renderUI({
       req(ztest_results_gt())
+
+      idx_z <- ztest$results$results %in% c('statistic.z')
+      z_value <- ztest$results$values[idx_z]
+
+      indx_p <- ztest$results$results %in% c('p.value')
+      p_value <- ztest$results$values[indx_p]
+
       tagList(
-        stati_card(ztest$results |>
-                   filter(results %in% c('statistic.z')) |>
-                   pull(values) |>
-                   as.numeric() |>
-                   f_num(dig = 3),
-                   'Z value'),
-        stati_card(ztest$results |>
-                   filter(results %in% c('p.value')) |>
-                   pull(values) |>
-                   as.numeric() |>
-                   f_num(dig = 3),
-                   'p value')
+        stati_card(f_num(as.numeric(z_value), dig = 3), 'Z value'),
+        stati_card(f_num(as.numeric(p_value), dig = 3), 'p value')
       )
     })
 

@@ -35,23 +35,23 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
 
           n_nas = collapse::whichNA(x) |> NROW(),
 
-          min = if (is.numeric(x)) collapse::fmin(x, na.rm = TRUE) else NA,
+          min = if(is.numeric(x)) collapse::fmin(x, na.rm = TRUE) else NA,
 
-          q1 = if (is.numeric(x)) collapse::fquantile(x, 0.25) else NA,
+          q1 = if(is.numeric(x)) collapse::fquantile(x, 0.25) else NA,
 
-          median = if (is.numeric(x)) collapse::fmedian(x, na.rm = TRUE) else NA,
+          median = if(is.numeric(x)) collapse::fmedian(x, na.rm = TRUE) else NA,
 
-          mean = if (is.numeric(x)) collapse::fmean(x, na.rm = TRUE) else NA,
+          mean = if(is.numeric(x)) collapse::fmean(x, na.rm = TRUE) else NA,
 
-          mode = if (is.numeric(x) || is.character(x) || is.factor(x)) {
+          mode = if(is.numeric(x) || is.character(x) || is.factor(x)) {
             collapse::fmode(x, na.rm = TRUE)
           } else {
             NA
           },
 
-          q3 = if (is.numeric(x)) collapse::fquantile(x, 0.75) else NA,
+          q3 = if(is.numeric(x)) collapse::fquantile(x, 0.75) else NA,
 
-          max = if (is.numeric(x)) collapse::fmax(x, na.rm = TRUE) else NA
+          max = if(is.numeric(x)) collapse::fmax(x, na.rm = TRUE) else NA
         )
 
       }, x = x, x_name = x_name)
@@ -75,7 +75,7 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
       data.frame(
         measure = c(
           'Variable',
-          paste("% NA's (", f_int(stats_result()$n_nas), '/', f_int(stats_result()$n), ')'),
+          paste0("% NA's (", f_int(stats_result()$n_nas), '/', f_int(stats_result()$n), ')'),
           'Minimum',
           'Percentile 25',
           'Median',
@@ -105,7 +105,7 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
       )
     })
 
-    # format tabe -------------------------------------------------------------
+    # format table ------------------------------------------------------------
     stats_table_fmt <- reactive({
       req(stats_table())
 

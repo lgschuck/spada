@@ -42,6 +42,8 @@ editor_options:
 
 14 - **gt tables x Output**: gt tables are inserted as raw_html for speed improvement
 
+15 - **dplyr**: removed as dependencie (only filter and pull functions were used)
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))

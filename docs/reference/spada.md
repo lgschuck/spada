@@ -16,7 +16,8 @@ spada(..., run_local = TRUE)
 
 - run_local:
 
-  Logical. Whether to run the application locally.
+  Logical. Whether to run the application locally. If TRUE the app will
+  close at session end.
 
 ## Value
 

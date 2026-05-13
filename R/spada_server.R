@@ -149,11 +149,9 @@ spada_server <- function(datasets, conf, run_local = TRUE){
 
       list(
         'row_col' = paste(
-          session$userData$dt$act_meta() |>
-            pull(rows) |> head(1) |> f_int(),
+          f_int(session$userData$dt$act_meta()[['rows']][1]),
           '/',
-          session$userData$dt$act_meta() |>
-            pull(cols) |> head(1) |> f_int()
+          f_int(session$userData$dt$act_meta()[['cols']][1])
         ),
         'col_nas' = session$userData$dt$act_meta()[n_nas > 0, ] |> fnrow()
       )

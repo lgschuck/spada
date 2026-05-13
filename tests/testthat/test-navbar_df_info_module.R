@@ -29,21 +29,18 @@ test_that("Test render df_info UI", {
       req(session$userData$dt$act_meta())
 
       list(
-        'row_col' = paste(session$userData$dt$act_meta() |>
-                            pull(rows) |> head(1) |> f_num(dig = 1),
-                          '/',
-                          session$userData$dt$act_meta() |>
-                            pull(cols) |> head(1) |> f_num()),
-        'col_nas' = session$userData$dt$act_meta() |>
-          filter(n_nas > 0) |> nrow()
+        'row_col' = paste(
+          f_int(session$userData$dt$act_meta()[['rows']][1]),
+          '/',
+          f_int(session$userData$dt$act_meta()[['cols']][1])
+        ),
+        'col_nas' = session$userData$dt$act_meta()[n_nas > 0, ] |> nrow()
       )
     })
 
     expect_true(is.list(output$navbar_df_info))
-
     expect_true(grepl('0', output$navbar_df_info$html))
-    expect_true(grepl('Rows/Columns:\n  150.0 / 5\n', output$navbar_df_info$html))
+    expect_true(grepl('Rows/Columns:\n  150 / 5\n', output$navbar_df_info$html))
     expect_true(grepl("Columns with NA's:\n  0", output$navbar_df_info$html))
-
   })
 })

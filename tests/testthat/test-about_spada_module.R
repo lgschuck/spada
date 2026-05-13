@@ -24,7 +24,6 @@ test_that('Test dependencies', {
     expect_true(grepl('collapse', package_output, fixed = T))
     expect_true(grepl('data.table', package_output, fixed = T))
     expect_true(grepl('DescTools', package_output, fixed = T))
-    expect_true(grepl('dplyr', package_output, fixed = T))
     expect_true(grepl('ggplot2', package_output, fixed = T))
     expect_true(grepl('gt', package_output, fixed = T))
     expect_true(grepl('haven', package_output, fixed = T))
