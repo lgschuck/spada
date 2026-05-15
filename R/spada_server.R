@@ -11,7 +11,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
       daemons(0)
     })
 
-    session$onFlushed(function() {
+    session$onFlushed(function(){
       waiter_hide()
     })
 

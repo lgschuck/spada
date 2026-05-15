@@ -44,6 +44,8 @@ editor_options:
 
 15 - **dplyr**: removed as dependencie (only filter and pull functions were used)
 
+16 - **Messages** on waiter: new messages on startup and exit screens
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))

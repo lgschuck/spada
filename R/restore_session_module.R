@@ -18,13 +18,13 @@ restore_session_server <- function(id) {
 	        session$userData$dt$dt
 	    )
 
-	    if(session$userData$run_local && session$userData$conf$restore_session == 'always') {
+	    if(session$userData$run_local && session$userData$conf$restore_session == 'always'){
 
 	      if(!file.exists(paste0(session$userData$conf$data_dir, '/data.qs2'))){
 	        session$userData$conf$restore_data_status <- 2
 
 	      } else {
-
+	        update_waiter_text(session, 'spada_startup_text', 'Loading data')
 	        previous_data <- qs_read(paste0(session$userData$conf$data_dir, '/data.qs2'))
 
 	        # check data format
@@ -34,6 +34,7 @@ restore_session_server <- function(id) {
 
 	          previous_data <- lapply(previous_data, as.data.table)
 
+	          update_waiter_text(session, 'spada_startup_text', 'Calculating metadata')
 	          # if empty entry only keep loaded data
 	          if(session$userData$conf$no_input_data){
 	            session$userData$dt$dt <- previous_data
@@ -66,6 +67,8 @@ restore_session_server <- function(id) {
 	        session$userData$conf$restore_output_status <- 2
 
 	      } else {
+
+	        update_waiter_text(session, 'spada_startup_text', 'Loading output')
 	        previous_output <- qs_read(paste0(session$userData$conf$data_dir, '/output.qs2'))
 
 	        # check output format

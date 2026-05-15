@@ -378,11 +378,7 @@ normality_test_server <- function(id) {
 
     # help ks function --------------------------------------------------------
     observe({
-      showModal(modalDialog(
-        HTML(get_help_file('stats', 'ks.test')),
-        title = div(icon('circle-question'), 'Help'),
-        easyClose = TRUE, size = 'xl'
-      ))
+      fun_help_modal('stats', 'ks.test')
     }) |> bindEvent(input$btn_help_ks)
 
     # sw test -----------------------------------------------------------------
@@ -418,7 +414,7 @@ normality_test_server <- function(id) {
       sw_results() |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results') |>
+        cols_label('values' = 'Values', 'results' = 'Results') |>
         tab_header('Shapiro-Wilk Normality Test')
     })
 
@@ -464,11 +460,7 @@ normality_test_server <- function(id) {
 
     # help file of shapiro.test
     observe({
-      showModal(modalDialog(
-        HTML(get_help_file('stats', 'shapiro.test')),
-        title = div(icon('circle-question'), 'Help'),
-        easyClose = TRUE, size = 'xl'
-      ))
+      fun_help_modal('stats', 'shapiro.test')
     }) |> bindEvent(input$btn_help_sw)
 
     # sf test -----------------------------------------------------------------
@@ -504,7 +496,7 @@ normality_test_server <- function(id) {
       sf_results() |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
-        gt::cols_label('values' = 'Values', 'results' = 'Results') |>
+        cols_label('values' = 'Values', 'results' = 'Results') |>
         tab_header('Shapiro-Francia Normality Test')
     })
 
@@ -551,11 +543,7 @@ normality_test_server <- function(id) {
 
     # help file of ShapiroFranciaTest
     observe({
-      showModal(modalDialog(
-        HTML(get_help_file('DescTools', 'ShapiroFranciaTest')),
-        title = div(icon('circle-question'), 'Help'),
-        easyClose = TRUE, size = 'xl'
-      ))
+      fun_help_modal('DescTools', 'ShapiroFranciaTest')
     }) |> bindEvent(input$btn_help_sf)
 
   })

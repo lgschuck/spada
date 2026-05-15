@@ -360,6 +360,7 @@ waiter_screen <- tags$style(
     }
 
     .waiter-overlay .screen-title-box {
+      position: relative;
       width: 100vw;
       padding: 40px 0;
       border-radius: 0;
@@ -395,6 +396,14 @@ waiter_screen <- tags$style(
       letter-spacing: 4px;
     }
 
+    .waiter-overlay .screen-subtitle3 {
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: 100;
+      opacity: 0.85;
+      letter-spacing: 4px;
+    }
+
     .waiter-overlay .screen-spinner {
       margin: 30px auto 0;
       width: 60px;
@@ -422,6 +431,21 @@ waiter_screen <- tags$style(
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .waiter-overlay .waiter-log {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Segoe UI', Ubuntu, system-ui;
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      height: 50px;
+      width: 400px;
+      text-align: center;
+      align-items: center;
     }
   "
   )
@@ -869,6 +893,16 @@ get_help_file <- function(pak, fun){
   )
 }
 
+# fun help modal --------------------------------------------------------------
+fun_help_modal <- function(pak, fun) {
+  showModal(modalDialog(
+    HTML(get_help_file(pak, fun)),
+    title = div(icon('circle-question'), paste('Help:', pak, '-', fun)),
+    easyClose = TRUE,
+    size = 'xl'
+  ))
+}
+
 # format decimals -------------------------------------------------------------
 f_dec <- function(x, dig = 0){
   if(is.numeric(x) && !is.na(x) |> all()){
@@ -975,18 +1009,19 @@ abort_run_local_modal <- function(msg = 'Spada must run locally'){
 
 # show startup function -------------------------------------------------------
 show_startup_screen <- function() {
-  waiterShowOnLoad(
-    html = tagList(div(
+  waiterShowOnLoad(html = tagList(
+    div(
       class = 'screen-container',
-      div(class = 'screen-title-box',
+      div(
+        class = 'screen-title-box',
         div('Spada', class = 'screen-title'),
         div('a Shiny Package for Data Analysis', class = 'screen-subtitle2')
       ),
-      waiter_spinner
-      ),
-      waiter_right_foot
-    )
-  )
+      waiter_spinner,
+      div(id = 'spada_startup_text', class = 'waiter-log', 'Building UI')
+    ),
+    waiter_right_foot
+  ))
 }
 
 # exit screen function --------------------------------------------------------
@@ -996,23 +1031,25 @@ show_exit_screen <- function(save = TRUE) {
       if(save){
         tagList(
           div(
-            class = "screen-container",
+            class = 'screen-container',
             div(class = 'screen-title-box',
-            div("Spada is saving your work", class = "screen-subtitle"),
-            div("Please do not close this window", class = "screen-subtitle2")
+            div('Spada is saving your work', class = 'screen-subtitle'),
+            div('Please do not close this window', class = 'screen-subtitle2')
             ),
-            waiter_spinner
+            waiter_spinner,
+            div(id = 'spada_exit_text', class = 'waiter-log', '')
           ),
           waiter_right_foot
         )
       } else {
         html = tagList(
           div(
-            class = "screen-container",
+            class = 'screen-container',
             div(class = 'screen-title-box',
-              div("Closing Spada", class = "screen-subtitle")
+              div('Closing Spada', class = 'screen-subtitle')
             ),
-            waiter_spinner
+            waiter_spinner,
+            div(id = 'spada_exit_text', class = 'waiter-log', 'Saving conf')
           ),
           waiter_right_foot
         )
@@ -1020,6 +1057,32 @@ show_exit_screen <- function(save = TRUE) {
     }
   )
 }
+
+# update startup text ---------------------------------------------------------
+update_waiter_text <- function(session, id, text) {
+  session$sendCustomMessage('update-text', list(id = id, text = text))
+}
+
+# update start up text-----------------------------------------------------------
+waiter_text <- "
+  Shiny.addCustomMessageHandler(
+    'update-text',
+    function(data){
+
+      const el = document.getElementById(data.id);
+
+      if(el){
+        const line = document.createElement('div');
+
+        line.innerText = data.text;
+
+        el.appendChild(line);
+      }
+    }
+  )
+"
+
+tag_js_waiter_text <- tags$head(tags$script(HTML(waiter_text)))
 
 # spada save function ---------------------------------------------------------
 spada_save <- function(dir, object, file_name){
@@ -1040,22 +1103,21 @@ spada_save <- function(dir, object, file_name){
 exit_with_save <- function(session){
 
   show_exit_screen()
-  t0 <- Sys.time()
-
+  update_waiter_text(session, 'spada_exit_text', 'Saving data')
   spada_save(session$userData$conf$data_dir,
              session$userData$dt$dt,
              'data.qs2')
-
+  Sys.sleep(0.3)
+  update_waiter_text(session, 'spada_exit_text', 'Saving output')
   spada_save(session$userData$conf$data_dir,
              session$userData$out$elements,
              'output.qs2')
-
+  Sys.sleep(0.4)
+  update_waiter_text(session, 'spada_exit_text', 'Saving conf')
   spada_save(session$userData$conf$conf_dir,
              reactiveValuesToList(session$userData$conf),
              'conf.qs2')
-
-  t_diff <- Sys.time() - t0
-  if(t_diff < 5) Sys.sleep(5 - t_diff)
+  Sys.sleep(0.8)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   if(session$userData$run_local) stopApp()
 }

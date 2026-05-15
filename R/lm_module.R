@@ -128,11 +128,7 @@ lm_server <- function(id) {
 
     # help events -------------------------------------------------------------
     observe({
-      showModal(modalDialog(
-        HTML(get_help_file('stats', 'lm')),
-        title = div(icon('circle-question'), 'Help'),
-        easyClose = TRUE, size = 'xl'
-      ))
+      fun_help_modal('stats', 'lm')
     }) |> bindEvent(input$btn_help_lm)
 
     # insert model to output --------------------------------------------------

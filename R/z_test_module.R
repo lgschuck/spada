@@ -266,11 +266,7 @@ z_test_server <- function(id) {
 
     # help modal --------------------------------------------------------------
     observe({
-      showModal(modalDialog(
-        HTML(get_help_file('DescTools', 'ZTest')),
-        title = div(icon('circle-question'), 'Help'),
-        easyClose = TRUE, size = 'xl'
-      ))
+      fun_help_modal('DescTools', 'ZTest')
     }) |> bindEvent(input$btn_help_ztest)
 
     # histogram ---------------------------------------------------------------

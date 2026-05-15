@@ -15,6 +15,8 @@ spada_ui <- function(conf){
     useBusyIndicators(),
 
     # css style for waiter screen ---------------------------------------------
+    tag_js_waiter_text,
+
     useWaiter(),
 
     waiter_screen,
