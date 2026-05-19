@@ -34,7 +34,6 @@ restore_session_server <- function(id) {
 
 	          previous_data <- lapply(previous_data, as.data.table)
 
-	          update_waiter_text(session, 'spada_startup_text', 'Calculating metadata')
 	          # if empty entry only keep loaded data
 	          if(session$userData$conf$no_input_data){
 	            session$userData$dt$dt <- previous_data

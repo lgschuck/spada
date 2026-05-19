@@ -696,6 +696,8 @@ test_dataset <- function(n_row = 1e3, n_col = 11){
     char_long_var = rep(paste(letters, collapse = ''), n_row),
     char_colors_var = rep(sample(colors(), n_row, replace = T)),
     date_var = Sys.Date() + rep(sample(-49:50, n_row, replace = T)),
+    datetime_var =
+      as.POSIXct(Sys.time()) + sample(0:(365 * 24 * 60 * 60), n_row, replace = TRUE),
     factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n_row, replace = T))),
     num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
     int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
@@ -1254,7 +1256,7 @@ test_output_format <- function(output){
          all(sapply(output, \(x){ 'character' %in% class(x$id)})) &&
            all(sapply(output, \(x){ 'character' %in% class(x$title) })) &&
            all(sapply(output, \(x){ 'character' %in% class(x$annotation) })) &&
-           all(sapply(output, \(x){ any(c('gt_tbl', 'shiny.tag') %in% class(x$element)) })) &&
+           all(sapply(output, \(x){ any(c('gt_tbl', 'html', 'shiny.tag') %in% class(x$element)) })) &&
            all(sapply(output, \(x){ 'shiny.tag' %in% class(x$card) })) &&
            all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_x) })) &&
            all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_e) }))

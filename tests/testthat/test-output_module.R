@@ -1,8 +1,8 @@
 # tests/testthat/test-output_module.R
 
 out_el <- list(
-  'id_1' = gen_output(),
-  'id_2' = gen_output()
+  'id_1' = gen_output(element = div(h2('Test'))),
+  'id_2' = gen_output(element = iris |> gt())
 )
 
 # test elements ---------------------------------------------------------------

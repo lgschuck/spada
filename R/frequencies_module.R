@@ -9,7 +9,7 @@ frequencies_ui <- function(id) {
     ),
     card_footer(
       fluidRow(
-        column(3, btn_task(ns('btn_freq'), 'Generate Table', icon('gear'))),
+        column(3, btn_task(ns('btn_freq_table'), 'Generate Table', icon('gear'))),
         column(3, insert_output_ui(ns('insert_frequencies')))
       )
     )
@@ -22,19 +22,34 @@ frequencies_server <- function(id, var, var_name) {
 
     ns <- session$ns
 
-    freq_table <- reactive({
+    task_freq_table <- ExtendedTask$new(function(is_date_fun, var, var_name){
+      mirai({
+        if(is_date_fun(var)){
+          freq_df <- DescTools::Freq(var, breaks = 10, useNA = 'always')
+        } else {
+          freq_df <- DescTools::Freq(var, useNA = 'always')
+        }
+        freq_df <- freq_df |> as.data.frame()
+
+        attr(freq_df, 'title') <- var_name
+        freq_df
+
+      },
+      is_date_fun = is_date_fun,
+      var = var,
+      var_name = var_name)
+    }) |> bind_task_button('btn_freq_table')
+
+    observe({
       req(var(), var_name())
+      task_freq_table$invoke(
+        is_date_fun = is_date,
+        var = var(),
+        var_name = var_name()
+      )
+    }) |> bindEvent(input$btn_freq_table)
 
-      var <- var()
-      var_name <- var_name()
-
-      if(is_date(var)) var <- as.factor(var)
-
-      freq_df <- Freq(var, useNA = 'always') |> as.data.frame()
-      attr(freq_df, 'title') <- var_name
-      freq_df
-
-    })|> bindEvent(input$btn_freq)
+    freq_table <- reactive({ task_freq_table$result() })
 
     freq_table_gt <- reactive({
 
