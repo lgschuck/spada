@@ -10,6 +10,9 @@ if(interactive()){
   options(repos = repo)
   rm(repo)
 
-  .libPaths('../.spada_libs/r4.5_cran/')
-
+  if(getRversion() == '4.5.3'){
+    .libPaths('../.spada_libs/r4.5_cran/')
+  } else{
+    .libPaths('../.spada_libs/cran/')
+  }
 }

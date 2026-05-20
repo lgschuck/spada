@@ -225,6 +225,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
     descriptive_stats_server('pA_desc_stats')
 
     # correlation ----------------------------
+    cor_matrix_server('pA_cor_matrix')
     correlation_server('pA_correlation')
 
     # normality test -------------------------

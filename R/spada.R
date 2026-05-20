@@ -28,7 +28,7 @@
 #'             fnrow fnunique fquantile fsd fsum fvar frange qtab whichNA %==%
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
-#'             data.table fcase fifelse fread fwrite hour is.data.table mday
+#'             data.table fcase fifelse fread fwrite hour is.data.table mday melt
 #'             minute month quarter rbindlist second setcolorder setDT setnames
 #'             setorderv shift wday week yday year
 #'
@@ -37,15 +37,15 @@
 #'
 #' @importFrom ggplot2 .data aes after_stat coord_flip element_blank
 #'             element_rect element_text geom_bar geom_boxplot geom_histogram
-#'             geom_hline geom_line geom_point geom_vline ggplot labs
-#'             stat_boxplot stat_function stat_qq stat_qq_line theme
-#'             theme_classic ylim
+#'             geom_hline geom_line geom_point geom_text geom_tile geom_vline
+#'             ggplot labs scale_fill_gradient2 stat_boxplot stat_function
+#'             stat_qq stat_qq_line theme theme_classic ylim
 #'
 #' @importFrom graphics abline barplot boxplot curve hist lines mtext polygon text
 #'
 #' @importFrom grDevices colors
 #'
-#' @importFrom gt cols_align cols_hide cols_label cols_merge cols_move
+#' @importFrom gt as_raw_html cols_align cols_hide cols_label cols_merge cols_move
 #'             cols_width data_color fmt_bytes fmt_icon fmt_integer
 #'             fmt_number fmt_percent gt gt_output gtsave opt_interactive pct
 #'             render_gt sub_missing sub_values tab_header tab_options tab_spanner

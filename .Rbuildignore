@@ -10,3 +10,5 @@
 ^NEWS_0.1.0.md$
 ^.git$
 ^.gitignoe$
+^\.positai$
+^\.claude$

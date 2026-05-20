@@ -46,6 +46,8 @@ editor_options:
 
 16 - **Messages** on waiter: new messages on startup and exit screens
 
+17 - New **cor_matrix** module
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))

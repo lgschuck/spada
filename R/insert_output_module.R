@@ -25,8 +25,8 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
 
       el <- input_element()
 
-      if(inherits(el, "gt_tbl")) {
-        htmltools::HTML(gt::as_raw_html(el))
+      if(inherits(el, 'gt_tbl')) {
+        HTML(as_raw_html(el))
       } else {
         el
       }
