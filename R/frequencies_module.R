@@ -25,7 +25,12 @@ frequencies_server <- function(id, var, var_name) {
     task_freq_table <- ExtendedTask$new(function(is_date_fun, var, var_name){
       mirai({
         if(is_date_fun(var)){
-          freq_df <- DescTools::Freq(var, breaks = 10, useNA = 'always')
+
+          if(unique(var) |> length() < 9){
+            freq_df <- DescTools::Freq(var |> as.factor(), useNA = 'always')
+          } else {
+            freq_df <- DescTools::Freq(var, breaks = 9, useNA = 'always')
+          }
         } else {
           freq_df <- DescTools::Freq(var, useNA = 'always')
         }

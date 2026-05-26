@@ -26,6 +26,10 @@ test_that('test correlation matrix - pearson method', {
       btn_cor_matrix = 1
     )
 
+    while(task_cor_matrix$status() == 'running'){
+      session$flushReact()
+    }
+
     expect_s3_class(df_cor(), 'data.table')
 
     expect_equal(c('Var1', 'Var2', 'value', 'label', 'method'), names(df_cor()))

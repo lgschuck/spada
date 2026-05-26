@@ -64,29 +64,47 @@ cor_matrix_server <- function(id) {
     })
 
     # run cor matrix ----------------------------------------------------------
-    df_cor <- reactive({
-      req(input$sel_vars, input$radio_method)
+    task_cor_matrix <- ExtendedTask$new(function(df, vars, method){
+      mirai({
 
-      df_cor <- cor(subset(df(), select = input$sel_vars),
-                    method = input$radio_method,
-                    use = 'na.or.complete') |>
-        as.data.frame()
+        df_cor <- cor(
+            subset(df, select = vars), method = method, use = 'na.or.complete'
+          ) |>
+          as.data.frame()
 
-      df_cor <- cbind(Var1 = rownames(df_cor), df_cor) |> as.data.table()
+        df_cor <- cbind(Var1 = rownames(df_cor), df_cor) |>
+          data.table::as.data.table()
 
-      df_cor <- melt(
-        data = df_cor,
-        id.vars = 'Var1',
-        variable.name = 'Var2',
-        value.name = 'value'
+        df_cor <- data.table::melt(
+          data = df_cor,
+          id.vars = 'Var1',
+          variable.name = 'Var2',
+          value.name = 'value'
+        )
+
+        df_cor[, label := round(value, digits = 3)]
+        df_cor[, method := method]
+        df_cor
+
+      },
+      df = df,
+      vars = vars,
+      method = method
       )
+    }) |> bind_task_button('btn_cor_matrix')
 
-      df_cor[, label := round(value, digits = 3)]
-      df_cor[, method := input$radio_method]
-      df_cor
-
+    observe({
+      req(df(), input$sel_vars, input$radio_method)
+      task_cor_matrix$invoke(
+        df = df(),
+        vars = input$sel_vars,
+        method = input$radio_method
+      )
     }) |> bindEvent(input$btn_cor_matrix)
 
+    df_cor <- reactive({ task_cor_matrix$result() })
+
+    # cor matrix plot ---------------------------------------------------------
     cor_matrix <- reactive({
       req(df_cor())
 
@@ -100,8 +118,8 @@ cor_matrix_server <- function(id) {
       ggplot(
         data = df_cor(),
         mapping = aes(x = Var1, y = Var2, fill = value)
-      ) + geom_tile(color = 'white') +
-        labs(title = paste('Correlation (', method, ')'),
+      ) + geom_tile(color = '#ffffff') +
+        labs(title = paste(StrCap(method), 'Correlation'),
              x = NULL, y = NULL, fill = '') +
         theme(
           panel.grid = element_blank(),
@@ -109,8 +127,9 @@ cor_matrix_server <- function(id) {
           plot.background = element_blank(),
           axis.text.x = element_text(size = 16),
           axis.text.y = element_text(size = 16),
-          plot.title = element_text(color = session$userData$conf$plot_title_color,
-                                    size = 16, face = 'bold')
+          plot.title = element_text(
+            color = session$userData$conf$plot_title_color, size = 16, face = 'bold'
+          )
         ) +
         geom_text(aes(label = label), size = text_size, color = '#000000') +
         scale_fill_gradient2(
