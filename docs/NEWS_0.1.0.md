@@ -285,7 +285,7 @@ default values for plot colors.
 ### Bug Fixes
 
 1 - **Data \> Copy dataset and rename dataset: error with active
-dataset**: fixed, the session$userData$dt\$dt onject was not updated
+dataset**: fixed, the session$`userData`$dt\$dt onject was not updated
 befone renaming and in copy dataset the selection was always in the
 qactive dataset. ([\#32](https://github.com/lgschuck/spada/issues/32))
 

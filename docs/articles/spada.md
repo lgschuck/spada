@@ -12,6 +12,7 @@ call then Iris and Mtcars, from datasets package, are used as sample
 data.
 
 ``` r
+
 library(spada)
 spada()
 ```
@@ -19,6 +20,7 @@ spada()
 For multiples datasets as input:
 
 ``` r
+
 spada(iris, mtcars, cars)
 ```
 
@@ -28,12 +30,14 @@ If the user desires to give names to datasets, then the Spada function
 should be called like this:
 
 ``` r
+
 spada('dataset' = iris, 'test_data' = mtcars)
 ```
 
 Spada will make valid and unique names with **make.names** function. So:
 
 ``` r
+
 spada('dataset 1' = iris, 'test data' = mtcars, 'dataset 1' = cars)
 ```
 
@@ -45,6 +49,7 @@ and **will create valid and unique names** using dataset_n, being n a
 sequencial number:
 
 ``` r
+
 spada('dataset 1' = iris, mtcars, cars)
 ```
 

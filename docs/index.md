@@ -31,6 +31,7 @@ Book](https://lgschuck.github.io/spada_book/).
 ## Installation
 
 ``` r
+
 install.packages("spada")
 ```
 
@@ -38,6 +39,7 @@ You can install the development version of spada from
 [GitHub](https://github.com/) using the command below.
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github(
   "lgschuck/spada",
@@ -48,12 +50,14 @@ remotes::install_github(
 ### Loading the package
 
 ``` r
+
 library(spada)
 ```
 
 ### Usage
 
 ``` r
+
 if(interactive()){
   spada()
 }

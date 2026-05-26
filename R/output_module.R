@@ -238,7 +238,7 @@ output_server <- function(id) {
       content = function(file) {
 
         savable_output <- list(
-          report_card(),
+          spada_output_header,
           lapply(
             session$userData$out$elements,
             function(x){ printable_report_card(NULL, x$card, NULL) }

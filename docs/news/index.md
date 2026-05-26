@@ -50,6 +50,12 @@ speed improvement
 15 - **dplyr**: removed as dependencie (only filter and pull functions
 were used)
 
+16 - **Messages** on waiter: new messages on startup and exit screens
+
+17 - New **cor_matrix** module
+
+18 - New **Output header**: new header in exported HTML output file
+
 #### Bug fixes
 
 1 - **Edit \> Convert: convert even with no variable

@@ -1,14 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# spada (<u>**S**</u>hiny <u>**Pa**</u>ckage for <u>**D**</u>ata <u>**A**</u>nalysis) <img src="man/figures/logo.png" align="right" height="139"/>
+# spada (<u>**S**</u>hiny <u>**Pa**</u>ckage for <u>**D**</u>ata <u>**A**</u>nalysis)
 
 <!-- badges: start -->
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/spada)](https://cran.r-project.org/package=spada)
+[![](https://www.r-pkg.org/badges/version/spada)](https://cran.r-project.org/package=spada)
+
+[![](https://cranlogs.r-pkg.org/badges/last-week/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
 
 [![](https://cranlogs.r-pkg.org/badges/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
+
+[![](https://cranlogs.r-pkg.org/badges/grand-total/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
 
 <!-- badges: end -->
 

@@ -577,6 +577,35 @@ gen_table2 <- function(element1, element2, w1 = '50%', w2 = '50%') {
 }
 
 # card to insert in output ----------------------------------------------------
+spada_output_header <- div(
+  style = "
+    padding: 20px 24px;
+
+    background: linear-gradient(
+      135deg,
+      #003452 0%,
+      #02517d 100%
+    );
+
+    border-radius: 4px;
+    color: #ffffff;
+    margin-bottom: 25px;
+  ",
+
+  div(
+    style = "display: flex; flex-direction: column;",
+
+    tags$div(
+      "Spada Output",
+      style = "
+        font-size: 32px;
+        font-weight: 450;
+        letter-spacing: 4px;
+      "
+    )
+  )
+)
+
 report_card <- function(title = 'Spada - Output', annotation = NULL,
                         content = NULL){
   div(
