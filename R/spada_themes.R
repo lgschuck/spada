@@ -6,6 +6,7 @@ themes_names <- c('spada_theme', 'spada_dark_theme')
 main_color <- '#02517d'
 navbar_bg <- '#0A5A88'
 sidebar_color <- '#e3e3e4'
+inputs_border_color <- '#c8c8c8'
 bg_color <- '#f9f9f9'
 secondary <- '#0072B2'
 sucess <- '#009E73'
@@ -32,6 +33,7 @@ theme_basic_rules <- list(
     " $secondary:", secondary, ";",
     " $bg_color:", bg_color, ";",
     " $sidebar_bg:", sidebar_color, ";",
+    " $inputs_border_color:", inputs_border_color, ";",
 
     "
       $grad1: #1f4e72;
@@ -80,14 +82,14 @@ theme_basic_rules <- list(
 
       .btn-task-cancel {
         color: #dc3545 !important;
-        background-color: white !important;
+        background-color: $bg_color !important;
         border-color: #dc3545 !important;
       }
 
       .btn-task-cancel:hover {
         background-color: $danger !important;
         border-color: $danger !important;
-        color: white !important;
+        color: $bg_color !important;
       }
 
       .mini-btn {
@@ -184,6 +186,7 @@ theme_basic_rules <- list(
       background-color: rgba(255, 255, 255, 0.18);
       color: white !important;
     }
+
   "
   )
 )
@@ -265,6 +268,36 @@ spada_theme <- bs_theme(
 
       .nav-pills .nav-link:hover {
         background-color: #f0f0f0 !important;
+      }
+
+
+      .shiny-input-text,
+      .shiny-input-number,
+      .selectize-input,
+      .shiny-input-textarea textarea {
+        border: 1px solid #d1d1d1 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .selectize-input:hover,
+      .shiny-input-text:hover,
+      .shiny-input-number:hover,
+      .shiny-input-textarea textarea:hover {
+        border-color: #c8c8c8 !important;
+        border-bottom: 1px solid $main_color !important;
+      }
+
+      .selectize-input:focus,
+      .shiny-input-text:focus,
+      .shiny-input-number:focus,
+      .shiny-input-textarea textarea:focus {
+        border-color: #c8c8c8 !important;
+        border-bottom: 1px solid $main_color !important;
       }
     ")
   )

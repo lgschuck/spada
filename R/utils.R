@@ -1148,7 +1148,7 @@ exit_with_save <- function(session){
   spada_save(session$userData$conf$conf_dir,
              reactiveValuesToList(session$userData$conf),
              'conf.qs2')
-  Sys.sleep(0.8)
+  Sys.sleep(1)
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   if(session$userData$run_local) stopApp()
 }

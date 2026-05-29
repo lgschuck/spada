@@ -50,6 +50,8 @@ editor_options:
 
 18 - New **Output header**: new header in exported HTML output file
 
+19 - **Visuals**: new bottom border for inputs (spada theme)
+
 ### Bug fixes
 
 1 - **Edit > Convert: convert even with no variable selected**([#71](https://github.com/lgschuck/spada/issues/71))
