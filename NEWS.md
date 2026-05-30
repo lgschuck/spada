@@ -48,7 +48,7 @@ editor_options:
 
 17 - New **cor_matrix** module
 
-18 - New **Output header**: new header in exported HTML output file
+18 - New **Output layout**: new header, links and able of contents in exported HTML output file
 
 19 - **Visuals**: new bottom border for inputs (spada theme)
 

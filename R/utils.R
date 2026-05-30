@@ -578,7 +578,7 @@ gen_table2 <- function(element1, element2, w1 = '50%', w2 = '50%') {
 
 # card to insert in output ----------------------------------------------------
 spada_output_header <- div(
-  style = "
+  style = '
     padding: 20px 24px;
 
     background: linear-gradient(
@@ -590,19 +590,13 @@ spada_output_header <- div(
     border-radius: 4px;
     color: #ffffff;
     margin-bottom: 25px;
-  ",
+  ',
 
   div(
-    style = "display: flex; flex-direction: column;",
-
+    style = 'display: flex; flex-direction: column;',
     tags$div(
-      "Spada Output",
-      style = "
-        font-size: 32px;
-        font-weight: 450;
-        letter-spacing: 4px;
-      "
-    )
+      'Spada Output',
+      style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
   )
 )
 
@@ -641,6 +635,59 @@ printable_report_card <- function(btns, card, id = NULL){
   )
 }
 
+# spada output ----------------------------------------------------------------
+spada_output <- function(output, header){
+  toc <- tags$div(
+    style = '
+    width:15vw;
+    min-width:220px;
+    height:100vh;
+    padding:16px 16px 16px 24px;
+    border-left:1px solid #ddd;
+    box-sizing:border-box;
+    overflow-y:auto;
+    position:sticky;
+    top:0;
+  ',
+
+    tags$h2('Table of contents'),
+
+    tags$ul(
+      tagList(
+        tags$li(tags$a(href = '#home', 'Home')),
+
+        lapply(
+          output,
+          function(x) { tags$li(tags$a(href = paste0('#', x$id), x$title)) }
+        )
+      )
+    )
+  )
+
+  cards <- tags$div(
+    style = 'width:85vw; padding:24px; box-sizing:border-box;',
+
+    lapply(
+      output,
+      function(x) {
+        div(
+          id = x$id,
+          style = 'margin-bottom:32px;',
+          printable_report_card(NULL, x$card, NULL)
+        )
+
+      }
+    )
+  )
+
+  body_content <- tags$div(
+    style = 'display:flex; align-items:flex-start;',
+    cards,
+    toc
+  )
+
+  tagList(div(id = 'home', header), body_content)
+}
 # generate output object ------------------------------------------------------
 gen_output <- function(element = div(h2('Element'))){
 
