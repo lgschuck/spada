@@ -465,6 +465,41 @@ output_export_css <- tags$head(tags$style(HTML(
         color:'", main_color, "' !important;
         font-weight: 400 !important;
       }
+
+      .toc ul{
+        list-style:none;
+        padding-left:0;
+        margin:0;
+      }
+
+      .toc li{
+        margin-bottom:4px;
+      }
+
+      .toc a{
+        display:block;
+        padding:8px 12px;
+
+        color:#444;
+        text-decoration:none;
+
+        border-radius:6px;
+
+        transition:
+          background-color .25s ease,
+          color .25s ease,
+          transform .25s ease,
+          box-shadow .25s ease;
+      }
+
+      .toc a:hover{
+        background:", main_color, ";
+        color:white;
+
+        transform:translateX(5px);
+
+        box-shadow:0 2px 8px rgba(13,110,253,.25);
+      }
     "
   )
 )))
@@ -638,6 +673,7 @@ printable_report_card <- function(btns, card, id = NULL){
 # spada output ----------------------------------------------------------------
 spada_output <- function(output, header){
   toc <- tags$div(
+    class = 'toc',
     style = '
     width:15vw;
     min-width:220px;
