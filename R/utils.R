@@ -451,8 +451,8 @@ waiter_screen <- tags$style(
   )
 )
 
-# output_export_css ------------------------------------------------------------------
-output_export_css <- tags$head(tags$style(HTML(
+# spada_output_css ------------------------------------------------------------
+spada_output_css <- tags$head(tags$style(HTML(
   paste(
     "
       body {
@@ -462,9 +462,11 @@ output_export_css <- tags$head(tags$style(HTML(
       h2 {
         font-size: 1.5rem !important;
         margin-bottom: 12px ! important;
-        color:'", main_color, "' !important;
+        color: ", main_color, " !important;
         font-weight: 400 !important;
       }
+
+      .toc-title { color: ", main_color, ";}
 
       .toc ul{
         list-style:none;
@@ -503,10 +505,38 @@ output_export_css <- tags$head(tags$style(HTML(
     "
   )
 )))
+
+# output header ---------------------------------------------------------------
+spada_output_header <- div(
+  style = '
+    padding: 20px 24px;
+
+    background: linear-gradient(
+      135deg,
+      #003452 0%,
+      #02517d 100%
+    );
+
+    border-radius: 4px;
+    color: #ffffff;
+    margin-bottom: 25px;
+  ',
+
+  div(
+    style = 'display: flex; flex-direction: column;',
+    tags$div(
+      'Spada Output',
+      style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
+  )
+)
 # ============================================================================.
 # ---------------------------- FUNCTIONS -------------------------------------
 # ============================================================================.
-
+# short name ------------------------------------------------------------------
+short_name <- function(name, max_size = 20){
+  stopifnot(is.character(name))
+  if(nchar(name) <= max_size) name else paste0(substr(name, 1, max_size - 3) , '...')
+}
 # spada_user_dir --------------------------------------------------------------
 spada_user_dir <- function(which){
   dir <- normalizePath(R_user_dir('spada', which), winslash = '/', mustWork = F)
@@ -612,29 +642,6 @@ gen_table2 <- function(element1, element2, w1 = '50%', w2 = '50%') {
 }
 
 # card to insert in output ----------------------------------------------------
-spada_output_header <- div(
-  style = '
-    padding: 20px 24px;
-
-    background: linear-gradient(
-      135deg,
-      #003452 0%,
-      #02517d 100%
-    );
-
-    border-radius: 4px;
-    color: #ffffff;
-    margin-bottom: 25px;
-  ',
-
-  div(
-    style = 'display: flex; flex-direction: column;',
-    tags$div(
-      'Spada Output',
-      style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
-  )
-)
-
 report_card <- function(title = 'Spada - Output', annotation = NULL,
                         content = NULL){
   div(
@@ -686,7 +693,7 @@ spada_output <- function(output, header){
     top:0;
   ',
 
-    tags$h2('Table of contents'),
+    tags$h2(class = 'toc-title', 'Table of contents'),
 
     tags$ul(
       tagList(
@@ -722,7 +729,10 @@ spada_output <- function(output, header){
     toc
   )
 
-  tagList(div(id = 'home', header), body_content)
+  tags$html(
+    spada_output_css,
+    tags$body(div(id = 'home', header), body_content)
+  )
 }
 # generate output object ------------------------------------------------------
 gen_output <- function(element = div(h2('Element'))){
@@ -1080,8 +1090,16 @@ is_spada_df <- function(df){
 
 # is spada data table ---------------------------------------------------------
 is_spada_dt <- function(dt){
-  is_spada_df(dt) && is.data.table(dt)
+  is.data.table(dt) && is_spada_df(dt)
 }
+
+# test data format-------------------------------------------------------------
+test_data_format <- function(data){
+  is.list(data) &&
+    length(data) > 0 &&
+    (sapply(data, is_spada_df) |> all())
+}
+
 
 # running modal ---------------------------------------------------------------
 running_modal <- function(text = 'Running...'){
@@ -1374,14 +1392,6 @@ test_output_format <- function(output){
            all(sapply(output, \(x){ 'shiny.tag' %in% class(x$btn_e) }))
        )
     )
-}
-
-# test data format-------------------------------------------------------------
-test_data_format <- function(data){
-  is.list(data) &&
-     length(data) > 0 &&
-     (sapply(data, is.data.frame) |> all()) &&
-     (all(sapply(data, nrow) > 0))
 }
 
 # check existence of directory ------------------------------------------------

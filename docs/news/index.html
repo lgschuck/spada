@@ -45,31 +45,36 @@
 <h2 class="pkg-version" data-toc-text="0.1.6.9000" id="spada-0169000">Spada 0.1.6.9000<a class="anchor" aria-label="anchor" href="#spada-0169000"></a></h2>
 <div class="section level4">
 <h4 id="improvements-0-1-6-9000">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-1-6-9000"></a></h4>
-<p>1 - New <strong>duplicates</strong> module: allows identify and drop duplicate cases</p>
-<p>2 - New <strong>xlsx</strong> format (from <strong>writexl</strong> package) in <strong>export_file</strong> module</p>
-<p>3 - New Spada <strong>favicon</strong></p>
-<p>4 - New <strong>style in modal header</strong> and new icons in modal titles</p>
+<p>1 - New <strong>duplicates</strong> module: allows identify and drop duplicate cases (<a href="https://github.com/lgschuck/spada/issues/20" class="external-link">#20</a>)</p>
+<p>2 - New <strong>xlsx</strong> format (from <strong>writexl</strong> package) in <strong>export_file</strong> module (<a href="https://github.com/lgschuck/spada/issues/73" class="external-link">#73</a>)</p>
+<p>3 - New <strong>cor_matrix</strong> module (<a href="https://github.com/lgschuck/spada/issues/77" class="external-link">#77</a>)</p>
+<p>4 - New <strong>Frequencies</strong> module: new Frequencies table inside Exploratory module</p>
 <p>5 - Change <strong>updateSelectizeInput</strong> for updateSelectInput when erroneously used with selecInput</p>
 <p>6 - <strong>Save/import</strong> with run_local = FALSE: now a modal warns that is not possible to save/import (session and output)</p>
 <p>7 - <strong>Exit</strong> with run_local = FALSE: when run_local = FALSE the app closes witout saving (data, output and conf)</p>
 <p>8 - <strong>Restore sesison</strong> with run_local = FALSE: now only restore previous session if run_local = TRUE</p>
 <p>9 - New <strong>plot_tag</strong> function: better control in how plots images are inserted in the output</p>
 <p>10 - <strong>Table values</strong> module: now uses collapse::qtab instead of base::table for speed improvement</p>
-<p>11 - New <strong>Frequencies</strong> module: new Frequencies table inside Exploratory module</p>
-<p>12 - New switch for activate <strong>Dark mode</strong> (Sidebar module)</p>
-<p>13 - <strong>Removed sass</strong> package as dependencie</p>
-<p>14 - <strong>gt tables x Output</strong>: gt tables are inserted as raw_html for speed improvement</p>
-<p>15 - <strong>dplyr</strong>: removed as dependencie (only filter and pull functions were used)</p>
-<p>16 - <strong>Messages</strong> on waiter: new messages on startup and exit screens</p>
-<p>17 - New <strong>cor_matrix</strong> module</p>
-<p>18 - New <strong>Output header</strong>: new header in exported HTML output file</p>
+<p>11 - <strong>Removed sass</strong> package as dependencie</p>
+<p>12 - <strong>gt tables x Output</strong>: gt tables are inserted as raw_html for speed improvement</p>
+<p>13 - <strong>dplyr</strong>: removed as dependencie (only filter and pull functions were used)</p>
+<div class="section level5">
+<h5 id="visuals-0-1-6-9000">Visuals<a class="anchor" aria-label="anchor" href="#visuals-0-1-6-9000"></a></h5>
+<p>1 - New switch for activate <strong>Dark mode</strong> (Sidebar module)</p>
+<p>2 - <strong>Messages</strong> on waiter: new messages on startup and exit screens</p>
+<p>3 - New <strong>Output layout</strong>: new header, links and table of contents in exported HTML output file</p>
+<p>4 - New Spada <strong>favicon</strong></p>
+<p>5 - New <strong>style in modal header</strong> and new icons in modal titles</p>
+<p>6 - <strong>Inputs</strong>: new bottom border for inputs n spada theme (selectInputs, textArea)</p>
+</div>
 </div>
 <div class="section level4">
 <h4 id="bug-fixes-0-1-6-9000">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-6-9000"></a></h4>
-<p>1 - <strong>Edit &gt; Convert: convert even with no variable selected</strong>(<a href="https://github.com/lgschuck/spada/issues/71" class="external-link">#71</a>)</p>
-<p>2 - <strong>Filter Rows: filter with no variable selected</strong>(<a href="https://github.com/lgschuck/spada/issues/74" class="external-link">#74</a>)</p>
-<p>3 - <strong>Calculate: apply function even without select a variable</strong>(<a href="https://github.com/lgschuck/spada/issues/75" class="external-link">#75</a>)</p>
-<p>4 - <strong>Exploratory module: histogram with NA values</strong>(<a href="https://github.com/lgschuck/spada/issues/69" class="external-link">#69</a>)</p>
+<p>1 - <strong>Edit &gt; Convert</strong>: convert even with no variable selected (<a href="https://github.com/lgschuck/spada/issues/71" class="external-link">#71</a>)</p>
+<p>2 - <strong>Filter Rows</strong>: filter with no variable selected (<a href="https://github.com/lgschuck/spada/issues/74" class="external-link">#74</a>)</p>
+<p>3 - <strong>Calculate</strong>: apply function even without select a variable (<a href="https://github.com/lgschuck/spada/issues/75" class="external-link">#75</a>)</p>
+<p>4 - <strong>Exploratory module</strong>: histogram with NA values (<a href="https://github.com/lgschuck/spada/issues/69" class="external-link">#69</a>)</p>
+<p>5 - <strong>Nested data.table</strong> in data.qs2 (saved session) (<a href="https://github.com/lgschuck/spada/issues/78" class="external-link">#78</a>)</p>
 </div>
 </div>
     <div class="section level2">

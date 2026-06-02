@@ -11,13 +11,16 @@
 #### Improvements
 
 1 - New **duplicates** module: allows identify and drop duplicate cases
+([\#20](https://github.com/lgschuck/spada/issues/20))
 
 2 - New **xlsx** format (from **writexl** package) in **export_file**
+module ([\#73](https://github.com/lgschuck/spada/issues/73))
+
+3 - New **cor_matrix** module
+([\#77](https://github.com/lgschuck/spada/issues/77))
+
+4 - New **Frequencies** module: new Frequencies table inside Exploratory
 module
-
-3 - New Spada **favicon**
-
-4 - New **style in modal header** and new icons in modal titles
 
 5 - Change **updateSelectizeInput** for updateSelectInput when
 erroneously used with selecInput
@@ -37,38 +40,46 @@ inserted in the output
 10 - **Table values** module: now uses collapse::qtab instead of
 base::table for speed improvement
 
-11 - New **Frequencies** module: new Frequencies table inside
-Exploratory module
+11 - **Removed sass** package as dependencie
 
-12 - New switch for activate **Dark mode** (Sidebar module)
-
-13 - **Removed sass** package as dependencie
-
-14 - **gt tables x Output**: gt tables are inserted as raw_html for
+12 - **gt tables x Output**: gt tables are inserted as raw_html for
 speed improvement
 
-15 - **dplyr**: removed as dependencie (only filter and pull functions
+13 - **dplyr**: removed as dependencie (only filter and pull functions
 were used)
 
-16 - **Messages** on waiter: new messages on startup and exit screens
+##### Visuals
 
-17 - New **cor_matrix** module
+1 - New switch for activate **Dark mode** (Sidebar module)
 
-18 - New **Output header**: new header in exported HTML output file
+2 - **Messages** on waiter: new messages on startup and exit screens
+
+3 - New **Output layout**: new header, links and table of contents in
+exported HTML output file
+
+4 - New Spada **favicon**
+
+5 - New **style in modal header** and new icons in modal titles
+
+6 - **Inputs**: new bottom border for inputs n spada theme
+(selectInputs, textArea)
 
 #### Bug fixes
 
-1 - **Edit \> Convert: convert even with no variable
-selected**([\#71](https://github.com/lgschuck/spada/issues/71))
+1 - **Edit \> Convert**: convert even with no variable selected
+([\#71](https://github.com/lgschuck/spada/issues/71))
 
-2 - **Filter Rows: filter with no variable
-selected**([\#74](https://github.com/lgschuck/spada/issues/74))
+2 - **Filter Rows**: filter with no variable selected
+([\#74](https://github.com/lgschuck/spada/issues/74))
 
-3 - **Calculate: apply function even without select a
-variable**([\#75](https://github.com/lgschuck/spada/issues/75))
+3 - **Calculate**: apply function even without select a variable
+([\#75](https://github.com/lgschuck/spada/issues/75))
 
-4 - **Exploratory module: histogram with NA
-values**([\#69](https://github.com/lgschuck/spada/issues/69))
+4 - **Exploratory module**: histogram with NA values
+([\#69](https://github.com/lgschuck/spada/issues/69))
+
+5 - **Nested data.table** in data.qs2 (saved session)
+([\#78](https://github.com/lgschuck/spada/issues/78))
 
 ## Spada 0.1.5
 

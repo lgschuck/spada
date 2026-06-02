@@ -233,18 +233,13 @@ output_server <- function(id) {
     # save html ---------------------------------------------------------------
     output$btn_save_html <- downloadHandler(
       filename = function() {
-        paste0('output_', format(Sys.time(), format = '%Y%m%d%H%M%S'), '.html')
+        paste0('spada_output_', format(Sys.time(), format = '%Y%m%d%H%M%S'), '.html')
       },
       content = function(file) {
-
-        savable_output <- spada_output(session$userData$out$elements,
-                                       spada_output_header)
-
-        doc <- tags$html(
-          output_export_css, tags$body(savable_output)
+        save_html(
+          spada_output(session$userData$out$elements, spada_output_header),
+          file
         )
-
-        save_html(doc, file)
       }
     )
 

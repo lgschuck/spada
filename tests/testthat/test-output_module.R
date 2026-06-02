@@ -182,7 +182,7 @@ test_that('Download HTML ', {
     expect_equal(
       output$btn_save_html |> basename() |> substr(1, 15),
       paste0(
-        'output_',
+        'spada_output_',
         format(Sys.time(), format = '%Y%m%d%H%M%S'),
         '.html') |> substr(1, 15)
     )

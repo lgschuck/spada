@@ -64,13 +64,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
       names(session$userData$dt$dt)
     })
 
-    output$dt_act_name <- renderText(
-      if(nchar(session$userData$dt$act_name) <= 20){
-        session$userData$dt$act_name
-      } else {
-        paste0(substr(session$userData$dt$act_name, 1, 17) , '...')
-      }
-    )
+    output$dt_act_name <- renderText(short_name(session$userData$dt$act_name))
 
     # datasets metadata -------------------------------------------------------
     observe({
@@ -147,13 +141,15 @@ spada_server <- function(datasets, conf, run_local = TRUE){
     session$userData$dt$act_mini_meta <- reactive({
       req(session$userData$dt$act_meta())
 
+      dt_act_meta <- session$userData$dt$act_meta()
+
       list(
         'row_col' = paste(
-          f_int(session$userData$dt$act_meta()[['rows']][1]),
+          f_int(dt_act_meta[['rows']][1]),
           '/',
-          f_int(session$userData$dt$act_meta()[['cols']][1])
+          f_int(dt_act_meta[['cols']][1])
         ),
-        'col_nas' = session$userData$dt$act_meta()[n_nas > 0, ] |> fnrow()
+        'col_nas' = dt_act_meta[n_nas > 0, ] |> fnrow()
       )
     })
 
