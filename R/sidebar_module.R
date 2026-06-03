@@ -11,7 +11,7 @@ sidebar_ui <- function(id) {
         class = 'accordion-sidebar',
         'Active Dataset',
         icon = bs_icon('check2-square', size = '1.75em'),
-        selectInput(ns('sel_act_dt'), NULL, choices = NULL, selected = NULL),
+        selectInput(ns('sel_act_dt'), NULL, choices = character(0)),
         uiOutput(ns('df_info')),
         fluidRow(
           column(3, actionButton(ns('df_btn_overview'), '',
@@ -35,7 +35,7 @@ sidebar_ui <- function(id) {
         class = 'accordion-sidebar',
         'Datasets',
         icon = bs_icon('stack', size = '1.75em'),
-        selectInput(ns('sel_datasets_names'), '', choices = NULL),
+        selectInput(ns('sel_datasets_names'), '', choices = character(0)),
         actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
                      class = 'btn-task') |>
           popover(htmlOutput(ns('df_preview')),
@@ -77,7 +77,7 @@ sidebar_server <- function(id, app_session) {
 
     # update active dataset list --------
     observe({
-      req(session$userData$dt$dt, session$userData$dt$act_name)
+      req(session$userData$dt_names(), session$userData$dt$act_name)
 
       updateSelectInput(
         session,
@@ -88,7 +88,6 @@ sidebar_server <- function(id, app_session) {
         ),
         selected = session$userData$dt$act_name
       )
-
     })
 
     # update active dataset --------
@@ -97,7 +96,6 @@ sidebar_server <- function(id, app_session) {
       session$userData$dt$act_name <- input$sel_act_dt
       session$userData$dt$bkp0 <- copy(get_act_dt(session))
       session$userData$dt$bkp <- NULL
-
     }) |> bindEvent(input$sel_act_dt, ignoreInit = T)
 
     # mini buttons --------
@@ -122,7 +120,8 @@ sidebar_server <- function(id, app_session) {
 
     # list of datasets --------------------------------------------------------
     observe({
-      req(session$userData$dt$dt, session$userData$dt$act_name)
+      req(session$userData$dt_names(), session$userData$dt$act_name)
+
       choices <- c(
         session$userData$dt$act_name,
         setdiff(session$userData$dt_names(), session$userData$dt$act_name)
@@ -138,10 +137,10 @@ sidebar_server <- function(id, app_session) {
       n <- min(5, session$userData$dt$dt[[input$sel_datasets_names]] |> fnrow())
       df <- session$userData$dt$dt[[input$sel_datasets_names]][1:n, ]
 
-      gt::gt(df) |>
+      gt(df) |>
         tab_header(input$sel_datasets_names) |>
         tab_options(heading.align = 'left') |>
-        gt::as_raw_html() |>
+        as_raw_html() |>
         HTML()
     })
 

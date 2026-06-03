@@ -62,9 +62,9 @@ data_server <- function(id) {
 	      # update active dataset if necessary
 	      if(session$userData$dt$act_name == input$sel_dt){
 	        session$userData$dt$act_name <- input$txt_new_name
-	        # update metadata names
-	        names(session$userData$dt$meta)[names(session$userData$dt$meta) == input$sel_dt] <- input$txt_new_name
 	      }
+	      # update metadata names
+	      names(session$userData$dt$meta)[names(session$userData$dt$meta) == input$sel_dt] <- input$txt_new_name
 
 	      msg('New name applied')
 	      updateTextInput(session, 'txt_new_name', value = '')

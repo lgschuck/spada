@@ -187,6 +187,13 @@ theme_basic_rules <- list(
       color: white !important;
     }
 
+    .selectize-input {
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .selectize-dropdown {word-wrap: break-word;}
+
   "
   )
 )

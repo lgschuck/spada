@@ -101,12 +101,13 @@ test_that('Test try delete active df', {
 })
 
 # test rename dt --------------------------------------------------------------
-test_that('Test data - del dt', {
+test_that('Test rename dataset', {
   testServer(data_server, {
 
     session$userData$dt_names <- reactive(dfs |> names())
     session$userData$dt$dt <- dfs
     session$userData$dt$act_name <- 'df_iris'
+    session$userData$dt$meta = lapply(dfs, df_info)
 
     session$setInputs(
       txt_new_name = 'dataset',
@@ -115,6 +116,7 @@ test_that('Test data - del dt', {
     )
 
     expect_equal(session$userData$dt$dt |> names(), c('df_iris', 'dataset'))
+    expect_equal(names(session$userData$dt$meta), c('df_iris', 'dataset'))
     expect_equal(
       session$userData$dt$dt[[session$userData$dt$act_name]],
       iris |> as.data.table()
@@ -132,6 +134,7 @@ test_that('Test rename active df - invalid name', {
     session$userData$dt_names <- reactive(dfs |> names())
     session$userData$dt$dt <- dfs
     session$userData$dt$act_name <- 'df_iris'
+    session$userData$dt$meta = lapply(dfs, df_info)
 
     session$setInputs(
       txt_new_name = 'new dataset',
@@ -140,5 +143,27 @@ test_that('Test rename active df - invalid name', {
     )
 
     expect_equal(session$userData$dt$act_name, 'df_iris')
+    expect_equal(names(session$userData$dt$meta), c('df_iris', 'df_mtcars'))
   })
 })
+
+test_that('Test rename non active df', {
+  testServer(data_server,{
+
+    session$userData$dt_names <- reactive(dfs |> names())
+    session$userData$dt$dt <- dfs
+    session$userData$dt$act_name <- 'df_iris'
+    session$userData$dt$meta = lapply(dfs, df_info)
+
+    session$setInputs(
+      txt_new_name = 'df_mtcars2',
+      sel_dt = 'df_mtcars',
+      btn_new_name = 1
+    )
+
+    expect_equal(session$userData$dt$act_name, 'df_iris')
+    expect_equal(names(session$userData$dt$meta), c('df_iris', 'df_mtcars2'))
+
+  })
+})
+

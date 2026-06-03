@@ -204,8 +204,14 @@ test_that('Test renders dataset preview second dataset', {
 test_that('Test dark mode', {
   testServer(sidebar_server, args = list(app_session = NULL), {
     session$userData$conf <- reactiveValues(theme = 'spada_theme')
+    session$userData$dt <- reactiveValues(
+      dt = list(iris = iris),
+      act_name = 'iris'
+    )
+    session$userData$dt_names <- reactive( names(session$userData$dt$dt) )
 
     session$setInputs(dark_mode = FALSE)
+
     expect_equal(session$userData$conf$theme, 'spada_theme')
 
     session$setInputs(dark_mode = TRUE)

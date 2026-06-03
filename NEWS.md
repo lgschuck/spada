@@ -52,7 +52,9 @@ editor_options:
 
 5 - New **style in modal header** and new icons in modal titles
 
-6 - **Inputs**: new bottom border for inputs n spada theme (selectInputs, textArea)
+6 - **Inputs**: new bottom border for inputs in spada theme (selectInputs, textArea)
+
+7 - **Large names in inputs**: new css breaking long names to a new line in selectInputs
 
 ### Bug fixes
 
@@ -65,6 +67,8 @@ editor_options:
 4 - **Exploratory module**: histogram with NA values ([#69](https://github.com/lgschuck/spada/issues/69))
 
 5 - **Nested data.table** in data.qs2 (saved session) ([#78](https://github.com/lgschuck/spada/issues/78))
+
+6 - **Change non active dataset name**: error in metadata names ([#79](https://github.com/lgschuck/spada/issues/79))
 
 # Spada 0.1.5
 
