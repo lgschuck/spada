@@ -6,7 +6,9 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
-## Spada 0.1.6.9000
+## Spada 0.1.6
+
+CRAN update submission: 2026-06-10
 
 #### Improvements
 
@@ -61,8 +63,11 @@ exported HTML output file
 
 5 - New **style in modal header** and new icons in modal titles
 
-6 - **Inputs**: new bottom border for inputs n spada theme
+6 - **Inputs**: new bottom border for inputs in spada theme
 (selectInputs, textArea)
+
+7 - **Large names in inputs**: new css breaking long names to a new line
+in selectInputs
 
 #### Bug fixes
 
@@ -81,11 +86,14 @@ exported HTML output file
 5 - **Nested data.table** in data.qs2 (saved session)
 ([\#78](https://github.com/lgschuck/spada/issues/78))
 
+6 - **Change non active dataset name**: error in metadata names
+([\#79](https://github.com/lgschuck/spada/issues/79))
+
 ## Spada 0.1.5
 
 CRAN release: 2026-04-21
 
-Version for **CRAN submission** (based on 0.1.4).
+CRAN release: 2026-04-21
 
 #### Fixes
 

@@ -10,7 +10,9 @@ editor_options:
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
-# Spada 0.1.6.9000
+# Spada 0.1.6
+
+CRAN update submission: 2026-06-10
 
 ### Improvements
 
@@ -72,7 +74,7 @@ editor_options:
 
 # Spada 0.1.5
 
-Version for **CRAN submission** (based on 0.1.4).
+CRAN release: 2026-04-21
 
 ### Fixes
 
