@@ -74,8 +74,6 @@ CRAN update submission: 2026-06-10
 
 # Spada 0.1.5
 
-CRAN release: 2026-04-21
-
 ### Fixes
 
 1 - Now the dir paths are created with file.path instead of paste0

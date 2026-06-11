@@ -6,17 +6,12 @@
 <!-- badges: start -->
 
 [![](https://www.r-pkg.org/badges/version-last-release/spada)](https://cran.r-project.org/package=spada)
-
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-coral.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-
-[![](https://cranlogs.r-pkg.org/badges/grand-total/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
-
-[![](https://cranlogs.r-pkg.org/badges/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
-
-[![](https://cranlogs.r-pkg.org/badges/last-week/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
-
-[![](https://cranlogs.r-pkg.org/badges/last-day/spada)](https://cran.rstudio.com/web/packages/spada/index.html)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/spada)](https://CRAN.R-project.org/package=spada)
+[![](https://cranlogs.r-pkg.org/badges/spada)](https://CRAN.R-project.org/package=spada)
+[![](https://cranlogs.r-pkg.org/badges/last-week/spada)](https://CRAN.R-project.org/package=spada)
+[![](https://cranlogs.r-pkg.org/badges/last-day/spada)](https://CRAN.R-project.org/package=spada)
 
 <!-- badges: end -->
 
