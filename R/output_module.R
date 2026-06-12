@@ -318,31 +318,16 @@ output_server <- function(id) {
             btn_xid <- paste0('btn_xout_', id)
             btn_eid <- paste0('btn_eout_', id)
 
-            x$btn_x <- actionButton(
+            register_output_events(id, session, input, btn_xid, btn_eid)
+
+            add_output_element(
+              id,
+              x$title,
+              x$annotation,
+              x$element,
               ns(btn_xid),
-              '',
-              icon('x'),
-              class = 'micro-btn-cancel'
+              ns(btn_eid)
             )
-
-            x$btn_e <- actionButton(
-              ns(btn_eid),
-              '',
-              icon('pen-to-square'),
-              class = 'micro-btn-cancel'
-            )
-
-            # delete event
-            observe({
-              session$userData$out$elements[[id]] <- NULL
-            }) |> bindEvent(input[[btn_xid]], once = TRUE)
-
-            # edit event
-            observe({
-              session$userData$out_edit_trigger(id)
-            }) |> bindEvent(input[[btn_eid]])
-
-            return(x)
           })
           # rename items of list with new ids
           names(temp_output) <- vapply(temp_output, function(x) x$id, character(1))

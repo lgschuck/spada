@@ -6,9 +6,16 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+## Spada 0.1.7.9000
+
+#### Improvements
+
+1 - **Output** events: better internal functions for register/import
+output events (edit and delete buttons)
+
 ## Spada 0.1.6
 
-CRAN update submission: 2026-06-10
+CRAN release: 2026-06-11
 
 #### Improvements
 

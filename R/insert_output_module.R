@@ -84,41 +84,15 @@ insert_output_server <- function(id, input_element, element_title = 'Title') {
         btn_xid <- paste0('btn_xout_', id)
         btn_eid <- paste0('btn_eout_', id)
 
-        btn_x <- actionButton(
+        register_output_events(id, session, input, btn_xid, btn_eid)
+
+        session$userData$out$elements[[id]] <- add_output_element(
+          id,
+          input$output_title,
+          input$output_annot,
+          new_element(),
           ns(btn_xid),
-          '',
-          icon('x'),
-          class = 'micro-btn-cancel'
-        )
-
-        btn_e <- actionButton(
-          ns(btn_eid),
-          '',
-          icon('pen-to-square'),
-          class = 'micro-btn-cancel'
-        )
-
-        output_card <- report_card(input$output_title, input$output_annot, new_element())
-
-        # delete event
-        observe({
-          session$userData$out$elements[[id]] <- NULL
-        }) |> bindEvent(input[[btn_xid]], once = T)
-
-        # edit event
-        observe({
-          session$userData$out_edit_trigger(id)
-        }) |> bindEvent(input[[btn_eid]])
-
-        # insert element in the output
-        session$userData$out$elements[[id]] <- list(
-          'id' = id,
-          'title' = input$output_title,
-          'annotation' = input$output_annot,
-          'element' = new_element(),
-          'card' = output_card,
-          'btn_x' = btn_x,
-          'btn_e' = btn_e
+          ns(btn_eid)
         )
         msg('Added to output', DURATION = 1)
       }

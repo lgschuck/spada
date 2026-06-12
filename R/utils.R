@@ -734,6 +734,35 @@ spada_output <- function(output, header){
     tags$body(div(id = 'home', header), body_content)
   )
 }
+
+# add output element ----------------------------------------------------------
+add_output_element <- function(id, title, annotation, element, btn_xid, btn_eid){
+
+  btn_x <- actionButton(btn_xid, '', icon('x'), class = 'micro-btn-cancel')
+  btn_e <- actionButton(btn_eid, '', icon('pen-to-square'), class = 'micro-btn-cancel')
+
+  list(
+    'id' = id,
+    'title' = title,
+    'annotation' = annotation,
+    'element' = element,
+    'card' = report_card(title, annotation, element),
+    'btn_x' = btn_x,
+    'btn_e' = btn_e
+  )
+}
+
+# register outputs events -----------------------------------------------------
+register_output_events <- function(id, session, input, btn_xid, btn_eid) {
+  observe({
+    session$userData$out$elements[[id]] <- NULL
+  }) |> bindEvent(input[[btn_xid]], once = TRUE)
+
+  observe({
+    session$userData$out_edit_trigger(id)
+  }) |> bindEvent(input[[btn_eid]])
+}
+
 # generate output object ------------------------------------------------------
 gen_output <- function(element = div(h2('Element'))){
 
@@ -744,31 +773,15 @@ gen_output <- function(element = div(h2('Element'))){
   btn_xid <- paste0('btn_xout_', id)
   btn_eid <- paste0('btn_eout_', id)
 
-  btn_x <- actionButton(
-    btn_xid,
-    '',
-    icon('x'),
-    class = 'micro-btn-cancel'
-  )
-
-  btn_e <- actionButton(
-    btn_eid,
-    '',
-    icon('pen-to-square'),
-    class = 'micro-btn-cancel'
-  )
-
   element <- if(is.null(element)) data.frame(x = letters) |> gt() else element
-  output_card <- report_card(title, annotation, element)
 
-  list(
-    'id' = id,
-    'title' = title,
-    'annotation' = annotation,
-    'element' = element,
-    'card' = output_card,
-    'btn_x' = btn_x,
-    'btn_e' = btn_e
+  add_output_element(
+    id,
+    title,
+    annotation,
+    element,
+    btn_xid,
+    btn_eid
   )
 }
 
