@@ -506,29 +506,6 @@ spada_output_css <- tags$head(tags$style(HTML(
   )
 )))
 
-# output header ---------------------------------------------------------------
-spada_output_header <- div(
-  style = '
-    padding: 20px 24px;
-
-    background: linear-gradient(
-      135deg,
-      #003452 0%,
-      #02517d 100%
-    );
-
-    border-radius: 4px;
-    color: #ffffff;
-    margin-bottom: 25px;
-  ',
-
-  div(
-    style = 'display: flex; flex-direction: column;',
-    tags$div(
-      'Spada Output',
-      style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
-  )
-)
 # ============================================================================.
 # ---------------------------- FUNCTIONS -------------------------------------
 # ============================================================================.
@@ -678,7 +655,98 @@ printable_report_card <- function(btns, card, id = NULL){
 }
 
 # spada output ----------------------------------------------------------------
-spada_output <- function(output, header){
+
+
+
+
+# output header ---------------------------------------------------------------
+spada_output_info_card <- function(content){
+  div(
+    style = '
+    padding: 20px 24px;
+
+    background: linear-gradient(
+      135deg,
+      #003452 0%,
+      #02517d 100%
+    );
+
+    border-radius: 4px;
+    color: #ffffff;
+    margin-bottom: 25px;
+  ',
+    content
+  )
+}
+
+spada_output_header <- spada_output_info_card(
+  div(
+    style = 'display: flex; flex-direction: column;',
+    tags$div(
+      'Spada Output',
+      style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
+  )
+)
+
+spada_output_footer <- spada_output_info_card(
+  div(
+    style = '
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    ',
+
+    # left
+    div(
+      paste('Spada:', utils::packageVersion('spada')),
+      tags$br(),
+
+      tags$a(
+        href = 'https://cran.r-project.org/package=spada',
+        target = '_blank',
+        style = 'color: white;',
+        'CRAN'
+      ),
+
+      ' | ',
+
+      tags$a(
+        href = 'https://github.com/lgschuck/spada',
+        target = '_blank',
+        style = 'color: white;',
+        'GitHub'
+      ),
+
+      ' | ',
+
+      tags$a(
+        href = 'https://lgschuck.github.io/spada/',
+        target = '_blank',
+        style = 'color: white;',
+        'Documentation'
+      ),
+
+      ' | ',
+
+      tags$a(
+        href = 'https://lgschuck.github.io/spada_book/',
+        target = '_blank',
+        style = 'color: white;',
+        'Book'
+      )
+    ),
+
+    # right
+    div(
+      style = 'text-align: right;',
+      format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')
+    )
+  )
+)
+
+spada_output <- function(output, header = spada_output_header, footer = spada_output_footer){
   toc <- tags$div(
     class = 'toc',
     style = '
@@ -731,7 +799,7 @@ spada_output <- function(output, header){
 
   tags$html(
     spada_output_css,
-    tags$body(div(id = 'home', header), body_content)
+    tags$body(div(id = 'home', header), body_content, footer)
   )
 }
 
@@ -2135,7 +2203,10 @@ gt_info <- function(df, df_name){
   }
 
   dt_gt |>
-    tab_header(df_name) |>
+    tab_header(
+      title = df_name,
+      subtitle = paste(dt$rows[1], 'rows -', dt$cols[1], 'variables')
+    ) |>
     cols_hide(columns = c('rows', 'cols')) |>
     fmt_percent(columns = c('perc_valid', 'perc_zero', 'perc_nas')) |>
     data_color(columns = 'n_valid', palette = lg_palette) |>
@@ -2162,7 +2233,7 @@ gt_info <- function(df, df_name){
     cols_merge(columns = c('n_valid', 'perc_valid'), pattern = "{1} / {2}") |>
     cols_merge(columns = c('n_zero', 'perc_zero'), pattern = "{1} / {2}") |>
     cols_merge(columns = c('n_nas', 'perc_nas'), pattern = "{1} / {2}") |>
-    tab_options(table.background.color = '#ffffff')
+    tab_options(table.background.color = '#ffffff', heading.title.font.size = 20)
 }
 
 is_date <- function(x){

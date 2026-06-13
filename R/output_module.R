@@ -236,10 +236,7 @@ output_server <- function(id) {
         paste0('spada_output_', format(Sys.time(), format = '%Y%m%d%H%M%S'), '.html')
       },
       content = function(file) {
-        save_html(
-          spada_output(session$userData$out$elements, spada_output_header),
-          file
-        )
+        save_html(spada_output(session$userData$out$elements), file)
       }
     )
 

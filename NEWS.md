@@ -14,7 +14,9 @@ editor_options:
 
 ### Improvements
 
-1 - **Output** events: better internal functions for register/import output events (edit and delete buttons)
+1 - **utils**: better internal functions for register/import output events (edit and delete buttons)
+
+2 - **Output**: new footer in exported HTML output file
 
 # Spada 0.1.6
 
