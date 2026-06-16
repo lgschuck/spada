@@ -14,18 +14,26 @@ sidebar_ui <- function(id) {
         selectInput(ns('sel_act_dt'), NULL, choices = character(0)),
         uiOutput(ns('df_info')),
         fluidRow(
-          column(3, actionButton(ns('df_btn_overview'), '',
-                                 icon('magnifying-glass'), class = 'mini-btn') |>
+          column(3, mini_btn(ns('df_btn_overview'), '', icon('magnifying-glass')) |>
                    tooltip('Overview', placement = 'bottom')),
-          column(3, actionButton(ns('df_btn_meta'), '', bs_icon('info-circle'),
-                                 class = 'mini-btn') |>
+          column(3, mini_btn(ns('df_btn_meta'), '', bs_icon('info-circle')) |>
                    tooltip('Metadata', placement = 'bottom')),
-          column(3, actionButton(ns('df_btn_change'), '', icon('shuffle'),
-                                 class = 'mini-btn') |>
+          column(3, mini_btn(ns('df_btn_change'), '', icon('shuffle')) |>
                    tooltip('Change dataset', placement = 'bottom')),
-          column(3, actionButton(ns('df_btn_explore'), '', icon('chart-simple'),
-                                 class = 'mini-btn') |>
-                   tooltip('Exploratory Analysis', placement = 'bottom')),
+          column(3, mini_btn(ns('df_btn_edit'), '', icon('screwdriver-wrench')) |>
+                   tooltip('Edit', placement = 'bottom'))
+
+        ),
+        tags$br(),
+        fluidRow(
+          column(3, mini_btn(ns('df_btn_import'), '', icon('upload')) |>
+                   tooltip('Import', placement = 'bottom')),
+          column(3, mini_btn(ns('df_btn_export'), '', bs_icon('download')) |>
+                   tooltip('Export', placement = 'bottom')),
+          column(3, mini_btn(ns('df_btn_output'), '', icon('tablet-screen-button')) |>
+                   tooltip('Output', placement = 'bottom')),
+          column(3, mini_btn(ns('df_btn_explore'), '', icon('chart-simple')) |>
+                   tooltip('Exploratory Analysis', placement = 'bottom'))
         )
       )
     ),
@@ -117,6 +125,24 @@ sidebar_server <- function(id, app_session) {
     observe({
       nav_select('navbar', selected = 'Exploratory', session = app_session)
     }) |> bindEvent(input$df_btn_explore)
+
+    observe({
+      nav_select('navbar', selected = 'Data', session = app_session)
+      nav_select('navset_card_pill_data', selected = 'Import', session = app_session)
+    }) |> bindEvent(input$df_btn_import)
+
+    observe({
+      nav_select('navbar', selected = 'Data', session = app_session)
+      nav_select('navset_card_pill_data', selected = 'Export', session = app_session)
+    }) |> bindEvent(input$df_btn_export)
+
+    observe({
+      nav_select('navbar', selected = 'Output', session = app_session)
+    }) |> bindEvent(input$df_btn_output)
+
+    observe({
+      nav_select('navbar', selected = 'Edit', session = app_session)
+    }) |> bindEvent(input$df_btn_edit)
 
     # list of datasets --------------------------------------------------------
     observe({

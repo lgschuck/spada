@@ -259,8 +259,8 @@ spada_server <- function(datasets, conf, run_local = TRUE){
             easyClose = FALSE,
             size = 'm',
             footer = tagList(
-              actionButton('btn_cancel_exit', 'Cancel', icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
-              actionButton('btn_cancel_save_session', 'No', icon = icon('xmark'), class = 'btn-task'),
+              actionButton('btn_cancel_exit', 'Cancel', icon = icon('xmark'), class = 'btn-task btn-task-neutral'),
+              actionButton('btn_cancel_save_session', 'No', icon = icon('xmark'), class = 'btn-task btn-task-cancel'),
               actionButton('btn_confirm_save_session', 'Yes', icon = icon('check'), class = 'btn-task')
             )
           ))

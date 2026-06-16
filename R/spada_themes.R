@@ -26,7 +26,6 @@ pk_palette <- c('#ffffff', '#bf007f', '#8f0360')
 red_palette <- c('#ffffff', '#b60020', '#750217')
 
 # basic rules -----------------------------------------------------------------
-
 theme_basic_rules <- list(
   paste(
     " $main_color:", main_color, ";",
@@ -92,13 +91,28 @@ theme_basic_rules <- list(
         color: $bg_color !important;
       }
 
+      .btn-task.btn-task-neutral {
+        color: #424242 !important;
+        background-color: white !important;
+        border-color: #424242 !important;
+      }
+
+      .btn-task.btn-task-neutral:hover {
+        background-color: #424242 !important;
+        border-color: #424242 !important;
+        color: $bg_color !important;
+      }
+
       .mini-btn {
-        padding: 5px 10px !important;
         color: $secondary !important;
         background-color: $bg_color !important;
         border-color: $secondary !important;
-        border-radius: 0rem;
+        border-radius: 0.2rem;
         font-weight: 400;
+
+        width: 48px;
+        height: 32px;
+        padding: 0 !important;
       }
 
       .micro-btn-cancel {
@@ -167,33 +181,32 @@ theme_basic_rules <- list(
         border-radius: 0 !important;
       }
 
-    .navbar-nav .nav-link {
-      transition: background-color 0.2s ease;
+      .navbar-nav .nav-link {
+        transition: background-color 0.2s ease;
 
-      border-radius: 10px;
-      margin: 1px;
+        border-radius: 10px;
+        margin: 1px;
 
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-    }
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
 
-    .navbar-nav .nav-link:hover {
-      background-color: rgba(255, 255, 255, 0.12);
-      color: white !important;
-    }
+      .navbar-nav .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.12);
+        color: white !important;
+      }
 
-    .navbar-nav .nav-link.active {
-      background-color: rgba(255, 255, 255, 0.18);
-      color: white !important;
-    }
+      .navbar-nav .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.18);
+        color: white !important;
+      }
 
-    .selectize-input {
-      word-wrap: break-word;
-      word-break: break-word;
-    }
+      .selectize-input {
+        word-wrap: break-word;
+        word-break: break-word;
+      }
 
-    .selectize-dropdown {word-wrap: break-word;}
-
+      .selectize-dropdown {word-wrap: break-word;}
   "
   )
 )
@@ -277,7 +290,6 @@ spada_theme <- bs_theme(
         background-color: #f0f0f0 !important;
       }
 
-
       .shiny-input-text,
       .shiny-input-number,
       .selectize-input,
@@ -308,7 +320,6 @@ spada_theme <- bs_theme(
       }
     ")
   )
-
 
 # darkly spada theme ----------------------------------------------------------
 spada_dark_theme <- bs_theme(

@@ -926,9 +926,29 @@ empty_plot <- function(msg = 'No plot', c = 2){
 }
 
 # bslib btn task --------------------------------------------------------------
-btn_task <- function(ID, LABEL, ICON = NULL, LABEL_BUSY = "Running...", ...){
-  bslib::input_task_button(id = ID, label = LABEL, icon = ICON,
-                           label_busy = LABEL_BUSY, class = 'btn-task', ...)
+btn_task <- function(ID,
+                     LABEL,
+                     ICON = NULL,
+                     LABEL_BUSY = 'Running...',
+                     ...){
+  input_task_button(
+    id = ID,
+    label = LABEL,
+    icon = ICON,
+    label_busy = LABEL_BUSY,
+    class = 'btn-task',
+    ...
+  )
+}
+
+# mini_btn --------------------------------------------------------------------
+mini_btn <- function(ID, LABEL, ICON){
+  actionButton(
+    inputId = ID,
+    label = LABEL,
+    icon = ICON,
+    class = 'mini-btn'
+  )
 }
 
 # messages - shownotification -------------------------------------------------

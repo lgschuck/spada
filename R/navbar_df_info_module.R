@@ -4,10 +4,19 @@ navbar_df_info_ui <- function(id) {
   ns <- NS(id)
   tagList(
     uiOutput(ns('navbar_df_info')),
-    actionButton(ns('df_btn_overview'), '', icon('magnifying-glass'), class = 'mini-btn'),
-    actionButton(ns('df_btn_meta'), '', bs_icon('info-circle'), class = 'mini-btn'),
-    actionButton(ns('df_btn_change'), '', icon('shuffle'), class = 'mini-btn'),
-    actionButton(ns('df_btn_explore'), '', icon('chart-simple'), class = 'mini-btn')
+    fluidRow(
+      column(3, mini_btn(ns('df_btn_overview'), '', icon('magnifying-glass'))),
+      column(3, mini_btn(ns('df_btn_meta'), '', bs_icon('info-circle'))),
+      column(3, mini_btn(ns('df_btn_change'), '', icon('shuffle'))),
+      column(3, mini_btn(ns('df_btn_edit'), '', icon('screwdriver-wrench')))
+    ),
+      tags$br(),
+    fluidRow(
+      column(3, mini_btn(ns('df_btn_import'), '', icon('upload'))),
+      column(3, mini_btn(ns('df_btn_export'), '', icon('download'))),
+      column(3, mini_btn(ns('df_btn_output'), '', icon('tablet-screen-button'))),
+      column(3, mini_btn(ns('df_btn_explore'), '', icon('chart-simple')))
+    )
   )
 }
 
@@ -45,6 +54,24 @@ navbar_df_info_server <- function(id, app_session) {
     observe({
       nav_select('navbar', selected = 'Exploratory', session = app_session)
     }) |> bindEvent(input$df_btn_explore)
+
+    observe({
+      nav_select('navbar', selected = 'Data', session = app_session)
+      nav_select('navset_card_pill_data', selected = 'Import', session = app_session)
+    }) |> bindEvent(input$df_btn_import)
+
+    observe({
+      nav_select('navbar', selected = 'Data', session = app_session)
+      nav_select('navset_card_pill_data', selected = 'Export', session = app_session)
+    }) |> bindEvent(input$df_btn_export)
+
+    observe({
+      nav_select('navbar', selected = 'Output', session = app_session)
+    }) |> bindEvent(input$df_btn_output)
+
+    observe({
+      nav_select('navbar', selected = 'Edit', session = app_session)
+    }) |> bindEvent(input$df_btn_edit)
 
   })
 }

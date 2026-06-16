@@ -20,6 +20,10 @@ editor_options:
 
 3 - New **One-sample t test** module: ([#22](https://github.com/lgschuck/spada/issues/22))
 
+#### Visuals 
+
+1 - New **mini buttons** (new css) in sidebar and navbar df info
+
 # Spada 0.1.6
 
 ### Improvements

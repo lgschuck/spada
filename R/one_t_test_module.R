@@ -16,7 +16,7 @@ one_t_test_ui <- function(id) {
               sidebar = sidebar(
                 width = 380,
                 fluidRow(
-                  h5('Sampe Values'),
+                  h5('Sample Values'),
                   column(6, p(textOutput(ns('sample_mean'))))
                 ),
                 h5('Parameters', style = 'margin-bottom: -18px;'),
