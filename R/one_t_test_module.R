@@ -1,10 +1,10 @@
 
 # ui --------------------------------------------------------------------------
-z_test_ui <- function(id) {
+one_t_test_ui <- function(id) {
   ns <- NS(id)
   card(
     full_screen = T,
-    card_header('Z Test', class = 'mini-header'),
+    card_header('One-sample t Test', class = 'mini-header'),
     layout_sidebar(
       class = 'card-sidebar',
       sidebar = sidebar(uiOutput(ns('parameters'))),
@@ -17,20 +17,14 @@ z_test_ui <- function(id) {
                 width = 380,
                 fluidRow(
                   h5('Sampe Values'),
-                  column(6, p(textOutput(ns('sample_mean')))),
-                  column(6, p(textOutput(ns('sample_sd'))))
+                  column(6, p(textOutput(ns('sample_mean'))))
                 ),
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 layout_columns(
                   numericInput(
                     ns('mu'),
                     list('Mean', bs_icon('info-circle') |>
-                           ttip('Hypothesized Mean')), 0),
-                  numericInput(
-                    ns('sd'),
-                    list('Std Deviation', bs_icon('info-circle') |>
-                           ttip('Standard Deviation of Population')),
-                    value = 1, min = 0)
+                           ttip('True Value of Mean')), 0)
                 ),
                 radioButtons(ns('radio_alternative'), 'Alternative',
                              c('Two sided' = 'two.sided',
@@ -41,7 +35,7 @@ z_test_ui <- function(id) {
                 layout_columns(
                   col_widths = c(6, 6),
                   btn_task(ns('btn_run_test'), 'Run Test', icon('gear')),
-                  btn_task(ns('btn_help_ztest'), 'Help', icon('question'))
+                  btn_task(ns('btn_help_ttest'), 'Help', icon('question'))
                 )
               ),
               card_body(
@@ -50,12 +44,12 @@ z_test_ui <- function(id) {
                   fluidRow(
                     div(
                       style = 'margin-bottom: 10px;',
-                      uiOutput(ns('conditional_staticard_ztest')),
+                      uiOutput(ns('conditional_staticard_ttest')),
                     )
                   ),
                   uiOutput(ns('conditional_plot')),
                   div(
-                    gt_output(ns('ztest_gt')),
+                    gt_output(ns('ttest_gt')),
                     br(), br(),
                     uiOutput(ns('conditional_save_gt'))
                   )
@@ -79,7 +73,7 @@ z_test_ui <- function(id) {
                 numericInput(ns('bins'), 'Bins', 25, 5, step = 5),
                 btn_task(ns('btn_hist'), 'Show Histogram', icon('chart-simple'),
                          style = 'margin-top: 28px'),
-                div(insert_output_ui(ns('ztest_insert_output_hist')),
+                div(insert_output_ui(ns('ttest_insert_output_hist')),
                     style = 'margin-top: 28px')
               ),
               div(style = 'margin-bottom: -24px !important;'),
@@ -92,13 +86,13 @@ z_test_ui <- function(id) {
 }
 
 # server ----------------------------------------------------------------------
-z_test_server <- function(id) {
+one_t_test_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
 	  df <- reactive(get_act_dt(session))
 
-    ztest <- reactiveValues(results = NULL)
+    ttest <- reactiveValues(results = NULL)
 
     df_active <- reactive(df()[, lapply(df(), is.numeric) == T, with = F])
 
@@ -122,12 +116,6 @@ z_test_server <- function(id) {
       paste('Mean:', sample_mean() |> f_num(dig = 2))
     })
 
-    sample_sd <- reactive(var() |> fsd(na.rm = T))
-
-    output$sample_sd <- renderText({
-      paste('Std Deviation:', sample_sd() |> f_num(dig = 2))
-    })
-
     # input vars --------------------------------------------------------------
     output$parameters <- renderUI({
       tagList(
@@ -136,27 +124,22 @@ z_test_server <- function(id) {
       )
     })
 
-    # run z test --------------------------------------------------------------
+    # run t test --------------------------------------------------------------
     observe({
       req(input$sel_var)
       req(input$radio_alternative)
 
       if(!isTruthy(input$mu)){
         msg_error('Inform a value for the Mean')
-      } else if(!isTruthy(input$sd)){
-        msg_error('Inform a value for the Std Deviation')
-      } else if(input$sd <= 0){
-        msg_error('Standard Deviation must be positive ( > 0)', 2)
       } else if(!isTruthy(input$confidence) ||
          !between(input$confidence, 0, 100)) {
         msg_error('Confidence interval must be between 0 and 100%', 2)
       } else if (fnobs(var()) < 2) {
         msg_error('Inform at least 2 valid values')
       } else {
-        df <- ZTest(var(),
+        df <- t.test(var(),
                     alternative = input$radio_alternative,
                     mu = input$mu,
-                    sd_pop = input$sd,
                     conf.level = input$confidence/100)
 
         df <- df |>
@@ -167,108 +150,112 @@ z_test_server <- function(id) {
 
         df[df$results == 'data.name', ]$values <- input$sel_var
 
-        ztest$results <- df
+        ttest$results <- df
 
-        ztest$confidence <- input$confidence/100
+        ttest$confidence <- input$confidence/100
       }
     }) |> bindEvent(input$btn_run_test)
 
     # results gt table --------------------------------------------------------
-    ztest_results_gt <- reactive({
-      req(ztest$results)
-      ztest$results |>
+    ttest_results_gt <- reactive({
+      req(ttest$results)
+      ttest$results |>
         gt() |>
         cols_move(columns = 'values', after = 'results') |>
         cols_label('values' = 'Values', 'results' = 'Results') |>
-        tab_header('Z Test')
+        tab_header('One-sample t Test')
     })
 
-    output$ztest_gt <- render_gt({
-      req(ztest_results_gt())
-      ztest_results_gt()
+    output$ttest_gt <- render_gt({
+      req(ttest_results_gt())
+      ttest_results_gt()
     })
 
     # save gt module ----------------------------------------------------------
-    save_gt_server('ztest_save_gt', ztest_results_gt)
+    save_gt_server('ttest_save_gt', ttest_results_gt)
 
     output$conditional_save_gt <- renderUI({
-      req(ztest_results_gt())
-      save_gt_ui(ns('ztest_save_gt'))
+      req(ttest_results_gt())
+      save_gt_ui(ns('ttest_save_gt'))
     })
 
     # insert to output --------------------------------------------------------
     insert_output_server(
-      'ztest_insert_output',
+      'ttest_insert_output',
       reactive(
         gen_table2(
-          plot_tag(ztest_plot()(), w = 600, h = 300),
-          ztest_results_gt(),
+          plot_tag(ttest_plot()(), w = 600, h = 300),
+          ttest_results_gt(),
           '75%',
           '25%'
         )
       ),
-      'Z Test'
+      'One-sample t Test'
     )
 
     output$conditional_add_output <- renderUI({
-      req(ztest_results_gt())
-      insert_output_ui(ns('ztest_insert_output'))
+      req(ttest_results_gt())
+      insert_output_ui(ns('ttest_insert_output'))
     })
 
     # test plot ---------------------------------------------------------------
     output$conditional_plot <- renderUI({
-      req(ztest_plot())
-      plotOutput(ns('ztest_plot'))
+      req(ttest_plot())
+      plotOutput(ns('ttest_plot'))
     })
 
-    ztest_plot <- reactive({
-      req(ztest$results)
-      req(ztest$confidence)
+    ttest_plot <- reactive({
+      req(ttest$results)
+      req(ttest$confidence)
 
-      alt <- ztest$results$values[which(ztest$results$results == 'alternative')]
-      z_value <- ztest$results$values[which(ztest$results$results == 'statistic.z')]
+      alt <- ttest$results$values[which(ttest$results$results == 'alternative')]
+
+      t_value <- ttest$results$values[which(ttest$results$results == 'statistic.t')]
+
+      df <- ttest$results$values[which(ttest$results$results == 'parameter.df')]
 
       function(){
-        plot_z_test(
-          confidence = ztest$confidence,
+        plot_t_test(
+          confidence = ttest$confidence,
+          df = df |> as.numeric(),
           test_type = alt,
-          z_value = z_value |> as.numeric()
+          t_value = t_value |> as.numeric()
         )
       }
     })
 
-    output$ztest_plot <- renderPlot({
-      req(ztest$results)
-      req(ztest$confidence)
-      req(ztest_plot())
+    output$ttest_plot <- renderPlot({
+      req(ttest$results)
+      req(ttest$confidence)
+      req(ttest_plot())
 
-      ztest_plot()()
+      ttest_plot()()
     })
 
     # staticards --------------------------------------------------------------
-    output$conditional_staticard_ztest <- renderUI({
-      req(ztest_results_gt())
+    output$conditional_staticard_ttest <- renderUI({
+      req(ttest_results_gt())
 
-      z_value <- ztest$results$values[which(ztest$results$results  == 'statistic.z')]
-      p_value <- ztest$results$values[which(ztest$results$results == 'p.value')]
+      t_value <- ttest$results$values[which(ttest$results$results == 'statistic.t')]
+      p_value <- ttest$results$values[which(ttest$results$results == 'p.value')]
 
       tagList(
-        stati_card(f_num(as.numeric(z_value), dig = 3), 'Z value'),
+        stati_card(f_num(as.numeric(t_value), dig = 3), 't value'),
         stati_card(f_num(as.numeric(p_value), dig = 3), 'p value')
       )
     })
 
     # help modal --------------------------------------------------------------
     observe({
-      fun_help_modal('DescTools', 'ZTest')
-    }) |> bindEvent(input$btn_help_ztest)
+      fun_help_modal('stats', 't.test')
+    }) |> bindEvent(input$btn_help_ttest)
 
     # histogram ---------------------------------------------------------------
     output$hist <- renderPlot({
-      req(ztest_hist())
+      req(ttest_hist())
       validate(need(input$bins > 0, 'Bins must be 1 or higher'))
 
-      ztest_hist()
+      ttest_hist()
     }, res = 96)
 
     task_hist <- ExtendedTask$new(function(spada_plot_fun,
@@ -323,12 +310,12 @@ z_test_server <- function(id) {
       )
     }) |> bindEvent(input$btn_hist)
 
-    ztest_hist <- reactive({ task_hist$result() })
+    ttest_hist <- reactive({ task_hist$result() })
 
     # insert histogram to output ----------------------------------------------
     insert_output_server(
-      'ztest_insert_output_hist',
-      reactive(plot_tag(ztest_hist())),
+      'ttest_insert_output_hist',
+      reactive(plot_tag(ttest_hist())),
       'Histogram'
     )
 

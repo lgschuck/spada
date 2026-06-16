@@ -18,6 +18,8 @@ editor_options:
 
 2 - **Output**: new footer in exported HTML output file
 
+3 - New **One-sample t test** module: ([#22](https://github.com/lgschuck/spada/issues/22))
+
 # Spada 0.1.6
 
 ### Improvements

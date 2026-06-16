@@ -25,7 +25,8 @@
 #'             value_box
 #'
 #' @importFrom collapse allNA ffirst flast fmean fmedian fmax fmin fmode fncol
-#'             fnrow fnunique fquantile fsd fsum fvar frange qtab whichNA %==%
+#'             fnobs fnrow fnunique fquantile fsd fsum fvar frange qtab whichNA
+#'             %==%
 #'
 #' @importFrom data.table %between% %notin% .SD := as.data.table between copy
 #'             data.table fcase fifelse fread fwrite hour is.data.table mday melt
@@ -63,8 +64,9 @@
 #' @importFrom shinyWidgets colorPickr dropdownButton show_toast radioGroupButtons
 #'             statiCard updateColorPickr updateRadioGroupButtons
 #'
-#' @importFrom stats cor cor.test dnorm formula IQR dnorm ks.test median lm pf
-#'             qnorm qqline qqnorm rnorm sd setNames shapiro.test var
+#' @importFrom stats cor cor.test dnorm dt formula IQR dnorm ks.test median lm
+#'             pf qnorm qqline qqnorm qt rnorm sd setNames shapiro.test t.test
+#'             var
 #'
 #' @importFrom tools file_ext R_user_dir toTitleCase
 #'

@@ -227,7 +227,8 @@ spada_server <- function(datasets, conf, run_local = TRUE){
     # normality test -------------------------
     normality_test_server('pA_normality_test')
 
-    # z test ---------------------------------
+    # stats test -----------------------------
+    one_t_test_server('pA_t_test')
     z_test_server('pA_z_test')
 
     # linear model ---------------------------

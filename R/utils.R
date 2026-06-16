@@ -1412,9 +1412,9 @@ plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
   }
 
   # Create the plot
-  plot(x, y, type = "l", lwd = 2, col = color_line,
+  plot(x, y, type = 'l', lwd = 2, col = color_line,
        xlab = 'Standardized Values (Z)', ylab = 'Density',
-       main = paste('Test Type:', test_type, ' - Confidence:',
+       main = paste('Z Test\n Type:', test_type, '- Conf.',
                     confidence * 100, '% | Z value:', z_value |> f_num(dig = 3)))
 
   # Highlight the critical regions
@@ -1435,6 +1435,62 @@ plot_z_test <- function(confidence = 0.95, test_type = 'two.sided',
 
   if(abs(z_value) <= 4){
     abline(v = z_value, col = 'black', lwd = 2, lty = 2)
+  }
+
+}
+
+# plot t test -----------------------------------------------------------------
+plot_t_test <- function(confidence = 0.95, test_type = 'two.sided',
+                        df = 10, t_value = qt(confidence, df = 10),
+                        color_fill = 'brown3', color_line = 'steelblue') {
+    x <- seq(-4, 4, length.out = 1000)
+  y <- dt(x, df = df)
+
+  alpha <- 1 - confidence
+
+  # Determine critical values in standardized scale
+  if (test_type == 'two.sided') {
+    t_critical <- qt(1 - alpha / 2, df = df)
+    critical_left <- -t_critical
+    critical_right <- t_critical
+  } else if (test_type == 'greater') {
+    critical_right <- qt(1 - alpha, df = df)
+  } else if (test_type == 'less') {
+    critical_left <- qt(alpha, df = df)
+  } else {
+    stop("Invalid 'test_type'. Use 'two.sided', 'greater', or 'less'.")
+  }
+
+  # Create the plot
+  plot(x, y, type = 'l', lwd = 2, col = color_line,
+       xlab = 't-value', ylab = 'Density',
+       main = paste(
+         'One-sample t Test\n',
+         'Type:', test_type,
+         '- Conf.', confidence * 100,
+         '% | t value =', t_value |> f_num(dig = 3),
+        '(df =', df |> f_int(), ')'
+       )
+  )
+
+  # Highlight the critical regions
+  if (test_type == 'two.sided') {
+    polygon(c(x[x <= critical_left], critical_left),
+            c(y[x <= critical_left], 0), col = color_fill, border = NA)
+    polygon(c(x[x >= critical_right], critical_right),
+            c(y[x >= critical_right], 0), col = color_fill, border = NA)
+
+  } else if (test_type == 'less') {
+    polygon(c(x[x <= critical_left], critical_left),
+            c(y[x <= critical_left], 0), col = color_fill, border = NA)
+
+  } else if (test_type == 'greater') {
+    polygon(c(x[x >= critical_right], critical_right),
+            c(y[x >= critical_right], 0), col = color_fill, border = NA)
+  }
+
+  if(abs(t_value) <= 4){
+    abline(v = t_value, col = 'black', lwd = 2, lty = 2)
   }
 
 }
