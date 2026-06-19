@@ -330,11 +330,8 @@ normality_test_server <- function(id) {
     output$conditional_staticard_ks <- renderUI({
       req(ks_results())
 
-      idx_d <- ks_results()$results %in% c('statistic.D')
-      stat_d <- ks_results()$values[idx_d]
-
-      idx_p <- ks_results()$results %in% c('p.value')
-      p_value <- ks_results()$values[idx_p]
+      stat_d <- ks_results()$results$values[which(ks_results()$results$results == 'statistic.D')]
+      p_value <- ks_results()$results$values[which(ks_results()$results$results == 'p.value')]
 
       tagList(
         stati_card(stat_d |> as.numeric() |> f_num(dig = 5), 'Statistic D (test value)'),
@@ -387,8 +384,9 @@ normality_test_server <- function(id) {
       req(var())
       req(var_len())
 
-      if (var_len() < 3 || var_len() > 5000) {
-        msg(paste0('Sample size must be between 3 and 5000 (actual: ', var_len(), ')'), 3)
+      var_len <- var_len()
+      if (var_len < 3 || var_len > 5000) {
+        msg(paste0('Sample size must be between 3 and 5000 (actual: ', var_len, ')'), 3)
 
         return()
       }
@@ -422,11 +420,8 @@ normality_test_server <- function(id) {
     output$conditional_staticard_sw <- renderUI({
       req(sw_results())
 
-      idx_w <- sw_results()$results %in% c('statistic.W')
-      stat_w <- sw_results()$values[idx_w]
-
-      idx_p <- sw_results()$results %in% c('p.value')
-      p_value <- sw_results()$values[idx_p]
+      stat_w <- sw_results()$values[which(sw_results()$results == 'statistic.W')]
+      p_value <- sw_results()$values[which(sw_results()$results == 'p.value')]
 
       tagList(
         stati_card(stat_w |> as.numeric() |> f_num(dig = 5), 'Statistic W (test value)'),
@@ -468,9 +463,9 @@ normality_test_server <- function(id) {
       req(input$sel_var)
       req(var())
       req(var_len())
-
-      if (var_len() < 5 || var_len() > 5000) {
-        msg(paste0('Sample size must be between 5 and 5000 (actual: ', var_len(), ')'), 3)
+      var_len <- var_len()
+      if (var_len < 5 || var_len > 5000) {
+        msg(paste0('Sample size must be between 5 and 5000 (actual: ', var_len, ')'), 3)
 
         return()
       }
@@ -505,11 +500,8 @@ normality_test_server <- function(id) {
     output$conditional_staticard_sf <- renderUI({
       req(sf_results())
 
-      idx_w <- sf_results()$results %in% c('statistic.W')
-      stat_w <- sf_results()$values[idx_w]
-
-      idx_p <- sf_results()$results %in% c('p.value')
-      p_value <- sf_results()$values[idx_p]
+      stat_w <- sf_results()$values[which(sw_results()$results == 'statistic.W')]
+      p_value <- sf_results()$values[which(sw_results()$results == 'p.value')]
 
       tagList(
         stati_card(stat_w |> as.numeric() |> f_num(dig = 5), 'Statistic W (test value)'),

@@ -24,6 +24,12 @@ editor_options:
 
 1 - New **mini buttons** (new css) in sidebar and navbar df info
 
+2 - Better layout in tests (z test, t test, etc) sidebar
+
+### Bug fixes
+
+1 - Normality test: **KS test undefined values** in cards ([#80](https://github.com/lgschuck/spada/issues/80))
+
 # Spada 0.1.6
 
 ### Improvements

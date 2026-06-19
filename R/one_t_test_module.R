@@ -14,43 +14,43 @@ one_t_test_ui <- function(id) {
           card(
             layout_sidebar(
               sidebar = sidebar(
-                width = 380,
-                fluidRow(
-                  h5('Sample Values'),
-                  column(6, p(textOutput(ns('sample_mean'))))
-                ),
+                h5('Sample Values', style = 'margin-bottom: -18px;'),
+                textOutput(ns('sample_mean')),
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 layout_columns(
                   numericInput(
                     ns('mu'),
                     list('Mean', bs_icon('info-circle') |>
-                           ttip('True Value of Mean')), 0)
+                           ttip('True Value of Mean')), 0, width = '180px')
                 ),
                 radioButtons(ns('radio_alternative'), 'Alternative',
                              c('Two sided' = 'two.sided',
                                'Less' = 'less',
-                               'Greater' = 'greater'), inline = T),
+                               'Greater' = 'greater')),
                 numericInput(ns('confidence'), 'Confidence Interval - %',
-                             value = 95, 0, 100, 5, width = '200px'),
+                             value = 95, 0, 100, 5, width = '180px'),
                 layout_columns(
-                  col_widths = c(6, 6),
-                  btn_task(ns('btn_run_test'), 'Run Test', icon('gear')),
+                  col_widths = c(8),
+                  btn_task(ns('btn_run_test'), 'Run Test', icon('gear'))
+                ),
+                layout_columns(
+                  col_widths = c(8),
                   btn_task(ns('btn_help_ttest'), 'Help', icon('question'))
-                )
+                ),
               ),
               card_body(
                 layout_columns(
-                  col_widths = c(2, 7, 3),
-                  fluidRow(
-                    div(
-                      style = 'margin-bottom: 10px;',
-                      uiOutput(ns('conditional_staticard_ttest')),
-                    )
+                  col_widths = c(8, 4),
+                  div(
+                    uiOutput(ns('conditional_plot')),
+
+                    br(),
+
+                    uiOutput(ns('conditional_staticard_ttest'))
                   ),
-                  uiOutput(ns('conditional_plot')),
                   div(
                     gt_output(ns('ttest_gt')),
-                    br(), br(),
+                    br(),
                     uiOutput(ns('conditional_save_gt'))
                   )
                 )
@@ -239,7 +239,8 @@ one_t_test_server <- function(id) {
       t_value <- ttest$results$values[which(ttest$results$results == 'statistic.t')]
       p_value <- ttest$results$values[which(ttest$results$results == 'p.value')]
 
-      tagList(
+      layout_columns(
+        col_widths = c(6, 6),
         stati_card(f_num(as.numeric(t_value), dig = 3), 't value'),
         stati_card(f_num(as.numeric(p_value), dig = 3), 'p value')
       )

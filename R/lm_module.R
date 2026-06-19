@@ -20,12 +20,14 @@ lm_ui <- function(id) {
           card(
             layout_sidebar(
               sidebar = sidebar(
-                width = 400,
                 layout_columns(
-                  col_widths = c(6, 6),
-                  btn_task(ns('btn_run_lm'), 'Run Model', icon('gear')),
+                  col_widths = c(8),
+                  btn_task(ns('btn_run_lm'), 'Run Model', icon('gear'))
+                ),
+                layout_columns(
+                  col_widths = c(8),
                   btn_task(ns('btn_help_lm'), 'Help', icon('question'))
-                )
+                ),
               ),
               card_body(
                 gt_output(ns('lm_var_table')),
@@ -86,7 +88,10 @@ lm_server <- function(id) {
     )
 
     observe({
-      req(input$sel_yvar, input$sel_xvar)
+      if (!isTruthy(input$sel_yvar) || !isTruthy(input$sel_xvar)) {
+        msg('Select dependent and independent variables')
+        return()
+      }
 
       linear_model$y_name <- input$sel_yvar
       linear_model$x_name <- paste(input$sel_xvar, collapse = '+')
@@ -152,7 +157,7 @@ lm_server <- function(id) {
     observe({
       showModal(
         modalDialog(
-          title = 'Save Model',
+          title = div(icon('download'), 'Save Model'),
           h5('This will save the Model Output and the Metrics tables.'),
           textInput(ns('model_filename'), 'File name', value = 'model'),
           footer = tagList(

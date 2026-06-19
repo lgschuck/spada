@@ -14,7 +14,6 @@ correlation_ui <- function(id) {
           card(
             layout_sidebar(
               sidebar = sidebar(
-                width = 400,
                 h5('Parameters', style = 'margin-bottom: -18px;'),
                 radioButtons(ns('radio_method'), 'Method',
                              c('Pearson' = 'pearson',
@@ -23,14 +22,17 @@ correlation_ui <- function(id) {
                 radioButtons(ns('radio_alternative'), 'Alternative',
                              c('Two sided' = 'two.sided',
                                'Less' = 'less',
-                               'Greater' = 'greater'), inline = T),
+                               'Greater' = 'greater')),
                 numericInput(ns('confidence'), 'Confidence Interval - %',
-                             value = 95, 0, 100, 5, width = '200px'),
+                             value = 95, 0, 100, 5, width = '180px'),
                 layout_columns(
-                  col_widths = c(6, 6),
-                  btn_task(ns('btn_run_test'), 'Run Test', icon('gear')),
+                  col_widths = c(8),
+                  btn_task(ns('btn_run_test'), 'Run Test', icon('gear'))
+                ),
+                layout_columns(
+                  col_widths = c(8),
                   btn_task(ns('btn_help_cor'), 'Help', icon('question'))
-                )
+                ),
               ),
               layout_columns(
                 col_widths = c(3, 6, 3),

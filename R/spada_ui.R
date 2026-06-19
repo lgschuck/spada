@@ -121,19 +121,15 @@ spada_ui <- function(conf){
                   cor_matrix_ui('pA_cor_matrix')),
         nav_panel('Correlation Test',
                   icon = bs_icon('magnet'),
-                  correlation_ui('pA_correlation')),
+                  correlation_ui('pA_correlation')
+        ),
         nav_panel('Normality Test',
                   icon = bs_icon('bell'),
-                  normality_test_ui('pA_normality_test')),
-        nav_panel('One-sample t Test',
-                  icon = icon('t'),
-                  one_t_test_ui('pA_t_test')),
-        nav_panel('Z Test',
-                  icon = icon('z'),
-                  z_test_ui('pA_z_test')),
-        nav_panel('Linear Model',
-                  icon = bs_icon('graph-up'),
-                  lm_ui('pA_lm')),
+                  normality_test_ui('pA_normality_test')
+        ),
+        nav_panel('One-sample t Test', icon = icon('t'), one_t_test_ui('pA_t_test')),
+        nav_panel('Z Test', icon = icon('z'), z_test_ui('pA_z_test')),
+        nav_panel('Linear Model', icon = bs_icon('graph-up'), lm_ui('pA_lm'))
       ), # end of analysis menu
 
       # output ----------------------------------------------------------------
