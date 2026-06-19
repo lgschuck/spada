@@ -2281,7 +2281,7 @@ gt_info <- function(df, df_name){
   dt_gt |>
     tab_header(
       title = df_name,
-      subtitle = paste(dt$rows[1], 'rows -', dt$cols[1], 'variables')
+      subtitle = paste(f_int(dt$rows[1]), 'rows -', f_int(dt$cols[1]), 'variables')
     ) |>
     cols_hide(columns = c('rows', 'cols')) |>
     fmt_percent(columns = c('perc_valid', 'perc_zero', 'perc_nas')) |>

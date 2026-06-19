@@ -17,13 +17,13 @@ plot_title_color <- '#02517d'
 
 startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------
-gray_palette <- c('#ffffff', '#585858', '#232323')
-blue_palette <- c('#ffffff', '#096691', '#134359')
-yl_palette <- c('#ffffff', '#ffc107', '#f7a305')
-dg_palette <- c('#ffffff','#1c6561', '#284e4c')
-lg_palette <- c('#ffffff', '#0cb0a8', '#09918b')
-pk_palette <- c('#ffffff', '#bf007f', '#8f0360')
-red_palette <- c('#ffffff', '#b60020', '#750217')
+gray_palette <- c('#cfcfcf', '#585858', '#232323')
+blue_palette <- c('#229bd4', '#096691', '#134359')
+yl_palette   <- c('#f5cb4e', '#ffc107', '#f7a305')
+dg_palette   <- c('#378c88', '#1c6561', '#284e4c')
+lg_palette   <- c('#0cb0a8', '#228f8a', '#09918b')
+pk_palette   <- c('#a35d8c', '#bf007f', '#8f0360')
+red_palette  <- c('#8f3646', '#b60020', '#750217')
 
 # basic rules -----------------------------------------------------------------
 theme_basic_rules <- list(
