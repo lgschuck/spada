@@ -3,39 +3,8 @@
 var1 <- 'hp'
 df_mtcars <- mtcars |> as.data.table()
 
-# test ddescriptiveesc stats - reactives --------------------------------------
-test_that('Test desc stats - reactives', {
-
-  testServer(descriptive_stats_server, {
-
-    session$userData$dt <- reactiveValues(
-      dt = list('mtcars' = df_mtcars),
-      act_name = 'mtcars'
-    )
-
-    session$setInputs(
-      sel_var = var1,
-      table_digits = 9,
-      xg_central_tendency = 'mean',
-      xg_dispersion = '',
-      xg_shape = '',
-      btn_stats = 1
-    )
-
-    expect_true(df |> is.reactive())
-    expect_equal(df(), df_mtcars)
-
-    expect_true(df_stats |> is.reactive())
-    expect_equal(df_stats(), df_mtcars[, ..var1])
-
-    expect_true(calculated_stats |> is.reactive())
-    expect_true(calculated_stats() |> is.list())
-    expect_true((calculated_stats() |> length()) == 1)
-  })
-})
-
 # test descriptive stats - desc_stats mean 1 var ------------------------------
-test_that('Test descriptive stats - desc_stats mean 1 var', {
+test_that('Test desc stats - desc_stats mean 1 var', {
 
   testServer(descriptive_stats_server, {
 
@@ -53,16 +22,18 @@ test_that('Test descriptive stats - desc_stats mean 1 var', {
       btn_stats = 1
     )
 
-    expect_equal(df(), df_mtcars)
-    expect_equal(df_stats(), df_mtcars[, ..var1])
     expect_true(calculated_stats |> is.reactive())
+
+    while(task_desc_stats$status() == 'running'){
+      session$flushReact()
+    }
+
     expect_true(calculated_stats() |> is.list())
     expect_true((calculated_stats() |> length()) == 1)
 
     mean_hp <- mean(df_mtcars[[var1]]) |> f_num(dig = 9)
     names(mean_hp) = var1
     expect_equal(calculated_stats(), list('Mean' = mean_hp))
-
   })
 })
 
@@ -84,6 +55,10 @@ test_that('Test descriptive stats - gt stats', {
       xg_shape = '',
       btn_stats = 1
     )
+
+    while(task_desc_stats$status() == 'running'){
+      session$flushReact()
+    }
 
     expect_true(gt_stats |> is.reactive())
     expect_equal(gt_stats() |> class(), c('gt_tbl', 'list'))

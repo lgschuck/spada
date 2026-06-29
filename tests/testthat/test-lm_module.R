@@ -133,3 +133,46 @@ test_that('lm_server - save model', {
   })
 })
 
+# test lm module - plot residuals ---------------------------------------------
+test_that('lm_server - plot residuals', {
+  testServer(lm_server, {
+    session$userData$dt <- reactiveValues(
+      dt = list('iris' = iris |> as.data.table()),
+      act_name = 'iris'
+    )
+
+    session$userData$dt$df_info <- reactive({
+      req(session$userData$dt)
+
+      lapply(session$userData$dt$dt, df_info)
+    })
+
+    session$userData$dt$act_meta <- reactive({
+      req(session$userData$dt$df_info())
+      session$userData$dt$df_info()[[session$userData$dt$act_name]]
+    })
+
+    session$userData$conf <- reactiveValues(
+      plot_fill_color = '#229999',
+      plot_line_color = '#44aa44',
+      plot_limit = 1e5
+    )
+
+    session$setInputs(
+      sel_yvar = 'Petal.Width',
+      sel_xvar = 'Petal.Length',
+      btn_run_lm = 1
+    )
+
+    expect_equal(update_lm_resid_plot(), 0)
+
+    session$setInputs(
+      radio_lm_resid = 'hist',
+      btn_lm_resid = 1
+    )
+
+    expect_equal(update_lm_resid_plot(), 1)
+    expect_s3_class(lm_resid_plot(), 'ggplot')
+    expect_true(is.reactive(lm_resid_plot))
+  })
+})

@@ -654,11 +654,6 @@ printable_report_card <- function(btns, card, id = NULL){
   )
 }
 
-# spada output ----------------------------------------------------------------
-
-
-
-
 # output header ---------------------------------------------------------------
 spada_output_info_card <- function(content){
   div(
@@ -1852,7 +1847,7 @@ spada_plot <- function(
         na.rm = na_rm
       ) +
       geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
-      labs(x = xlab, y = ylab, title = title) +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
             axis.text.y = element_text(size = 14),
@@ -1872,7 +1867,7 @@ spada_plot <- function(
                                 sd = sd_value),
                     color = line_color,
                     linewidth = 1) +
-      labs(x = xlab, y = ylab, title = title) +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
             axis.text.y = element_text(size = 14),
@@ -1888,36 +1883,39 @@ spada_plot <- function(
       geom_boxplot(fill = fill_color, na.rm = na_rm) +
       ylim(-1.2, 1.2) +
       geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
-      labs(x = '', y = '') +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(
         axis.ticks.y = element_blank(),
         axis.text.y  = element_blank(),
         axis.line.y  = element_blank(),
         panel.border = element_rect(color = '#000000', fill = NA),
-        axis.text.x = element_text(size = 14)
+        axis.text.x = element_text(size = 14),
+        plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
   } else if(type == 'dots'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
       geom_point(shape = point_shape, color = fill_color, na.rm = na_rm) +
       geom_hline(yintercept = vertical_line, color = line_color, linetype = line_type) +
-      labs(x = xlab, y = ylab) +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
             axis.text.y = element_text(size = 14),
             axis.title.x = element_text(size = 16),
-            axis.title.y = element_text(size = 16)
+            axis.title.y = element_text(size = 16),
+            plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
   } else if (type == 'barplot'){
 
     ggplot(data = df, aes(x = factor(.data[[xvar]]))) +
       geom_bar(fill = fill_color, na.rm = na_rm) +
-      labs(x = xlab, y = ylab) +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
             axis.text.y = element_text(size = 14),
-            axis.title.y = element_text(size = 16)
+            axis.title.y = element_text(size = 16),
+            plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
 
   } else if (type == 'boxplot_group'){
@@ -1928,7 +1926,7 @@ spada_plot <- function(
       geom_hline(yintercept = vertical_line,
                  color = line_color) +
       coord_flip() +
-      labs(x = xlab, y = ylab) +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(
         legend.position = 'none',
@@ -1936,14 +1934,14 @@ spada_plot <- function(
         axis.line.y  = element_blank(),
         panel.border = element_rect(color = 'black', fill = NA),
         axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14)
+        axis.text.y = element_text(size = 14),
+        plot.title = element_text(color = title_color, size = 16, face = 'bold')
       )
   } else if (type == 'scatter'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
       geom_point(color = fill_color, shape = point_shape, na.rm = na_rm) +
-      labs(title = title,
-           x = xlab, y = ylab) +
+      labs(title = title, x = xlab, y = ylab) +
       theme_classic() +
       theme(axis.text.x = element_text(size = 14),
             axis.text.y = element_text(size = 14),

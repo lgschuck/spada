@@ -54,11 +54,9 @@ descriptive_stats_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 	  ns <- session$ns
 
-	  df <- reactive(get_act_dt(session))
+	  dt <- reactive(get_act_dt(session))
 
-    var_analysis <- reactive({
-      df() |> names()
-    })
+    var_analysis <- reactive({ dt() |> names() })
 
     output$parameters <- renderUI({
       tagList(
@@ -70,25 +68,58 @@ descriptive_stats_server <- function(id) {
       )
     })
 
-    df_stats <- reactive({
-      req(input$sel_var)
-      df()[, .SD, .SDcols = input$sel_var]
-    })
-
     # calculate stats ---------------------------------------------------------
-    calculated_stats <- reactive({
-      req(input$sel_var)
+    task_desc_stats <- ExtendedTask$new(
+      function(desc_stats_fun, df, fmt_digits, central_tendency, dispersion, shape){
+      mirai({
 
-      desc_stats(df = df_stats(),
-                 fmt_digits = min(max(0, input$table_digits), 9),
-                 central_tendency = input$xg_central_tendency,
-                 dispersion = input$xg_dispersion,
-                 shape = input$xg_shape
-                 )
-    })
+        desc_stats_fun(
+          df = df,
+          fmt_digits = fmt_digits,
+          central_tendency = central_tendency,
+          dispersion = dispersion,
+          shape = shape
+        )
+      },
+      desc_stats_fun = desc_stats,
+      df = df,
+      fmt_digits = fmt_digits,
+      central_tendency = central_tendency,
+      dispersion = dispersion,
+      shape = shape
+      )
+    }) |> bind_task_button('btn_freq_table')
+
+    observe({
+      if(!isTruthy(input$sel_var)) {
+        msg('Select at least 1 variable')
+        return()
+      } else if(!isTruthy(input$table_digits) || input$table_digits < 1) {
+        msg('The precision digits must be between 1 and 9')
+        return()
+      } else if(all(!isTruthy(input$xg_central_tendency),
+                    !isTruthy(input$xg_dispersion),
+                    !isTruthy(input$xg_shape))
+                ) {
+        msg('Select at least one measure')
+        return()
+      }
+
+      task_desc_stats$invoke(
+        desc_stats_fun = desc_stats,
+        df = dt()[, .SD, .SDcols = input$sel_var],
+        fmt_digits = min(max(0, input$table_digits), 9),
+        central_tendency = input$xg_central_tendency,
+        dispersion = input$xg_dispersion,
+        shape = input$xg_shape
+      )
+    }) |> bindEvent(input$btn_stats)
+
+    calculated_stats <- reactive({ task_desc_stats$result() })
 
     # gt table ----------------------------------------------------------------
     gt_stats <- reactive({
+      req(calculated_stats())
       data.frame(
         Measures = names(calculated_stats()),
         do.call(rbind, calculated_stats())
@@ -101,7 +132,7 @@ descriptive_stats_server <- function(id) {
         sub_values(values = 'Gmean', replacement = 'Geometric Mean') |>
         sub_values(values = 'Hmean', replacement = 'Harmonic Mean') |>
         tab_header('Descriptive Statistics')
-    }) |> bindEvent(input$btn_stats)
+    })
 
     output$gt_stats <- render_gt({
       req(gt_stats())

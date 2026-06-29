@@ -449,6 +449,7 @@ exploratory_server <- function(id) {
 
     lm_resid_plot <- reactive({
       req(linear_model$model$residuals)
+      req(update_lm_resid_plot() > 0)
 
       if(input$radio_lm_resid == 'hist'){
 
