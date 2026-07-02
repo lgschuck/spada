@@ -14,12 +14,15 @@ config_ui <- function(id) {
           card_body(
             h4('Colors'),
             layout_columns(
-              col_widths = c(3, 3, 3),
+              col_widths = c(2, 2, 2, 2, 2, 2),
               uiOutput(ns('ui_fill_color')),
               uiOutput(ns('ui_line_color')),
               uiOutput(ns('ui_title_color')),
-              btn_task(ns('btn_reset_colors'), 'Reset', icon('rotate'),
-                       style = 'margin-top: 27px !important;')
+              uiOutput(ns('ui_gg_theme')),
+              actionButton(ns('btn_reset_colors'), 'Reset', icon('rotate'),
+                       style = 'margin-top: 27px !important;', class = 'btn-task'),
+              actionButton(ns('btn_apply_theme'), 'Apply', icon('check'),
+                       style = 'margin-top: 27px !important;', class = 'btn-task')
             ),
             plotOutput(ns('sample_plot'))
           )
@@ -156,17 +159,16 @@ config_server <- function(id, app_session) {
 	    )
 	  })
 
-	  # palette ---------------------------------
-	  palette <- reactive({
-	    list('fill' = input$sel_fill, 'line' = input$sel_line,
-	         'title' = input$sel_title)
+	  output$ui_gg_theme <- renderUI({
+	    req(session$userData$conf$plot_gg_theme)
+	    selectInput(ns('sel_gg_theme'), 'ggplot2 theme', spada_gg_themes, session$userData$conf$plot_gg_theme)
 	  })
 
-	  observe({
-	    req(input$sel_fill, input$sel_line)
-	    session$userData$conf$plot_fill_color <- palette()[['fill']]
-	    session$userData$conf$plot_line_color <- palette()[['line']]
-	    session$userData$conf$plot_title_color <- palette()[['title']]
+	  # palette ---------------------------------
+	  palette <- reactive({
+	    req(input$sel_fill, input$sel_line, input$sel_title)
+	    list('fill' = input$sel_fill, 'line' = input$sel_line,
+	         'title' = input$sel_title)
 	  })
 
 	  # reset colors ---------------------------
@@ -180,24 +182,46 @@ config_server <- function(id, app_session) {
 	    updateColorPickr(session = session,
 	                     inputId = 'sel_title',
 	                     value = plot_title_color)
+	    updateSelectInput(session = session,
+	                      inputId = 'sel_gg_theme',
+	                      selected = plot_gg_theme)
 	  }) |> bindEvent(input$btn_reset_colors)
 
-	  # sample plot to show picked colors ------
-	  plot_values <- rnorm(1e3)
-	  output$sample_plot <- renderPlot({
-	    req(palette())
-	    hist(
-	      plot_values,
-	      col = palette()[['fill']],
-	      xlab = '',
-	      ylab = '',
-	      main = 'Title',
-	      col.main = palette()[['title']],
-	      cex.main = 3
-	    )
-	    abline(h = 100, col = palette()[['line']], lwd = 3)
 
-	  }) |> bindCache(palette())
+	  # apply theme -----------------------------
+	  observe({
+	    req(input$sel_gg_theme, palette())
+	    session$userData$conf$plot_gg_theme <- input$sel_gg_theme
+	    session$userData$conf$plot_fill_color <- palette()[['fill']]
+	    session$userData$conf$plot_line_color <- palette()[['line']]
+	    session$userData$conf$plot_title_color <- palette()[['title']]
+
+	    msg('Theme applied')
+
+	  }) |> bindEvent(input$btn_apply_theme)
+
+	  # sample plot to show picked colors ------
+	  plot_values <- rnorm(1e4)
+	  output$sample_plot <- renderPlot({
+	    req(palette(), input$sel_gg_theme)
+
+	    spada_plot(
+	      type = 'hist',
+	      df = data.frame(x = plot_values),
+	      xvar = 'x',
+	      plot_conf = list(
+	        plot_line_color = palette()[['line']],
+	        plot_fill_color = palette()[['fill']],
+	        plot_title_color = palette()[['title']],
+	        plot_gg_theme = input$sel_gg_theme,
+	        plot_limit = 1e5
+	      ),
+	      title = 'Title',
+	      bins = 30
+	    ) +
+	      geom_hline(yintercept = 500, colour = palette()[['line']], linewidth = 1)
+
+	  }) |> bindCache(palette(), input$sel_gg_theme)
 
 	  # directories -----------------------------
 	  output$conf_dir <- renderText({

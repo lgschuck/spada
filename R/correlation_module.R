@@ -190,42 +190,36 @@ correlation_server <- function(id) {
     })
 
     # scatter plot ------------------------------------------------------------
-    task_scatter <- ExtendedTask$new(function(spada_plot_fun,
-                                              df,
+    task_scatter <- ExtendedTask$new(function(df,
                                               sel_var1,
                                               sel_var2,
-                                              plot_fill_color,
-                                              sample_limit) {
+                                              plot_conf) {
       mirai({
-        spada_plot_fun(
+        spada_plot(
           type = 'scatter',
           df = df,
           xvar = sel_var1,
           yvar = sel_var2,
           xlab = sel_var1,
           ylab = sel_var2,
-          fill_color = plot_fill_color,
-          point_shape = if(sample_limit > 1e4 && nrow(df) > 1e4) '.' else 20,
-          sample_limit = sample_limit
+          point_shape = if(plot_conf$plot_limit > 1e4 && nrow(df) > 1e4) '.' else 20,
+          plot_conf = plot_conf
         )
       },
-      spada_plot_fun = spada_plot_fun,
       df = df,
       sel_var1 = sel_var1,
       sel_var2 = sel_var2,
-      plot_fill_color = plot_fill_color,
-      sample_limit = sample_limit)
+      plot_conf = plot_conf
+      )
     }) |> bind_task_button('btn_scatter')
 
     observe({
       req(input$sel_var1, input$sel_var2, df_active())
       task_scatter$invoke(
-        spada_plot_fun = spada_plot,
         df = df_active(),
         sel_var1 = input$sel_var1,
         sel_var2 = input$sel_var2,
-        plot_fill_color = session$userData$conf$plot_fill_color,
-        sample_limit = session$userData$conf$plot_limit
+        plot_conf = reactiveValuesToList(session$userData$conf)
       )
     }) |> bindEvent(input$btn_scatter)
 

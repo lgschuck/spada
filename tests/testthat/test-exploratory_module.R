@@ -59,6 +59,7 @@ test_that('Exploratory module - dist plot', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -101,6 +102,7 @@ test_that('Exploratory module - scatter plot', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -145,6 +147,7 @@ test_that('Exploratory module - linear model', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -222,6 +225,7 @@ test_that('Exploratory module - stats', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 

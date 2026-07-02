@@ -35,6 +35,8 @@ test_that('Normality Test module - variable selection', {
 # test normality test - test plots --------------------------------------------
 test_that('Normality Test module - test plots', {
   testServer(normality_test_server, {
+    daemons(1)
+    spada_everywhere()
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
       act_name = 'iris'
@@ -54,6 +56,7 @@ test_that('Normality Test module - test plots', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -104,6 +107,7 @@ test_that('Normality Test module - ks test results', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -151,6 +155,7 @@ test_that('Normality Test module - shapiro wilk test results', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -196,6 +201,7 @@ test_that('Normality Test module - shapiro francia test results', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 

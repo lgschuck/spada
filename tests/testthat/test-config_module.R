@@ -4,11 +4,23 @@
 test_that('Test chose colors', {
   testServer(config_server, args = list(app_session = NULL), {
 
-    session$setInputs(sel_fill = '#aaccff')
-    session$setInputs(sel_line = '#ccee55')
+    session$setInputs(
+      sel_fill = '#aaccff',
+      sel_line = '#ccee55',
+      sel_gg_theme = 'theme_xxx',
+      sel_title = '#996622',
+      btn_apply_theme = 1
+    )
 
     expect_equal(palette()[[1]], '#aaccff')
     expect_equal(palette()[[2]], '#ccee55')
+    expect_equal(palette()[[3]], '#996622')
+
+    expect_equal(session$userData$conf$plot_gg_theme, 'theme_xxx')
+    expect_equal(session$userData$conf$plot_fill_color, '#aaccff')
+    expect_equal(session$userData$conf$plot_line_color, '#ccee55')
+    expect_equal(session$userData$conf$plot_title_color, '#996622')
+
   })
 })
 

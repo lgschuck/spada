@@ -12,6 +12,7 @@ default_conf <- list(
   'restore_data_status' = 0,
   'restore_output_status' = 0,
   'restore_status' = NULL,
+  'plot_gg_theme' = plot_gg_theme,
   'plot_fill_color' = plot_fill_color,
   'plot_line_color' = plot_line_color,
   'plot_title_color' = plot_title_color,
@@ -545,6 +546,7 @@ load_conf <- function(start_conf,
       'file_size',
       'restore_session',
       'save_session',
+      'plot_gg_theme',
       'plot_fill_color',
       'plot_line_color',
       'plot_title_color',
@@ -573,6 +575,10 @@ load_conf <- function(start_conf,
       length(conf_saved$save_session) == 1 &&
         isTRUE(conf_saved$save_session %in% c('always', 'ask', 'never')) &&
 
+      # gg theme
+      length(conf_saved$plot_gg_theme) == 1 &&
+        isTRUE(conf_saved$plot_gg_theme %in% spada_gg_themes) &&
+
       # fill color
       length(conf_saved$plot_fill_color) == 1 &&
         isTRUE(is_hex_color(conf_saved$plot_fill_color)) &&
@@ -594,6 +600,7 @@ load_conf <- function(start_conf,
       start_conf$file_size <- conf_saved$file_size
       start_conf$restore_session <- conf_saved$restore_session
       start_conf$save_session <- conf_saved$save_session
+      start_conf$plot_gg_theme <- conf_saved$plot_gg_theme
       start_conf$plot_fill_color <- conf_saved$plot_fill_color
       start_conf$plot_line_color <- conf_saved$plot_line_color
       start_conf$plot_title_color <- conf_saved$plot_title_color
@@ -1809,6 +1816,7 @@ desc_stats <- function(df = NULL,
 }
 
 # plots -----------------------------------------------------------------------
+
 spada_plot <- function(
     type = 'hist',
     df = NULL,
@@ -1817,25 +1825,45 @@ spada_plot <- function(
     zvar = NULL,
     xlab = '',
     ylab = '',
-    fill_color = '#0099F8',
-    line_color = '#000000',
-    title_color = '#02517d',
     title = NULL,
     bins = 25,
-    vertical_line = NULL,
+    v_line = NULL,
+    h_line,
     point_shape = '.',
     line_type = 1,
     mean_value = NULL,
     sd_value = NULL,
-    sample_limit = 1e5,
-    na_rm = TRUE
-  ){
+    na_rm = TRUE,
+    plot_conf
+){
 
-  if(nrow(df) > sample_limit){
-    df <- df[sample.int(nrow(df), sample_limit), , drop = FALSE]
+  fill_color = plot_conf$plot_fill_color
+  line_color = plot_conf$plot_line_color
+  title_color = plot_conf$plot_title_color
+  gg_theme = plot_conf$plot_gg_theme
+  plot_limit = plot_conf$plot_limit
+
+  if(nrow(df) > plot_limit){
+    df <- df[sample.int(nrow(df), plot_limit), , drop = FALSE]
   }
 
   stopifnot(is.data.frame(df))
+
+  spada_plot_theme <- list(
+        labs(title = title, x = xlab, y = ylab),
+        switch(gg_theme,
+          'theme_classic' = theme_classic(),
+          'theme_minimal' = theme_minimal(),
+          'theme_gray' = theme_gray()
+        ),
+        theme(
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 14),
+          axis.title.x = element_text(size = 16),
+          axis.title.y = element_text(size = 16),
+          plot.title = element_text(color = title_color, size = 16, face = 'bold')
+        )
+      )
 
   if(type == 'hist'){
 
@@ -1846,14 +1874,8 @@ spada_plot <- function(
         color = '#000000',
         na.rm = na_rm
       ) +
-      geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            axis.title.y = element_text(size = 16),
-            plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      geom_vline(xintercept = v_line, color = line_color, linetype = line_type) +
+      spada_plot_theme
   } else if (type == 'hist_density'){
 
     ggplot(data = df, aes(x = .data[[xvar]])) +
@@ -1863,18 +1885,10 @@ spada_plot <- function(
                      color = 'black',
                      na.rm = na_rm) +
       stat_function(fun = dnorm,
-                    args = list(mean = mean_value,
-                                sd = sd_value),
+                    args = list(mean = mean_value, sd = sd_value),
                     color = line_color,
                     linewidth = 1) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            axis.title.x = element_text(size = 16),
-            axis.title.y = element_text(size = 16),
-            plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      spada_plot_theme
 
   } else if (type == 'boxplot'){
 
@@ -1882,85 +1896,47 @@ spada_plot <- function(
       stat_boxplot(geom = 'errorbar', width = 0.3, na.rm = na_rm) +
       geom_boxplot(fill = fill_color, na.rm = na_rm) +
       ylim(-1.2, 1.2) +
-      geom_vline(xintercept = vertical_line, color = line_color, linetype = line_type) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(
-        axis.ticks.y = element_blank(),
-        axis.text.y  = element_blank(),
-        axis.line.y  = element_blank(),
-        panel.border = element_rect(color = '#000000', fill = NA),
-        axis.text.x = element_text(size = 14),
-        plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      geom_vline(xintercept = v_line, color = line_color, linetype = line_type) +
+      spada_plot_theme +
+      theme(panel.border = element_rect(color = '#000000', fill = NA))
+
   } else if(type == 'dots'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
       geom_point(shape = point_shape, color = fill_color, na.rm = na_rm) +
-      geom_hline(yintercept = vertical_line, color = line_color, linetype = line_type) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            axis.title.x = element_text(size = 16),
-            axis.title.y = element_text(size = 16),
-            plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      geom_hline(yintercept = h_line, color = line_color, linetype = line_type) +
+      spada_plot_theme
+
   } else if (type == 'barplot'){
 
     ggplot(data = df, aes(x = factor(.data[[xvar]]))) +
       geom_bar(fill = fill_color, na.rm = na_rm) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            axis.title.y = element_text(size = 16),
-            plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      spada_plot_theme
 
   } else if (type == 'boxplot_group'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]], fill = .data[[xvar]])) +
       stat_boxplot(geom = 'errorbar', width = 0.3, na.rm = na_rm) +
       geom_boxplot(orientation = 'x', na.rm = na_rm) +
-      geom_hline(yintercept = vertical_line,
-                 color = line_color) +
+      geom_hline(yintercept = v_line, color = line_color) +
       coord_flip() +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
+      spada_plot_theme +
       theme(
         legend.position = 'none',
-        axis.ticks.y = element_blank(),
-        axis.line.y  = element_blank(),
-        panel.border = element_rect(color = 'black', fill = NA),
-        axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        plot.title = element_text(color = title_color, size = 16, face = 'bold')
+        panel.border = element_rect(color = 'black', fill = NA)
       )
+
   } else if (type == 'scatter'){
 
     ggplot(data = df, aes(x = .data[[xvar]], y = .data[[yvar]])) +
       geom_point(color = fill_color, shape = point_shape, na.rm = na_rm) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            axis.title.x = element_text(size = 16),
-            axis.title.y = element_text(size = 16),
-            plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      spada_plot_theme
+
   } else if (type == 'qq_plot'){
     ggplot(data = df, aes(sample = .data[[xvar]])) +
       stat_qq(color = fill_color, na.rm = na_rm) +
       stat_qq_line(color = line_color, na.rm = na_rm) +
-      labs(title = title, x = xlab, y = ylab) +
-      theme_classic() +
-      theme(axis.text.x = element_text(size = 14),
-            axis.text.y = element_text(size = 14),
-            axis.title.x = element_text(size = 16),
-            axis.title.y = element_text(size = 16),
-            plot.title = element_text(color = title_color, size = 16, face = 'bold')
-      )
+      spada_plot_theme
   }
 }
 
@@ -2363,6 +2339,14 @@ mean_nona <- function(x){
   fmean(x, na.rm = T)
 }
 
+median_na <- function(x){
+  fmedian(x, na.rm = F)
+}
+
+median_nona <- function(x){
+  fmedian(x, na.rm = T)
+}
+
 min_na <- function(x){
   fmin(x, na.rm = F)
 }
@@ -2377,4 +2361,33 @@ sum_na <- function(x){
 
 sum_nona <- function(x){
   fsum(x, na.rm = T)
+}
+
+# set mirai env ---------------------------------------------------------------
+spada_everywhere <- function() {
+  exports <- list(
+    .expr = quote({}),
+    spada_plot = spada_plot,
+    theme_minimal = theme_minimal,
+    theme_gray = theme_gray,
+    desc_stats = desc_stats,
+    is_date = is_date,
+    Freq = Freq,
+    accordion = accordion,
+    accordion_panel = accordion_panel,
+    div = div,
+    whichNA = whichNA,
+    min_nona = min_nona,
+    fquantile = fquantile,
+    median_nona = median_nona,
+    mean_nona = mean_nona,
+    fmode = fmode,
+    max_nona = max_nona,
+    melt = melt,
+    as.data.table = as.data.table
+  )
+
+  do.call(everywhere, exports)
+
+  invisible(NULL)
 }

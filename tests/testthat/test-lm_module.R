@@ -155,6 +155,7 @@ test_that('lm_server - plot residuals', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
+      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 

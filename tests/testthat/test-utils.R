@@ -456,10 +456,17 @@ test_that('spada plot function', {
   p <- spada_plot(
     type = 'hist',
     df = data.frame(x = rnorm(100), y = rnorm(100)),
-    xvar = 'x'
+    xvar = 'x',
+    plot_conf = list(
+      plot_gg_theme = plot_gg_theme,
+      plot_fill_color = plot_fill_color,
+      plot_line_color = plot_line_color,
+      plot_title_color = plot_title_color,
+      plot_limit = 1e5
+    )
   )
 
-  expect_s3_class(p, "ggplot")
+  expect_s3_class(p, 'ggplot')
 })
 
 # test output format ----------------------------------------------------------

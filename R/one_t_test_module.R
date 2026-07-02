@@ -259,17 +259,14 @@ one_t_test_server <- function(id) {
       ttest_hist()
     }, res = 96)
 
-    task_hist <- ExtendedTask$new(function(spada_plot_fun,
-                                           df,
+    task_hist <- ExtendedTask$new(function(df,
                                            title,
                                            bins,
-                                           plot_fill_color,
-                                           plot_line_color,
-                                           sample_limit,
                                            mean_value,
-                                           sd_value) {
+                                           sd_value,
+                                           plot_conf) {
       mirai({
-        spada_plot_fun(
+        spada_plot(
           type = 'hist_density',
           df = df,
           xvar = 'x',
@@ -277,37 +274,29 @@ one_t_test_server <- function(id) {
           ylab = 'Density',
           title = title,
           bins = bins,
-          fill_color = plot_fill_color,
-          line_color = plot_line_color,
-          point_shape = if (sample_limit > 1e4 && nrow(df) > 1e4) '.' else 20,
-          sample_limit = sample_limit,
+          point_shape = if(plot_conf$plot_limit > 1e4 && nrow(df) > 1e4) '.' else 20,
           mean_value = mean_value,
-          sd_value = sd_value
+          sd_value = sd_value,
+          plot_conf = plot_conf
         )
       },
-      spada_plot_fun = spada_plot_fun,
       df = df,
       title = title,
       bins = bins,
-      plot_fill_color = plot_fill_color,
-      plot_line_color = plot_line_color,
-      sample_limit = sample_limit,
       mean_value = mean_value,
-      sd_value = sd_value)
+      sd_value = sd_value,
+      plot_conf = plot_conf)
     }) |> bind_task_button('btn_hist')
 
     observe({
       req(input$sel_var, var())
       task_hist$invoke(
-        spada_plot_fun = spada_plot,
         df = data.frame(x = var()),
         bins = input$bins,
         title = paste('Histogram -', input$sel_var),
-        plot_fill_color = session$userData$conf$plot_fill_color,
-        plot_line_color = session$userData$conf$plot_line_color,
-        sample_limit = session$userData$conf$plot_limit,
         mean_value = fmean(var(), na.rm = TRUE),
-        sd_value = fsd(var(), na.rm = TRUE)
+        sd_value = fsd(var(), na.rm = TRUE),
+        plot_conf = reactiveValuesToList(session$userData$conf)
       )
     }) |> bindEvent(input$btn_hist)
 

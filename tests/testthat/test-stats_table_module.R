@@ -23,6 +23,10 @@ test_that('stats table server - test calculations', {
       pearson_correlation = pearson_correlation
     ),
     {
+
+      daemons(1)
+      spada_everywhere()
+
       session$flushReact()
 
       while(task_stats$status() == 'running'){

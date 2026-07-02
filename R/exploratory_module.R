@@ -212,8 +212,7 @@ exploratory_server <- function(id) {
                    df = data.frame(x = var()),
                    xvar = 'x',
                    ylab = 'Count',
-                   fill_color = session$userData$conf$plot_fill_color,
-                   sample_limit = session$userData$conf$plot_limit
+                   plot_conf = reactiveValuesToList(session$userData$conf)
         )
 
       } else {
@@ -236,10 +235,8 @@ exploratory_server <- function(id) {
             }, y = var()),
             xvar = 'x',
             yvar = 'y',
-            fill_color = session$userData$conf$plot_fill_color,
-            line_color = session$userData$conf$plot_line_color,
-            vertical_line = var_percentile(),
-            sample_limit = session$userData$conf$plot_limit
+            v_line = var_percentile(),
+            plot_conf = reactiveValuesToList(session$userData$conf)
           )
 
         } else {
@@ -255,13 +252,10 @@ exploratory_server <- function(id) {
                        df = data.frame(x = var()),
                        xvar = 'x',
                        ylab = 'Count',
-                       fill_color = session$userData$conf$plot_fill_color,
-                       line_color = session$userData$conf$plot_line_color,
-                       title_color = session$userData$conf$plot_title_color,
                        title = paste('Histogram -', input$sel_vars),
                        bins = input$bins,
-                       vertical_line = var_percentile(),
-                       sample_limit = session$userData$conf$plot_limit
+                       v_line = var_percentile(),
+                       plot_conf = reactiveValuesToList(session$userData$conf)
             )
 
           } else if (input$radio_dist_plot == 'boxplot'){
@@ -269,10 +263,8 @@ exploratory_server <- function(id) {
             spada_plot(type = 'boxplot',
                        df = data.frame(x = var()),
                        xvar = 'x',
-                       fill_color = session$userData$conf$plot_fill_color,
-                       line_color = session$userData$conf$plot_line_color,
-                       vertical_line = var_percentile(),
-                       sample_limit = session$userData$conf$plot_limit
+                       v_line = var_percentile(),
+                       plot_conf = reactiveValuesToList(session$userData$conf)
             )
 
           } else if (input$radio_dist_plot == 'dots'){
@@ -283,12 +275,10 @@ exploratory_server <- function(id) {
                        yvar = 'y',
                        xlab = 'Index',
                        ylab = 'Values',
-                       fill_color = session$userData$conf$plot_fill_color,
-                       line_color = session$userData$conf$plot_line_color,
-                       vertical_line = var_percentile(),
+                       v_line = var_percentile(),
                        point_shape = if(session$userData$conf$plot_limit > 1e4 &&
                                         length(var()) > 1e4) '.' else 20,
-                       sample_limit = session$userData$conf$plot_limit
+                       plot_conf = reactiveValuesToList(session$userData$conf)
             )
           }
         }
@@ -320,11 +310,9 @@ exploratory_server <- function(id) {
                  } else {
                    paste('Pearson Correlation:', stats_correlation() |> round(4))
                  },
-                 fill_color = session$userData$conf$plot_fill_color,
-                 title_color = session$userData$conf$plot_title_color,
                  point_shape = if(session$userData$conf$plot_limit > 1e4 &&
                                   length(var()) > 1e4) '.' else 20,
-                 sample_limit = session$userData$conf$plot_limit
+                 plot_conf = reactiveValuesToList(session$userData$conf)
         )
         # insert model line
         if(model_plot){
@@ -457,10 +445,7 @@ exploratory_server <- function(id) {
                    df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
                    ylab = 'Count',
-                   fill_color = session$userData$conf$plot_fill_color,
-                   line_color = session$userData$conf$plot_line_color,
-                   title_color = session$userData$conf$plot_title_color,
-                   sample_limit = session$userData$conf$plot_limit
+                   plot_conf = reactiveValuesToList(session$userData$conf)
         )
 
       } else if (input$radio_lm_resid == 'boxplot'){
@@ -468,9 +453,7 @@ exploratory_server <- function(id) {
         spada_plot(type = 'boxplot',
                    df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
-                   fill_color = session$userData$conf$plot_fill_color,
-                   line_color = session$userData$conf$plot_line_color,
-                   sample_limit = session$userData$conf$plot_limit
+                   plot_conf = reactiveValuesToList(session$userData$conf)
         )
 
       } else if (input$radio_lm_resid == 'dots'){
@@ -482,12 +465,10 @@ exploratory_server <- function(id) {
                    yvar = 'y',
                    xlab = 'Index',
                    ylab = 'Values',
-                   fill_color = session$userData$conf$plot_fill_color,
-                   line_color = session$userData$conf$plot_line_color,
-                   vertical_line = 0,
+                   h_line = 0,
                    point_shape = if(session$userData$conf$plot_limit > 1e4 &&
                                     length(linear_model$model$residuals) > 1e4) '.' else 20,
-                   sample_limit = session$userData$conf$plot_limit,
+                   plot_conf = reactiveValuesToList(session$userData$conf),
                    line_type = 2
         )
       }

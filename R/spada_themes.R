@@ -2,6 +2,9 @@
 # themes names ----------------------------------------------------------------
 themes_names <- c('spada_theme', 'spada_dark_theme')
 
+# gg themes -------------------------------------------------------------------
+spada_gg_themes <- c('theme_classic', 'theme_minimal', 'theme_gray')
+
 # app colors ------------------------------------------------------------------
 main_color <- '#02517d'
 navbar_bg <- '#0A5A88'
@@ -14,6 +17,7 @@ danger <- '#b60020'
 plot_fill_color <- '#0099F8'
 plot_line_color <- '#EE7942'
 plot_title_color <- '#02517d'
+plot_gg_theme <- 'theme_classic'
 
 startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------
