@@ -102,4 +102,3 @@ test_that('Test plot limit', {
   })
 })
 
-

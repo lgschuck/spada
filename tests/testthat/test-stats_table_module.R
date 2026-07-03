@@ -12,6 +12,8 @@ pearson_correlation <- reactive(cor(v1, v2, method = 'p', use = 'na.or.complete'
 
 # test stats table - calculations ---------------------------------------------
 test_that('stats table server - test calculations', {
+  daemons(1)
+  spada_everywhere()
   testServer(
     stats_table_server,
     args = list(
@@ -23,10 +25,6 @@ test_that('stats table server - test calculations', {
       pearson_correlation = pearson_correlation
     ),
     {
-
-      daemons(1)
-      spada_everywhere()
-
       session$flushReact()
 
       while(task_stats$status() == 'running'){
@@ -43,10 +41,13 @@ test_that('stats table server - test calculations', {
       expect_equal(stats_result()$q3, quantile(v1, 0.75, na.rm = T))
       expect_equal(stats_result()$max, max_nona(v1))
   })
+  daemons(0)
 })
 
 # test stats table - data.frame  and gt table ---------------------------------
 test_that('stats table server - test data.frame and gt table', {
+  daemons(1)
+  spada_everywhere()
   testServer(
     stats_table_server,
     args = list(
@@ -72,4 +73,5 @@ test_that('stats table server - test data.frame and gt table', {
       expect_equal(names(stats_table()), c('measure', 'value'))
       expect_equal(stats_table()[1, 2], var1_name())
     })
+	daemons(0)
 })

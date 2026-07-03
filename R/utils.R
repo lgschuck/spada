@@ -23,6 +23,8 @@ default_conf <- list(
 math_funs <- c(
   'Mean' = 'mean_na',
   'Mean no NA' = 'mean_nona',
+  'Median' = 'median_na',
+  'Median no NA' = 'median_nona',
   'Geometric Mean' = 'Gmean',
   'Harmonic Mean' = 'Hmean',
   # 'Mode' = 'Mode',

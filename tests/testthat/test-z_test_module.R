@@ -83,6 +83,8 @@ test_that('Z Test module - test results', {
 
 # test z test - histogram -----------------------------------------------------
 test_that('Z Test module - histogram', {
+  daemons(1)
+  spada_everywhere()
   testServer(z_test_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -120,5 +122,6 @@ test_that('Z Test module - histogram', {
     expect_equal(task_hist$status(), 'success')
     expect_s3_class(ztest_hist(), c('gg', 'ggplot'))
   })
+  daemons(0)
 })
 
