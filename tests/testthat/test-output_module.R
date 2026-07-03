@@ -191,8 +191,7 @@ test_that('Download HTML ', {
 
 # test printable output -------------------------------------------------------
 test_that('Test output - printable output', {
-  daemons(1)
-  spada_everywhere()
+
   testServer(output_server, {
 
     session$userData$out <- reactiveValues(elements = out_el)
@@ -217,7 +216,7 @@ test_that('Test output - printable output', {
       )
     )
   })
-  daemons(0)
+  
 })
 
 # test edit output element ----------------------------------------------------
@@ -241,8 +240,7 @@ start_conf <- list(
 )
 
 test_that('Test output - edit element', {
-  daemons(1)
-  spada_everywhere()
+
   testServer(spada_server(datasets = dfs, conf = start_conf), {
 
     session$userData$out <- reactiveValues(elements = list())
@@ -283,14 +281,13 @@ test_that('Test output - edit element', {
     expect_equal(session$userData$out$elements[[ 1 ]]$title, 'New title')
     expect_equal(session$userData$out$elements[[ 1 ]]$annotation, 'New annotation')
   })
-  daemons(0)
+  
 })
 
 
 # test delete output element --------------------------------------------------
 test_that('Test output - edit element', {
-  daemons(1)
-  spada_everywhere()
+
   testServer(spada_server(datasets = dfs, conf = start_conf), {
 
     session$userData$out <- reactiveValues(elements = list())
@@ -322,5 +319,5 @@ test_that('Test output - edit element', {
     expect_type(session$userData$out$elements, 'list')
     expect_length(session$userData$out$elements, 0)
   })
-  daemons(0)
+  
 })

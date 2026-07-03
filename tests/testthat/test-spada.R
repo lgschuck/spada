@@ -12,5 +12,5 @@ test_that('spada() reject invalid inputs', {
                'Objects must be data.frame and have at least 1 row and 1 col each')
   expect_error(spada(data.frame(Var = character(0))),
                'Objects must be data.frame and have at least 1 row and 1 col each')
-  daemons(0)
+  
 })

@@ -1842,7 +1842,7 @@ spada_plot <- function(
   fill_color = plot_conf$plot_fill_color
   line_color = plot_conf$plot_line_color
   title_color = plot_conf$plot_title_color
-  gg_theme = plot_conf$plot_gg_theme
+  gg_theme = plot_conf$spada_gg_themes[[plot_conf$plot_gg_theme]]
   plot_limit = plot_conf$plot_limit
 
   if(nrow(df) > plot_limit){
@@ -1853,11 +1853,7 @@ spada_plot <- function(
 
   spada_plot_theme <- list(
         labs(title = title, x = xlab, y = ylab),
-        switch(gg_theme,
-          'theme_classic' = theme_classic(),
-          'theme_minimal' = theme_minimal(),
-          'theme_gray' = theme_gray()
-        ),
+        gg_theme,
         theme(
           axis.text.x = element_text(size = 14),
           axis.text.y = element_text(size = 14),
@@ -2363,33 +2359,4 @@ sum_na <- function(x){
 
 sum_nona <- function(x){
   fsum(x, na.rm = T)
-}
-
-# set mirai env ---------------------------------------------------------------
-spada_everywhere <- function() {
-  exports <- list(
-    .expr = quote({}),
-    spada_plot = spada_plot,
-    theme_minimal = theme_minimal,
-    theme_gray = theme_gray,
-    desc_stats = desc_stats,
-    is_date = is_date,
-    Freq = Freq,
-    accordion = accordion,
-    accordion_panel = accordion_panel,
-    div = div,
-    whichNA = whichNA,
-    min_nona = min_nona,
-    fquantile = fquantile,
-    median_nona = median_nona,
-    mean_nona = mean_nona,
-    fmode = fmode,
-    max_nona = max_nona,
-    melt = melt,
-    as.data.table = as.data.table
-  )
-
-  do.call(everywhere, exports)
-
-  invisible(NULL)
 }

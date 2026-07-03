@@ -158,7 +158,8 @@ normality_test_server <- function(id) {
       norm_hist()
     }, res = 96)
 
-    task_hist <- ExtendedTask$new(function(df,
+    task_hist <- ExtendedTask$new(function(spada_plot,
+                                           df,
                                            title,
                                            bins,
                                            mean_value,
@@ -180,6 +181,7 @@ normality_test_server <- function(id) {
           plot_conf = plot_conf
         )
       },
+      spada_plot = spada_plot,
       df = df,
       title = title,
       bins = bins,
@@ -191,6 +193,7 @@ normality_test_server <- function(id) {
     observe({
       req(input$sel_var, var())
       task_hist$invoke(
+        spada_plot = spada_plot,
         df = data.frame(x = var()),
         bins = input$bins,
         title = paste('Histogram -', input$sel_var),
@@ -214,7 +217,8 @@ normality_test_server <- function(id) {
       norm_qq_plot()
     }, res = 96)
 
-    task_qq <- ExtendedTask$new(function(df,
+    task_qq <- ExtendedTask$new(function(spada_plot,
+                                         df,
                                          title,
                                          plot_conf) {
       mirai({
@@ -228,6 +232,7 @@ normality_test_server <- function(id) {
           plot_conf = plot_conf
         )
       },
+      spada_plot = spada_plot,
       df = df,
       title = title,
       plot_conf = plot_conf)
@@ -236,6 +241,7 @@ normality_test_server <- function(id) {
     observe({
       req(input$sel_var, var())
       task_qq$invoke(
+        spada_plot = spada_plot,
         df = data.frame(x = var()),
         title = paste('Normal QQ Plot:', input$sel_var),
         plot_conf = reactiveValuesToList(session$userData$conf)

@@ -7,6 +7,7 @@ df_test <- data.frame(
 
 # test exploratory test module - variable selection ---------------------------
 test_that('Exploratory module - variable selection', {
+
   testServer(exploratory_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -35,10 +36,12 @@ test_that('Exploratory module - variable selection', {
     expect_equal(var2(), iris$Petal.Width)
 
   })
+  
 })
 
 # test exploratory test module - dist plot ------------------------------------
 test_that('Exploratory module - dist plot', {
+
   testServer(exploratory_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -78,10 +81,12 @@ test_that('Exploratory module - dist plot', {
     expect_s3_class(dist_plot(), c('gg', 'ggplot'))
 
   })
+  
 })
 
 # test exploratory test module - scatter plot ---------------------------------
 test_that('Exploratory module - scatter plot', {
+
   testServer(exploratory_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -123,10 +128,12 @@ test_that('Exploratory module - scatter plot', {
     expect_s3_class(scatter_plot(), c('gg', 'ggplot'))
 
   })
+  
 })
 
 # test exploratory test module - linear model ---------------------------------
 test_that('Exploratory module - linear model', {
+
   testServer(exploratory_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -201,10 +208,12 @@ test_that('Exploratory module - linear model', {
     expect_equal(linear_model$x_name, '')
     expect_equal(linear_model$y_name, '')
   })
+  
 })
 
 # test exploratory test module - stats ----------------------------------------
 test_that('Exploratory module - stats', {
+
   testServer(exploratory_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -239,5 +248,6 @@ test_that('Exploratory module - stats', {
     expect_equal(stats_correlation(), cor(iris$Petal.Width, iris$Petal.Length))
 
   })
+  
 })
 

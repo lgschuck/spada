@@ -268,7 +268,8 @@ z_test_server <- function(id) {
       ztest_hist()
     }, res = 96)
 
-    task_hist <- ExtendedTask$new(function(df,
+    task_hist <- ExtendedTask$new(function(spada_plot,
+                                           df,
                                            title,
                                            bins,
                                            mean_value,
@@ -289,6 +290,7 @@ z_test_server <- function(id) {
           plot_conf = plot_conf
         )
       },
+      spada_plot = spada_plot,
       df = df,
       title = title,
       bins = bins,
@@ -300,6 +302,7 @@ z_test_server <- function(id) {
     observe({
       req(input$sel_var, var())
       task_hist$invoke(
+        spada_plot = spada_plot,
         df = data.frame(x = var()),
         bins = input$bins,
         title = paste('Histogram -', input$sel_var),

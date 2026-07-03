@@ -161,7 +161,12 @@ config_server <- function(id, app_session) {
 
 	  output$ui_gg_theme <- renderUI({
 	    req(session$userData$conf$plot_gg_theme)
-	    selectInput(ns('sel_gg_theme'), 'ggplot2 theme', spada_gg_themes, session$userData$conf$plot_gg_theme)
+	    selectInput(
+	      ns('sel_gg_theme'),
+	      'ggplot2 theme',
+	      names(spada_gg_themes),
+	      session$userData$conf$plot_gg_theme
+	    )
 	  })
 
 	  # palette ---------------------------------
@@ -214,7 +219,8 @@ config_server <- function(id, app_session) {
 	        plot_fill_color = palette()[['fill']],
 	        plot_title_color = palette()[['title']],
 	        plot_gg_theme = input$sel_gg_theme,
-	        plot_limit = 1e5
+	        plot_limit = 1e5,
+	        spada_gg_themes = session$userData$conf$spada_gg_themes
 	      ),
 	      title = 'Title',
 	      bins = 30
@@ -324,7 +330,11 @@ config_server <- function(id, app_session) {
     }) |> bindEvent(input$btn_plot_limit)
 
     # current conf ------------------------
-    output$current_conf <- renderPrint({ session$userData$conf |> reactiveValuesToList() })
+    output$current_conf <- renderPrint({
+      conf <- reactiveValuesToList(session$userData$conf)
+      conf$spada_gg_themes <- names(conf$spada_gg_themes)
+      conf
+    })
 
   })
 }

@@ -79,11 +79,9 @@
 
 spada <- function(..., run_local = TRUE) {
 
-  run_local <- !isFALSE(run_local)
+  on.exit(daemons(0))
 
-  # set mirai conf ------------------------------------------------------------
-  daemons(1)
-  spada_everywhere()
+  run_local <- !isFALSE(run_local)
 
   # datasets ------------------------------------------------------------------
   datasets <- list(...)
@@ -136,6 +134,9 @@ spada <- function(..., run_local = TRUE) {
 
   # resources -----------------------------------------------------------------
   addResourcePath('spada', system.file('www', package = 'spada'))
+
+  # set mirai conf ------------------------------------------------------------
+  daemons(1)
 
   ### Run App -----------------------------------------------------------------
   shinyApp(spada_ui(start_conf),

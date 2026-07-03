@@ -5,8 +5,7 @@ df_mtcars <- mtcars |> as.data.table()
 
 # test descriptive stats - desc_stats mean 1 var ------------------------------
 test_that('Test desc stats - desc_stats mean 1 var', {
-  daemons(1)
-  spada_everywhere()
+
   testServer(descriptive_stats_server, {
 
     session$userData$dt <- reactiveValues(
@@ -36,13 +35,12 @@ test_that('Test desc stats - desc_stats mean 1 var', {
     names(mean_hp) = var1
     expect_equal(calculated_stats(), list('Mean' = mean_hp))
   })
-  daemons(0)
+  
 })
 
 # test descriptive stats - gt stats -------------------------------------------
 test_that('Test descriptive stats - gt stats', {
-  daemons(1)
-  spada_everywhere()
+
 
   testServer(descriptive_stats_server, {
 
@@ -68,7 +66,7 @@ test_that('Test descriptive stats - gt stats', {
     expect_equal(gt_stats() |> class(), c('gt_tbl', 'list'))
 
   })
-  daemons(0)
+  
 })
 
-daemons(0)
+

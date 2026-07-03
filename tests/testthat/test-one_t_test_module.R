@@ -80,8 +80,7 @@ test_that('One-sample t Test module - test results', {
 
 # test one t test - histogram -------------------------------------------------
 test_that('One-sample t Test module - histogram', {
-  daemons(1)
-  spada_everywhere()
+
   testServer(one_t_test_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -119,5 +118,5 @@ test_that('One-sample t Test module - histogram', {
     expect_equal(task_hist$status(), 'success')
     expect_s3_class(ttest_hist(), c('gg', 'ggplot'))
   })
-  daemons(0)
+  
 })

@@ -37,6 +37,7 @@ spada_server <- function(datasets, conf, run_local = TRUE){
       plot_line_color = conf$plot_line_color,
       plot_title_color = conf$plot_title_color,
       plot_limit = conf$plot_limit,
+      spada_gg_themes = spada_gg_themes,
       run_local = run_local
     )
 

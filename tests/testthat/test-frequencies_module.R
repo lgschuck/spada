@@ -2,8 +2,7 @@
 
 # test frequencies - table ----------------------------------------------------
 test_that('Frequencies', {
-  daemons(1)
-  spada_everywhere()
+
   testServer(frequencies_server,
              args = list(reactive(iris$Species), reactive('Species')), {
 
@@ -22,5 +21,5 @@ test_that('Frequencies', {
     expect_s3_class(freq_table(), 'data.frame')
     expect_s3_class(freq_table_gt(), 'gt_tbl')
   })
-  daemons(0)
+  
 })

@@ -3,7 +3,11 @@
 themes_names <- c('spada_theme', 'spada_dark_theme')
 
 # gg themes -------------------------------------------------------------------
-spada_gg_themes <- c('theme_classic', 'theme_minimal', 'theme_gray')
+spada_gg_themes <- list(
+  'theme_classic' = theme_classic(),
+  'theme_minimal' = theme_minimal(),
+  'theme_gray' = theme_gray()
+)
 
 # app colors ------------------------------------------------------------------
 main_color <- '#02517d'

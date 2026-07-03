@@ -26,8 +26,6 @@ editor_options:
 
 6 - **Spada_plot** function with options to choose theme
 
-7 - New internal **function spada_everywhere** for better setup of mirai 
-
 #### Visuals 
 
 1 - New **mini buttons** (new css) in sidebar and navbar df info

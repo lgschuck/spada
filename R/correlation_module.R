@@ -190,7 +190,8 @@ correlation_server <- function(id) {
     })
 
     # scatter plot ------------------------------------------------------------
-    task_scatter <- ExtendedTask$new(function(df,
+    task_scatter <- ExtendedTask$new(function(spada_plot,
+                                              df,
                                               sel_var1,
                                               sel_var2,
                                               plot_conf) {
@@ -206,6 +207,7 @@ correlation_server <- function(id) {
           plot_conf = plot_conf
         )
       },
+      spada_plot = spada_plot,
       df = df,
       sel_var1 = sel_var1,
       sel_var2 = sel_var2,
@@ -216,6 +218,7 @@ correlation_server <- function(id) {
     observe({
       req(input$sel_var1, input$sel_var2, df_active())
       task_scatter$invoke(
+        spada_plot = spada_plot,
         df = df_active(),
         sel_var1 = input$sel_var1,
         sel_var2 = input$sel_var2,

@@ -73,9 +73,9 @@ cor_matrix_server <- function(id) {
           as.data.frame()
 
         df_cor <- cbind(Var1 = rownames(df_cor), df_cor) |>
-          as.data.table()
+          data.table::as.data.table()
 
-        df_cor <- melt(
+        df_cor <- data.table::melt(
           data = df_cor,
           id.vars = 'Var1',
           variable.name = 'Var2',

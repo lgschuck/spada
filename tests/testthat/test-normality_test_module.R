@@ -33,8 +33,6 @@ test_that('Normality Test module - variable selection', {
 
 # test normality test - test plots --------------------------------------------
 test_that('Normality Test module - test plots', {
-  daemons(1)
-  spada_everywhere()
   testServer(normality_test_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -82,7 +80,6 @@ test_that('Normality Test module - test plots', {
     expect_equal(task_qq$status(), 'success')
     expect_s3_class(norm_qq_plot(), c('gg', 'ggplot'))
   })
-  daemons(0)
 })
 
 # test normality test - ks test -------------------------------------------------------

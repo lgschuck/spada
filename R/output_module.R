@@ -128,7 +128,10 @@ output_server <- function(id) {
 
     # render panel ------------------------------------------------------------
     task_printable_out <- ExtendedTask$new(
-      function(printable_report_card, elements, sel_show_output) {
+      function(accordion,
+               accordion_panel,
+               div = div,
+               printable_report_card, elements, sel_show_output) {
 
       mirai({
         if (is.null(elements) || length(elements) == 0) {
@@ -155,6 +158,9 @@ output_server <- function(id) {
           })
         }
       },
+      accordion = accordion,
+      accordion_panel = accordion_panel,
+      div = div,
       printable_report_card = printable_report_card,
       elements = elements,
       sel_show_output = sel_show_output
@@ -166,6 +172,9 @@ output_server <- function(id) {
       req(input$sel_show_output)
 
         task_printable_out$invoke(
+          accordion = accordion,
+          accordion_panel = accordion_panel,
+          div = div,
           printable_report_card = printable_report_card,
           elements = session$userData$out$elements,
           sel_show_output = as.numeric(input$sel_show_output)

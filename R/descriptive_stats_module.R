@@ -70,7 +70,7 @@ descriptive_stats_server <- function(id) {
 
     # calculate stats ---------------------------------------------------------
     task_desc_stats <- ExtendedTask$new(
-      function(df, fmt_digits, central_tendency, dispersion, shape){
+      function(desc_stats, df, fmt_digits, central_tendency, dispersion, shape){
       mirai({
 
         desc_stats(
@@ -81,6 +81,7 @@ descriptive_stats_server <- function(id) {
           shape = shape
         )
       },
+      desc_stats = desc_stats,
       df = df,
       fmt_digits = fmt_digits,
       central_tendency = central_tendency,
@@ -105,6 +106,7 @@ descriptive_stats_server <- function(id) {
       }
 
       task_desc_stats$invoke(
+        desc_stats = desc_stats,
         df = dt()[, .SD, .SDcols = input$sel_var],
         fmt_digits = min(max(0, input$table_digits), 9),
         central_tendency = input$xg_central_tendency,
