@@ -159,7 +159,6 @@ test_that('test correlation - spearman method', {
 
 # test correlation - scatter plot -------------------------------------------------
 test_that('test correlation - scatter plot', {
-
   testServer(correlation_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -180,8 +179,6 @@ test_that('test correlation - scatter plot', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
-
       plot_limit = 1e5
     )
 
@@ -200,5 +197,4 @@ test_that('test correlation - scatter plot', {
     expect_s3_class(scatter_plot(), c('gg', 'ggplot'))
 
   })
-  
 })

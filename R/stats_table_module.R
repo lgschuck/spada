@@ -35,13 +35,13 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
 
           n_nas = collapse::whichNA(x) |> NROW(),
 
-          min = if(is.numeric(x))collapse::fmin(x, na.rm = T) else NA,
+          min = if(is.numeric(x)) collapse::fmin(x, na.rm = TRUE) else NA,
 
           q1 = if(is.numeric(x)) collapse::fquantile(x, 0.25) else NA,
 
-          median = if(is.numeric(x)) collapse::fmedian(x, na.rm = T) else NA,
+          median = if(is.numeric(x)) collapse::fmedian(x, na.rm = TRUE) else NA,
 
-          mean = if(is.numeric(x)) collapse::fmean(x, na.rm = T) else NA,
+          mean = if(is.numeric(x)) collapse::fmean(x, na.rm = TRUE) else NA,
 
           mode = if(is.numeric(x) || is.character(x) || is.factor(x)) {
             collapse::fmode(x, na.rm = TRUE)
@@ -51,7 +51,7 @@ stats_table_server <- function(id, var1, var1_name, input_percentile, percentile
 
           q3 = if(is.numeric(x)) collapse::fquantile(x, 0.75) else NA,
 
-          max = if(is.numeric(x)) collapse::fmax(x, na.rm = T) else NA
+          max = if(is.numeric(x)) collapse::fmax(x, na.rm = TRUE) else NA
         )
 
       }, x = x, x_name = x_name)

@@ -83,7 +83,6 @@ test_that('Z Test module - test results', {
 
 # test z test - histogram -----------------------------------------------------
 test_that('Z Test module - histogram', {
-
   testServer(z_test_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -93,7 +92,6 @@ test_that('Z Test module - histogram', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -121,6 +119,5 @@ test_that('Z Test module - histogram', {
     expect_equal(task_hist$status(), 'success')
     expect_s3_class(ztest_hist(), c('gg', 'ggplot'))
   })
-  
 })
 

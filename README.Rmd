@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# spada (Shiny Package for Data Analysis)
+# spada ([**S**]{.underline}hiny [**Pa**]{.underline}ckage for [**D**]{.underline}ata [**A**]{.underline}nalysis) 
 
 <!-- badges: start -->
 

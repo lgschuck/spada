@@ -35,12 +35,10 @@ test_that('Test desc stats - desc_stats mean 1 var', {
     names(mean_hp) = var1
     expect_equal(calculated_stats(), list('Mean' = mean_hp))
   })
-  
 })
 
 # test descriptive stats - gt stats -------------------------------------------
 test_that('Test descriptive stats - gt stats', {
-
 
   testServer(descriptive_stats_server, {
 
@@ -66,7 +64,4 @@ test_that('Test descriptive stats - gt stats', {
     expect_equal(gt_stats() |> class(), c('gt_tbl', 'list'))
 
   })
-  
 })
-
-

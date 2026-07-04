@@ -40,8 +40,7 @@
 #'             element_rect element_text geom_bar geom_boxplot geom_histogram
 #'             geom_hline geom_line geom_point geom_text geom_tile geom_vline
 #'             ggplot labs scale_fill_gradient2 stat_boxplot stat_function
-#'             stat_qq stat_qq_line theme theme_classic theme_gray theme_minimal
-#'             ylim
+#'             stat_qq stat_qq_line theme theme_classic ylim
 #'
 #' @importFrom graphics abline barplot boxplot curve hist lines mtext polygon text
 #'
@@ -56,7 +55,7 @@
 #'
 #' @importFrom htmltools plotTag save_html
 #'
-#' @importFrom mirai daemons everywhere mirai
+#' @importFrom mirai daemons mirai
 #'
 #' @importFrom qs2 qs_read qs_save
 #'
@@ -79,11 +78,9 @@
 
 spada <- function(..., run_local = TRUE) {
 
-  on.exit(daemons(0))
-
   run_local <- !isFALSE(run_local)
+  daemons(1)
 
-  # datasets ------------------------------------------------------------------
   datasets <- list(...)
   if(length(datasets) == 0){
     datasets <- list('iris' = datasets::iris, 'mtcars' = datasets::mtcars)
@@ -134,9 +131,6 @@ spada <- function(..., run_local = TRUE) {
 
   # resources -----------------------------------------------------------------
   addResourcePath('spada', system.file('www', package = 'spada'))
-
-  # set mirai conf ------------------------------------------------------------
-  daemons(1)
 
   ### Run App -----------------------------------------------------------------
   shinyApp(spada_ui(start_conf),

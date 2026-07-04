@@ -2,8 +2,6 @@
 
 # test correlation matrix -----------------------------------------------------
 test_that('test correlation matrix - pearson method', {
-
-
   testServer(cor_matrix_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -42,5 +40,4 @@ test_that('test correlation matrix - pearson method', {
       round(cor(iris$Sepal.Length, iris$Sepal.Width), 3)
     )
   })
-  
 })

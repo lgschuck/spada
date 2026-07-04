@@ -80,7 +80,6 @@ test_that('One-sample t Test module - test results', {
 
 # test one t test - histogram -------------------------------------------------
 test_that('One-sample t Test module - histogram', {
-
   testServer(one_t_test_server, {
     session$userData$dt <- reactiveValues(
       dt = list('iris' = iris |> as.data.table()),
@@ -90,7 +89,6 @@ test_that('One-sample t Test module - histogram', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -118,5 +116,5 @@ test_that('One-sample t Test module - histogram', {
     expect_equal(task_hist$status(), 'success')
     expect_s3_class(ttest_hist(), c('gg', 'ggplot'))
   })
-  
 })
+

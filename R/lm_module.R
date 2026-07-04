@@ -227,7 +227,11 @@ lm_server <- function(id) {
     update_lm_resid_plot <- reactiveVal(0)
 
     observe({
+      # print('teste')
+
+      # cat("antes:", update_lm_resid_plot(), "\n")
       update_lm_resid_plot(update_lm_resid_plot() + 1)
+      # cat("depois:", update_lm_resid_plot(), "\n")
     }) |> bindEvent(input$btn_lm_resid)
 
     lm_resid_plot <- reactive({
@@ -240,8 +244,11 @@ lm_server <- function(id) {
                    df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
                    ylab = 'Count',
+                   fill_color = session$userData$conf$plot_fill_color,
+                   line_color = session$userData$conf$plot_line_color,
+                   title_color = session$userData$conf$plot_title_color,
                    title = 'Linear Model - Residuals',
-                   plot_conf = reactiveValuesToList(session$userData$conf)
+                   sample_limit = session$userData$conf$plot_limit
         )
 
       } else if (input$radio_lm_resid == 'boxplot'){
@@ -249,8 +256,11 @@ lm_server <- function(id) {
         spada_plot(type = 'boxplot',
                    df = data.frame(x = linear_model$model$residuals),
                    xvar = 'x',
+                   fill_color = session$userData$conf$plot_fill_color,
+                   line_color = session$userData$conf$plot_line_color,
+                   title_color = session$userData$conf$plot_title_color,
                    title = 'Linear Model - Residuals',
-                   plot_conf = reactiveValuesToList(session$userData$conf)
+                   sample_limit = session$userData$conf$plot_limit
         )
 
       } else if (input$radio_lm_resid == 'dots'){
@@ -262,12 +272,15 @@ lm_server <- function(id) {
                    yvar = 'y',
                    xlab = 'Index',
                    ylab = 'Values',
+                   fill_color = session$userData$conf$plot_fill_color,
+                   line_color = session$userData$conf$plot_line_color,
+                   title_color = session$userData$conf$plot_title_color,
                    title = 'Linear Model - Residuals',
-                   h_line = 0,
+                   vertical_line = 0,
                    point_shape = if(session$userData$conf$plot_limit > 1e4 &&
                                     length(linear_model$model$residuals) > 1e4) '.' else 20,
-                   line_type = 2,
-                   plot_conf = reactiveValuesToList(session$userData$conf)
+                   sample_limit = session$userData$conf$plot_limit,
+                   line_type = 2
         )
       }
     }) |> bindEvent(update_lm_resid_plot())

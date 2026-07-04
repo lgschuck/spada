@@ -127,11 +127,12 @@ output_server <- function(id) {
     }) |> bindEvent(input$btn_confirm_edit_output)
 
     # render panel ------------------------------------------------------------
-    task_printable_out <- ExtendedTask$new(
-      function(accordion,
-               accordion_panel,
-               div = div,
-               printable_report_card, elements, sel_show_output) {
+    task_printable_out <- ExtendedTask$new(function(accordion,
+                                                accordion_panel,
+                                                div_fun = div,
+                                                printable_report_card,
+                                                elements,
+                                                sel_show_output) {
 
       mirai({
         if (is.null(elements) || length(elements) == 0) {

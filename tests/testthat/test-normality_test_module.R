@@ -28,6 +28,7 @@ test_that('Normality Test module - variable selection', {
     expect_equal(var_analysis(), setdiff(names(iris), 'Species'))
     expect_equal(var(), iris$Setal.Width)
     expect_equal(var_len(), iris$Setal.Width |> length())
+
   })
 })
 
@@ -53,7 +54,6 @@ test_that('Normality Test module - test plots', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -104,7 +104,6 @@ test_that('Normality Test module - ks test results', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -152,7 +151,6 @@ test_that('Normality Test module - shapiro wilk test results', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 
@@ -198,7 +196,6 @@ test_that('Normality Test module - shapiro francia test results', {
     session$userData$conf <- reactiveValues(
       plot_fill_color = '#229999',
       plot_line_color = '#44aa44',
-      plot_gg_theme = 'theme_classic',
       plot_limit = 1e5
     )
 

@@ -24,15 +24,11 @@ editor_options:
 
 5 - New **ExtendedTask in Descriptive Stats** module
 
-6 - **Spada_plot** function with options to choose theme
-
 #### Visuals 
 
 1 - New **mini buttons** (new css) in sidebar and navbar df info
 
 2 - Better layout in tests (z test, t test, etc) sidebar
-
-3 - New **ggplot theme**: possibles choices theme_classic, theme_minimal and theme_gray
 
 ### Bug fixes
 
