@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# spada ([**S**]{.underline}hiny [**Pa**]{.underline}ckage for [**D**]{.underline}ata [**A**]{.underline}nalysis) 
+# spada (Shiny Package for Data Analysis) 
 
 <!-- badges: start -->
 
@@ -119,6 +119,10 @@ You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to search for 
 ### Output
 
 ![Output](man/figures/spada_output.png)
+
+#### Exported Output
+
+![Exported Output](man/figures/spada_output_exported.png)
 
 ### Options
 

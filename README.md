@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# spada (<u>**S**</u>hiny <u>**Pa**</u>ckage for <u>**D**</u>ata <u>**A**</u>nalysis)
+# spada (Shiny Package for Data Analysis)
 
 <!-- badges: start -->
 
@@ -141,6 +141,14 @@ search for diferent versions.
 <figure>
 <img src="man/figures/spada_output.png" alt="Output" />
 <figcaption aria-hidden="true">Output</figcaption>
+</figure>
+
+#### Exported Output
+
+<figure>
+<img src="man/figures/spada_output_exported.png"
+alt="Exported Output" />
+<figcaption aria-hidden="true">Exported Output</figcaption>
 </figure>
 
 ### Options

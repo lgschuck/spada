@@ -1,4 +1,4 @@
-# spada (***S***hiny ***Pa***ckage for ***D***ata ***A***nalysis)
+# spada (Shiny Package for Data Analysis)
 
 **Spada** provides a ‘shiny’ application with a user-friendly interface
 for interactive data analysis. It supports exploratory data analysis
@@ -118,6 +118,12 @@ Analysis
 ![Output](reference/figures/spada_output.png)
 
 Output
+
+#### Exported Output
+
+![Exported Output](reference/figures/spada_output_exported.png)
+
+Exported Output
 
 ### Options
 

@@ -18,6 +18,10 @@ events (edit and delete buttons)
 3 - New **One-sample t test** module:
 ([\#22](https://github.com/lgschuck/spada/issues/22))
 
+4 - New **residuals plots** in Linear Model module
+
+5 - New **ExtendedTask in Descriptive Stats** module
+
 ##### Visuals
 
 1 - New **mini buttons** (new css) in sidebar and navbar df info
