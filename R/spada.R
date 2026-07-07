@@ -34,7 +34,7 @@
 #'             setorderv shift wday week yday year
 #'
 #' @importFrom DescTools Freq Gmean Hmean Kurt Mode Outlier ShapiroFranciaTest
-#'             Skew StrCap ZTest
+#'             Skew StrCap VIF ZTest
 #'
 #' @importFrom ggplot2 .data aes after_stat coord_flip element_blank
 #'             element_rect element_text geom_bar geom_boxplot geom_histogram

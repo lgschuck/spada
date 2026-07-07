@@ -68,6 +68,18 @@ lm_ui <- function(id) {
               )
             )
           )
+        ),
+        nav_panel(
+          'VIF',
+          gt_output(ns('vif_gt')),
+          card_footer(
+            layout_columns(
+              col_widths = c(2, 2, 2),
+              btn_task(ns('btn_vif'), 'Run VIF', icon('gear')),
+              insert_output_ui(ns('insert_lm_vif')),
+              btn_task(ns('btn_help_vif'), 'Help', icon('question'))
+            )
+          )
         )
       )
     )
@@ -227,11 +239,7 @@ lm_server <- function(id) {
     update_lm_resid_plot <- reactiveVal(0)
 
     observe({
-      # print('teste')
-
-      # cat("antes:", update_lm_resid_plot(), "\n")
       update_lm_resid_plot(update_lm_resid_plot() + 1)
-      # cat("depois:", update_lm_resid_plot(), "\n")
     }) |> bindEvent(input$btn_lm_resid)
 
     lm_resid_plot <- reactive({
@@ -298,5 +306,48 @@ lm_server <- function(id) {
       'Linear Model - Residuals Plot'
     )
 
+    # VIF ---------------------------------------------------------------------
+
+    vif <- reactive({
+      req(linear_model$model)
+
+      mod <- linear_model$model
+      if(length(labels(terms(mod))) < 2){
+        msg('Model contains fewer than 2 terms')
+        return()
+      }
+
+      df <- VIF(mod) |> as.data.frame()
+
+      if (ncol(df) == 1) {
+        colnames(df) <- 'VIF'
+      } else {
+        colnames(df) <- c('GVIF', 'Df', 'Adjusted GVIF')
+      }
+
+      cbind(data.frame(Variable = rownames(df)), df)
+
+    }) |> bindEvent(input$btn_vif)
+
+    vif_gt <- reactive({
+      req(vif())
+
+      vif() |>
+        gt() |>
+        tab_header(title = 'Linear Model - VIF')
+    })
+
+    output$vif_gt <- render_gt({
+      req(vif_gt())
+      vif_gt()
+    })
+
+    # insert vif to output ----------------------------------------------------
+    insert_output_server('insert_lm_vif', vif_gt, 'Linear Model - VIF')
+
+    # help events -------------------------------------------------------------
+    observe({
+      fun_help_modal('DescTools', 'VIF')
+    }) |> bindEvent(input$btn_help_vif)
   })
 }
