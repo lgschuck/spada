@@ -28,7 +28,7 @@ spada_ui <- function(conf){
 
     page_navbar(
       id = 'navbar',
-      theme = get(conf$theme),
+      theme = spada_bs_theme(conf$theme),
       title = 'Spada',
       navbar_options = navbar_options(
         bg = navbar_bg,

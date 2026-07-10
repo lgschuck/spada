@@ -12,6 +12,8 @@ if(interactive()){
 
   if(getRversion() == '4.5.3'){
     .libPaths('../.spada_libs/r4.5_cran/')
+  } else if(getRversion() == '4.6.1'){
+    .libPaths('../.spada_libs/r4.6_cran/')
   } else{
     .libPaths('../.spada_libs/cran/')
   }

@@ -6,7 +6,7 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
-## Spada 0.1.7.9000
+## Spada 0.1.7
 
 #### Improvements
 
@@ -18,7 +18,7 @@ events (edit and delete buttons)
 3 - New **One-sample t test** module:
 ([\#22](https://github.com/lgschuck/spada/issues/22))
 
-4 - New **residuals plots** in Linear Model module
+4 - New **residuals plots** and **VIF** in Linear Model module
 
 5 - New **ExtendedTask in Descriptive Stats** module
 
@@ -32,6 +32,9 @@ events (edit and delete buttons)
 
 1 - Normality test: **KS test undefined values** in cards
 ([\#80](https://github.com/lgschuck/spada/issues/80))
+
+2 - Error when installing binaries from CRAN
+([\#81](https://github.com/lgschuck/spada/issues/81))
 
 ## Spada 0.1.6
 

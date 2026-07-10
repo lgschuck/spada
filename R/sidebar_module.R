@@ -209,6 +209,12 @@ sidebar_server <- function(id, app_session) {
 
       if(identical(session$userData$conf$theme, new_theme)) return()
 
+      running_modal('Applying theme...')
+
+      session$onFlushed(function(){
+        remove_running_modal()
+      }, once = TRUE)
+
       set_spada_theme(session = session, theme = new_theme)
 
     }) |> bindEvent(input$dark_mode, ignoreInit = TRUE)

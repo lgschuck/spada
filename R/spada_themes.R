@@ -25,16 +25,28 @@ lg_palette   <- c('#0cb0a8', '#228f8a', '#09918b')
 pk_palette   <- c('#a35d8c', '#bf007f', '#8f0360')
 red_palette  <- c('#8f3646', '#b60020', '#750217')
 
-# basic rules -----------------------------------------------------------------
-theme_basic_rules <- list(
-  paste(
-    " $main_color:", main_color, ";",
-    " $secondary:", secondary, ";",
-    " $bg_color:", bg_color, ";",
-    " $sidebar_bg:", sidebar_color, ";",
-    " $inputs_border_color:", inputs_border_color, ";",
+# themes function -------------------------------------------------------------
 
-    "
+spada_bs_theme <- function(theme) {
+  basic_rules <- list(
+    paste(
+      " $main_color:",
+      main_color,
+      ";",
+      " $secondary:",
+      secondary,
+      ";",
+      " $bg_color:",
+      bg_color,
+      ";",
+      " $sidebar_bg:",
+      sidebar_color,
+      ";",
+      " $inputs_border_color:",
+      inputs_border_color,
+      ";",
+
+      "
       $grad1: #1f4e72;
       $grad2: #2a6485;
       $grad3: #3a7f9d;
@@ -208,161 +220,158 @@ theme_basic_rules <- list(
 
       .selectize-dropdown {word-wrap: break-word;}
   "
-  )
-)
-
-# default theme ---------------------------------------------------------------
-spada_theme <- bs_theme(
-  version = 5,
-  bg = bg_color,
-  fg = '#000000',
-  primary = main_color,
-  secondary = secondary,
-  success = sucess,
-  danger = danger,
-  font_size_base = '1rem',
-  'nav-pills-border-radius' = '0rem',
-  'nav-pills-link-active-color' = main_color,
-  'nav-pills-link-active-bg' = sidebar_color,
-  'border-radius-sm' = 0,
-  'border-radius' = 0,
-  'navbar-brand-font-size' = '1.5rem',
-  'navbar-brand-padding-y' = '0.250rem',
-  'btn-font-weight' = 400,
-  'dropdown-bg' = '#f9f9f9',
-  'dropdown-color' = main_color,
-  'dropdown-link-color' = '#000000',
-  'dropdown-link-hover-bg' = sidebar_color,
-  base_font = font_collection('Segoe UI', 'Ubuntu', 'system-ui')
-) |> bs_add_rules(theme_basic_rules) |>
-  bs_add_rules(
-    list(
-      "
-      .accordion-sidebar{
-        background-color: $main_color !important;
-        color: #ffffff;
-      }
-
-      .card {
-        border-radius: 0.1rem;
-        margin: -8px;
-      }
-
-      .big-card-footer{
-        background-color: $main_color;
-        margin-top: -12px !important;
-        padding-bottom: 6px !important;
-        height: 60px;
-      }
-
-      .btn-task {
-        color: $secondary !important;
-        background-color: $bg_color !important;
-        border-color: $secondary !important;
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        border-radius: 0rem
-      }
-
-      .btn-task-cancel {
-        color: #dc3545 !important;
-        background-color: white !important;
-        border-color: #dc3545 !important;
-        border-radius: 0rem
-      }
-
-      .control-label {
-        margin-bottom: 3px !important;
-        padding-top: 3px !important;
-      }
-
-      .bslib-sidebar-layout>.sidebar {
-        background-color: $sidebar_bg !important;
-        color: black !important;
-      }
-
-      .bslib-sidebar-layout>.collapse-toggle {
-        color: black !important;
-        background-color: unset;
-      }
-
-      .nav-pills .nav-link:hover {
-        background-color: #f0f0f0 !important;
-      }
-
-      .shiny-input-text,
-      .shiny-input-number,
-      .selectize-input,
-      .shiny-input-textarea textarea {
-        border: 1px solid #d1d1d1 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-
-        transition:
-          border-color 0.2s ease,
-          box-shadow 0.2s ease;
-      }
-
-      .selectize-input:hover,
-      .shiny-input-text:hover,
-      .shiny-input-number:hover,
-      .shiny-input-textarea textarea:hover {
-        border-color: #c8c8c8 !important;
-        border-bottom: 1px solid $main_color !important;
-      }
-
-      .selectize-input:focus,
-      .shiny-input-text:focus,
-      .shiny-input-number:focus,
-      .shiny-input-textarea textarea:focus {
-        border-color: #c8c8c8 !important;
-        border-bottom: 1px solid $main_color !important;
-      }
-    ")
+    )
   )
 
-# darkly spada theme ----------------------------------------------------------
-spada_dark_theme <- bs_theme(
-  version = 5,
-  bootswatch = 'darkly',
-  'border-radius-sm' = 0,
-  'border-radius' = 0,
-  'navbar-brand-font-size' = '1.5rem',
-  'btn-font-weight' = 400,
-  base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
-  ) |>
-  bs_add_rules(theme_basic_rules) |>
-  bs_add_rules(
-    list(
-      "
-      .card {
-        border-radius: 0rem;
-        margin: -4px;
-      }
+  if (theme == 'spada_theme' || !(theme %in% themes_names)) {
+    bs_theme(
+      version = 5,
+      bg = bg_color,
+      fg = '#000000',
+      primary = main_color,
+      secondary = secondary,
+      success = sucess,
+      danger = danger,
+      font_size_base = '1rem',
+      'nav-pills-border-radius' = '0rem',
+      'nav-pills-link-active-color' = main_color,
+      'nav-pills-link-active-bg' = sidebar_color,
+      'border-radius-sm' = 0,
+      'border-radius' = 0,
+      'navbar-brand-font-size' = '1.5rem',
+      'navbar-brand-padding-y' = '0.250rem',
+      'btn-font-weight' = 400,
+      'dropdown-bg' = '#f9f9f9',
+      'dropdown-color' = main_color,
+      'dropdown-link-color' = '#000000',
+      'dropdown-link-hover-bg' = sidebar_color,
+      base_font = font_collection('Segoe UI', 'Ubuntu', 'system-ui')
+    ) |> bs_add_rules(basic_rules) |>
+      bs_add_rules(
+        list(
+          "
+          .accordion-sidebar{
+            background-color: $main_color !important;
+            color: #ffffff;
+          }
 
-      .big-card-footer{
-        margin-top: -12px !important;
-        padding-bottom: 0px !important;
-        height: 60px;
-      }
+          .card {
+            border-radius: 0.1rem;
+            margin: -8px;
+          }
 
-      .btn-task {
-        color: $secondary;
-        background-color: $bg_color;
-        border-color: $secondary;
-        border-radius: 0rem
-      }
+          .big-card-footer{
+            background-color: $main_color;
+            margin-top: -12px !important;
+            padding-bottom: 6px !important;
+            height: 60px;
+          }
 
-      .nav-pills .nav-link:hover {
-        background-color: #5a5a5a !important;
-        color: #ffffff !important;
-      }
+          .btn-task {
+            color: $secondary !important;
+            background-color: $bg_color !important;
+            border-color: $secondary !important;
+            padding-top: 6px !important;
+            padding-bottom: 6px !important;
+            border-radius: 0rem
+          }
 
-    ")
-  )
+          .btn-task-cancel {
+            color: #dc3545 !important;
+            background-color: white !important;
+            border-color: #dc3545 !important;
+            border-radius: 0rem
+          }
 
-# themes ----------------------------------------------------------------------
-spada_themes <- list(
-  spada_theme = spada_theme,
-  spada_dark_theme = spada_dark_theme
-)
+          .control-label {
+            margin-bottom: 3px !important;
+            padding-top: 3px !important;
+          }
+
+          .bslib-sidebar-layout>.sidebar {
+            background-color: $sidebar_bg !important;
+            color: black !important;
+          }
+
+          .bslib-sidebar-layout>.collapse-toggle {
+            color: black !important;
+            background-color: unset;
+          }
+
+          .nav-pills .nav-link:hover {
+            background-color: #f0f0f0 !important;
+          }
+
+          .shiny-input-text,
+          .shiny-input-number,
+          .selectize-input,
+          .shiny-input-textarea textarea {
+            border: 1px solid #d1d1d1 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+
+            transition:
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+          }
+
+          .selectize-input:hover,
+          .shiny-input-text:hover,
+          .shiny-input-number:hover,
+          .shiny-input-textarea textarea:hover {
+            border-color: #c8c8c8 !important;
+            border-bottom: 1px solid $main_color !important;
+          }
+
+          .selectize-input:focus,
+          .shiny-input-text:focus,
+          .shiny-input-number:focus,
+          .shiny-input-textarea textarea:focus {
+            border-color: #c8c8c8 !important;
+            border-bottom: 1px solid $main_color !important;
+          }
+        "
+        )
+      )
+  } else if (theme == 'spada_dark_theme') {
+    bs_theme(
+      version = 5,
+      bootswatch = 'darkly',
+      'border-radius-sm' = 0,
+      'border-radius' = 0,
+      'navbar-brand-font-size' = '1.5rem',
+      'btn-font-weight' = 400,
+      base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
+    ) |>
+      bs_add_rules(basic_rules) |>
+      bs_add_rules(
+        list(
+          "
+          .card {
+            border-radius: 0rem;
+            margin: -4px;
+          }
+
+          .big-card-footer{
+            margin-top: -12px !important;
+            padding-bottom: 0px !important;
+            height: 60px;
+          }
+
+          .btn-task {
+            color: $secondary;
+            background-color: $bg_color;
+            border-color: $secondary;
+            border-radius: 0rem
+          }
+
+          .nav-pills .nav-link:hover {
+            background-color: #5a5a5a !important;
+            color: #ffffff !important;
+          }
+
+        "
+        )
+      )
+  }
+}

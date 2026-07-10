@@ -66,7 +66,7 @@
 #'
 #' @importFrom stats cor cor.test dnorm dt formula IQR dnorm ks.test median lm
 #'             pf qnorm qqline qqnorm qt rnorm sd setNames shapiro.test t.test
-#'             var
+#'             terms var
 #'
 #' @importFrom tools file_ext R_user_dir toTitleCase
 #'

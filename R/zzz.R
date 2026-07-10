@@ -30,6 +30,7 @@ utils::globalVariables(
     'rows',
     'Sig Levels',
     'size',
+    'terms',
     'value',
     'values',
     'var1',

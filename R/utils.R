@@ -526,7 +526,7 @@ spada_user_dir <- function(which){
 # set theme -------------------------------------------------------------------
 set_spada_theme <- function(session, theme){
 
-  session$setCurrentTheme(spada_themes[[theme]])
+  session$setCurrentTheme(spada_bs_theme(theme))
   session$userData$conf$theme <- theme
 }
 

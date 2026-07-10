@@ -10,7 +10,7 @@ editor_options:
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
-# Spada 0.1.7.9000
+# Spada 0.1.7
 
 ### Improvements
 
@@ -33,6 +33,8 @@ editor_options:
 ### Bug fixes
 
 1 - Normality test: **KS test undefined values** in cards ([#80](https://github.com/lgschuck/spada/issues/80))
+
+2 - Error when **installing binaries from CRAN** ([#81](https://github.com/lgschuck/spada/issues/81))
 
 # Spada 0.1.6
 

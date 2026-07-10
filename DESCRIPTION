@@ -1,6 +1,6 @@
 Package: spada
 Title: A 'shiny' Package for Data Analysis
-Version: 0.1.7.9000
+Version: 0.1.7
 Authors@R: 
     person("Luís Gustavo", "Schuck", email="luisgustavoschuck@yahoo.com.br",  
     role = c("aut", "cre"))
@@ -35,7 +35,6 @@ Imports:
   writexl (>= 1.5.4)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.3
 Suggests: 
     dplyr,
     knitr,
@@ -44,3 +43,4 @@ Suggests:
     tidyselect
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
