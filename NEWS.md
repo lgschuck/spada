@@ -10,6 +10,16 @@ editor_options:
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+# Spada 0.1.8
+
+### Improvements
+
+1 - **QQ Plot in linear model**: inserted QQ Plot for residuals (Exploratory and Lm modules)
+
+### Bug fixes
+
+1 - Fixed time in Spada Output footer (HTML exported file)
+
 # Spada 0.1.7
 
 ### Improvements

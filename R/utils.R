@@ -674,74 +674,7 @@ spada_output_info_card <- function(content){
   )
 }
 
-spada_output_header <- spada_output_info_card(
-  div(
-    style = 'display: flex; flex-direction: column;',
-    tags$div(
-      'Spada Output',
-      style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
-  )
-)
-
-spada_output_footer <- spada_output_info_card(
-  div(
-    style = '
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    ',
-
-    # left
-    div(
-      paste('Spada:', utils::packageVersion('spada')),
-      tags$br(),
-
-      tags$a(
-        href = 'https://cran.r-project.org/package=spada',
-        target = '_blank',
-        style = 'color: white;',
-        'CRAN'
-      ),
-
-      ' | ',
-
-      tags$a(
-        href = 'https://github.com/lgschuck/spada',
-        target = '_blank',
-        style = 'color: white;',
-        'GitHub'
-      ),
-
-      ' | ',
-
-      tags$a(
-        href = 'https://lgschuck.github.io/spada/',
-        target = '_blank',
-        style = 'color: white;',
-        'Documentation'
-      ),
-
-      ' | ',
-
-      tags$a(
-        href = 'https://lgschuck.github.io/spada_book/',
-        target = '_blank',
-        style = 'color: white;',
-        'Book'
-      )
-    ),
-
-    # right
-    div(
-      style = 'text-align: right;',
-      format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')
-    )
-  )
-)
-
-spada_output <- function(output, header = spada_output_header, footer = spada_output_footer){
+spada_output <- function(output){
   toc <- tags$div(
     class = 'toc',
     style = '
@@ -791,6 +724,76 @@ spada_output <- function(output, header = spada_output_header, footer = spada_ou
     cards,
     toc
   )
+
+  header <- spada_output_info_card(
+    div(
+      style = 'display: flex; flex-direction: column;',
+      tags$div(
+        'Spada Output',
+        style = ' font-size: 32px; font-weight: 450; letter-spacing: 4px;')
+    )
+  )
+
+  footer <- spada_output_info_card(
+    div(
+      style = '
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    ',
+
+      # left
+      div(
+        paste('Spada:', utils::packageVersion('spada')),
+        tags$br(),
+
+        tags$a(
+          href = 'https://cran.r-project.org/package=spada',
+          target = '_blank',
+          style = 'color: white;',
+          'CRAN'
+        ),
+
+        ' | ',
+
+        tags$a(
+          href = 'https://github.com/lgschuck/spada',
+          target = '_blank',
+          style = 'color: white;',
+          'GitHub'
+        ),
+
+        ' | ',
+
+        tags$a(
+          href = 'https://lgschuck.github.io/spada/',
+          target = '_blank',
+          style = 'color: white;',
+          'Documentation'
+        ),
+
+        ' | ',
+
+        tags$a(
+          href = 'https://lgschuck.github.io/spada_book/',
+          target = '_blank',
+          style = 'color: white;',
+          'Book'
+        )
+      ),
+
+      # right
+      div(
+        style = 'text-align: right;',
+        format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')
+      )
+    )
+  )
+
+
+
 
   tags$html(
     spada_output_css,
@@ -1863,8 +1866,7 @@ spada_plot <- function(
                      color = 'black',
                      na.rm = na_rm) +
       stat_function(fun = dnorm,
-                    args = list(mean = mean_value,
-                                sd = sd_value),
+                    args = list(mean = mean_value, sd = sd_value),
                     color = line_color,
                     linewidth = 1) +
       labs(title = title, x = xlab, y = ylab) +

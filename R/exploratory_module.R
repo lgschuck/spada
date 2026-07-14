@@ -105,7 +105,8 @@ exploratory_ui <- function(id) {
                       c(
                         'Histogram' = 'hist',
                         'Boxplot' = 'boxplot',
-                        'Dots' = 'dots'
+                        'Dots' = 'dots',
+                        'QQ Plot' = 'qq_plot'
                       ),
                       size = 'sm',
                       individual = T
@@ -489,6 +490,18 @@ exploratory_server <- function(id) {
                                     length(linear_model$model$residuals) > 1e4) '.' else 20,
                    sample_limit = session$userData$conf$plot_limit,
                    line_type = 2
+        )
+      } else if (input$radio_lm_resid == 'qq_plot'){
+        spada_plot(
+          type = 'qq_plot',
+          df = data.frame(x = linear_model$model$residuals),
+          xvar = 'x',
+          xlab = 'Theoretical Quantiles',
+          ylab = 'Sample Quantiles',
+          title = 'Linear Model - Residuals',
+          fill_color = session$userData$conf$plot_fill_color,
+          line_color = session$userData$conf$plot_line_color,
+          sample_limit = session$userData$conf$plot_limit
         )
       }
     }) |> bindEvent(update_lm_resid_plot())
