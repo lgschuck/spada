@@ -6,7 +6,22 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+## Spada 0.1.8
+
+#### Improvements
+
+1 - **QQ Plot in linear model**: inserted QQ Plot for residuals
+(Exploratory and Lm modules)
+
+2 - New **missing module**
+
+#### Bug fixes
+
+1 - Fixed time in Spada Output footer (HTML exported file)
+
 ## Spada 0.1.7
+
+CRAN release: 2026-07-10
 
 #### Improvements
 
@@ -33,7 +48,7 @@ events (edit and delete buttons)
 1 - Normality test: **KS test undefined values** in cards
 ([\#80](https://github.com/lgschuck/spada/issues/80))
 
-2 - Error when installing binaries from CRAN
+2 - Error when **installing binaries from CRAN**
 ([\#81](https://github.com/lgschuck/spada/issues/81))
 
 ## Spada 0.1.6

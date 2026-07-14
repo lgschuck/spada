@@ -28,6 +28,7 @@ utils::globalVariables(
     'q3',
     'results',
     'rows',
+    'sel_var',
     'Sig Levels',
     'size',
     'terms',

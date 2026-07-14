@@ -2365,6 +2365,14 @@ mean_nona <- function(x){
   fmean(x, na.rm = T)
 }
 
+median_na <- function(x){
+  fmedian(x, na.rm = F)
+}
+
+median_nona <- function(x){
+  fmedian(x, na.rm = T)
+}
+
 min_na <- function(x){
   fmin(x, na.rm = F)
 }

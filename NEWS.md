@@ -16,6 +16,8 @@ editor_options:
 
 1 - **QQ Plot in linear model**: inserted QQ Plot for residuals (Exploratory and Lm modules)
 
+2 - New **missing module**
+
 ### Bug fixes
 
 1 - Fixed time in Spada Output footer (HTML exported file)

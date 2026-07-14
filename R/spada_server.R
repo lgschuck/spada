@@ -197,6 +197,9 @@ spada_server <- function(datasets, conf, run_local = TRUE){
     # join datasets --------------------------
     join_server('pE_join')
 
+    # missing data events --------------------
+    missing_server('pE_missing')
+
     # order rows events ----------------------
     order_rows_server('pE_order_rows')
 

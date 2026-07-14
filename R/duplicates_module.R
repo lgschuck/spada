@@ -30,7 +30,7 @@ duplicates_ui <- function(id) {
     card(
       card_header('Remove Duplicates', class = 'mini-header'),
       card_body(
-        selectInput(ns('vars_sel_drop'), 'Variable', NULL),
+        selectInput(ns('vars_sel_drop'), 'Variable', ''),
       ),
       card_footer(btn_task(ns('btn_remove'), 'Remove', icon('trash-can')))
     )
@@ -53,7 +53,7 @@ duplicates_server <- function(id) {
 	      choices = c('', df_names())
 	    )
 
-	    updateSelectizeInput(
+	    updateSelectInput(
 	      session,
 	      'vars_sel_drop',
 	      choices = c('', df_names())
@@ -135,7 +135,7 @@ duplicates_server <- function(id) {
 	    not_dup_factor <- !(is.factor(get_act_dt(session)[[selected_vars]]) &&
 	      all(levels(get_act_dt(session)[[selected_vars]]) %in% c('Duplicated', 'Not Duplicated')))
 
-	    if(selected_vars |> length() == 0){
+	    if(!isTruthy(selected_vars)){
 	      msg('Select at least one variable')
 	      return()
 	    } else if(not_dup_factor){
@@ -151,6 +151,7 @@ duplicates_server <- function(id) {
         } else {
           running_modal()
           update_act_dt(session, copy(temp))
+          updateSelectInput(session, 'vars_sel_drop', selected = character(0))
           remove_running_modal()
         }
       }

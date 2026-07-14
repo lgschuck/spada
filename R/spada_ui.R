@@ -85,6 +85,7 @@ spada_ui <- function(conf){
                    )
                  ),
                  nav_panel('Join', join_ui('pE_join')),
+                 nav_panel('Missing', missing_ui('pE_missing')),
                  nav_panel(
                    'Order',
                    layout_column_wrap(
