@@ -16,22 +16,10 @@ missing_ui <- function(id) {
       card_header('Replace Missing Values', class = 'mini-header'),
       card_body(
         selectInput(ns('var_sel_replace'), 'Variable', ''),
-        selectInput(
-          ns('sel_replace_method'),
-          'Replacement',
-          c(
-            'Constant'='constant',
-            'Mean'='mean',
-            'Median'='median'
-          )
-        ),
-
-        conditionalPanel(
-          sprintf("input['%s'] == 'constant'", ns('sel_replace_method')),
-          textInput(ns('txt_replace_value'), 'Value')
-        )
+        uiOutput(ns('ui_replace_method')),
+        uiOutput(ns('ui_replace_value'))
       ),
-      card_footer(btn_task(ns('btn_replace'), 'Replace', icon('wand-magic-sparkles')))
+      card_footer(btn_task(ns('btn_replace'), 'Replace', icon('check')))
     )
   )
 }
@@ -96,26 +84,49 @@ missing_server <- function(id) {
 	  }) |> bindEvent(input$btn_identify)
 
 	  # replace missing -----------
-	  # update replace methods
-	  observe({
+	  output$ui_replace_method <- renderUI({
 	    req(input$var_sel_replace)
+	    type <- obj_type(get_act_dt(session)[[input$var_sel_replace]])
 
-	    if (obj_type(get_act_dt(session)[[input$var_sel_replace]]) == 'numeric') {
-	      choices <- c(
-	        'Constant' = 'constant',
-	        'Mean' = 'mean',
-	        'Median' = 'median'
-	      )
-	    } else {
-	      choices <- c('Constant' = 'constant')
+	    methods <- c('Constant' = 'constant')
+
+	    if (type == 'numeric') {
+	      methods <- c(methods, 'Mean' = 'mean', 'Median' = 'median')
 	    }
 
-	    updateSelectInput(
-	      session,
-	      "sel_replace_method",
-	      choices = choices
+	    selectInput(
+	      ns('sel_replace_method'),
+	      'Replacement',
+	      choices = methods
 	    )
-	  }) |> bindEvent(input$var_sel_replace)
+	  })
+
+	  output$ui_replace_value <- renderUI({
+	    req(input$var_sel_replace, input$sel_replace_method)
+
+	    type <- obj_type(get_act_dt(session)[[input$var_sel_replace]])
+
+      if(type == 'numeric') {
+
+        if (input$sel_replace_method != 'constant') {
+          NULL
+        } else {
+          numericInput(ns('num_value'), 'Value', 0)
+        }
+      } else if(type == 'logical') {
+        selectInput(ns('logical_value'), 'Value', c(TRUE, FALSE))
+      } else if(type == 'factor') {
+        selectInput(
+          ns('factor_value'),
+          'Value',
+          choices = levels(get_act_dt(session)[[input$var_sel_replace]])
+        )
+      } else if(type == 'date') {
+        dateInput(ns('date_value'), 'Date')
+      } else {
+        textInput(ns('txt_replace_value'), 'Value')
+      }
+	  })
 
     # replace value -----------
 	  observe({
@@ -129,38 +140,42 @@ missing_server <- function(id) {
 	    method <- input$sel_replace_method
 	    sel_var_type <- obj_type(get_act_dt(session)[[selected_var]])
 
-	    # only allow char and numeric types
-	    if(sel_var_type %notin% c('char', 'numeric')){
-	      msg('Select a character or numeric variable')
-	      return()
-	    }
+	    replace_value <- switch(
+	      sel_var_type,
+	      'numeric' = input$num_value |> as.numeric(),
+	      'char' = input$txt_replace_value,
+	      'logical' = input$logical_value |> as.character(),
+	      'factor' = input$factor_value |> as.factor(),
+	      'date' = input$date_value |> as.Date()
+	    )
 
-	    # mean and median only for numerics
-	    if(method %in% c('mean', 'median') && sel_var_type != 'numeric'){
-	      msg('Mean and Median replacement are only available for numeric variables', 4)
-	      return()
-	    }
-
-	    if(method %in% c('constant') && !isTruthy(input$txt_replace_value)){
+	    if(method %in% c('constant') && !isTruthy(replace_value)){
 	      msg('Inform a value')
 	      return()
 	    }
 
 	    temp <- copy(get_act_dt(session))
+
       new_value <- switch(
         method,
         'mean' = mean_nona(temp[[selected_var]]),
         'median' = median_nona(temp[[selected_var]]),
-        'constant' = input$txt_replace_value
+        'constant' = replace_value
       )
 
-      if(sel_var_type == 'numeric'){
-        new_value <- as.numeric(new_value)
-      } else {
-        new_value <- as.character(new_value)
-      }
+      # new value must keep the type of actual variable
+      actual_type <- temp[[selected_var]] |> obj_type()
+      new_value <- convert(new_value, actual_type)
 
-      temp <- temp[, var := fcoalesce(var, new_value), env = list(var = selected_var)]
+      temp <- try(
+        temp[is.na(var), var := new_value, env = list(var = selected_var)],
+        silent = TRUE
+      )
+
+      if (inherits(temp, 'try-error')) {
+        msg_error('Unable to replace missing values')
+        return()
+      }
 
       if(!is_spada_df(temp)){
         abort_filter_modal()

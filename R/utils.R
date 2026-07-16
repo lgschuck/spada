@@ -889,22 +889,38 @@ safe_env <- function(operations = NULL){
 }
 
 # test dataset ----------------------------------------------------------------
-test_dataset <- function(n_row = 1e3, n_col = 11){
+add_na <- function(x, prop = 0.05) {
+  idx <- sample.int(length(x), ceiling(length(x) * prop))
+  x[idx] <- NA
+  x
+}
+
+test_dataset <- function(n_row = 1e3, n_col = 18) {
+
   test_data <- data.table(
-    integer_var = rep(sample(1:100, n_row, replace = T)),
+    integer_var = sample(1:100, n_row, replace = TRUE),
     numeric_var = rnorm(n_row),
-    char_var = rep(sample(letters, n_row, replace = T)),
+    char_var = sample(letters, n_row, replace = TRUE),
     char_long_var = rep(paste(letters, collapse = ''), n_row),
-    char_colors_var = rep(sample(colors(), n_row, replace = T)),
-    date_var = Sys.Date() + rep(sample(-49:50, n_row, replace = T)),
-    datetime_var =
-      as.POSIXct(Sys.time()) + sample(0:(365 * 24 * 60 * 60), n_row, replace = TRUE),
-    factor_var = as.factor(rep(sample(paste0('factor_', 1:10), n_row, replace = T))),
-    num_nas_var = c(rep(NA, round(n_row/2)), rnorm(n_row - round(n_row/2))),
-    int_nas_var = c(rep(NA, round(n_row/2)), sample(1:100, n_row - round(n_row/2), replace = T)),
-    logical_var = rep(sample(c(TRUE, FALSE), n_row, replace = T)),
-    all_na = rep(NA, n_row)
+    char_colors_var = sample(colors(), n_row, replace = TRUE),
+    date_var = Sys.Date() + sample(-49:50, n_row, replace = TRUE),
+    datetime_var = as.POSIXct(Sys.time()) +
+      sample(0:(365 * 24 * 60 * 60), n_row, replace = TRUE),
+    factor_var = factor(sample(paste0('factor_', 1:10), n_row, replace = TRUE)),
+    logical_var = sample(c(TRUE, FALSE), n_row, replace = TRUE)
   )
+
+  test_data[, `:=`(
+    integer_var_na = add_na(integer_var),
+    numeric_var_na = add_na(numeric_var),
+    char_var_na = add_na(char_var),
+    char_long_var_na = add_na(char_long_var),
+    char_colors_var_na = add_na(char_colors_var),
+    date_var_na = add_na(date_var),
+    datetime_var_na = add_na(datetime_var),
+    factor_var_na = add_na(factor_var),
+    logical_var_na = add_na(logical_var)
+  )]
 
   extra_cols <- n_col - ncol(test_data)
 
@@ -988,6 +1004,10 @@ bmsg <- function(TEXT, DURATION = 2.3){
   )
 }
 
+
+
+
+
 # try convert -----------------------------------------------------------------
 try_convert <- function(x, fun){
   tryCatch(fun(x),
@@ -1000,13 +1020,13 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
                     date_origin = '1970-01-01'){
   if(x |> is.raw()) x <- as.numeric(x)
 
-  if(type == 'as.numeric'){
+  if(type %in% c('as.numeric', 'numeric')){
     suppressWarnings(as.numeric(x))
-  } else if(type == 'as.integer'){
+  } else if(type%in% c('as.integer', 'integer')){
     suppressWarnings(as.integer(x))
-  } else if(type == 'as.character'){
+  } else if(type %in% c('as.character', 'char')){
     as.character(x)
-  } else if(type == 'as.Date'){
+  } else if(type %in% c('as.Date', 'date')){
     if(x |> inherits('Date')) {
       x
     } else if(is.numeric(x)){
@@ -1016,17 +1036,19 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
         as.Date(x |> as.numeric(), origin = date_origin)
       )
     } else as.Date(x, format = date_format)
-  } else if(type == 'as.factor'){
+  } else if(type %in% c('as.factor', 'factor')){
     as.factor(x)
-  } else if(type == 'as.double'){
+  } else if(type %in% c('as.double', 'double')){
     suppressWarnings(as.double(x))
-  } else if(type == 'as.complex'){
+  } else if(type %in% c('as.complex', 'complex')){
     if(is.complex(x)){
       x
     } else {
       x1 <- suppressWarnings(as.numeric(x))
       as.complex(x1)
     }
+  } else if (type %in% c('as.logical', 'logical')){
+    as.logical(x)
   }
 }
 
