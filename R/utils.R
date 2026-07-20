@@ -904,7 +904,7 @@ test_dataset <- function(n_row = 1e3, n_col = 18) {
     char_long_var = rep(paste(letters, collapse = ''), n_row),
     char_colors_var = sample(colors(), n_row, replace = TRUE),
     date_var = Sys.Date() + sample(-49:50, n_row, replace = TRUE),
-    datetime_var = as.POSIXct(Sys.time()) +
+    posixct_var = as.POSIXct(Sys.time()) +
       sample(0:(365 * 24 * 60 * 60), n_row, replace = TRUE),
     factor_var = factor(sample(paste0('factor_', 1:10), n_row, replace = TRUE)),
     logical_var = sample(c(TRUE, FALSE), n_row, replace = TRUE)
@@ -917,10 +917,12 @@ test_dataset <- function(n_row = 1e3, n_col = 18) {
     char_long_var_na = add_na(char_long_var),
     char_colors_var_na = add_na(char_colors_var),
     date_var_na = add_na(date_var),
-    datetime_var_na = add_na(datetime_var),
+    posixct_var_na = add_na(posixct_var),
     factor_var_na = add_na(factor_var),
     logical_var_na = add_na(logical_var)
   )]
+
+  test_data <- test_data[, sort(names(test_data)), with = FALSE]
 
   extra_cols <- n_col - ncol(test_data)
 
@@ -1004,10 +1006,6 @@ bmsg <- function(TEXT, DURATION = 2.3){
   )
 }
 
-
-
-
-
 # try convert -----------------------------------------------------------------
 try_convert <- function(x, fun){
   tryCatch(fun(x),
@@ -1049,6 +1047,8 @@ convert <- function(x, type, date_format = '%Y-%m-%d',
     }
   } else if (type %in% c('as.logical', 'logical')){
     as.logical(x)
+  } else if (type %in% c('as.posix', 'posix')){
+    as.POSIXct(x)
   }
 }
 
@@ -1172,7 +1172,8 @@ test_all_equal <- function(x){
 # obj type --------------------------------------------------------------------
 obj_type <- function(x){
   if(x |> is.numeric()) 'numeric'
-  else if (x |> is_date()) 'date'
+  else if (x |> inherits('Date')) 'date'
+  else if (x |> inherits(c('POSIXct', 'POSIXlt', 'POSIXt'))) 'posix'
   else if (x |> is.factor()) 'factor'
   else if (x |> is.character()) 'char'
   else if (x |> is.logical()) 'logical'

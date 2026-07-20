@@ -121,7 +121,7 @@ missing_server <- function(id) {
           'Value',
           choices = levels(get_act_dt(session)[[input$var_sel_replace]])
         )
-      } else if(type == 'date') {
+      } else if(type %in% c('date', 'posix')) {
         dateInput(ns('date_value'), 'Date')
       } else {
         textInput(ns('txt_replace_value'), 'Value')
@@ -146,7 +146,8 @@ missing_server <- function(id) {
 	      'char' = input$txt_replace_value,
 	      'logical' = input$logical_value |> as.character(),
 	      'factor' = input$factor_value |> as.factor(),
-	      'date' = input$date_value |> as.Date()
+	      'date' = input$date_value |> as.Date(),
+	      'posix' = input$date_value |> as.Date()
 	    )
 
 	    if(method %in% c('constant') && !isTruthy(replace_value)){
