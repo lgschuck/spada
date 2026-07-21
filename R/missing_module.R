@@ -90,7 +90,7 @@ missing_server <- function(id) {
 
 	    methods <- c('Constant' = 'constant')
 
-	    if (type == 'numeric') {
+	    if (type %in% c('double', 'integer')) {
 	      methods <- c(methods, 'Mean' = 'mean', 'Median' = 'median')
 	    }
 
@@ -106,7 +106,7 @@ missing_server <- function(id) {
 
 	    type <- obj_type(get_act_dt(session)[[input$var_sel_replace]])
 
-      if(type == 'numeric') {
+      if(type %in% c('double', 'integer')) {
 
         if (input$sel_replace_method != 'constant') {
           NULL
@@ -142,7 +142,8 @@ missing_server <- function(id) {
 
 	    replace_value <- switch(
 	      sel_var_type,
-	      'numeric' = input$num_value |> as.numeric(),
+	      'double' = input$num_value |> as.double(),
+	      'integer' = input$num_value |> as.integer(),
 	      'char' = input$txt_replace_value,
 	      'logical' = input$logical_value |> as.character(),
 	      'factor' = input$factor_value |> as.factor(),

@@ -296,7 +296,8 @@ test_that('all equal', {
 
 # test obj type function ------------------------------------------------------
 test_that('obj_type returns correct type', {
-  expect_equal(obj_type(1.2), 'numeric')
+  expect_equal(obj_type(1.2), 'double')
+  expect_equal(obj_type(1L), 'integer')
   expect_equal(obj_type(as.Date('2020-01-01')), 'date')
   expect_equal(obj_type(factor('a')), 'factor')
   expect_equal(obj_type(as.raw(10)), 'other')
@@ -1139,3 +1140,25 @@ test_that('Test gt info', {
   expect_equal(gt_info_test$`_data`$rows, rep(150, 5))
   expect_equal(gt_info_test$`_data`$cols, rep(5, 5))
 })
+
+# test dt_join ----------------------------------------------------------------
+test_that('dt_join checks variable types correctly', {
+
+  dt1 <- data.table::data.table(
+    id = c(1, 2, 3) |> as.Date(),
+    x = letters[1:3]
+  )
+
+  dt2 <- data.table::data.table(
+    id = c(2, 3, 4) |> as.Date(),
+    x = LETTERS[1:3]
+  )
+
+  expect_no_error(dt_join(dt1, dt2, 'id', 'id'))
+
+  dt2$id <- as.double(dt2$id)
+
+  expect_error(dt_join(dt1, dt2, 'id', 'id'), 'The variables types must match')
+})
+
+

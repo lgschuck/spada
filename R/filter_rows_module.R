@@ -211,7 +211,7 @@ filter_rows_server <- function(id) {
               )
             )
           }
-        } else if (col_type_one_var() == 'numeric'){
+        } else if (col_type_one_var() %in% c('double', 'integer')){
           if(input$one_var_operator %in% c(equal_operators, compare_operators)){
             numericInput(ns('one_var_value'), 'Value', value = 0)
           } else if (input$one_var_operator %in% between_operators){
@@ -282,7 +282,7 @@ filter_rows_server <- function(id) {
             c('', logical_operators)
           } else if (col_type_one_var() == 'date'){
             c('', filter_operators[filter_operators %notin% logical_operators])
-          } else if (col_type_one_var() == 'numeric'){
+          } else if (col_type_one_var() %in% c('double', 'integer')){
             c('', filter_operators[filter_operators %notin% logical_operators])
           } else { c('', filter_operators) }
       )
@@ -296,7 +296,7 @@ filter_rows_server <- function(id) {
         choices =
           if(col_type_two_var1() %in% c('factor', 'char', 'complex', 'logical')){
             c('', equal_operators)
-          } else if (col_type_two_var1() %in% c('date', 'numeric')){
+          } else if (col_type_two_var1() %in% c('date', 'double', 'integer')){
             c('', equal_operators, compare_operators) }
       )
     }) |> bindEvent(input$two_var_sel1)
@@ -346,7 +346,7 @@ filter_rows_server <- function(id) {
             msg('Insert a value')
             return()
           } else if (input$one_var_operator %in% between_operators) {
-            if (col_type_one_var() == 'numeric' &
+            if (col_type_one_var() %in% c('double', 'integer') &
                 !isTruthy(input$one_var_value2)) {
               msg('Inform inicial and final values')
               return()
@@ -365,7 +365,7 @@ filter_rows_server <- function(id) {
 
           # use inserted values
           if (input$one_var_operator %in% between_operators) {
-            if (col_type_one_var() == 'numeric') {
+            if (col_type_one_var() %in% c('double', 'integer')) {
               value_temp$value_temp <- c(input$one_var_value, input$one_var_value2)
             } else if (col_type_one_var() == 'date') {
               value_temp$value_temp <- input$one_var_value

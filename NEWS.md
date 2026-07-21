@@ -18,6 +18,10 @@ editor_options:
 
 2 - New **missing module**
 
+3 - Now double and integer are treated differently (not just equally as numeric)
+
+4 - **Sidebar preview**: change renderUI for renderTable for better speed
+
 ### Bug fixes
 
 1 - Fixed time in Spada Output footer (HTML exported file)

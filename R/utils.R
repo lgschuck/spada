@@ -1171,7 +1171,8 @@ test_all_equal <- function(x){
 
 # obj type --------------------------------------------------------------------
 obj_type <- function(x){
-  if(x |> is.numeric()) 'numeric'
+  if(x |> is.numeric() & x |> is.integer()) 'integer'
+  else if (x |> is.numeric() & x |> is.double()) 'double'
   else if (x |> inherits('Date')) 'date'
   else if (x |> inherits(c('POSIXct', 'POSIXlt', 'POSIXt'))) 'posix'
   else if (x |> is.factor()) 'factor'
@@ -2108,7 +2109,6 @@ dt_join <- function(dt1, dt2, vars1, vars2,
   )
   return(temp)
 }
-
 
 # math and other functions ----------------------------------------------------
 

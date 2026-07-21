@@ -88,7 +88,8 @@ calculate_cols_server <- function(id) {
         'fun',
         choices = switch(
           selected_var_type(),
-          'numeric'  = math_funs,
+          'double'   = math_funs,
+          'integer'  = math_funs,
           'char'     = char_funs,
           'date'     = date_funs,
           'logical'  = logical_funs,

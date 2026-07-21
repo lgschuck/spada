@@ -86,7 +86,8 @@ groupby_server <- function(id) {
 
       choices = switch(
         selected_var_type(),
-        'numeric'  = groupby_math_funs,
+        'double'   = groupby_math_funs,
+        'integer'  = groupby_math_funs,
         'char'     = groupby_char_funs,
         'date'     = groupby_date_funs,
         'logical'  = groupby_logical_funs,

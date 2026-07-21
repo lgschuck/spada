@@ -47,6 +47,7 @@ utils::globalVariables(
     'date_var',
     'datetime_var',
     'factor_var',
-    'logical_var'
+    'logical_var',
+    'posixct_var'
     )
   )
