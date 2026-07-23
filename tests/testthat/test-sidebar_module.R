@@ -163,13 +163,14 @@ test_that('Test renders dataset preview first dataset', {
 
     session$setInputs(sel_datasets_names = 'iris')
 
-    expect_true(class(output$df_preview) == 'character')
-    expect_true(grepl('table shiny-table', output$df_preview))
-    expect_true(grepl('Sepal.Length', output$df_preview))
-    expect_true(grepl('Sepal.Width', output$df_preview))
-    expect_true(grepl('Petal.Length', output$df_preview))
-    expect_true(grepl('Petal.Width', output$df_preview))
-    expect_true(grepl('Species', output$df_preview))
+    expect_true(is.list(output$df_preview))
+    expect_true(names(output$df_preview)[1] == 'html')
+    expect_true(grepl('iris', output$df_preview$html))
+    expect_true(grepl('Sepal.Length', output$df_preview$html))
+    expect_true(grepl('Sepal.Width', output$df_preview$html))
+    expect_true(grepl('Petal.Length', output$df_preview$html))
+    expect_true(grepl('Petal.Width', output$df_preview$html))
+    expect_true(grepl('Species', output$df_preview$html))
 
   })
 })
@@ -190,10 +191,11 @@ test_that('Test renders dataset preview second dataset', {
 
     session$setInputs(sel_datasets_names = 'cars')
 
-    expect_true(class(output$df_preview) == 'character')
-    expect_true(grepl('table shiny-table', output$df_preview))
-    expect_true(grepl('speed', output$df_preview))
-    expect_true(grepl('dist', output$df_preview))
+    expect_true(is.list(output$df_preview))
+    expect_true(names(output$df_preview)[1] == 'html')
+    expect_true(grepl('cars', output$df_preview$html))
+    expect_true(grepl('speed', output$df_preview$html))
+    expect_true(grepl('dist', output$df_preview$html))
 
   })
 })

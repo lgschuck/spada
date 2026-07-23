@@ -44,14 +44,9 @@ sidebar_ui <- function(id) {
         'Datasets',
         icon = bs_icon('stack', size = '1.75em'),
         selectInput(ns('sel_datasets_names'), '', choices = character(0)),
-        # actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
-        #              class = 'btn-task') |>
-        #   popover(htmlOutput(ns('df_preview')),
-        #           options = list(customClass = 'preview-dt-popup'))
-
         actionButton(ns('btn_preview_dt'), 'Preview', icon('magnifying-glass'),
                      class = 'btn-task') |>
-          popover(tableOutput(ns('df_preview')),
+          popover(htmlOutput(ns('df_preview')),
                   options = list(customClass = 'preview-dt-popup'))
       )
     ),
@@ -162,10 +157,15 @@ sidebar_server <- function(id, app_session) {
     })
 
     # preview dataset -------------------------
-    output$df_preview <- renderTable({
+    output$df_preview <- renderUI({
       req(session$userData$dt$dt, input$sel_datasets_names)
 
-      head(session$userData$dt$dt[[input$sel_datasets_names]], 5)
+      head(session$userData$dt$dt[[input$sel_datasets_names]], 5) |>
+        gt() |>
+        tab_header(input$sel_datasets_names) |>
+        tab_options(heading.align = 'left') |>
+        as_raw_html() |>
+        HTML()
     })
 
     # save session ------------------------------------------------------------

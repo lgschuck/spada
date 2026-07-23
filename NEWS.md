@@ -20,7 +20,9 @@ editor_options:
 
 3 - Now double and integer are treated differently (not just equally as numeric)
 
-4 - **Sidebar preview**: change renderUI for renderTable for better speed
+#### Visuals 
+
+1 - New **waiter screen** in startup and close
 
 ### Bug fixes
 

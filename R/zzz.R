@@ -48,6 +48,7 @@ utils::globalVariables(
     'datetime_var',
     'factor_var',
     'logical_var',
-    'posixct_var'
+    'posixct_var',
+    'waiter_right_foot'
     )
   )

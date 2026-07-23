@@ -70,7 +70,7 @@
 #'
 #' @importFrom tools file_ext R_user_dir toTitleCase
 #'
-#' @importFrom utils object.size head packageDescription sessionInfo
+#' @importFrom utils object.size head packageDescription packageVersion sessionInfo
 #'
 #' @importFrom waiter useWaiter waiter_hide waiter_show waiterShowOnLoad
 #'
