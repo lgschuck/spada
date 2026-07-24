@@ -4,6 +4,7 @@ sidebar_ui <- function(id) {
   ns <- NS(id)
 
   sidebar(
+    class = 'spada-main-sidebar',
     open = T,
     accordion(
       open = T,

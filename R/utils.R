@@ -326,14 +326,25 @@ waiter_progress_bar <- div(class = 'spada-waiter-progress',  div(class = 'spada-
 waiter_screen <- tags$style(
   HTML(
     "
+
+    .waiter-overlay-content{
+      width: 100% !important;
+      max-width: none !important;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+    }
+
     .waiter-overlay {
       font-family: 'Segoe UI', sans-serif;
 
       display: flex;
       justify-content: center;
       align-items: center;
-
       overflow:hidden;
+
+      width: 100vw;
+      height: 100vh;
 
       background:
 
@@ -364,7 +375,8 @@ waiter_screen <- tags$style(
     .waiter-overlay .spada-waiter-card{
         position :relative;
         z-index: 1;
-        width: 800px;
+        width: 90%;
+        max-width: 800px;
         padding: 60px 60px 60px 60px;
         background: #EEF2F5;
         border-radius: 16px;
@@ -372,6 +384,18 @@ waiter_screen <- tags$style(
             0 30px 70px rgba(0,0,0,.30),
             0 8px 20px rgba(0,0,0,.18);
         text-align:left;
+        animation:fade .8s ease;
+    }
+
+    @keyframes fade{
+        from{
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        to{
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .waiter-overlay .spada-waiter-title{
@@ -400,7 +424,7 @@ waiter_screen <- tags$style(
 
     .waiter-overlay .spada-waiter-subtitle3{
         margin-top: 15px;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 100;
         opacity: 0.85;
         letter-spacing: 4px;
@@ -421,7 +445,7 @@ waiter_screen <- tags$style(
         position: absolute;
         top: 0;
         left: 0;
-        width: 24%;
+        width: 20%;
         height: 100%;
         border-radius: 999px;
         background:
@@ -435,12 +459,12 @@ waiter_screen <- tags$style(
         box-shadow:
             0 0 10px rgba(47,128,237,.35);
 
-        animation: loading 2.4s ease-in-out infinite alternate;
+        animation: loading 3.5s ease-in-out infinite alternate;
     }
 
     @keyframes loading{
         from{ left: 0; }
-        to{ left: 76%; }
+        to{ left: 80%; }
     }
 
     .waiter-overlay .spada-waiter-card-footer{
@@ -456,21 +480,6 @@ waiter_screen <- tags$style(
         color: #6F89A1;
         font-size: 16px;
         letter-spacing: 1px;
-    }
-
-    .waiter-overlay .spada-waiter-card{
-        animation:fade .8s ease;
-    }
-
-    @keyframes fade{
-        from{
-            opacity: 0;
-            transform: translateY(18px);
-        }
-        to{
-            opacity: 1;
-            transform: translateY(0);
-        }
     }
 
     .waiter-overlay .spada-waiter-log{
@@ -1316,13 +1325,11 @@ show_exit_screen <- function(save = TRUE) {
     html = {
       if(save){
         tagList(
-          div(
-            div(class = 'spada-waiter-card',
-              div('Spada is saving your work', class = 'spada-waiter-subtitle2'),
-              div('Please do not close this window', class = 'spada-waiter-subtitle3'),
-              div(class = 'spada-waiter-progress',  div(class = 'spada-waiter-bar')),
-              div(id = 'spada_exit_text', class = 'spada-waiter-log', '')
-            )
+          div(class = 'spada-waiter-card',
+            div('Spada is saving your work', class = 'spada-waiter-subtitle2'),
+            div('Please do not close this window', class = 'spada-waiter-subtitle3'),
+            div(class = 'spada-waiter-progress',  div(class = 'spada-waiter-bar')),
+            div(id = 'spada_exit_text', class = 'spada-waiter-log', '')
           ),
           waiter_right_foot()
         )

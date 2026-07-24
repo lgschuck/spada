@@ -15,7 +15,6 @@ plot_fill_color <- '#0099F8'
 plot_line_color <- '#EE7942'
 plot_title_color <- '#02517d'
 
-startup_text_color <- '#FFFFFF'
 # palettes --------------------------------------------------------------------
 gray_palette <- c('#cfcfcf', '#585858', '#232323')
 blue_palette <- c('#229bd4', '#096691', '#134359')
@@ -47,6 +46,7 @@ spada_bs_theme <- function(theme) {
       ";",
 
       "
+
       $grad1: #1f4e72;
       $grad2: #2a6485;
       $grad3: #3a7f9d;
@@ -67,6 +67,15 @@ spada_bs_theme <- function(theme) {
         padding-bottom: 8px !important;
       }
 
+      .spada-main-sidebar{
+        background: $sidebar_bg
+      }
+
+      .spada-main-sidebar .accordion-item{
+        border: none !important;
+        border-color: transparent !important;
+      }
+
       .nav-link { font-size: 18px; }
 
       .big-card{
@@ -74,9 +83,15 @@ spada_bs_theme <- function(theme) {
       }
 
       .mini-header {
-        color: white;
-        background: linear-gradient(to right, $grad1, $grad2, $grad3, $grad4, $grad5, $grad6);
-        /*font-weight: 400 !important;*/
+        color: #ffffff;
+
+        background:
+          linear-gradient(
+            180deg,
+            #0A6CA4 0%,
+            #0A5A88 100%
+          );
+        border-bottom: 1px solid #ffffff;
       }
 
       .btn-task:active {
@@ -149,7 +164,12 @@ spada_bs_theme <- function(theme) {
       .card-body {border-radius: 0rem;}
 
       .card-sidebar {
-        background-color: $main_color !important;
+        background:
+        linear-gradient(
+            180deg,
+            #0A5A88 0%,
+            #0A6CA4 100%
+        );
       }
 
       .value-box-title {
