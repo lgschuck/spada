@@ -67,7 +67,10 @@ filter_rows_ui <- function(id) {
           height = '200px',
           resize = 'both'
         ),
-        column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations'))
+        fluidRow(
+          column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations')),
+          column(4, btn_task(ns('btn_help'), 'Help', icon('question')))
+        )
       ),
 
       # panel for other dataset -----------------------------------------------
@@ -542,6 +545,30 @@ filter_rows_server <- function(id) {
     observe({
       show_allowed_op()
     }) |> bindEvent(input$btn_allowed_operations)
+
+    # show help ---------------------------------------------------------------
+    observe({
+      operations_help(
+        div(
+          style = '
+              border: 1px solid #d9e3f0;
+              border-radius: 10px;
+              padding: 20px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            ',
+
+          h4(icon('wand-magic-sparkles'), 'Examples of operations'),
+
+          tags$p('Spada allows you to perform a variety of filter tasks.'),
+
+          tags$ul(
+            tags$li(strong('Compare Values:'), 'Sepal.Length > 6'),
+            tags$li(strong('Compare Variables:'), 'Sepal.Length == Sepal.Width * 2'),
+            tags$li(strong('Apply functions:'), 'is.na(Sepal.Length)')
+          )
+        )
+      )
+    }) |> bindEvent(input$btn_help)
 
   })
 }

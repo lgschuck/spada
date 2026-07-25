@@ -91,6 +91,7 @@ spada_bs_theme <- function(theme) {
             #0A6CA4 0%,
             #0A5A88 100%
           );
+
         border-bottom: 1px solid #ffffff;
       }
 
@@ -202,13 +203,12 @@ spada_bs_theme <- function(theme) {
         max-height: 100vh;
         overflow: auto;
       }
-
       .modal-content {
         border-radius: 0 !important;
       }
 
       .modal-header {
-        background-color: #02517d;
+        background: linear-gradient(135deg,#02517d,#0A74B8);
         color: white;
         border-radius: 0 !important;
       }

@@ -25,7 +25,10 @@ calculate_cols_ui <- function(id) {
       card_body(
         textInput(ns('txt_new_name_free'), 'New var name', placeholder = 'new_var'),
         textAreaInput(ns('txt_code_input'), 'Input code', width = '800px', height = '200px'),
-        column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations')),
+        fluidRow(
+          column(4, btn_task(ns('btn_allowed_operations'), 'Show Allowed Operations')),
+          column(4, btn_task(ns('btn_help'), 'Help', icon('question')))
+        ),
         selectizeInput(ns('vars_groupby_free'),
                        'Group By',
                        choices = '',
@@ -224,6 +227,31 @@ calculate_cols_server <- function(id) {
     observe({
       show_allowed_op()
     }) |> bindEvent(input$btn_allowed_operations)
+
+    # show help ---------------------------------------------------------------
+    observe({
+      operations_help(
+        div(
+          style = '
+              border: 1px solid #d9e3f0;
+              border-radius: 10px;
+              padding: 20px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            ',
+
+          h4(icon('wand-magic-sparkles'), 'Examples of operations'),
+
+          tags$p('Spada allows you to perform a variety of data manipulation tasks.'),
+
+          tags$ul(
+            tags$li(strong('Create variables:'), "as.character('Spada')"),
+            tags$li(strong('Math operations:'), 'Sepal.Length + Petal.Width'),
+            tags$li(strong('If else:'), 'fifelse(Petal.Length > 6, 99, -99)'),
+            tags$li(strong('Apply functions:'), 'sum(Petal.Width)')
+          )
+        )
+      )
+    }) |> bindEvent(input$btn_help)
 
   })
 }

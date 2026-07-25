@@ -1188,6 +1188,18 @@ fun_help_modal <- function(pak, fun) {
   ))
 }
 
+# operations help -------------------------------------------------------------
+operations_help <- function(div_content){
+  showModal(
+    modalDialog(
+      title = div(icon('circle-question'), ' Help'),
+      size = 'l',
+      easyClose = TRUE,
+      div_content
+    )
+  )
+}
+
 # format decimals -------------------------------------------------------------
 f_dec <- function(x, dig = 0){
   if(is.numeric(x) && !is.na(x) |> all()){
@@ -2036,37 +2048,71 @@ plot_tag <- function(plot, w = 900, h = 300){
 }
 
 # status row for restore session ----------------------------------------------
-status_row <- function(icon_name, color, text) {
+status_row <- function(icon_name, color, title, type_icon){
   div(
     style = paste0(
-      'display:flex; align-items:center; gap:12px;
-       padding:12px 16px;
-       border-radius:2px;
-       background-color:', color, '15;'
+      'display:flex;
+       align-items:center;
+       gap:16px;
+       padding:18px 20px;
+       border-radius:16px;
+       background:#FFFFFF;
+       border-left:5px solid ', color, ';
+       box-shadow:0 2px 10px rgba(0,0,0,.05);'
     ),
-    icon(icon_name, style = paste0('font-size:20px; color:', color)),
-    tags$span(text, style = 'font-size:20px; font-weight:400;')
+
+    div(
+      style = paste0(
+        'width:44px;
+         height:44px;
+         border-radius:12px;
+         background:', color, '18;
+         display:flex;
+         align-items:center;
+         justify-content:center;
+         flex-shrink:0;'
+      ),
+      icon(icon_name, style = paste0('font-size:22px;color:', color))
+    ),
+
+    div(
+      style = '
+        flex:1;
+        font-size:20px;
+        font-weight:400;
+        color:#1C4B71;
+      ',
+      title
+    ),
+
+    div(
+      style = '
+        color:#607B95;
+        font-size:26px;
+        opacity:.75;
+      ',
+      icon(type_icon)
+    )
   )
 }
 
 # display restore status ------------------------------------------------------
-
 display_restore_status <- function(session_restore_status, btn_ok){
   list_check_restore <- div(
     style = 'display:flex; flex-direction:column; gap:12px;',
 
     switch(
       substr(session_restore_status, 1, 1),
-      '1' = status_row('check', '#2e7d32', 'Data restored successfully'),
-      '2' = status_row('times', '#c62828', 'Data not found'),
-      '3' = status_row('circle-question', '#ed6c02', 'Data in invalid format')
+      '1' = status_row('check', '#2e7d32', 'Data restored successfully', 'database'),
+      '2' = status_row('times', '#c62828', 'Data not found', 'database'),
+      '3' = status_row('circle-question', '#ed6c02', 'Data in invalid format', 'database')
     ),
 
     switch(
       substr(session_restore_status, 3, 3),
-      '1' = status_row('check', '#2e7d32', 'Output restored successfully'),
-      '2' = status_row('times', '#c62828', 'Output not found'),
-      '3' = status_row('circle-question', '#ed6c02', 'Output in invalid format')
+      '1' = status_row('check', '#2e7d32', 'Output restored successfully', 'tablet-screen-button'),
+      '2' = status_row('times', '#c62828', 'Output not found', 'tablet-screen-button'),
+      '3' = status_row('circle-question', '#ed6c02', 'Output in invalid format', 'tablet-screen-button')
     )
   )
 
