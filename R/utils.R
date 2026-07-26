@@ -522,7 +522,7 @@ spada_output_css <- tags$head(tags$style(HTML(
         display:block;
         padding:8px 12px;
 
-        color:#444;
+        color:#444444;
         text-decoration:none;
 
         border-radius:6px;
@@ -702,11 +702,10 @@ spada_output_info_card <- function(content){
 
     background: linear-gradient(
       135deg,
-      #003452 0%,
-      #02517d 100%
+      #02517d 0%,
+      #0A6CA4 100%
     );
 
-    border-radius: 4px;
     color: #ffffff;
     margin-bottom: 25px;
   ',
@@ -831,9 +830,6 @@ spada_output <- function(output){
       )
     )
   )
-
-
-
 
   tags$html(
     spada_output_css,

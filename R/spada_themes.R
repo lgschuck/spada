@@ -5,60 +5,70 @@ themes_names <- c('spada_theme', 'spada_dark_theme')
 # app colors ------------------------------------------------------------------
 main_color <- '#02517d'
 navbar_bg <- '#0A5A88'
-sidebar_color <- '#e3e3e4'
-inputs_border_color <- '#c8c8c8'
-bg_color <- '#f9f9f9'
+sidebar_color <- '#E3EEe4'
+inputs_border_color <- '#C8C8C8'
+inputs_border_color2 <- '#D1D1D1'
+bg_color <- '#F9F9F9'
 secondary <- '#0072B2'
 sucess <- '#009E73'
-danger <- '#b60020'
+danger <- '#B60020'
 plot_fill_color <- '#0099F8'
 plot_line_color <- '#EE7942'
 plot_title_color <- '#02517d'
 
+spada_white <- '#FFFFFF'
+spada_black <- '#000000'
+spada_navpills_hover <- '#F0F0F0'
+spada_navpills_hover_dark <- '#5A5A5A'
+spada_blue5 <- '#0A6CA4'
+spada_blue6 <- '#0A74B8'
+spada_gray5 <- '#424242'
+spada_red5 <- '#DC3545'
+
 # palettes --------------------------------------------------------------------
-gray_palette <- c('#cfcfcf', '#585858', '#232323')
-blue_palette <- c('#229bd4', '#096691', '#134359')
-yl_palette   <- c('#f5cb4e', '#ffc107', '#f7a305')
-dg_palette   <- c('#378c88', '#1c6561', '#284e4c')
-lg_palette   <- c('#0cb0a8', '#228f8a', '#09918b')
-pk_palette   <- c('#a35d8c', '#bf007f', '#8f0360')
-red_palette  <- c('#8f3646', '#b60020', '#750217')
+gray_palette <- c('#CFCFCF', '#585858', '#232323')
+blue_palette <- c('#229BD4', '#096691', '#134359')
+yl_palette   <- c('#F5CB4E', '#FFC107', '#F7A305')
+dg_palette   <- c('#378C88', '#1C6561', '#284E4C')
+lg_palette   <- c('#0CB0A8', '#228F8A', '#09918B')
+pk_palette   <- c('#A35D8C', '#BF007F', '#8F0360')
+red_palette  <- c('#8F3646', '#B60020', '#750217')
 
 # themes function -------------------------------------------------------------
-
 spada_bs_theme <- function(theme) {
+
   basic_rules <- list(
     paste(
-      " $main_color:",
-      main_color,
-      ";",
-      " $secondary:",
-      secondary,
-      ";",
-      " $bg_color:",
-      bg_color,
-      ";",
-      " $sidebar_bg:",
-      sidebar_color,
-      ";",
-      " $inputs_border_color:",
-      inputs_border_color,
-      ";",
+      " $main_color:", main_color, ";",
+      " $secondary:", secondary, ";",
+      " $bg_color:", bg_color, ";",
+      " $sidebar_bg:", sidebar_color, ";",
+      " $inputs_border_color:", inputs_border_color, ";",
+      " $inputs_border_color2:", inputs_border_color2, ";",
+      " $navbar_bg:", navbar_bg, ";",
+      " $spada_navpills_hover:", spada_navpills_hover, ";",
+      " $spada_navpills_hover_dark:", spada_navpills_hover_dark, ";",
+      " $spada_white:", spada_white, ";",
+      " $spada_blue5:", spada_blue5, ";",
+      " $spada_blue6:", spada_blue6, ";",
+      " $spada_red5:", spada_red5, ";",
+      " $btn_neutral:", spada_gray5, ";",
 
       "
 
-      $grad1: #1f4e72;
-      $grad2: #2a6485;
-      $grad3: #3a7f9d;
-      $grad4: #4b97b6;
-      $grad5: #5fa3c2;
-      $grad6: #4e96b6;
-      $stati_card_text: #ffffff;
+      $stati_card_text: $spada_white;
 
       .navbar {
         min-height: 45px !important;
         padding-top: 4px !important;
         padding-bottom: 4px !important;
+
+        background: linear-gradient(
+          to right,
+          $main_color,
+          $spada_blue6
+        ) !important;
+
       }
 
       .main{
@@ -78,21 +88,19 @@ spada_bs_theme <- function(theme) {
 
       .nav-link { font-size: 18px; }
 
-      .big-card{
-        background-color: $main_color;
-      }
+      .big-card{ background-color: $main_color; }
 
       .mini-header {
-        color: #ffffff;
+        color: $spada_white;
 
         background:
           linear-gradient(
             180deg,
-            #0A6CA4 0%,
-            #0A5A88 100%
+            $spada_blue5 0%,
+            $navbar_bg 100%
           );
 
-        border-bottom: 1px solid #ffffff;
+        border-bottom: 1px solid $spada_white;
       }
 
       .btn-task:active {
@@ -108,9 +116,9 @@ spada_bs_theme <- function(theme) {
       }
 
       .btn-task-cancel {
-        color: #dc3545 !important;
+        color: $spada_red5 !important;
         background-color: $bg_color !important;
-        border-color: #dc3545 !important;
+        border-color: $spada_red5 !important;
       }
 
       .btn-task-cancel:hover {
@@ -120,14 +128,14 @@ spada_bs_theme <- function(theme) {
       }
 
       .btn-task.btn-task-neutral {
-        color: #424242 !important;
+        color: $btn_neutral !important;
         background-color: white !important;
-        border-color: #424242 !important;
+        border-color: $btn_neutral !important;
       }
 
       .btn-task.btn-task-neutral:hover {
-        background-color: #424242 !important;
-        border-color: #424242 !important;
+        background-color: $btn_neutral !important;
+        border-color: $btn_neutral !important;
         color: $bg_color !important;
       }
 
@@ -158,28 +166,22 @@ spada_bs_theme <- function(theme) {
         color: $secondary !important;
       }
 
-      .card, .well {
-       --bs-card-inner-border-radius: 0;
-      }
+      .card, .well { --bs-card-inner-border-radius: 0; }
 
-      .card-body {border-radius: 0rem;}
+      .card-body { border-radius: 0rem; }
 
       .card-sidebar {
         background:
         linear-gradient(
             180deg,
-            #0A5A88 0%,
-            #0A6CA4 100%
+            $navbar_bg 0%,
+            $spada_blue5 100%
         );
       }
 
-      .value-box-title {
-        font-size: 1rem !important;
-      }
+      .value-box-title { font-size: 1rem !important; }
 
-      .value-box-value {
-        font-size: 1.5rem !important;
-      }
+      .value-box-value { font-size: 1.5rem !important; }
 
       .nav-pills .nav-link {
         font-size: 14px !important;
@@ -203,12 +205,10 @@ spada_bs_theme <- function(theme) {
         max-height: 100vh;
         overflow: auto;
       }
-      .modal-content {
-        border-radius: 0 !important;
-      }
+      .modal-content { border-radius: 0 !important; }
 
       .modal-header {
-        background: linear-gradient(135deg,#02517d,#0A74B8);
+        background: linear-gradient(135deg, $main_color, $spada_blue6);
         color: white;
         border-radius: 0 !important;
       }
@@ -238,7 +238,7 @@ spada_bs_theme <- function(theme) {
         word-break: break-word;
       }
 
-      .selectize-dropdown {word-wrap: break-word;}
+      .selectize-dropdown { word-wrap: break-word; }
   "
     )
   )
@@ -247,7 +247,7 @@ spada_bs_theme <- function(theme) {
     bs_theme(
       version = 5,
       bg = bg_color,
-      fg = '#000000',
+      fg = spada_black,
       primary = main_color,
       secondary = secondary,
       success = sucess,
@@ -261,18 +261,19 @@ spada_bs_theme <- function(theme) {
       'navbar-brand-font-size' = '1.5rem',
       'navbar-brand-padding-y' = '0.250rem',
       'btn-font-weight' = 400,
-      'dropdown-bg' = '#f9f9f9',
+      'dropdown-bg' = bg_color,
       'dropdown-color' = main_color,
-      'dropdown-link-color' = '#000000',
+      'dropdown-link-color' = spada_black,
       'dropdown-link-hover-bg' = sidebar_color,
       base_font = font_collection('Segoe UI', 'Ubuntu', 'system-ui')
-    ) |> bs_add_rules(basic_rules) |>
+    ) |>
+      bs_add_rules(basic_rules) |>
       bs_add_rules(
         list(
           "
           .accordion-sidebar{
             background-color: $main_color !important;
-            color: #ffffff;
+            color: $spada_white;
           }
 
           .card {
@@ -297,9 +298,9 @@ spada_bs_theme <- function(theme) {
           }
 
           .btn-task-cancel {
-            color: #dc3545 !important;
+            color: $spada_red5 !important;
             background-color: white !important;
-            border-color: #dc3545 !important;
+            border-color: $spada_red5 !important;
             border-radius: 0rem
           }
 
@@ -319,14 +320,14 @@ spada_bs_theme <- function(theme) {
           }
 
           .nav-pills .nav-link:hover {
-            background-color: #f0f0f0 !important;
+            background-color: $spada_navpills_hover !important;
           }
 
           .shiny-input-text,
           .shiny-input-number,
           .selectize-input,
           .shiny-input-textarea textarea {
-            border: 1px solid #d1d1d1 !important;
+            border: 1px solid $inputs_border_color2 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
 
@@ -339,7 +340,7 @@ spada_bs_theme <- function(theme) {
           .shiny-input-text:hover,
           .shiny-input-number:hover,
           .shiny-input-textarea textarea:hover {
-            border-color: #c8c8c8 !important;
+            border-color: $inputs_border_color !important;
             border-bottom: 1px solid $main_color !important;
           }
 
@@ -347,7 +348,7 @@ spada_bs_theme <- function(theme) {
           .shiny-input-text:focus,
           .shiny-input-number:focus,
           .shiny-input-textarea textarea:focus {
-            border-color: #c8c8c8 !important;
+            border-color: $inputs_border_color !important;
             border-bottom: 1px solid $main_color !important;
           }
         "
@@ -386,8 +387,8 @@ spada_bs_theme <- function(theme) {
           }
 
           .nav-pills .nav-link:hover {
-            background-color: #5a5a5a !important;
-            color: #ffffff !important;
+            background-color: $spada_navpills_hover_dark !important;
+            color: $spada_white !important;
           }
 
         "
