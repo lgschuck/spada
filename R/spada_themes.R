@@ -5,7 +5,7 @@ themes_names <- c('spada_theme', 'spada_dark_theme')
 # app colors ------------------------------------------------------------------
 main_color <- '#02517d'
 navbar_bg <- '#0A5A88'
-sidebar_color <- '#E3EEe4'
+sidebar_color <- '#E3E3E4'
 inputs_border_color <- '#C8C8C8'
 inputs_border_color2 <- '#D1D1D1'
 bg_color <- '#F9F9F9'

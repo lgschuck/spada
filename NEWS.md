@@ -18,11 +18,13 @@ editor_options:
 
 2 - New **missing module**
 
-3 - Now double and integer are treated differently (not just equally as numeric)
+3 - Now **double and integer** are treated differently (not just equally as numeric)
 
 #### Visuals 
 
 1 - New **waiter screen** in startup and close
+
+2 - Better colors consistency through all the package
 
 ### Bug fixes
 
