@@ -26,6 +26,8 @@ editor_options:
 
 2 - Better colors consistency through all the package
 
+3 - Better CSS with rounded corners
+
 ### Bug fixes
 
 1 - Fixed time in Spada Output footer (HTML exported file)

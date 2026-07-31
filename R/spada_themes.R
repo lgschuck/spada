@@ -101,15 +101,18 @@ spada_bs_theme <- function(theme) {
           );
 
         border-bottom: 1px solid $spada_white;
+        border-radius: 0.2rem;
       }
 
-      .btn-task:active {
+      .btn-task:active,
+      .btn-default:active {
         background-color: darken($bg_color, 10%) !important;
         transform: scale(0.99);
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
-      .btn-task:hover {
+      .btn-task:hover,
+      .btn-default:hover {
         background-color: $secondary !important;
         border-color: $secondary !important;
         color: white !important;
@@ -166,9 +169,9 @@ spada_bs_theme <- function(theme) {
         color: $secondary !important;
       }
 
-      .card, .well { --bs-card-inner-border-radius: 0; }
+      .card, .well { --bs-card-inner-border-radius: '0.2rem'; }
 
-      .card-body { border-radius: 0rem; }
+      .card-body { border-radius: '0.2rem'; }
 
       .card-sidebar {
         background:
@@ -192,33 +195,49 @@ spada_bs_theme <- function(theme) {
       .popover.preview-dt-popup {
         max-width: 120vw;
         width: 600px;
-        border-radius: 0 !important;
+        border-radius: 0.2rem !important;
       }
 
       .popover.preview-dt-popup-mini {
         max-width: 120vw;
         width: 300px;
-        border-radius: 0 !important;
+        border-radius: 0.2rem !important;
       }
 
       .popover.preview-dt-popup .popover-body {
         max-height: 100vh;
         overflow: auto;
       }
-      .modal-content { border-radius: 0 !important; }
+
+      .modal-content {
+        border: none !important;
+        border-radius: 0.6rem !important;
+        box-shadow:
+          0 1.5rem 4rem rgba(0, 0, 0, .20),
+          0 .5rem 1rem rgba(0, 0, 0, .08);
+      }
 
       .modal-header {
-        background: linear-gradient(135deg, $main_color, $spada_blue6);
-        color: white;
-        border-radius: 0 !important;
+        background: linear-gradient(
+          135deg,
+          $main_color 0%,
+          $spada_blue6 100%
+        );
+
+        color: $spada_white;
+        border: none !important;
+        padding: 1rem 1.5rem;
+      }
+
+      .modal-footer {
+        border-top: 1px solid rgba(0, 0, 0, .06);
+        padding: 1rem 1.5rem;
       }
 
       .navbar-nav .nav-link {
         transition: background-color 0.2s ease;
-
-        border-radius: 10px;
+        border-radius: 0.6rem;
         margin: 1px;
-
         padding-left: 12px !important;
         padding-right: 12px !important;
       }
@@ -238,8 +257,58 @@ spada_bs_theme <- function(theme) {
         word-break: break-word;
       }
 
-      .selectize-dropdown { word-wrap: break-word; }
-  "
+      .selectize-dropdown {  }
+
+      .navbar .dropdown-menu {
+        border: none;
+        border-radius: 0.875rem;
+        padding: 6px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar .dropdown-item {
+        border-radius: 0.5rem;
+        transition: background-color .15s ease, color .15s ease;
+      }
+
+      .selectize-dropdown {
+        word-wrap: break-word;
+        border: none !important;
+        border-radius: 0.4rem !important;
+        overflow: hidden;
+        box-shadow:
+          0 0.75rem 2rem rgba(0, 0, 0, .15);
+      }
+
+      .selectize-dropdown .option {
+        margin: 0.2rem;
+        border-radius: 0.2rem;
+        transition: background-color .15s ease;
+      }
+
+      .selectize-dropdown .active {
+        background-color: rgba(10, 108, 164, .08);
+      }
+
+      .spada-navbar-df-info-header {
+        display: inline-block;
+        background: linear-gradient(135deg, $main_color, $spada_blue5);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 0.6rem;
+        margin-bottom: 1rem;
+      }
+
+      .spada-navbar-df-info-header h2{
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: white;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+    "
     )
   )
 
@@ -253,11 +322,11 @@ spada_bs_theme <- function(theme) {
       success = sucess,
       danger = danger,
       font_size_base = '1rem',
-      'nav-pills-border-radius' = '0rem',
+      'nav-pills-border-radius' = '0.2rem',
       'nav-pills-link-active-color' = main_color,
       'nav-pills-link-active-bg' = sidebar_color,
-      'border-radius-sm' = 0,
-      'border-radius' = 0,
+      'border-radius-sm' = '0.2rem',
+      'border-radius' = '0.2rem',
       'navbar-brand-font-size' = '1.5rem',
       'navbar-brand-padding-y' = '0.250rem',
       'btn-font-weight' = 400,
@@ -277,7 +346,7 @@ spada_bs_theme <- function(theme) {
           }
 
           .card {
-            border-radius: 0.1rem;
+            border-radius: 0.2rem;
             margin: -8px;
           }
 
@@ -288,20 +357,21 @@ spada_bs_theme <- function(theme) {
             height: 60px;
           }
 
-          .btn-task {
+          .btn-task,
+          .btn-default {
             color: $secondary !important;
             background-color: $bg_color !important;
             border-color: $secondary !important;
             padding-top: 6px !important;
             padding-bottom: 6px !important;
-            border-radius: 0rem
+            border-radius: 0.2rem
           }
 
           .btn-task-cancel {
             color: $spada_red5 !important;
             background-color: white !important;
             border-color: $spada_red5 !important;
-            border-radius: 0rem
+            border-radius: 0.2rem
           }
 
           .control-label {
@@ -328,7 +398,7 @@ spada_bs_theme <- function(theme) {
           .selectize-input,
           .shiny-input-textarea textarea {
             border: 1px solid $inputs_border_color2 !important;
-            border-radius: 0 !important;
+            border-radius: 0.2rem !important;
             box-shadow: none !important;
 
             transition:
@@ -351,6 +421,17 @@ spada_bs_theme <- function(theme) {
             border-color: $inputs_border_color !important;
             border-bottom: 1px solid $main_color !important;
           }
+
+          .navbar .dropdown-item.active,
+          .navbar .dropdown-item:active {
+            background: linear-gradient(
+              135deg,
+              $main_color 0%,
+              $spada_blue5 100%
+            ) !important;
+            color: $spada_white !important;
+          }
+
         "
         )
       )
@@ -358,8 +439,8 @@ spada_bs_theme <- function(theme) {
     bs_theme(
       version = 5,
       bootswatch = 'darkly',
-      'border-radius-sm' = 0,
-      'border-radius' = 0,
+      'border-radius-sm' = '0.2rem',
+      'border-radius' = '0.2rem',
       'navbar-brand-font-size' = '1.5rem',
       'btn-font-weight' = 400,
       base_font = font_collection('Open Sans', 'Ubuntu', 'system-ui')
@@ -369,7 +450,7 @@ spada_bs_theme <- function(theme) {
         list(
           "
           .card {
-            border-radius: 0rem;
+            border-radius: '0.2rem';
             margin: -4px;
           }
 
@@ -379,11 +460,12 @@ spada_bs_theme <- function(theme) {
             height: 60px;
           }
 
-          .btn-task {
+          .btn-task,
+          .btn-default {
             color: $secondary;
             background-color: $bg_color;
             border-color: $secondary;
-            border-radius: 0rem
+            border-radius: '0.2rem'
           }
 
           .nav-pills .nav-link:hover {
