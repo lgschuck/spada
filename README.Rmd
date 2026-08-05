@@ -26,7 +26,6 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-coral.svg)](ht
 [![](https://cranlogs.r-pkg.org/badges/last-week/spada)](https://CRAN.R-project.org/package=spada)
 [![](https://cranlogs.r-pkg.org/badges/last-day/spada)](https://CRAN.R-project.org/package=spada)
 
-
 <!-- badges: end -->
 
 **Spada** provides a 'shiny' application with a user-friendly interface for interactive data analysis. It supports exploratory data analysis through descriptive statistics, data visualization, statistical tests (e.g., normality assessment), linear modeling, data import, transformation and reporting.
@@ -81,6 +80,10 @@ if(interactive()){
   spada()
 }
 ```
+
+## Tests
+
+Spada is tested via testthat and currently runs over **900 tests**.
 
 ## Docker
 

@@ -1414,6 +1414,7 @@ exit_with_save <- function(session){
              reactiveValuesToList(session$userData$conf),
              'conf.qs2')
   Sys.sleep(exit_sleep_time/3)
+  update_waiter_text(session, 'spada_exit_text', 'Done')
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   if(session$userData$run_local) stopApp()
 }
@@ -1426,8 +1427,8 @@ exit_without_save <- function(session){
   spada_save(session$userData$conf$conf_dir,
              reactiveValuesToList(session$userData$conf),
              'conf.qs2')
-
   Sys.sleep(exit_sleep_time)
+  update_waiter_text(session, 'spada_exit_text', 'Done')
   session$sendCustomMessage(type = 'closeWindow', message = 'message')
   if(session$userData$run_local) stopApp()
 }

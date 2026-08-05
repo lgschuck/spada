@@ -79,6 +79,10 @@ if(interactive()){
 }
 ```
 
+## Tests
+
+Spada is tested via testthat and currently runs over **900 tests**.
+
 ## Docker
 
 Spada is distributed as a **Docker Image**.

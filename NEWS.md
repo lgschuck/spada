@@ -16,7 +16,7 @@ editor_options:
 
 1 - **QQ Plot in linear model**: inserted QQ Plot for residuals (Exploratory and Lm modules)
 
-2 - New **missing module**
+2 - New **missing module**: identify and replace missing values
 
 3 - Now **double and integer** are treated differently (not just equally as numeric)
 

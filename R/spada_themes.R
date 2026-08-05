@@ -167,6 +167,8 @@ spada_bs_theme <- function(theme) {
       .micro-btn-cancel:focus,
       .micro-btn-cancel:active {
         color: $secondary !important;
+        background-color: transparent !important;
+        border-color: transparent !important;
       }
 
       .card, .well { --bs-card-inner-border-radius: '0.2rem'; }
