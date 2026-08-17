@@ -95,7 +95,7 @@ You can use [Docker Hub](https://hub.docker.com/r/lgschuck/spada) to search for 
 
 ## Screenshots
 
-![Loading](man/figures/spada_loading_0.1.3.png)
+![Loading](man/figures/spada_loading.png)
 
 ### Data
 

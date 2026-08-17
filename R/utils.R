@@ -1403,12 +1403,12 @@ exit_with_save <- function(session){
   spada_save(session$userData$conf$data_dir,
              session$userData$dt$dt,
              'data.qs2')
-  Sys.sleep(exit_sleep_time/6)
+  Sys.sleep(exit_sleep_time/3)
   update_waiter_text(session, 'spada_exit_text', 'Saving output')
   spada_save(session$userData$conf$data_dir,
              session$userData$out$elements,
              'output.qs2')
-  Sys.sleep(exit_sleep_time/6)
+  Sys.sleep(exit_sleep_time/3)
   update_waiter_text(session, 'spada_exit_text', 'Saving conf')
   spada_save(session$userData$conf$conf_dir,
              reactiveValuesToList(session$userData$conf),

@@ -16,7 +16,7 @@ editor_options:
 
 1 - **QQ Plot in linear model**: inserted QQ Plot for residuals (Exploratory and Lm modules)
 
-2 - New **missing module**: identify and replace missing values
+2 - New **missing module**: identify and replace missing values ([#72](https://github.com/lgschuck/spada/issues/72))
 
 3 - Now **double and integer** are treated differently (not just equally as numeric)
 
@@ -30,7 +30,7 @@ editor_options:
 
 ### Bug fixes
 
-1 - Fixed time in Spada Output footer (HTML exported file)
+1 - Fixed time in Spada Output footer (HTML exported file) ([#82](https://github.com/lgschuck/spada/issues/82))
 
 # Spada 0.1.7
 

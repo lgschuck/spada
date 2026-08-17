@@ -79,7 +79,7 @@ search for diferent versions.
 
 ## Screenshots
 
-![Loading](reference/figures/spada_loading_0.1.3.png)
+![Loading](reference/figures/spada_loading.png)
 
 Loading
 
