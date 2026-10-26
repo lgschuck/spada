@@ -10,6 +10,12 @@ editor_options:
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+# Spada 0.1.9
+
+### Bug fixes
+
+1 - Test failure with upcoming gt 1.4.0: length() of gt_tbl object changed ([#83](https://github.com/lgschuck/spada/issues/83))
+
 # Spada 0.1.8
 
 ### Improvements
