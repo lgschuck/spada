@@ -6,7 +6,18 @@
 
 [0.2.0 Version Milestone](https://github.com/lgschuck/spada/milestone/2)
 
+## Spada 0.1.9
+
+CRAN release: 2026-10-26
+
+#### Bug fixes
+
+1 - Test failure with upcoming gt 1.4.0: length() of gt_tbl object
+changed ([\#83](https://github.com/lgschuck/spada/issues/83))
+
 ## Spada 0.1.8
+
+CRAN release: 2026-08-23
 
 #### Improvements
 
